@@ -1,0 +1,570 @@
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="{{ path('home') }}" class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="/images/logo-sm.png" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/images/logo-dark.png" alt="" height="20">
+                    </span>
+                </a>
+
+                <a href="{{ path('home') }}" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="/images/logo-sm.png" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/images/logo-light.png" alt="" height="20">
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+            <!-- App Search-->
+            <form class="app-search d-none d-lg-block">
+                <div class="position-relative">
+                    <input type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}...">
+                    <span class="uil-search"></span>
+                </div>
+            </form>
+        </div>
+
+        <div class="d-flex">
+
+            <div class="dropdown d-inline-block d-lg-none ms-2">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="uil-search"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-search-dropdown">
+                    
+                    <form class="p-3">
+                        <div class="m-0">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}..." aria-label="Recipient's username">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block language-switch">
+                <button type="button" class="btn header-item waves-effect"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if app.request.locale == 'en' %}
+                       <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+                    {% elseif app.request.locale == 'es' %}
+                       <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
+                    {% elseif app.request.locale == 'de' %}
+                        <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16">
+                    {% elseif app.request.locale == 'it' %}
+                        <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16">
+                    {% elseif app.request.locale == 'ru' %}
+                        <img class="header-lang-img" src="/images/flags/russia.jpg" alt="Header Language" height="16">
+                    {% else %}
+                       <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    
+                    {% if app.request.locale != 'en' %}
+                    <!-- item-->
+                    <a href="lang/en" class="dropdown-item notify-item language" data-lang="eng">
+                        <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
+                    </a>
+                    {% endif %}
+
+                    {% if app.request.locale != 'es' %}
+                    <!-- item-->
+                    <a href="lang/es" class="dropdown-item notify-item language" data-lang="sp">
+                        <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
+                    </a>
+                    {% endif %}
+                    
+                    {% if app.request.locale != 'de' %}
+                    <!-- item-->
+                    <a href="lang/de" class="dropdown-item notify-item language" data-lang="gr">
+                        <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
+                    </a>
+                    {% endif %}
+
+                    {% if app.request.locale != 'it' %}
+                    <!-- item-->
+                    <a href="lang/it" class="dropdown-item notify-item language" data-lang="it">
+                        <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
+                    </a>
+                    {% endif %}
+
+                    {% if app.request.locale != 'ru' %}
+                    <!-- item-->
+                    <a href="lang/ru" class="dropdown-item notify-item language" data-lang="ru">
+                        <img src="/images/flags/russia.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
+                    </a>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="uil-apps"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                    <div class="px-lg-2">
+                        <div class="row g-0">
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/images/brands/github.png" alt="Github">
+                                    <span>GitHub</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/images/brands/bitbucket.png" alt="bitbucket">
+                                    <span>Bitbucket</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/images/brands/dribbble.png" alt="dribbble">
+                                    <span>Dribbble</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row g-0">
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/images/brands/dropbox.png" alt="dropbox">
+                                    <span>Dropbox</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/images/brands/mail_chimp.png" alt="mail_chimp">
+                                    <span>Mail Chimp</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/images/brands/slack.png" alt="slack">
+                                    <span>Slack</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                    <i class="uil-minus-path"></i>
+                </button>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="uil-bell"></i>
+                    <span class="badge bg-danger rounded-pill">3</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h5 class="m-0 font-size-16"> {% trans %}Notifications{% endtrans %} </h5>
+                            </div>
+                            <div class="col-auto">
+                                <a href="javascript:void(0);" class="small"> {% trans %}Mark all as read{% endtrans %}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-simplebar style="max-height: 230px;">
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                        <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                            <i class="uil-shopping-basket"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{% trans %}Your order is placed{% endtrans %}</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}3 min ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <img src="/images/users/avatar-3.jpg" class="rounded-circle avatar-xs" alt="user-pic">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">James Lemire</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}It will seem like simplified English.{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}1 hour ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                        <span class="avatar-title bg-success rounded-circle font-size-16">
+                                            <i class="uil-truck"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{% trans %}Your item is shipped{% endtrans %}</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}3 min ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <img src="/images/users/avatar-4.jpg" class="rounded-circle avatar-xs" alt="user-pic">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Salena Layfield</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}As a skeptical Cambridge friend of mine occidental.{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}5 hours ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="p-2 border-top">
+                        <div class="d-grid">
+                            <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <i class="uil-arrow-circle-right me-1"></i> {% trans %}View More{% endtrans %}..
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="/images/users/avatar-4.jpg"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">Marcus</span>
+                    <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="#"><i class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span class="align-middle">{% trans %}View Profile{% endtrans %}</span></a>
+                    <a class="dropdown-item" href="#"><i class="uil uil-wallet font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}My Wallet{% endtrans %}</span></a>
+                    <a class="dropdown-item d-block" href="#"><i class="uil uil-cog font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}Settings{% endtrans %}</span> <span class="badge bg-soft-success rounded-pill mt-1 ms-2">03</span></a>
+                    <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}Lock screen{% endtrans %}</span></a>
+                    <a class="dropdown-item" href="#"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}Sign out{% endtrans %}</span></a>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
+                    <i class="uil-cog"></i>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="topnav">
+
+            <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+    
+                <div class="collapse navbar-collapse" id="topnav-menu-content">
+                    <ul class="navbar-nav">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('home') }}">
+                                <i class="uil-home-alt me-2"></i> {% trans %}Dashboard{% endtrans %}
+                            </a>
+                        </li>
+    
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button">
+                                <i class="uil-flask me-2"></i>{% trans %}UI Elements{% endtrans %} <div class="arrow-down"></div>
+                            </a>
+
+                            <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl"
+                                aria-labelledby="topnav-uielement">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div>
+                                            <a href="ui-alerts" class="dropdown-item">{% trans %}Alerts{% endtrans %}</a>
+                                            <a href="ui-buttons" class="dropdown-item">{% trans %}Buttons{% endtrans %}</a>
+                                            <a href="ui-cards" class="dropdown-item">{% trans %}Cards{% endtrans %}</a>
+                                            <a href="ui-carousel" class="dropdown-item">{% trans %}Carousel{% endtrans %}</a>
+                                            <a href="ui-dropdowns" class="dropdown-item">{% trans %}Dropdowns{% endtrans %}</a>
+                                            <a href="ui-grid" class="dropdown-item">{% trans %}Grid{% endtrans %}</a>
+                                            <a href="ui-images" class="dropdown-item">{% trans %}Images{% endtrans %}</a>
+                                            <a href="ui-lightbox" class="dropdown-item">{% trans %}Lightbox{% endtrans %}</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div>                                            
+                                            <a href="ui-modals" class="dropdown-item">{% trans %}Modals{% endtrans %}</a>
+                                            <a href="ui-offcanvas" class="dropdown-item">{% trans %}Offcanvas{% endtrans %}</a>
+                                            <a href="ui-rangeslider" class="dropdown-item">{% trans %}Range Slider{% endtrans %}</a>
+                                            <a href="ui-session-timeout" class="dropdown-item">{% trans %}Session Timeout{% endtrans %}</a>
+                                            <a href="ui-progressbars" class="dropdown-item">{% trans %}Progress Bars{% endtrans %}</a>
+                                            <a href="ui-placeholders" class="dropdown-item">{% trans %}Placeholders{% endtrans %}</a>
+                                            <a href="ui-sweet-alert" class="dropdown-item">{% trans %}Sweet-Alert{% endtrans %}</a>
+                                            <a href="ui-tabs-accordions" class="dropdown-item">{% trans %}Tabs & Accordions{% endtrans %}</a>                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div>                                            
+                                            <a href="ui-typography" class="dropdown-item">{% trans %}Typography{% endtrans %}</a>
+                                            <a href="ui-toasts" class="dropdown-item">{% trans %}Toasts{% endtrans %}</a>
+                                            <a href="ui-video" class="dropdown-item">{% trans %}Video{% endtrans %}</a>
+                                            <a href="ui-general" class="dropdown-item">{% trans %}General{% endtrans %}</a>
+                                            <a href="ui-colors" class="dropdown-item">{% trans %}Colors{% endtrans %}</a>
+                                            <a href="ui-rating" class="dropdown-item">{% trans %}Rating{% endtrans %}</a>
+                                            <a href="ui-notifications" class="dropdown-item">{% trans %}Notifications{% endtrans %}</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+    
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button">
+                                <i class="uil-apps me-2"></i>{% trans %}Apps{% endtrans %} <div class="arrow-down"></div>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="topnav-pages">
+
+                                <a href="calendar" class="dropdown-item">{% trans %}Calendar{% endtrans %}</a>
+                                <a href="chat" class="dropdown-item">{% trans %}Chat{% endtrans %}</a>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-email"
+                                        role="button">
+                                        {% trans %}Email{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-email">
+                                        <a href="email-inbox" class="dropdown-item">{% trans %}Inbox{% endtrans %}</a>
+                                        <a href="email-read" class="dropdown-item">{% trans %}Read Email{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-ecommerce"
+                                        role="button">
+                                        {% trans %}Ecommerce{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-ecommerce">
+                                        <a href="ecommerce-products" class="dropdown-item">{% trans %}Products{% endtrans %}</a>
+                                        <a href="ecommerce-product-detail" class="dropdown-item">{% trans %}Product Detail{% endtrans %}</a>
+                                        <a href="ecommerce-orders" class="dropdown-item">{% trans %}Orders{% endtrans %}</a>
+                                        <a href="ecommerce-customers" class="dropdown-item">{% trans %}Customers{% endtrans %}</a>
+                                        <a href="ecommerce-cart" class="dropdown-item">{% trans %}Cart{% endtrans %}</a>
+                                        <a href="ecommerce-checkout" class="dropdown-item">{% trans %}Checkout{% endtrans %}</a>
+                                        <a href="ecommerce-shops" class="dropdown-item">{% trans %}Shops{% endtrans %}</a>
+                                        <a href="ecommerce-add-product" class="dropdown-item">{% trans %}Add Product{% endtrans %}</a>
+                                    </div>
+                                </div>
+
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-invoice"
+                                        role="button">
+                                        {% trans %}Invoices{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-invoice">
+                                        <a href="invoices-list" class="dropdown-item">{% trans %}Invoice List{% endtrans %}</a>
+                                        <a href="invoices-detail" class="dropdown-item">{% trans %}Invoice Detail{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-contact"
+                                        role="button">
+                                        {% trans %}Contacts{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-contact">
+                                        <a href="contacts-grid" class="dropdown-item">{% trans %}User Grid{% endtrans %}</a>
+                                        <a href="contacts-list" class="dropdown-item">{% trans %}User List{% endtrans %}</a>
+                                        <a href="contacts-profile" class="dropdown-item">{% trans %}Profile{% endtrans %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+    
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-components" role="button"
+                               >
+                                <i class="uil-layers me-2"></i>{% trans %}Components{% endtrans %} <div class="arrow-down"></div>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="topnav-components">
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-form"
+                                        role="button">
+                                        {% trans %}Forms{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-form">
+                                        <a href="form-elements" class="dropdown-item">{% trans %}Basic Elements{% endtrans %}</a>
+                                        <a href="form-validation" class="dropdown-item">{% trans %}Validation{% endtrans %}</a>
+                                        <a href="form-advanced" class="dropdown-item">{% trans %}Advanced Plugins{% endtrans %}</a>
+                                        <a href="form-editors" class="dropdown-item">{% trans %}Editors{% endtrans %}</a>
+                                        <a href="form-uploads" class="dropdown-item">{% trans %}File Upload{% endtrans %}</a>
+                                        <a href="form-xeditable" class="dropdown-item">{% trans %}Xeditable{% endtrans %}</a>
+                                        <a href="form-repeater" class="dropdown-item">{% trans %}Repeater{% endtrans %}</a>
+                                        <a href="form-wizard" class="dropdown-item">{% trans %}Wizard{% endtrans %}</a>
+                                        <a href="form-mask" class="dropdown-item">{% trans %}Mask{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-table"
+                                        role="button">
+                                        {% trans %}Tables{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-table">
+                                        <a href="tables-basic" class="dropdown-item">{% trans %}Bootstrap Basic{% endtrans %}</a>
+                                        <a href="tables-datatable" class="dropdown-item">{% trans %}Datatables{% endtrans %}</a>
+                                        <a href="tables-responsive" class="dropdown-item">{% trans %}Responsive{% endtrans %}</a>
+                                        <a href="tables-editable" class="dropdown-item">{% trans %}Editable{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-charts"
+                                        role="button">
+                                        {% trans %}Charts{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-charts">
+                                        <a href="charts-apex" class="dropdown-item">{% trans %}Apex Chart{% endtrans %}</a>
+                                        <a href="charts-chartjs" class="dropdown-item">{% trans %}Chartjs{% endtrans %}</a>
+                                        <a href="charts-flot" class="dropdown-item">{% trans %}Flot Chart{% endtrans %}</a>
+                                        <a href="charts-knob" class="dropdown-item">{% trans %}Jquery Knob Chart{% endtrans %}</a>
+                                        <a href="charts-sparkline" class="dropdown-item">{% trans %}Sparkline Chart{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-icons"
+                                        role="button">
+                                        {% trans %}Icons{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-icons">
+                                        <a href="icons-unicons" class="dropdown-item">{% trans %}Unicons{% endtrans %}</a>
+                                        <a href="icons-boxicons" class="dropdown-item">{% trans %}Boxicons{% endtrans %}</a>
+                                        <a href="icons-materialdesign" class="dropdown-item">{% trans %}Material Design{% endtrans %}</a>
+                                        <a href="icons-dripicons" class="dropdown-item">{% trans %}Dripicons{% endtrans %}</a>
+                                        <a href="icons-fontawesome" class="dropdown-item">{% trans %}Font Awesome{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-map"
+                                        role="button">
+                                        {% trans %}Maps{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-map">
+                                        <a href="maps-google" class="dropdown-item">{% trans %}Google Maps{% endtrans %}</a>
+                                        <a href="maps-vector" class="dropdown-item">{% trans %}Vector Maps{% endtrans %}</a>
+                                        <a href="maps-leaflet" class="dropdown-item">{% trans %}Leaflet{% endtrans %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+    
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-more" role="button">
+                                <i class="uil-copy me-2"></i>{% trans %}Extra Pages{% endtrans %} <div class="arrow-down"></div>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="topnav-more">
+                                
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-auth"
+                                        role="button">
+                                        {% trans %}Authentication{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-auth">
+                                        <a href="auth-login" class="dropdown-item">{% trans %}Login{% endtrans %}</a>
+                                        <a href="auth-register" class="dropdown-item">{% trans %}Register{% endtrans %}</a>
+                                        <a href="auth-recoverpw" class="dropdown-item">{% trans %}Recover Password{% endtrans %}</a>
+                                        <a href="auth-lock-screen" class="dropdown-item">{% trans %}Lock Screen{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-utility"
+                                        role="button">
+                                        {% trans %}Utility{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-utility">
+                                        <a href="pages-starter" class="dropdown-item">{% trans %}Starter Page{% endtrans %}</a>
+                                        <a href="pages-maintenance" class="dropdown-item">{% trans %}Maintenance{% endtrans %}</a>
+                                        <a href="pages-comingsoon" class="dropdown-item">{% trans %}Coming Soon{% endtrans %}</a>
+                                        <a href="pages-timeline" class="dropdown-item">{% trans %}Timeline{% endtrans %}</a>
+                                        <a href="pages-faqs" class="dropdown-item">{% trans %}FAQs{% endtrans %}</a>
+                                        <a href="pages-pricing" class="dropdown-item">{% trans %}Pricing{% endtrans %}</a>
+                                        <a href="pages-404" class="dropdown-item">{% trans %}Error{% endtrans %} 404</a>
+                                        <a href="pages-500" class="dropdown-item">{% trans %}Error{% endtrans %} 500</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-layout" role="button"
+                               >
+                                <i class="uil-window-section me-2"></i>{% trans %}Layouts{% endtrans %} <div class="arrow-down"></div>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="topnav-layout">
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-layout-verti"
+                                        role="button">
+                                        {% trans %}Vertical{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-layout-verti">
+                                        <a href="layouts-dark-sidebar" class="dropdown-item">{% trans %}Dark Sidebar{% endtrans %}</a>
+                                        <a href="layouts-compact-sidebar" class="dropdown-item">{% trans %}Compact Sidebar{% endtrans %}</a>
+                                        <a href="layouts-icon-sidebar" class="dropdown-item">{% trans %}Icon Sidebar{% endtrans %}</a>
+                                        <a href="layouts-boxed" class="dropdown-item">{% trans %}Boxed Width{% endtrans %}</a>
+                                        <a href="layouts-preloader" class="dropdown-item">{% trans %}Preloader{% endtrans %}</a>
+                                        <a href="layouts-colored-sidebar" class="dropdown-item">{% trans %}Colored Sidebar{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-layout-hori"
+                                        role="button">
+                                        {% trans %}Horizontal{% endtrans %} <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-layout-hori">
+                                        <a href="layouts-horizontal" class="dropdown-item">{% trans %}Horizontal{% endtrans %}</a>
+                                        <a href="layouts-hori-topbar-dark" class="dropdown-item">{% trans %}Dark Topbar{% endtrans %}</a>
+                                        <a href="layouts-hori-boxed-width" class="dropdown-item">{% trans %}Boxed Width{% endtrans %}</a>
+                                        <a href="layouts-hori-preloader" class="dropdown-item">{% trans %}Preloader{% endtrans %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+    
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+    

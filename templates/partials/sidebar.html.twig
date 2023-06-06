@@ -1,0 +1,348 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="vertical-menu">
+
+    <!-- LOGO -->
+    <div class="navbar-brand-box">
+        <a href="{{ path('home') }}" class="logo logo-dark">
+            <span class="logo-sm">
+                <img src="/images/logo-sm.png" alt="" height="22">
+            </span>
+            <span class="logo-lg">
+                <img src="/images/logo-dark.png" alt="" height="20">
+            </span>
+        </a>
+
+        <a href="{{ path('home') }}" class="logo logo-light">
+            <span class="logo-sm">
+                <img src="/images/logo-sm.png" alt="" height="22">
+            </span>
+            <span class="logo-lg">
+                <img src="/images/logo-light.png" alt="" height="20">
+            </span>
+        </a>
+    </div>
+
+    <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+        <i class="fa fa-fw fa-bars"></i>
+    </button>
+
+    <div data-simplebar class="sidebar-menu-scroll">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li class="menu-title">{% trans %}Menu{% endtrans %}</li>
+
+                <li>
+                    <a href="{{ path('home') }}">
+                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end">01</span>
+                        <span>{% trans %}Dashboard{% endtrans %}</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-share-alt"></i>
+                        <span>{% trans %}Users{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li><a href="{{ path('app_user_list')}}">{% trans %}List{% endtrans %}</a></li>
+                        <li><a href="{{ path('app_user_index')}}">{% trans %}Grid{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+
+                <li>
+                    <a href="{{ path('app_area_index') }}">
+                        <i class="uil-home-alt"></i>
+                        <span>{% trans %}Zonas{% endtrans %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_meeting_point_index') }}">
+                        <i class="uil-home-alt"></i>
+                        <span>{% trans %}Lugar Briefing{% endtrans %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_status_index') }}">
+                        <i class="uil-home-alt"></i>
+                        <span>{% trans %}Estado Cliente{% endtrans %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('home') }}">
+                        <i class="uil-home-alt"></i>
+                        <span>{% trans %}Attributions Rep{% endtrans %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('home') }}">
+                        <i class="uil-home-alt"></i>
+                        <span>{% trans %}Etiquetas{% endtrans %}</span>
+                    </a>
+                </li>
+
+
+
+
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-window-section"></i>
+                        <span>{% trans %}Layouts{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow">{% trans %}Vertical{% endtrans %}</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="layouts-dark-sidebar">{% trans %}Dark Sidebar{% endtrans %}</a></li>
+                                <li><a href="layouts-compact-sidebar">{% trans %}Compact Sidebar{% endtrans %}</a></li>
+                                <li><a href="layouts-icon-sidebar">{% trans %}Icon Sidebar{% endtrans %}</a></li>
+                                <li><a href="layouts-boxed">{% trans %}Boxed Width{% endtrans %}</a></li>
+                                <li><a href="layouts-preloader">{% trans %}Preloader{% endtrans %}</a></li>
+                                <li><a href="layouts-colored-sidebar">{% trans %}Colored Sidebar{% endtrans %}</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow">{% trans %}Horizontal{% endtrans %}</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="layouts-horizontal">{% trans %}Horizontal{% endtrans %}</a></li>
+                                <li><a href="layouts-hori-topbar-dark">{% trans %}Dark Topbar{% endtrans %}</a></li>
+                                <li><a href="layouts-hori-boxed-width">{% trans %}Boxed Width{% endtrans %}</a></li>
+                                <li><a href="layouts-hori-preloader">{% trans %}Preloader{% endtrans %}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">{% trans %}Apps{% endtrans %}</li>
+
+                <li>
+                    <a href="calendar" class="waves-effect">
+                        <i class="uil-calender"></i>
+                        <span>{% trans %}Calendar{% endtrans %}</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="chat" class=" waves-effect">
+                        <i class="uil-comments-alt"></i>
+                        <span class="badge rounded-pill bg-warning float-end">New</span>
+                        <span>{% trans %}Chat{% endtrans %}</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-store"></i>
+                        <span>{% trans %}Ecommerce{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="ecommerce-products">{% trans %}Products{% endtrans %}</a></li>
+                        <li><a href="ecommerce-product-detail">{% trans %}Product Detail{% endtrans %}</a></li>
+                        <li><a href="ecommerce-orders">{% trans %}Orders{% endtrans %}</a></li>
+                        <li><a href="ecommerce-customers">{% trans %}Customers{% endtrans %}</a></li>
+                        <li><a href="ecommerce-cart">{% trans %}Cart{% endtrans %}</a></li>
+                        <li><a href="ecommerce-checkout">{% trans %}Checkout{% endtrans %}</a></li>
+                        <li><a href="ecommerce-shops">{% trans %}Shops{% endtrans %}</a></li>
+                        <li><a href="ecommerce-add-product">{% trans %}Add Product{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-envelope"></i>
+                        <span>{% trans %}Email{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="email-inbox">{% trans %}Inbox{% endtrans %}</a></li>
+                        <li><a href="email-read">{% trans %}Read Email{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-invoice"></i>
+                        <span>{% trans %}Invoices{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="invoices-list">{% trans %}Invoice List{% endtrans %}</a></li>
+                        <li><a href="invoices-detail">{% trans %}Invoice Detail{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-book-alt"></i>
+                        <span>{% trans %}Contacts{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="contacts-grid">{% trans %}User Grid{% endtrans %}</a></li>
+                        <li><a href="contacts-list">{% trans %}User List{% endtrans %}</a></li>
+                        <li><a href="contacts-profile">{% trans %}Profile{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">{% trans %}Pages{% endtrans %}</li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-user-circle"></i>
+                        <span>{% trans %}Authentication{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="auth-login">{% trans %}Login{% endtrans %}</a></li>
+                        <li><a href="auth-register">{% trans %}Register{% endtrans %}</a></li>
+                        <li><a href="auth-recoverpw">{% trans %}Recover Password{% endtrans %}</a></li>
+                        <li><a href="auth-lock-screen">{% trans %}Lock Screen{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-file-alt"></i>
+                        <span>{% trans %}Utility{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="pages-starter">{% trans %}Starter Page{% endtrans %}</a></li>
+                        <li><a href="pages-maintenance">{% trans %}Maintenance{% endtrans %}</a></li>
+                        <li><a href="pages-comingsoon">{% trans %}Coming Soon{% endtrans %}</a></li>
+                        <li><a href="pages-timeline">{% trans %}Timeline{% endtrans %}</a></li>
+                        <li><a href="pages-faqs">{% trans %}FAQs{% endtrans %}</a></li>
+                        <li><a href="pages-pricing">{% trans %}Pricing{% endtrans %}</a></li>
+                        <li><a href="pages-404">{% trans %}Error{% endtrans %} 404</a></li>
+                        <li><a href="pages-500">{% trans %}Error{% endtrans %} 500</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">{% trans %}Components{% endtrans %}</li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-flask"></i>
+                        <span>{% trans %}UI Elements{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="ui-alerts">{% trans %}Alerts{% endtrans %}</a></li>
+                        <li><a href="ui-buttons">{% trans %}Buttons{% endtrans %}</a></li>
+                        <li><a href="ui-cards">{% trans %}Cards{% endtrans %}</a></li>
+                        <li><a href="ui-carousel">{% trans %}Carousel{% endtrans %}</a></li>
+                        <li><a href="ui-dropdowns">{% trans %}Dropdowns{% endtrans %}</a></li>
+                        <li><a href="ui-grid">{% trans %}Grid{% endtrans %}</a></li>
+                        <li><a href="ui-images">{% trans %}Images{% endtrans %}</a></li>
+                        <li><a href="ui-lightbox">{% trans %}Lightbox{% endtrans %}</a></li>
+                        <li><a href="ui-modals">{% trans %}Modals{% endtrans %}</a></li>
+                        <li><a href="ui-offcanvas">{% trans %}Offcanvas{% endtrans %}</a></li>
+                        <li><a href="ui-rangeslider">{% trans %}Range Slider{% endtrans %}</a></li>
+                        <li><a href="ui-session-timeout">{% trans %}Session Timeout{% endtrans %}</a></li>
+                        <li><a href="ui-progressbars">{% trans %}Progress Bars{% endtrans %}</a></li>
+                        <li><a href="ui-placeholders">{% trans %}Placeholders{% endtrans %}</a></li>
+                        <li><a href="ui-sweet-alert">{% trans %}Sweet-Alert{% endtrans %}</a></li>
+                        <li><a href="ui-tabs-accordions">{% trans %}Tabs & Accordions{% endtrans %}</a></li>
+                        <li><a href="ui-typography">{% trans %}Typography{% endtrans %}</a></li>
+                        <li><a href="ui-toasts">{% trans %}Toasts{% endtrans %}</a></li>
+                        <li><a href="ui-video">{% trans %}Video{% endtrans %}</a></li>
+                        <li><a href="ui-general">{% trans %}General{% endtrans %}</a></li>
+                        <li><a href="ui-colors">{% trans %}Colors{% endtrans %}</a></li>
+                        <li><a href="ui-rating">{% trans %}Rating{% endtrans %}</a></li>
+                        <li><a href="ui-notifications">{% trans %}Notifications{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="waves-effect">
+                        <i class="uil-shutter-alt"></i>
+                        <span class="badge rounded-pill bg-info float-end">9</span>
+                        <span>{% trans %}Forms{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="form-elements">{% trans %}Basic Elements{% endtrans %}</a></li>
+                        <li><a href="form-validation">{% trans %}Validation{% endtrans %}</a></li>
+                        <li><a href="form-advanced">{% trans %}Advanced Plugins{% endtrans %}</a></li>
+                        <li><a href="form-editors">{% trans %}Editors{% endtrans %}</a></li>
+                        <li><a href="form-uploads">{% trans %}File Upload{% endtrans %}</a></li>
+                        <li><a href="form-xeditable">{% trans %}Xeditable{% endtrans %}</a></li>
+                        <li><a href="form-repeater">{% trans %}Repeater{% endtrans %}</a></li>
+                        <li><a href="form-wizard">{% trans %}Wizard{% endtrans %}</a></li>
+                        <li><a href="form-mask">{% trans %}Mask{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-list-ul"></i>
+                        <span>{% trans %}Tables{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="tables-basic">{% trans %}Bootstrap Basic{% endtrans %}</a></li>
+                        <li><a href="tables-datatable">{% trans %}Datatables{% endtrans %}</a></li>
+                        <li><a href="tables-responsive">{% trans %}Responsive{% endtrans %}</a></li>
+                        <li><a href="tables-editable">{% trans %}Editable{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-chart"></i>
+                        <span>{% trans %}Charts{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="charts-apex">{% trans %}Apex Chart{% endtrans %}</a></li>
+                        <li><a href="charts-chartjs">{% trans %}Chartjs{% endtrans %}</a></li>
+                        <li><a href="charts-flot">{% trans %}Flot Chart{% endtrans %}</a></li>
+                        <li><a href="charts-knob">{% trans %}Jquery Knob Chart{% endtrans %}</a></li>
+                        <li><a href="charts-sparkline">{% trans %}Sparkline Chart{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-streering"></i>
+                        <span>{% trans %}Icons{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="icons-unicons">{% trans %}Unicons{% endtrans %}</a></li>
+                        <li><a href="icons-boxicons">{% trans %}Boxicons{% endtrans %}</a></li>
+                        <li><a href="icons-materialdesign">{% trans %}Material Design{% endtrans %}</a></li>
+                        <li><a href="icons-dripicons">{% trans %}Dripicons{% endtrans %}</a></li>
+                        <li><a href="icons-fontawesome">{% trans %}Font Awesome{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-location-point"></i>
+                        <span>{% trans %}Maps{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="maps-google">{% trans %}Google Maps{% endtrans %}</a></li>
+                        <li><a href="maps-vector">{% trans %}Vector Maps{% endtrans %}</a></li>
+                        <li><a href="maps-leaflet">{% trans %}Leaflet{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-share-alt"></i>
+                        <span>{% trans %}Multi Level{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li><a href="javascript: void(0);">{% trans %}Level{% endtrans %} 1.1</a></li>
+                        <li><a href="javascript: void(0);" class="has-arrow">{% trans %}Level{% endtrans %} 1.2</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="javascript: void(0);">{% trans %}Level{% endtrans %} 2.1</a></li>
+                                <li><a href="javascript: void(0);">{% trans %}Level{% endtrans %} 2.2</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
+<!-- Left Sidebar End -->
