@@ -2,13 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\CustomerCard;
+use App\Entity\Transfer;
+use App\Repository\CustomerCardRepository;
+use App\Repository\MeetingPointRepository;
+use App\Repository\StatusRepository;
+use App\Repository\TransferRepository;
 use App\Repository\UserRepository;
-use Doctrine\Common\Annotations\Reader;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationRequestHandler;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
+use League\Csv\Reader;
+use League\Csv\Statement;
 
 class HomeController extends AbstractController
 {
@@ -45,7 +55,12 @@ class HomeController extends AbstractController
 
 
     #[Route('/traitement_csv', name: 'admin_traitement_csv')]
-    public function traitement_csv(HttpFoundationRequestHandler $request, EntityManagerInterface $manager): Response
+    public function traitement_csv(HttpFoundationRequest $request, EntityManagerInterface $manager, 
+                                    StatusRepository $statusRepository, 
+                                    MeetingPointRepository $meetingPointRepository, 
+                                    UserRepository $userRepository,
+                                    CustomerCardRepository $customerCardRepository,
+                                    TransferRepository $transferRepository): Response
     {
 
         // test des données recues
@@ -68,10 +83,10 @@ class HomeController extends AbstractController
 
             // récupération du token
             $submittedToken = $request->request->get('token');
-
-
-        // 'add-csv' si le token est valide, on peut commencer les traitements !
-        if ($this->isCsrfTokenValid('add-csv', $submittedToken)) {
+            
+            
+            // 'add-csv' si le token est valide, on peut commencer les traitements !
+            if ($this->isCsrfTokenValid('add-csv', $submittedToken)) {
             // a faire dans le traitement
             //load the CSV document from a stream
             /*  $stream = fopen('csv/servicios.csv', 'r'); */
@@ -88,9 +103,9 @@ class HomeController extends AbstractController
             $records = $stmt->process($csv);
             
             // les entités par défaut
-            $status = $this->statusRepository->find(1);
-            $user = $this->userRepository->find(1);
-            $meetingPoint = $this->meetingPointRepository->find(1);
+            $status = $statusRepository->find(1);
+            $user = $userRepository->find(1);
+            $meetingPoint = $meetingPointRepository->find(1);
             
             // début de l'extraction des données du csv
             foreach ($records as $record) {
@@ -113,7 +128,7 @@ class HomeController extends AbstractController
                 $babiesNumber = $numeroPasajeros[5];
 
                 // on essaie de récupérer la fiche pour savoir si on va create or update
-                $customerCardResult = $this->customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
+                $customerCardResult = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
                 // si l'enregistrement existe déja, on va le mettre a jour
                 if ($customerCardResult) {
                     $customerCard = $customerCardResult;
@@ -169,7 +184,7 @@ class HomeController extends AbstractController
                 }
 
                 // on essaie de récupérer la fiche pour savoir si on va create or update
-                $transferResult = $this->transferRepository->findOneBy(['customerCard' => $customerCard]);
+                $transferResult = $transferRepository->findOneBy(['customerCard' => $customerCard]);
                 // $transfer = $this->transferRepository
                 // si l'enregistrement existe déja, on va le mettre a jour
                 if ($transferResult) {
@@ -203,7 +218,7 @@ class HomeController extends AbstractController
             
 
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('home');
         }
         
         else {
