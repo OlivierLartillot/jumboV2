@@ -1,0 +1,52 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <h4 class="mb-1 mt-1">Attributions rep</h4>
+
+                            
+                        <form action={{ path('app_admin_ivan') }} method="GET">
+                            <input name="date" type="date" value="{{date | date('Y-m-d') }}">
+                            <input type="submit">
+                        </form>
+
+                        <a href="{{ path('app_admin_ivan_replist') }}" class="btn btn-secondary my-3">Briefing Rep</a>
+
+                        {% if notClient is defined %} 
+                            
+                            <p class="alert alert-success" role="alert">Pas ou plus de client à attribuer pour cette date.</p>
+
+                            {% else %}
+
+
+                                <p class="alert alert-danger" role="alert">Il reste encore {{ countNonAttributedClients }} client(s)  à attribuer </p>
+
+                                <div class="mb-3">
+                                    Agence: <strong>{{ firstClient.agency }}</strong> <br>
+                                    Hôtel:
+                                    {% for infosTransfer in firstClient.transfers %}
+                                        <strong>{{ infosTransfer.toArrival}}</strong><br/>
+                                    Pax: <strong>A:{{ infosTransfer.adultsNumber }}, N: {{ infosTransfer.childrenNumber}}, B: {{ infosTransfer.babiesNumber}}</strong><br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
+
+                                    {% endfor %}
+
+                                    Nom: <b>{{ firstClient.holder }}</b> <br>
+                                    Date d'arrivée: <b>{{ firstClient.meetingAt | date('d-m-Y') }}</b>
+                                </div>
+
+                            {{ form(form) }}
+                        {% endif %}
+
+                </div>
+                <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i class="mdi mdi-arrow-up-bold me-1"></i>2.65%</span> since last week</p>
+            </div>
+        </div>
+    </div> <!-- end col-->
+</div>
+
+{{ include('partials/footer-regroupement.html.twig') }}

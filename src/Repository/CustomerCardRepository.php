@@ -40,6 +40,28 @@ class CustomerCardRepository extends ServiceEntityRepository
         }
     }
 
+
+
+    /**
+     * @return CustomerCard[] Returns a int, countnumber of items
+     */
+    public function countNumberNonAttributedMeetingsByDate($date): int
+    {
+
+        /* $dateTime = $dateTimeImmutable->format('Y-m-d'); */
+
+        return $this->createQueryBuilder('c')
+             ->select('count(c.id)')
+            ->andWhere('c.staff IS NOT NULL')
+            ->andWhere('c.meetingAt >= :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+
+
     /**
      * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day)
      */

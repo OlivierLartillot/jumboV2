@@ -1,0 +1,146 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
+
+
+  <script type="text/javascript">
+        function imprimer_page(){
+        window.print();
+        }
+    </script>
+
+  <style>
+      @page {
+        size: letter portrait; 
+        margin-top: 2.5cm;
+
+      }
+    @media print {
+
+     /* body {
+        margin: 0.5in 0.15in;
+      } */
+
+    .labels-container {
+        display: grid;
+        grid-template-columns: repeat(2, 4in);
+        grid-template-rows: repeat(5, 2in);
+        gap: 0 0.15in;
+        margin: 0.5in 0.15in;    
+      }
+      .page-break {
+        page-break-inside:avoid;
+        page-break-after:always;
+      }
+
+      .label {
+        display: inline-block;
+        width: 4in;
+        height: 2in;
+        border: 1px solid black;
+        padding: 0px 15px;
+        box-sizing: border-box;
+        border-radius: 10px; 
+        font-size: 15px;
+        line-height: 0.6;
+      }
+      
+
+    .container {
+        display:flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+    }
+    .informations {
+        line-height:0.3;
+        flex-shrink: 3;
+        align-self: flex-start;
+    }
+    .qrcode {
+         flex-shrink: 1;
+         text-align:center;
+    }
+
+    .notImpressed {
+        display: none;
+      }
+    }
+  </style>
+
+<div class="text-center notImpressed">
+	<form action="{{ path('app_admin_stickers_par_date') }}" method="GET">
+		<input name="date" type="date" value="{{date | date('Y-m-d') }}">
+		<input type="submit">
+	</form>
+</div>
+
+<div class="text-center my-3">
+	<form class="notImpressed ">
+		<input class="btn-success .btn-soft-success" id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
+	</form>
+</div>
+
+
+
+<div>
+	{% set i = 1 %} 
+
+	{% for meetingInfos in meetings %}
+			
+		{% if (i == 1) %} 
+			<div class="labels-container">
+		{% endif %} 
+
+
+
+			<div class="label">
+				<p><strong>Nom: </strong> {{ meetingInfos.holder }}</p>
+				<p><strong>Hôtel:</strong> 
+					{% for infosTransfer in meetingInfos.transfers %}
+						{{ infosTransfer.toArrival}}
+					{% endfor %}
+				</p>
+				<p><strong>Reunion de Bienvenue &amp; d'Information</strong></p>
+
+
+				<div class="container">
+
+					<div class="informations">
+						<p><strong>Jour:</strong> Demain</p>
+						<p><strong>Lieu de rencontre:</strong> {{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}}</p>
+						<p><strong>Votre représentant:</strong> {{ meetingInfos.staff }}</p>
+						<p><strong>Whatsapp:</strong> +1 809 723 0945</p>
+					</div>
+
+					<div class="qrcode">
+						{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber != null %}   
+
+							<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
+							<div class="chattez-rep">Chattez Avec Florence</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+
+		{% if (i == 10) %}     
+			</div>
+		{% endif %}
+
+		{# si $i = 10 alors $i == 1 sinon $i++ #}
+		{% if (i == 10) %}  
+			{% set i = 1 %} 
+			<div class="page-break"></div>
+		{% else %}  
+			{% set i = i + 1 %} 
+		{% endif %} 
+
+	{% endfor %}
+
+
+
+	</div>
+</div>
+
+{{ include('partials/footer-regroupement.html.twig') }}

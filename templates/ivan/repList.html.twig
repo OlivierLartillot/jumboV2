@@ -1,0 +1,56 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
+
+
+    <a href="{{ path('app_admin_stickers_par_date') }}" class="btn btn-secondary my-3">Stickers</a>
+
+        <div class="row mb-3">    
+            <form action={{ path('app_admin_ivan_replist') }} method="GET">
+                <input name="date" type="date" value="{{date | date('Y-m-d') }}">
+                <input type="submit">
+            </form>
+        </div>
+
+        {% if countNonAssignedClient > 0 %}
+            <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} clients n'ont pas encore d'heure de meeting assignée"</p>
+        {% else %}
+             <p class="alert alert-success" role="alert">Pas ou plus de client à attribuer pour cette date.</p>
+        {% endif %}
+
+        <div class="row">
+            {% for  key,reps in clientsListByRepAndDate %}
+                    <div class="col-sm-5 mb-3 mb-sm-0">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if (reps is empty) %} 
+                                    <h5 class="card-title">{{ key }} </h5>
+                                        <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p>
+                                {% else %} 
+                                    <h5 class="card-title">{{ key }}</h5>
+                                
+                                    {% set currentStaff = "" %}
+                                    {% for client in reps %}   
+                                        <p class="card-text {{(client.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
+                                            {% for infosTransfer in client.transfers %}
+                                                <strong>{{ infosTransfer.toArrival}}</strong><br/>
+                                                <strong>Pax:</strong> A:{{ infosTransfer.adultsNumber }}, N: {{ infosTransfer.childrenNumber}}, B: {{ infosTransfer.babiesNumber}}<br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
+                                    
+                                            {% endfor %}
+                                            {{ client.holder }} <br> 
+                                            client meeting at: {{ client.getMeetingAtTime }} - {{ client.meetingPoint != null ? client.meetingPoint.name  : "" }}
+                                            {% set currentStaff = client.staff.id %}
+                                        </p>
+                                        <hr>
+                                    {% endfor %}
+                                <a href="{{ path('app_admin_ivan_fiche_par_date', {user: currentStaff })}}" class="btn btn-primary">Modifier Heure / Representant</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div> 
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller;
 
 use App\Entity\MeetingPoint;
 use App\Entity\User;
@@ -13,7 +13,6 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,16 +22,8 @@ class IvanController extends AbstractController
 {
 
 
-    private $adminUrlGenerator;
-
-    public function __construct(AdminUrlGenerator $adminUrlGenerator)
-    {
-        $this->adminUrlGenerator = $adminUrlGenerator;
-    }
-
-
-    // route qui affiche tous les trucs en fonction de la date
-    #[Route('/admin/ivan', name: 'app_admin_ivan',methods:["POST", "GET"])]
+    // route qui affiche tous les rep a attribuer en fonction de la date
+    #[Route('/ivan', name: 'app_admin_ivan',methods:["POST", "GET"])]
     public function index(CustomerCardRepository $customerCardRepository, Request $request, DefineQueryDate $defineQueryDate): Response
     {
 
@@ -68,7 +59,7 @@ class IvanController extends AbstractController
 
             }
             
-            return $this->render('admin/ivan/attributionRepresentants.html.twig', [
+            return $this->render('ivan/attributionRepresentants.html.twig', [
                 'firstClient' => $firstClient,
                 'form' => $form,
                 'controller_name' => 'IvanController',
@@ -78,7 +69,7 @@ class IvanController extends AbstractController
         }  
 
         else {
-            return $this->render('admin/ivan/attributionRepresentants.html.twig', [
+            return $this->render('ivan/attributionRepresentants.html.twig', [
                 'notClient' => true,
                 'controller_name' => 'IvanController',
                 'date' => $date
@@ -90,7 +81,7 @@ class IvanController extends AbstractController
 
     // route qui affiche la liste des rep - client en fonction de la date
     // la liste doit comporter le nombre de client par rep 
-    #[Route('/admin/ivan/replist', name: 'app_admin_ivan_replist',methods:["POST", "GET"])]
+    #[Route('/ivan/replist', name: 'app_admin_ivan_replist',methods:["POST", "GET"])]
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
@@ -101,6 +92,10 @@ class IvanController extends AbstractController
 
         // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
         $repUsers = $userRepository->findAll();
+
+
+        // nombre de clients sans attributions
+        $countNonAssignedClient = $customerCardRepository->countNumberNonAttributedMeetingsByDate($date);
 
         //initialisation du tableau des résultats
         $clientsListByRepAndDate = [];
@@ -115,16 +110,17 @@ class IvanController extends AbstractController
 
         dump($clientsListByRepAndDate);
 
-        return $this->render('admin/ivan/repList.html.twig', [
+        return $this->render('ivan/repList.html.twig', [
             'date' => $date,
-            'clientsListByRepAndDate' => $clientsListByRepAndDate
+            'clientsListByRepAndDate' => $clientsListByRepAndDate,
+            'countNonAssignedClient' => $countNonAssignedClient
         ]);
 
     } 
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/admin/ivan/fiche/{user}/date', name: 'app_admin_ivan_fiche_par_date',methods:["POST", "GET"])]
+    #[Route('/ivan/fiche/{user}/date', name: 'app_admin_ivan_fiche_par_date',methods:["POST", "GET"])]
     public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
@@ -171,7 +167,7 @@ class IvanController extends AbstractController
         dump($user);
  */
 
-        return $this->render('admin/ivan/attributionMeetings.html.twig', [
+        return $this->render('ivan/attributionMeetings.html.twig', [
             "date" => $date,
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
@@ -183,8 +179,8 @@ class IvanController extends AbstractController
 
         // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/admin/ivan/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
-    public function stickersParDate(AdminContext $context, CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
+    #[Route('/ivan/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
+    public function stickersParDate(CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
         $day =  $defineQueryDate->returnDay($request);
@@ -193,14 +189,10 @@ class IvanController extends AbstractController
         // récupérer les cutomerCard correspondant à la meeting date
         $meetings = $customerCardRepository->findByMeetingDate($date);
 
-        $url = $this->adminUrlGenerator->set('date',  $date->format('Y-m-d'))->generateUrl();
 
-
-        return $this->render('admin/ivan/stickers.html.twig', [
+        return $this->render('ivan/stickers.html.twig', [
             "date" => $date,
             "meetings" => $meetings,
-            "context" => $context,
-            "url" => $url 
    
 /*             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 

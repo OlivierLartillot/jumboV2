@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Area;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -48,7 +50,11 @@ class UserType extends AbstractType
                 'expanded' => true
             ])         
             ->add('phoneNumber')
-            ->add('area')
+            ->add('area', EntityType::class, [
+                'class' => Area::class,
+                'placeholder' => 'Choose your area',
+                'autocomplete' => true,
+            ])
         ;
     }
 
