@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<title>CustomerCard</title>
+
+{% block body %}
+    <h1>CustomerCard</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ customer_card.id }}</td>
+            </tr>
+            <tr>
+                <th>ReservationNumber</th>
+                <td>{{ customer_card.reservationNumber }}</td>
+            </tr>
+            <tr>
+                <th>JumboNumber</th>
+                <td>{{ customer_card.jumboNumber }}</td>
+            </tr>
+            <tr>
+                <th>Holder</th>
+                <td>{{ customer_card.holder }}</td>
+            </tr>
+            <tr>
+                <th>Agency</th>
+                <td>{{ customer_card.agency }}</td>
+            </tr>
+            <tr>
+                <th>AdultsNumber</th>
+                <td>{{ customer_card.adultsNumber }}</td>
+            </tr>
+            <tr>
+                <th>ChildrenNumber</th>
+                <td>{{ customer_card.childrenNumber }}</td>
+            </tr>
+            <tr>
+                <th>BabiesNumber</th>
+                <td>{{ customer_card.babiesNumber }}</td>
+            </tr>
+            <tr>
+                <th>StatusUpdatedAt</th>
+                <td>{{ customer_card.statusUpdatedAt ? customer_card.statusUpdatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>MeetingAt</th>
+                <td>{{ customer_card.meetingAt ? customer_card.meetingAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ReservationCancelled</th>
+                <td>{{ customer_card.reservationCancelled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_customer_card_index') }}">back to list</a>
+
+    <a href="{{ path('app_customer_card_edit', {'id': customer_card.id}) }}">edit</a>
+
+    {{ include('customer_card/_delete_form.html.twig') }}
+{% endblock %}

@@ -41,6 +41,7 @@
         "symfony/translation": "6.3.*",
         "symfony/twig-bundle": "6.3.*",
         "symfony/ux-autocomplete": "^2.9",
+        "symfony/ux-dropzone": "^2.9",
         "symfony/validator": "6.3.*",
         "symfony/web-link": "6.3.*",
         "symfony/webapp-meta": "^1.0",

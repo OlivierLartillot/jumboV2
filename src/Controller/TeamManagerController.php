@@ -19,6 +19,9 @@ class TeamManagerController extends AbstractController
 {
 
 
+    
+
+
     // route qui affiche tous les rep a attribuer en fonction de la date
     #[Route('/team-manager', name: 'app_admin_team_manager',methods:["POST", "GET"])]
     public function index(CustomerCardRepository $customerCardRepository, Request $request, DefineQueryDate $defineQueryDate): Response

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CustomerCard;
 use App\Entity\Transfer;
+use App\Form\DropzoneType;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
@@ -19,31 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 use League\Csv\Reader;
 use League\Csv\Statement;
+use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
-/*     public function __construct(Environment $twig)
-    {
-        $this->loader = $twig->getLoader();
-    }
-
-    #[Route('/', name: 'home')]
-    public function index(): Response
-    {
-        return $this->render('index.html.twig');
-    } */
-
-/*     #[Route('/{path}')]
-    public function root($path)
-    {
-        if ($this->loader->exists($path.'.html.twig')) {
-            if ($path == '/' || $path == 'home') {
-                die('Home');
-            }
-            return $this->render($path.'.html.twig');
-        }
-        throw $this->createNotFoundException('The Requested Page Not Found.');
-    } */
 
     #[Route('/', name: 'home' )]
     public function test(UserRepository $userRepository)
@@ -53,6 +33,15 @@ class HomeController extends AbstractController
 
     }
 
+
+    #[Route('/import', name: 'app_import', methods: ['GET', 'POST'] )]
+    public function import()
+    {
+
+        return $this->render('team_manager/import.html.twig', [
+        ]);
+
+    }
 
     #[Route('/traitement_csv', name: 'admin_traitement_csv')]
     public function traitement_csv(HttpFoundationRequest $request, EntityManagerInterface $manager, 
@@ -65,6 +54,10 @@ class HomeController extends AbstractController
 
         // test des données recues
             
+
+
+
+    
 
             // infos sur le csv
             if ($_FILES["fileToUpload"]["error"] > 0) {

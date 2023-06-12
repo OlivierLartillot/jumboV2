@@ -37,12 +37,24 @@
                 <li class="menu-title">{% trans %}Menu{% endtrans %}</li>
 
                 <li>
-                    <a href="{{ path('home') }}">
+                    <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
                         <span>{% trans %}Import{% endtrans %}</span>
                     </a>
                 </li>
 
+                <li class="menu-title">{% trans %}Customers{% endtrans %}</li>
+
+                <li>
+                    <a href="{{ path('app_customer_card_index') }}">
+                        <i class="fas fa-id-card"></i>
+                        <span>{% trans %}Customers Infos{% endtrans %}</span>
+                    </a>
+                </li>
+
+
+
+                
                 <li class="menu-title">{% trans %}Briefing MANAGER{% endtrans %}</li>
 
                 <li>

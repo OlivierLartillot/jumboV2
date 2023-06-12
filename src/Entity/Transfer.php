@@ -184,4 +184,10 @@ class Transfer
 
         return $this;
     }
+
+    public function getTransferHourArrival() {
+        return $this->dateHour->format('H:i');
+    }
+
+
 }
