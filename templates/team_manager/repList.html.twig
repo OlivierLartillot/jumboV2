@@ -6,7 +6,7 @@
     <a href="{{ path('app_admin_stickers_par_date') }}" class="btn btn-secondary my-3">Stickers</a>
 
         <div class="row mb-3">    
-            <form action={{ path('app_admin_ivan_replist') }} method="GET">
+            <form action={{ path('app_admin_team_manager_replist') }} method="GET">
                 <input name="date" type="date" value="{{date | date('Y-m-d') }}">
                 <input type="submit">
             </form>

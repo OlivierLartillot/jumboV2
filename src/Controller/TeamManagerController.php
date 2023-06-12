@@ -2,28 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\MeetingPoint;
 use App\Entity\User;
 use App\Form\RepAttributionType;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IvanController extends AbstractController
+class TeamManagerController extends AbstractController
 {
 
 
     // route qui affiche tous les rep a attribuer en fonction de la date
-    #[Route('/ivan', name: 'app_admin_ivan',methods:["POST", "GET"])]
+    #[Route('/team-manager', name: 'app_admin_team_manager',methods:["POST", "GET"])]
     public function index(CustomerCardRepository $customerCardRepository, Request $request, DefineQueryDate $defineQueryDate): Response
     {
 
@@ -55,23 +52,23 @@ class IvanController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 
                 $customerCardRepository->save($firstClient, true);                
-                return $this->redirect($this->generateUrl('app_admin_ivan'));
+                return $this->redirect($this->generateUrl('app_admin_team_manager'));
 
             }
             
-            return $this->render('ivan/attributionRepresentants.html.twig', [
+            return $this->render('team_manager/attributionRepresentants.html.twig', [
                 'firstClient' => $firstClient,
                 'form' => $form,
-                'controller_name' => 'IvanController',
+                'controller_name' => 'team_managerController',
                 'countNonAttributedClients' => $countNonAttributedClients,
                 'date' => $date
             ]);
         }  
 
         else {
-            return $this->render('ivan/attributionRepresentants.html.twig', [
+            return $this->render('team_manager/attributionRepresentants.html.twig', [
                 'notClient' => true,
-                'controller_name' => 'IvanController',
+                'controller_name' => 'team_managerController',
                 'date' => $date
             ]); 
         } 
@@ -81,7 +78,7 @@ class IvanController extends AbstractController
 
     // route qui affiche la liste des rep - client en fonction de la date
     // la liste doit comporter le nombre de client par rep 
-    #[Route('/ivan/replist', name: 'app_admin_ivan_replist',methods:["POST", "GET"])]
+    #[Route('/team-manager/replist', name: 'app_admin_team_manager_replist',methods:["POST", "GET"])]
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
@@ -110,7 +107,7 @@ class IvanController extends AbstractController
 
         dump($clientsListByRepAndDate);
 
-        return $this->render('ivan/repList.html.twig', [
+        return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
             'clientsListByRepAndDate' => $clientsListByRepAndDate,
             'countNonAssignedClient' => $countNonAssignedClient
@@ -120,7 +117,7 @@ class IvanController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/ivan/fiche/{user}/date', name: 'app_admin_ivan_fiche_par_date',methods:["POST", "GET"])]
+    #[Route('/team_manager/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
     public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
@@ -154,7 +151,7 @@ class IvanController extends AbstractController
             }
 
             $manager->flush();
-            return $this->redirect($this->generateUrl('app_admin_ivan_replist'));
+            return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));
         }
 
 
@@ -167,7 +164,7 @@ class IvanController extends AbstractController
         dump($user);
  */
 
-        return $this->render('ivan/attributionMeetings.html.twig', [
+        return $this->render('team_manager/attributionMeetings.html.twig', [
             "date" => $date,
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
@@ -179,7 +176,7 @@ class IvanController extends AbstractController
 
         // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/ivan/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
+    #[Route('/team_manager/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
     public function stickersParDate(CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
@@ -190,7 +187,7 @@ class IvanController extends AbstractController
         $meetings = $customerCardRepository->findByMeetingDate($date);
 
 
-        return $this->render('ivan/stickers.html.twig', [
+        return $this->render('team_manager/stickers.html.twig', [
             "date" => $date,
             "meetings" => $meetings,
    

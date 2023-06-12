@@ -2,7 +2,7 @@
 
 return [
     'Minible' => 'Minible',
-    'Welcome Back' => 'Willkommen zurück',
+    'Welcome Back' => 'Willkomen zmurück',
     'Dashboard' => 'Instrumententafel',
     'Dashboards' => 'Dashboards',
     'Menu' => 'Speisekarte',

@@ -10,20 +10,18 @@
                     <h4 class="mb-1 mt-1">Attributions rep</h4>
 
                             
-                        <form action={{ path('app_admin_ivan') }} method="GET">
+                        <form action={{ path('app_admin_team_manager') }} method="GET">
                             <input name="date" type="date" value="{{date | date('Y-m-d') }}">
                             <input type="submit">
                         </form>
 
-                        <a href="{{ path('app_admin_ivan_replist') }}" class="btn btn-secondary my-3">Briefing Rep</a>
+                        <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary my-3">Briefing Rep</a>
 
                         {% if notClient is defined %} 
                             
                             <p class="alert alert-success" role="alert">Pas ou plus de client à attribuer pour cette date.</p>
 
                             {% else %}
-
-
                                 <p class="alert alert-danger" role="alert">Il reste encore {{ countNonAttributedClients }} client(s)  à attribuer </p>
 
                                 <div class="mb-3">
