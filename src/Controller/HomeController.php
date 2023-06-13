@@ -14,13 +14,11 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 use League\Csv\Reader;
 use League\Csv\Statement;
-use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
@@ -87,13 +85,6 @@ class HomeController extends AbstractController
             //$csv = Reader::createFromPath($_FILES["fileToUpload"]["tmp_name"], 'r');
             $csv->setDelimiter('|');
             $csv->setHeaderOffset(0);
-
-            //dump($csv->getHeader());
-            //build a statement
-            $stmt = Statement::create() /* ->offset(10)->limit(20) */ ;
-
-            //query your records from the document
-            $records = $stmt->process($csv);
             
             // les entités par défaut
             $status = $statusRepository->find(1);
@@ -101,7 +92,7 @@ class HomeController extends AbstractController
             $meetingPoint = $meetingPointRepository->find(1);
             
             // début de l'extraction des données du csv
-            foreach ($records as $record) {
+            foreach ($csv as $record) {
                 // les entrées possédant ce numéro doivent être ignorée
                 if (($record['Nº Vuelo/Transporte Origen'] == "XX9999") or 
                     ($record['Nº Vuelo/Transporte Destino'] == "XX9999") or 

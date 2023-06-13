@@ -43,10 +43,40 @@ class CustomerCardController extends AbstractController
     #[Route('/{id}', name: 'app_customer_card_show', methods: ['GET'])]
     public function show(CustomerCard $customerCard): Response
     {
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+    
         return $this->render('customer_card/show.html.twig', [
             'customer_card' => $customerCard,
         ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     #[Route('/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository): Response
@@ -75,4 +105,5 @@ class CustomerCardController extends AbstractController
 
         return $this->redirectToRoute('app_customer_card_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }

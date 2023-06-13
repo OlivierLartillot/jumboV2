@@ -66,10 +66,19 @@ class CustomerCard
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: Transfer::class)]
     private Collection $transfers;
 
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: StatusHistory::class, orphanRemoval: true)]
+    private Collection $statusHistories;
+
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferJoan::class)]
+    private Collection $transferJoans;
+
+
     public function __construct()
     {
         $this->customerReports = new ArrayCollection();
         $this->transfers = new ArrayCollection();
+        $this->statusHistories = new ArrayCollection();
+        $this->transferJoans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -320,4 +329,66 @@ class CustomerCard
     {
         return 'Nombre: ' . $this->getHolder() . 'Reservation: ' . $this->getReservationNumber() . ' - Jumbo: ' . $this->getJumboNumber();
     }
+
+    /**
+     * @return Collection<int, StatusHistory>
+     */
+    public function getStatusHistories(): Collection
+    {
+        return $this->statusHistories;
+    }
+
+    public function addStatusHistory(StatusHistory $statusHistory): self
+    {
+        if (!$this->statusHistories->contains($statusHistory)) {
+            $this->statusHistories->add($statusHistory);
+            $statusHistory->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatusHistory(StatusHistory $statusHistory): self
+    {
+        if ($this->statusHistories->removeElement($statusHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($statusHistory->getCustomerCard() === $this) {
+                $statusHistory->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransferJoan>
+     */
+    public function getTransferJoans(): Collection
+    {
+        return $this->transferJoans;
+    }
+
+    public function addTransferJoan(TransferJoan $transferJoan): self
+    {
+        if (!$this->transferJoans->contains($transferJoan)) {
+            $this->transferJoans->add($transferJoan);
+            $transferJoan->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferJoan(TransferJoan $transferJoan): self
+    {
+        if ($this->transferJoans->removeElement($transferJoan)) {
+            // set the owning side to null (unless already changed)
+            if ($transferJoan->getCustomerCard() === $this) {
+                $transferJoan->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

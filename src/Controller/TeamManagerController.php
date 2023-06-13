@@ -121,7 +121,10 @@ class TeamManagerController extends AbstractController
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team_manager/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
-    public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, 
+                                                MeetingPointRepository $meetingPointRepository,  
+                                                UserRepository $userRepository,
+                                                EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
         $day =  $defineQueryDate->returnDay($request);
@@ -130,13 +133,11 @@ class TeamManagerController extends AbstractController
         // attraper la liste des objets correpsondants au representant et au jour 
         $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
         $meetingPoints = $meetingPointRepository->findAll();
-
+        $users = $userRepository->findAll();
 
         if (!empty($_POST) and $request->getMethod() == "POST") { 
 
-           // dd($request);
             foreach ($request->request as $key => $currentRequest) {
-                /* dump($key . ' - ' .$currentRequest); */
                 // convertir la clé en tableau
                 $keyTab = explode("_", $key);
                 // récupérer l'objet correspondant a l id
@@ -151,6 +152,12 @@ class TeamManagerController extends AbstractController
                     $meetingPoint = $meetingPointRepository->find($currentRequest);
                     $currentCustommerCard->setMeetingPoint($meetingPoint);
                 }
+                // si c est l'endroit convertir l objet avec l endroit 
+                else if ($keyTab[0] == 'staff') {
+                    $staff = $userRepository->find($currentRequest);
+                    $currentCustommerCard->setStaff($staff);
+                }
+
             }
 
             $manager->flush();
@@ -171,7 +178,8 @@ class TeamManagerController extends AbstractController
             "date" => $date,
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
-            "user" => $user
+            "user" => $user,
+            "users" => $users
         ]);
     }
 

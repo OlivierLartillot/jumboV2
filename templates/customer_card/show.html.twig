@@ -1,9 +1,621 @@
-<!DOCTYPE html>
+{{ include('partials/header-reproupement.html.twig') }}
 
-<title>CustomerCard</title>
 
-{% block body %}
-    <h1>CustomerCard</h1>
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
+
+        <div class="row mb-4">
+            <div class="col-xl-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <div class="dropdown float-end">
+                                <a class="text-body dropdown-toggle font-size-18" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                    <i class="uil uil-ellipsis-v"></i>
+                                </a>
+                                
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" href="#">Edit</a>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Remove</a>
+                                </div>
+                            </div>
+        
+                        </div>
+
+                        <div class="d-flex align-items-start">
+                            <div class="d-none d-md-block flex-shrink-0 me-4">
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
+                                        <i class="fas fa-id-card text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 align-self-center">
+                                <div class="border-bottom pb-1">
+                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
+                                    <p class="text-muted">
+                                        <i class="me-1">#</i> {{ customer_card.reservationNumber }}
+                                    </p>
+                                    <p>
+                                        {% if customer_card.status|lower == "no show" %}
+                                        <span class="badge rounded-pill bg-danger">{{ customer_card.status }}</span>
+                                    {% else %}
+                                        <span class="badge rounded-pill bg-success">{{ customer_card.status }}</span>
+                                    {% endif %}
+                                    </p>
+
+                                    <hr class="my-4">
+
+                                    <p class="text-muted">
+                                        {{ customer_card.agency }}
+                                    </p>
+                                </div>
+
+
+                                <div class="border-bottom mt-3 pt-1 pb-1">
+
+                                    <p class="text-muted">
+                                        <i class="fas fa-hotel"></i> 
+                                        {% for transfer in customer_card.transfers %} 
+                                            {% if transfer.natureTransfer|lower == "arrivée" %}
+                                                {{ transfer.toArrival }}
+                                            {% elseif  transfer.natureTransfer|lower == "inter hotel" %}
+                                                <br> <i class="fas fa-hotel"></i> {{ transfer.toArrival }}
+                                            {% endif  %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">Adults</p>
+                                            <h5 class="font-size-16 mb-0">{{ customer_card.adultsNumber }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">Children</p>
+                                            <h5 class="font-size-16 mb-0">{{ customer_card.childrenNumber }}</h5>
+                                        </div>
+                                    </div>                                                    
+                                    <div class="col-4">
+                                        <div class="mt-3">BB</p>
+                                            <h5 class="font-size-16 mb-0">{{ customer_card.babiesNumber }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% for transfer in customer_card.transfers %} 
+                                    {% if transfer.natureTransfer|lower == "arrivée" %}
+                                        <div class="row mt-3">
+                                            <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Date</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Hour</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
+                                                </div>
+                                            </div>                                                    
+                                            <div class="col-4">
+                                                <div class="mt-3">Flight #</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {% elseif transfer.natureTransfer|lower == "inter hotel" %}
+                                        <div class="row mt-3">
+                                            <h6><i class="mdi mdi-car"></i> Inter Hotel</h6>
+                                            <div class="col-6">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Date</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Hour</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
+                                                </div>
+                                            </div>                                                    
+                                        </div>
+
+
+                                    {% elseif transfer.natureTransfer|lower == "départ" %}
+                                        <div class="row mt-3">
+                                            <h6><i class="mdi mdi-airplane-takeoff"></i> Departure</h6>
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Date</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Hour</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
+                                                </div>
+                                            </div>                                                    
+                                            <div class="col-4">
+                                                <div class="mt-3">Flight #</p>
+                                                    <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-8">
+                <div class="card mb-0">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#about" role="tab">
+                                <i class="mdi mdi-airplane-landing fs-3"></i>
+                                <span class="d-none d-sm-block">Arrival</span> 
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#tasks" role="tab">
+                                <i class="mdi mdi-car fs-3"></i>
+                                <span class="d-none d-sm-block">Inter Hotel</span> 
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#messages" role="tab">
+                                <i class="mdi mdi-airplane-takeoff fs-3"></i>
+                                <span class="d-none d-sm-block">Departure</span>   
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Tab content -->
+                    <div class="tab-content p-4">
+
+                        {# Arrivée #}
+                        <div class="tab-pane" id="about" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="card border border-primary">
+                                        <div class="card-header bg-transparent border-primary">
+                                            <h5 class="my-0 text-primary"><i class="uil uil-calendar-alt me-3"></i>Date</h5>
+                                        </div><!-- end card-header -->
+                                        <div class="card-body">
+                                            {% for transfer in customer_card.transfers %} 
+                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                                    <h5 class="card-title">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                                {% endif %}
+                                            {% endfor %}            
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
+                                </div><!-- end col-md-4 -->
+            
+                                <div class="col-lg-4">
+                                    <div class="card border border-primary">
+                                        <div class="card-header bg-transparent border-primary">
+                                            <h5 class="my-0 text-primary"><i class="uil uil-clock me-3"></i>Hour</h5>
+                                        </div><!-- end card-header -->
+                                        <div class="card-body">
+                                            {% for transfer in customer_card.transfers %} 
+                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                                    <h5 class="card-title">{{ transfer.transferHourArrival }}</h5>
+                                                {% endif %}
+                                        {% endfor %}
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
+                                </div><!-- end col-md-4 -->
+
+                                 <div class="col-lg-4">
+                                    <div class="card border border-primary">
+                                        <div class="card-header bg-transparent border-primary">
+                                            <h5 class="my-0 text-primary"><i class="fas fa-plane me-3"></i>Flight #</h5>
+                                        </div><!-- end card-header -->
+                                        <div class="card-body">
+                                            {% for transfer in customer_card.transfers %} 
+                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                                    <h5 class="card-title">{{ transfer.flightNumber }}</h5>
+                                                {% endif %}
+                                        {% endfor %}
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
+                                </div><!-- end col-md-4 -->
+            
+                            </div>
+
+                            <hr class="my-4">
+
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="card border border-primary">
+                                        <div class="card-header bg-transparent border-primary">
+                                            <h5 class="my-0 text-primary"><i class="uil uil-arrow-from-right me-3"></i>From</h5>
+                                        </div><!-- end card-header -->
+                                        <div class="card-body">
+                                            {% for transfer in customer_card.transfers %} 
+                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                                    <h5 class="card-title">{{ transfer.fromStart }}</h5>
+                                                {% endif %}
+                                            {% endfor %}            
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
+                                </div><!-- end col-md-4 -->
+            
+                                <div class="col-lg-6">
+                                    <div class="card border border-primary">
+                                        <div class="card-header bg-transparent border-primary">
+                                            <h5 class="my-0 text-primary"><i class="uil uil-arrow-to-right me-3"></i>To</h5>
+                                        </div><!-- end card-header -->
+                                        <div class="card-body">
+                                            {% for transfer in customer_card.transfers %} 
+                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                                    <h5 class="card-title">{{ transfer.toArrival }}</h5>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
+                                </div><!-- end col-md-4 -->
+            
+                            </div>
+
+
+                            <hr class="my-4">
+
+                            <div class="row">
+
+                                {% for transferJoan in customer_card.transferJoans %}
+                                {% if transferJoan.natureTransfer|lower == "llegada" %}
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Transport Company</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                            <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Nature</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.getPrivateCollectiveJoan}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Voucher #</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.voucherNumber}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Vehicle Type</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.vehicleType}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+
+
+
+
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+
+
+                        {# Inter Hotel #}
+                        <div class="tab-pane active" id="tasks" role="tabpanel">
+
+
+
+
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "inter hotel" %}
+                                    <h5 class="card-title">{{ transfer.toArrival }}</h5>
+                                {% endif %}
+                            {% endfor %}
+
+
+
+
+
+                            {% for transferJoan in customer_card.transferJoans %}
+                                {% if transferJoan.natureTransfer|lower == "inter hotel" %}
+
+                                <div class="row">
+
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Transport Company</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                    <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+
+
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+
+
+                        {# Départ #}
+                        <div class="tab-pane" id="messages" role="tabpanel">
+
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "départ" %}
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="uil uil-calendar-alt me-3"></i>Date</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                                    <div class="col-lg-3">
+                                        <div class="card bg-success border-success text-white-50">
+                                            <div class="card-body">
+                                                <h5 class="text-white"><i class="uil uil-check-circle me-3"></i> Pick Up Hour</h5>
+                                                {% for transferJoan in transfer.customerCard.transferJoans  %} 
+                                                    {% if transferJoan.natureTransfer|lower == "salida" %}
+                                                    <p class="text-white">{{ transferJoan.getPickupTime }}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="fas fa-plane me-3"></i> Flight Hour</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.transferHourArrival }}</h5>
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="fas fa-plane me-3"></i> Flight #</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                        <h5 class="card-title">{{ transfer.flightNumber }}</h5>
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <hr class="my-4">
+
+
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "départ" %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="uil uil-arrow-from-right me-3"></i>From</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.fromStart }}</h5>     
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                
+                                    <div class="col-lg-6">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="uil uil-arrow-to-right me-3"></i>To</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.toArrival }}</h5>
+
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                
+                                </div>
+                                {% endif %}
+                            {% endfor %}       
+
+                            <hr class="my-4">
+
+                            <div class="row">
+                                {% for transferJoan in customer_card.transferJoans %}
+                                {% if transferJoan.natureTransfer|lower == "salida" %}
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Transport Company</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                            <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Nature</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.getPrivateCollectiveJoan}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Voucher #</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.voucherNumber}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Vehicle Type</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.vehicleType}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+
+
+
+
+        <div class="row">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="font-size-16 mb-4">TimeLine</h5>
+
+                        <ul class="activity-feed mb-0 ps-2">
+
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                    <li class="feed-item">
+                                        <div class="feed-item-list">
+                                            <p class="text-muted mb-1">Arrival: {{ transfer.dateHour | date('d-m-Y') }}</p>
+                                            {#  
+                                                <h5 class="font-size-16">UI/UX Designer</h5>
+                                                <p>Abc Company</p>
+                                                <p class="text-muted">To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words. If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual</p> 
+                                            #}
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            <li class="feed-item">
+                                <div class="feed-item-list">
+                                    <p class="text-muted mb-1">Status: No show</p>
+                                    <p class="text-muted">By ben at 10:00 le 05-10-2023</p>
+                                </div>
+                            </li>
+
+                            <li class="feed-item">
+                                <div class="feed-item-list">
+                                    <p class="text-muted mb-1">Meeting: {{ customer_card.meetingAt | date('d-m-Y')}}</p>
+                                    <p class="text-muted">with ben at 10:00 à Réception de l'hotel</p>
+                                </div>
+                            </li>
+
+
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "inter hotel" %}
+                                    <li class="feed-item">
+                                        <div class="feed-item-list">
+                                            <p class="text-muted mb-1">Inter Hotel: {{ transfer.dateHour | date('d-m-Y') }}</p>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}        
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "départ" %}
+                                    <li class="feed-item">
+                                        <div class="feed-item-list">
+                                            <p class="text-muted mb-1">Departure: {{ transfer.dateHour | date('d-m-Y') }}</p>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+
+
+
+{#     <h1>CustomerCard</h1>
 
     <table class="table">
         <tbody>
@@ -59,4 +671,4 @@
     <a href="{{ path('app_customer_card_edit', {'id': customer_card.id}) }}">edit</a>
 
     {{ include('customer_card/_delete_form.html.twig') }}
-{% endblock %}
+ #}

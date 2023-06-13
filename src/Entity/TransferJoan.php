@@ -56,6 +56,13 @@ class TransferJoan
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $babiesNumber = null;
 
+    #[ORM\ManyToOne(inversedBy: 'transferJoans')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?customerCard $customerCard = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $natureTransfer = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,9 +128,9 @@ class TransferJoan
         return $this;
     }
 
-    public function getPickupTime(): ?\DateTimeImmutable
+    public function getPickupTime()
     {
-        return $this->pickupTime;
+        return $this->pickupTime->format('H:i');
     }
 
     public function setPickupTime(\DateTimeImmutable $pickupTime): self
@@ -225,6 +232,30 @@ class TransferJoan
     public function setBabiesNumber(?int $babiesNumber): self
     {
         $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+
+    public function getCustomerCard(): ?customerCard
+    {
+        return $this->customerCard;
+    }
+
+    public function setCustomerCard(?customerCard $customerCard): self
+    {
+        $this->customerCard = $customerCard;
+
+        return $this;
+    }
+
+    public function getNatureTransfer(): ?string
+    {
+        return $this->natureTransfer;
+    }
+
+    public function setNatureTransfer(string $natureTransfer): self
+    {
+        $this->natureTransfer = $natureTransfer;
 
         return $this;
     }

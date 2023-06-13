@@ -56,10 +56,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'staff', targetEntity: CustomerCard::class)]
     private Collection $customerCards;
 
+    #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: StatusHistory::class)]
+    private Collection $statusHistories;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->customerCards = new ArrayCollection();
+        $this->statusHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,6 +250,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this->getUserIdentifier();
+    }
+
+    /**
+     * @return Collection<int, StatusHistory>
+     */
+    public function getStatusHistories(): Collection
+    {
+        return $this->statusHistories;
+    }
+
+    public function addStatusHistory(StatusHistory $statusHistory): self
+    {
+        if (!$this->statusHistories->contains($statusHistory)) {
+            $this->statusHistories->add($statusHistory);
+            $statusHistory->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatusHistory(StatusHistory $statusHistory): self
+    {
+        if ($this->statusHistories->removeElement($statusHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($statusHistory->getUpdatedBy() === $this) {
+                $statusHistory->setUpdatedBy(null);
+            }
+        }
+
+        return $this;
     }
 
 }

@@ -20,53 +20,57 @@
                         </div>
                     </div>
                 </div>
-
-
-                        <!-- end row -->
   
-                           
+                <div class="table-responsive mb-4">
+                    <form action="" method="POST">
+                    <table class="table table-centered table-striped table-nowrap mb-0">
+                    {# <table class="table table-striped border shadow"> #}
+                        <thead>
+                            <tr>
+                                <th scope="col">Hotel</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Time</th>
+                                <th scope="col">Place</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for client in attributionClientsByRepAndDate %}
+                                    <tr>
+                                        <td>
+                                        {% for infosTransfer in client.transfers %}
+                                            {{ infosTransfer.toArrival}}
+                                        {% endfor %}
+                                        </td>
+                                        <td>{{ client.holder }}</td> 
+                                        <td> <input type="time" value="{{ client.getMeetingAtTime}}" name="hour_{{ client.id }}"/></td> 
+                                        <td> 
+                                            <select name="staff_{{ client.id }}">
+                                                {% for user in users %}
+                                                    {% if "ROLE_REP" in user.roles %}
+                                                        <option value="{{user.id}}" {{ user.id == client.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td> 
+                                        <td>
+                                            <select name="meetingPoint_{{ client.id }}">
+                                                {% for meetingPoint in meetingPoints %}
 
-                    <div class="table-responsive mb-4">
-                        <form action="" method="POST">
-                        <table class="table table-centered table-striped table-nowrap mb-0">
-                        {# <table class="table table-striped border shadow"> #}
-                            <thead>
-                                <tr>
-                                    <th scope="col">Hotel</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Place</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    {% for client in attributionClientsByRepAndDate %}
-                                        <tr>
-                                            <td>
-                                            {% for infosTransfer in client.transfers %}
-                                                {{ infosTransfer.toArrival}}
-                                            {% endfor %}
-                                            </td>
-                                            <td>{{ client.holder }}</td> 
-                                            <td> <input type="time" value="{{ client.getMeetingAtTime}}" name="hour_{{ client.id }}"/></td> 
-                                            <td>
-                                                <select name="meetingPoint_{{ client.id }}" id="pet-select">
-                                                    {% for meetingPoint in meetingPoints %}
+                                                    {% if  client.meetingPoint is not null %}
+                                                        <option value="{{meetingPoint.id}}" {{ meetingPoint.id == client.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
+                                                    {% else %}
+                                                        <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td> 
+                                    </tr>
+                            
+                                {% endfor %}
 
-                                                        {% if  client.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == client.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
-                                                        {% else %}
-                                                            <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                        </tr>
-                                
-                                    {% endfor %}
-
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
+                </div>
 
                     <input type="submit">
                 </form>
