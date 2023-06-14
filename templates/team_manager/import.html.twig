@@ -1,73 +1,63 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Minibles', title: 'Bienvenue Sur le Kino Dashboards'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Forms', title: 'File Upload'}) }}
 
                 <div class="page-content">
                     <div class="container-fluid">
-
-                        {{ include('partials/page-title.html.twig', {pagetitle: 'Forms', title: 'File Upload'}) }}
-{# 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body">
-        
-                                        <h4 class="card-title">Dropzone</h4>
-                                        <p class="card-title-desc">DropzoneJS is an open source library
-                                            that provides drag’n’drop file uploads with image previews.
-                                        </p>
-        
-                                        <div>
-                                            <form action="#" class="dropzone">
-                                                <div class="fallback">
-                                                    <input name="file" type="file" multiple="multiple">
-                                                </div>
-                                                <div class="dz-message needsclick">
-                                                    <div class="mb-3">
-                                                        <i class="display-4 text-muted uil uil-cloud-upload"></i>
-                                                    </div>
-                                                    
-                                                    <h4>Drop files here or click to upload.</h4>
-                                                </div>
-                                            </form>
-                                        </div>
-        
-                                        <div class="text-center mt-4">
-                                            <button type="button" class="btn btn-primary waves-effect waves-light">Send Files</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div> <!-- end row --> #}
- 
-
 
 
                         <div class="row">
                             <div class="col">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="float-end mt-2">
-                                            <div id="total-revenue-chart"></div>
-                                        </div>
                                         <div>
-                                            <h4 class="mb-1 mt-1">Importation du CSV</h4>
-                                            <form action="{{ path('admin_traitement_csv') }}" method="post" enctype="multipart/form-data">
-                                                <div> 
-                                                    <input type="file" name="fileToUpload" id="fileToUpload">
+
+                                            <form name="drag_and_drop" method="post" action="/traitement_csv" enctype="multipart/form-data" class="dropzone dz-clickable">
+                                                <div class="dz-message needsclick">
+                                                    
+
+                                                        <div class="mt-4" data-controller="symfony--ux-dropzone--dropzone">
+                                                            <input type="file" id="drag_and_drop_name" name="drag_and_drop[name]" required="required" placeholder="Drag and drop or browse" data-controller="" class="dropzone-input" data-symfony--ux-dropzone--dropzone-target="input" style="display: block;">
+
+                                                            <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder" style="display: block;">
+                                                                <div class="mb-3">
+                                                                    <i class="display-4 text-muted uil uil-cloud-upload"></i>
+                                                                </div>
+                                                
+                                                                    <h4>Drop files here or click to upload.</h4>
+                                                            </div>
+
+                                                            <div class="dropzone-preview" data-symfony--ux-dropzone--dropzone-target="preview" style="display: none">
+                                                                <button class="dropzone-preview-button" type="button" data-symfony--ux-dropzone--dropzone-target="previewClearButton"></button>
+
+                                                                <div class="dropzone-preview-image" style="display: none; background-image: none;" data-symfony--ux-dropzone--dropzone-target="previewImage">
+                                                                </div>
+
+                                                                <div data-symfony--ux-dropzone--dropzone-target="previewFilename" class="dropzone-preview-filename">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <small>        </small>
+
+                                                        <div class="form-error">
+
+                                                        </div>
+                                                
                                                 </div>
-
-                                                <input type="hidden" name="token" value="{{ csrf_token('add-csv') }}"/>
-
-                                                <input type="submit" name="submit">
+                                                <div class="text-center">
+                                                    <button class="my-5 btn btn-primary waves-effect waves-light">Save</button>
+                                                </div>
+                                                    <input type="hidden" name="token" value="{{ csrf_token('upload-item') }}"/>
                                             </form>
                                         </div>
-                                        <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i class="mdi mdi-arrow-up-bold me-1"></i>2.65%</span> since last week
-                                        </p>
+
                                     </div>
                                 </div>
                             </div> <!-- end col-->
                         </div>
-
+                    </div>
+                </div>
 
 {{ include('partials/footer-regroupement.html.twig') }}
+
+

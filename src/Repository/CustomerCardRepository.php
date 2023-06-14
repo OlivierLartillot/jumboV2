@@ -107,6 +107,48 @@ class CustomerCardRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return CustomerCard[] Returns an array by the search User input text 
+     */
+    public function search($input): array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('c')
+            ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
+            ->andWhere('c.reservationNumber LIKE :reservationNumber 
+                        OR c.holder LIKE :holder
+                        OR c.jumboNumber LIKE :jumboNumber
+                        OR transferJoan.voucherNumber LIKE :voucherNumber
+                        ')
+            ->setParameter('reservationNumber', '%'.$input.'%')
+            ->setParameter('holder', '%'.$input.'%')
+            ->setParameter('jumboNumber', '%'.$input.'%')
+            ->setParameter('voucherNumber', '%'.$input.'%')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+ /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by meeting date (day) and 
+     */
+    public function agenciesList(): array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('c.agency')
+            ->distinct()
+            ->orderBy('c.agency', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+
 
 //    public function findOneBySomeField($value): ?CustomerCard
 //    {

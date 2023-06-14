@@ -22,6 +22,8 @@
         
                         </div>
 
+
+                        <!-- Fiche client -->
                         <div class="d-flex align-items-start">
                             <div class="d-none d-md-block flex-shrink-0 me-4">
                                 <div class="avatar-sm">
@@ -45,7 +47,7 @@
                                     </p>
 
                                     <hr class="my-4">
-
+                                    <h5>Agency:</h5>
                                     <p class="text-muted">
                                         {{ customer_card.agency }}
                                     </p>
@@ -86,7 +88,7 @@
                                     </div>
                                 </div>
 
-                                {% for transfer in customer_card.transfers %} 
+{#                                 {% for transfer in customer_card.transfers %} 
                                     {% if transfer.natureTransfer|lower == "arrivée" %}
                                         <div class="row mt-3">
                                             <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
@@ -150,7 +152,7 @@
                                         </div>
 
                                     {% endif %}
-                                {% endfor %}
+                                {% endfor %} #}
 
                             </div>
                         </div>
@@ -158,24 +160,25 @@
                 </div>
             </div>
 
+            <!-- Zone Tab -->
             <div class="col-xl-8">
                 <div class="card mb-0">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#about" role="tab">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#arrival" role="tab">
                                 <i class="mdi mdi-airplane-landing fs-3"></i>
                                 <span class="d-none d-sm-block">Arrival</span> 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#tasks" role="tab">
+                            <a class="nav-link" data-bs-toggle="tab" href="#interHotel" role="tab">
                                 <i class="mdi mdi-car fs-3"></i>
                                 <span class="d-none d-sm-block">Inter Hotel</span> 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#messages" role="tab">
+                            <a class="nav-link" data-bs-toggle="tab" href="#departure" role="tab">
                                 <i class="mdi mdi-airplane-takeoff fs-3"></i>
                                 <span class="d-none d-sm-block">Departure</span>   
                             </a>
@@ -185,7 +188,7 @@
                     <div class="tab-content p-4">
 
                         {# Arrivée #}
-                        <div class="tab-pane" id="about" role="tabpanel">
+                        <div class="tab-pane active" id="arrival" role="tabpanel">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="card border border-primary">
@@ -296,7 +299,7 @@
                                                 <h5 class="my-0 text-primary">Nature</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transferJoan.getPrivateCollectiveJoan}}</h5>
+                                                <h5 class="card-title">{{ transferJoan.getPrivateCollectiveJoan }}</h5>
                                                     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
@@ -342,26 +345,76 @@
 
 
                         {# Inter Hotel #}
-                        <div class="tab-pane active" id="tasks" role="tabpanel">
 
+                       <div class="tab-pane" id="interHotel" role="tabpanel">
 
+                            {% for transfer in customer_card.transfers %} 
+                                {% if transfer.natureTransfer|lower == "inter hotel" %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="uil uil-calendar-alt me-3"></i>Date</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                                    <div class="col-lg-6">
+                                        <div class="card bg-success border-success text-white-50">
+                                            <div class="card-body">
+                                                <h5 class="text-white"><i class="uil uil-check-circle me-3"></i> Pick Up Hour</h5>
+                                                {% for transferJoan in transfer.customerCard.transferJoans  %} 
+                                                    {% if transferJoan.natureTransfer|lower == "inter hotel" %}
+                                                    <p class="text-white">{{ transferJoan.getPickupTime }}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <hr class="my-4">
 
 
                             {% for transfer in customer_card.transfers %} 
                                 {% if transfer.natureTransfer|lower == "inter hotel" %}
-                                    <h5 class="card-title">{{ transfer.toArrival }}</h5>
-                                {% endif %}
-                            {% endfor %}
-
-
-
-
-
-                            {% for transferJoan in customer_card.transferJoans %}
-                                {% if transferJoan.natureTransfer|lower == "inter hotel" %}
-
                                 <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="uil uil-arrow-from-right me-3"></i>From</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.fromStart }}</h5>     
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                
+                                    <div class="col-lg-6">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary"><i class="uil uil-arrow-to-right me-3"></i>To</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transfer.toArrival }}</h5>
 
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+                
+                                </div>
+                                {% endif %}
+                            {% endfor %}       
+
+                            <hr class="my-4">
+
+                            <div class="row">
+                                {% for transferJoan in customer_card.transferJoans %}
+                                {% if transferJoan.natureTransfer|lower == "inter hotel" %}
 
                                     <div class="col-lg-3">
                                         <div class="card border border-primary">
@@ -369,23 +422,58 @@
                                                 <h5 class="my-0 text-primary">Transport Company</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                    <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                            <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
                                                     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
 
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Nature</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.getPrivateCollectiveJoan}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
 
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Voucher #</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.voucherNumber}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
 
-                                </div>
-                                {% endif %}
-                            {% endfor %}
+                                    <div class="col-lg-3">
+                                        <div class="card border border-primary">
+                                            <div class="card-header bg-transparent border-primary">
+                                                <h5 class="my-0 text-primary">Vehicle Type</h5>
+                                            </div><!-- end card-header -->
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ transferJoan.vehicleType}}</h5>
+                                                    
+                                            </div><!-- end card-body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col-md-4 -->
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+
                         </div>
 
 
-
                         {# Départ #}
-                        <div class="tab-pane" id="messages" role="tabpanel">
+                        <div class="tab-pane" id="departure" role="tabpanel">
 
                             {% for transfer in customer_card.transfers %} 
                                 {% if transfer.natureTransfer|lower == "départ" %}
@@ -607,8 +695,82 @@
 
                 </div>
             </div>
-        </div>
+        
+            <div class="col-xl-8">
+                <div class="card mb-0">
 
+                    <div class="card-body">
+                        <h5 class="font-size-16 mb-4">Comments => Revoir le User dans l enregistrement du formulaire</h5>
+                        <div class=" align-items-start border-bottom py-4 ps-3">
+
+                            {% for comment in comments %}
+                            <div class="">
+                                <h5 class="font-size-15 mb-1">
+                                    <small class="text-muted float-end pe-3">{{ comment.createdAt|date('d-m-Y') }} at {{ comment.getCreatedAtTime }}</small><br>
+                                    <small class="text-muted float-end pe-3">{{ comment.createdBy }} </small>
+                                </h5>
+                                <p class="text-muted">{{ comment.content }}</p>
+                                <p class="text-muted"><a href="{{ asset('images/comments_medias/'~ comment.media ) }}" target="blank">{{ comment.media }}</a></p>
+                                {% if comment.predefinedCommentsMessages is not null %}
+                                <p class="text-muted">{{ comment.predefinedCommentsMessages.messageToDisplay }}</p>
+                                {% endif %}
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <hr class="p-1">
+
+                    <div class="border rounded mt-4">
+                        <div class="px-2 py-1 ">
+                        
+                        {{ form_start(form) }}
+
+
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-control">
+                                    {{ form_label(form.media) }}
+                                    {{ form_widget(form.media) }}
+                                    <small>{{ form_help(form.media) }}</small>
+
+                                    <div class="form-error">
+                                        {{ form_errors(form.media) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-control rows='20'">
+                                    {{ form_label(form.predefinedCommentsMessages) }}
+                                    {{ form_widget(form.predefinedCommentsMessages) }}
+                                    <small>{{ form_help(form.predefinedCommentsMessages) }}</small>
+
+                                    <div class="form-error">
+                                        {{ form_errors(form.predefinedCommentsMessages) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="form-control">
+                                {{ form_label(form.content) }}
+                                {{ form_widget(form.content) }}
+
+                                <small>{{ form_help(form.content) }}</small>
+
+                                <div class="form-error">
+                                    {{ form_errors(form.content) }}
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary waves-effect waves-light">{{ button_label|default('Save') }}</button>
+                        {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- END ROW-->
 
 
 {{ include('partials/footer-regroupement.html.twig') }}

@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\CustomerCard;
+use App\Entity\DragAndDrop;
 use App\Entity\Transfer;
+use App\Form\DragAndDropType;
 use App\Form\DropzoneType;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
@@ -16,9 +18,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
+use Symfony\Component\HttpFoundation\Request;
 use League\Csv\Reader;
-use League\Csv\Statement;
+
 
 class HomeController extends AbstractController
 {
@@ -33,16 +35,26 @@ class HomeController extends AbstractController
 
 
     #[Route('/import', name: 'app_import', methods: ['GET', 'POST'] )]
-    public function import()
+    public function import(Request $request)
     {
 
+        $dragAndDrop = new DragAndDrop();
+        $form = $this->createForm(DragAndDropType::class, $dragAndDrop, [
+                'action' => $this->generateUrl('admin_traitement_csv'),
+        ] );
+       $form->handleRequest($request);
+
+
+
+
         return $this->render('team_manager/import.html.twig', [
+            'form' => $form
         ]);
 
     }
 
     #[Route('/traitement_csv', name: 'admin_traitement_csv')]
-    public function traitement_csv(HttpFoundationRequest $request, EntityManagerInterface $manager, 
+    public function traitement_csv(Request $request, EntityManagerInterface $manager, 
                                     StatusRepository $statusRepository, 
                                     MeetingPointRepository $meetingPointRepository, 
                                     UserRepository $userRepository,
@@ -50,13 +62,22 @@ class HomeController extends AbstractController
                                     TransferRepository $transferRepository): Response
     {
 
+
+
+        $submittedToken = $request->request->get('token');
+
+        // 'delete-item' is the same value used in the template to generate the token
+        if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
+            // ... do something, like deleting an object
+           // redirige vers page erreur token
+           dd('stop erreur token');
+        }
+
+
+        dd('ok le token est bon');
+
         // test des données recues
             
-
-
-
-    
-
             // infos sur le csv
             if ($_FILES["fileToUpload"]["error"] > 0) {
                 die("Erreur lors de l'upload du fichier. Code d'erreur : " . $_FILES["fileToUpload"]["error"]);

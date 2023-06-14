@@ -1,10 +1,118 @@
-{{ include('partials/header-reproupement.html.twig') }}
+{{ include('partials/main.html.twig') }}
+
+    <head>
+
+        {{ include('partials/title-meta.html.twig', {title: 'Bienvenue Sur le Kino Dashboard'}) }}
+
+        {{ include('partials/head-css.html.twig') }}
+
+        <!-- plugin css -->
+        <link href="/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+        <link href="/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+        <link href="/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+        <link href="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/libs/@chenfengyuan/datepicker/datepicker.min.css">
+
+        <!-- datepicker css -->
+        <link rel="stylesheet" href="/libs/flatpickr/flatpickr.min.css">
+
+        {{ include('partials/head-css.html.twig') }}
+
+    </head>
+
+    {{ include('partials/body.html.twig') }}
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
 
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
 
+<form method="GET">
+    <div class="row">
+        <div class="col-lg-6">
+                <div class="mb-3">
+                    <label class="form-label">Search date</label>
+                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
+                        <input type="text" class="form-control" name="dateStart" placeholder="Start Date" />
+                        <input type="text" class="form-control" name="dateEnd" placeholder="End Date" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-   
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="" selected>Nature Transfer</option>
+                    <option value="1">Arrival</option>
+                    <option value="2">Inter Hotel</option>
+                    <option value="3">Departure</option>
+                </select>
+                <label for="floatingSelectGrid">Works with selects</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="" selected>Status</option>
+                    {% for status in statusList%}
+                        {{ dump(status) }}
+                        <option value="{{ status.id }}">{{ status.name }}</option>
+                    {% endfor %}
+
+                </select>
+                <label for="floatingSelectGrid">Works with selects</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                        <option value="" selected>Agencies</option>
+                        {% for agency in agenciesList%}
+                            <option value="{{ agency.agency }}">{{ agency.agency }}</option>
+                        {% endfor %}
+                </select>
+                <label for="floatingSelectGrid">Select Agency</label>
+            </div>
+        </div>        
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name">
+                <label for="floatingnameInput">Flight Number</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name">
+                <label for="floatingnameInput">Name, # RSA, # Voucher, # Jumbo </label>
+            </div>
+        </div>
+        <div class="text-center text-md-start col-md-2 ">
+            <input type="submit" class="btn btn-primary px-5 py-3">
+        </div>
+
+    </div>
+
+
+
+</form>
+
+
+
+
 
 
                         <div class="row">
@@ -57,7 +165,6 @@
                                                     </p>
                                                 </div>
 
-                                                <a href=""> Show more</a>
 
                                                 <div class="row">
                                                     <div class="col-4">
@@ -79,9 +186,11 @@
                                                     </div>
                                                 </div>
 
+                                                <a href="" class="badge bg-primary"> Show more</a>
+
                                                 {% for transfer in customer_card.transfers %} 
                                                     {% if transfer.natureTransfer == "Arrivée" %}
-                                                        <div class="row mt-3">
+                                                        <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
                                                             <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
                                                             <div class="col-4">
                                                                 <div class="mt-3">
@@ -103,7 +212,7 @@
                                                         </div>
 
                                                     {% elseif transfer.natureTransfer == "Inter Hotel" %}
-                                                        <div class="row mt-3">
+                                                        <div class="row mt-3 p-3 shadow-lg  border border-1 border-primary rounded">
                                                             <h6><i class="mdi mdi-car"></i> Inter Hotel</h6>
                                                             <div class="col-6">
                                                                 <div class="mt-3">
@@ -121,7 +230,7 @@
 
 
                                                     {% elseif transfer.natureTransfer == "Départ" %}
-                                                        <div class="row mt-3">
+                                                        <div class="row mt-3 p-3 shadow-lg  border border-1 border-primary rounded">
                                                             <h6><i class="mdi mdi-airplane-takeoff"></i> Departure</h6>
                                                             <div class="col-4">
                                                                 <div class="mt-3">
@@ -170,61 +279,36 @@
 
 
 
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
 
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+        </div>
+        <!-- END layout-wrapper -->
 
+        {{ include('partials/right-sidebar.html.twig') }}
 
+        {{ include('partials/vendor-scripts.html.twig') }}
 
+        <!-- plugins -->
+        <script src="/libs/select2/js/select2.min.js"></script>
+        <script src="/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+        <script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script src="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+        <script src="/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+        <script src="/libs/@chenfengyuan/datepicker/datepicker.min.js"></script>
 
+        <!-- datepicker js -->
+        <script src="/libs/flatpickr/flatpickr.min.js"></script>
 
+        <!-- init js -->
+        <script src="/js/pages/form-advanced.init.js"></script>
 
+        <!-- App js -->
+        <script src="/js/app.js"></script>
 
-
-
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>ReservationNumber</th>
-                <th>JumboNumber</th>
-                <th>Holder</th>
-                <th>Agency</th>
-                <th>AdultsNumber</th>
-                <th>ChildrenNumber</th>
-                <th>BabiesNumber</th>
-                <th>StatusUpdatedAt</th>
-                <th>MeetingAt</th>
-                <th>ReservationCancelled</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for customer_card in customer_cards %}
-            <tr>
-                <td>{{ customer_card.id }}</td>
-                <td>{{ customer_card.reservationNumber }}</td>
-                <td>{{ customer_card.jumboNumber }}</td>
-                <td>{{ customer_card.holder }}</td>
-                <td>{{ customer_card.agency }}</td>
-                <td>{{ customer_card.adultsNumber }}</td>
-                <td>{{ customer_card.childrenNumber }}</td>
-                <td>{{ customer_card.babiesNumber }}</td>
-                <td>{{ customer_card.statusUpdatedAt ? customer_card.statusUpdatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ customer_card.meetingAt ? customer_card.meetingAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ customer_card.reservationCancelled ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_customer_card_show', {'id': customer_card.id}) }}">show</a>
-                    <a href="{{ path('app_customer_card_edit', {'id': customer_card.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_customer_card_new') }}">Create new</a>
-
-{{ include('partials/footer-regroupement.html.twig') }}
+    </body>
+</html>

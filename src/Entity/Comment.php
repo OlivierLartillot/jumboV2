@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +17,7 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
@@ -26,6 +29,26 @@ class Comment
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?customerCard $customerCard = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $media = null;
+
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    private ?PredefinedCommentsMessages $predefinedCommentsMessages = null;
+
+
+
+
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTimeImmutable("now");
+        $this->updatedAt = new DateTimeImmutable("now");
+    }
 
     public function getId(): ?int
     {
@@ -68,6 +91,10 @@ class Comment
         return $this;
     }
 
+    public function getCreatedAtTime() {
+        return $this->createdAt->format('H:i');
+    }
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -79,4 +106,42 @@ class Comment
 
         return $this;
     }
+
+    public function getCustomerCard(): ?customerCard
+    {
+        return $this->customerCard;
+    }
+
+    public function setCustomerCard(?customerCard $customerCard): self
+    {
+        $this->customerCard = $customerCard;
+
+        return $this;
+    }
+
+    public function getMedia(): ?string
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?string $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
+    public function getPredefinedCommentsMessages(): ?PredefinedCommentsMessages
+    {
+        return $this->predefinedCommentsMessages;
+    }
+
+    public function setPredefinedCommentsMessages(?PredefinedCommentsMessages $predefinedCommentsMessages): self
+    {
+        $this->predefinedCommentsMessages = $predefinedCommentsMessages;
+
+        return $this;
+    }
+
+
 }
