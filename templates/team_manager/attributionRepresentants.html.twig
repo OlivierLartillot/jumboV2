@@ -9,7 +9,12 @@
                 <div>
                     <h4 class="mb-1 mt-1">Attributions rep</h4>
 
-                            
+                        <div class="bg-danger">
+                            <p>Trouver la premiere occurence du jour qui n a pas de staff</p>
+                            <p>Afficher le couple hotel - agence</p>
+                            <p>valider le staff pour tous les couples hotels-agence qui sont égaux a cet objet</p>
+                            <p>QUANTITée de PAX pour ce couple</p>
+                        </div>
                         <form action={{ path('app_admin_team_manager') }} method="GET">
                             <input name="date" type="date" value="{{date | date('Y-m-d') }}">
                             <input type="submit">

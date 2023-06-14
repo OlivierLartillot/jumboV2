@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
+use App\Entity\TransferJoan;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
 use App\Repository\CommentRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\StatusRepository;
+use App\Repository\TransferJoanRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,12 +22,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerCardController extends AbstractController
 {
     #[Route('/', name: 'app_customer_card_index', methods: ['GET'])]
-    public function index(Request $request, CustomerCardRepository $customerCardRepository, StatusRepository $statusRepository): Response
+    public function index(Request $request, CustomerCardRepository $customerCardRepository, StatusRepository $statusRepository, UserRepository $userRepository): Response
     {
 
        $agenciesList = $customerCardRepository->agenciesList();
        $statusList = $statusRepository->findAll();
-
+       $users = $userRepository->findAll();
+       $reps = [];
+       foreach ($users as $user) {
+           if (in_array("ROLE_REP", $user->getRoles() )) {
+               $reps[] = $user;
+           }
+       }
        //dd($request->query);
 
 
@@ -34,7 +42,8 @@ class CustomerCardController extends AbstractController
         return $this->render('customer_card/index.html.twig', [
             'customer_cards' => $customerCardRepository->findAll(),
             'agenciesList' => $agenciesList,
-            'statusList' => $statusList
+            'statusList' => $statusList,
+            'reps' => $reps
         ]);
     }
 
@@ -54,6 +63,64 @@ class CustomerCardController extends AbstractController
 
     }
 
+    #[Route('/pax', name: 'app_customer_card_pax', methods: ['GET', 'POST'])]
+    public function pax(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    { 
+
+        $users = $userRepository->findAll();
+        $reps = [];
+        foreach ($users as $user) {
+            if (in_array("ROLE_REP", $user->getRoles() )) {
+                $reps[] = $user;
+            }
+        }
+
+        return $this->render('customer_card/calcul_pax_rep.html.twig', [
+            'reps' => $reps
+        ]); 
+    }
+
+    #[Route('/pax/rep/{id}', name: 'app_customer_card_pax_par_rep', methods: ['GET', 'POST'])]
+    public function paxParRep(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    { 
+
+        //! Attention si l id est différent du user courant, pas le droit
+
+
+        $users = $userRepository->findAll();
+        $reps = [];
+        foreach ($users as $user) {
+            if (in_array("ROLE_REP", $user->getRoles() )) {
+                $reps[] = $user;
+            }
+        }
+
+        return $this->render('customer_card/calcul_pax_par_rep.html.twig', [
+            'reps' => $reps
+        ]); 
+    }
+
+    #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
+    public function transportationManagement(Request $request, TransferJoanRepository $transferJoanRepository, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    {
+
+
+        $transportCompanies = $transferJoanRepository->transportCompanyList();
+
+        return $this->render('customer_card/transportation_management.html.twig', [
+            'transportCompanies' => $transportCompanies
+        ]);
+    }
+
+    #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET', 'POST'])]
+    public function airport(Request $request, TransferJoanRepository $transferJoanRepository, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    {
+
+        return $this->render('customer_card/airport.html.twig', [
+
+        ]);
+
+    }
 
 
     #[Route('/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]

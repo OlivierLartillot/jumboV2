@@ -56,7 +56,9 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
@@ -69,72 +71,28 @@
             </div>
         </div>
 
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>Nature Transfer</option>
-                    <option value="1">Arrival</option>
-                    <option value="2">Inter Hotel</option>
-                    <option value="3">Departure</option>
-                </select>
-                <label for="floatingSelectGrid">Works with selects</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>Status</option>
-                    {% for status in statusList%}
-                        {{ dump(status) }}
-                        <option value="{{ status.id }}">{{ status.name }}</option>
-                    {% endfor %}
-
-                </select>
-                <label for="floatingSelectGrid">Works with selects</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                        <option   value="" selected>Agencies</option>
-                        {% for agency in agenciesList%}
-                            <option value="{{ agency.agency }}">{{ agency.agency }}</option>
-                        {% endfor %}
-                </select>
-                <label for="floatingSelectGrid">Select Agency</label>
-            </div>
-        </div>        
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name">
-                <label for="floatingnameInput">Flight Number</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name">
-                <label for="floatingnameInput">Name, # RSA, # Voucher, # Jumbo </label>
-            </div>
-        </div>
         <div class="text-center text-md-start col-md-2 ">
             <input type="submit" class="btn btn-primary px-5 py-3">
         </div>
 
     </div>
 
-
-
 </form>
 
+<p>
+    récupérer toutes les colonnes adultes dans cette tranche de date et pour le rep
+    si le rep est pas défini, c est tous
 
+</p>
 
+<ul>
+    <li>Adultes: 1</li>
+    <li>Enfants: 0.5</li>
+    <li>Bébés: 0</li>
 
+</ul>
 
-
+{# 
                         <div class="row">
 
 
@@ -289,7 +247,7 @@
 
 
 
-                        </div>
+                        </div> #}
 
 
 

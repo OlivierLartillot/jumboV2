@@ -39,6 +39,24 @@ class TransferJoanRepository extends ServiceEntityRepository
         }
     }
 
+
+ /**
+     * @return TransferJoan[] Returns an array of distinct transport_company  
+     */
+    public function transportCompanyList(): array
+    {
+
+        return $this->createQueryBuilder('t')
+            ->select('t.transportCompany')
+            ->distinct()
+            ->orderBy('t.transportCompany', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
 //    /**
 //     * @return TransferJoan[] Returns an array of TransferJoan objects
 //     */

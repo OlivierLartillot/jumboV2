@@ -58,7 +58,7 @@ class TransferJoan
 
     #[ORM\ManyToOne(inversedBy: 'transferJoans')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?customerCard $customerCard = null;
+    private ?CustomerCard $customerCard = null;
 
     #[ORM\Column(length: 50)]
     private ?string $natureTransfer = null;
@@ -236,12 +236,12 @@ class TransferJoan
         return $this;
     }
 
-    public function getCustomerCard(): ?customerCard
+    public function getCustomerCard(): ?CustomerCard
     {
         return $this->customerCard;
     }
 
-    public function setCustomerCard(?customerCard $customerCard): self
+    public function setCustomerCard(?CustomerCard $customerCard): self
     {
         $this->customerCard = $customerCard;
 
