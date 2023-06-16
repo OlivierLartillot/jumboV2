@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<title>TransferJoan</title>
+
+{% block body %}
+    <h1>TransferJoan</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ transfer_joan.id }}</td>
+            </tr>
+            <tr>
+                <th>FromStartJoan</th>
+                <td>{{ transfer_joan.fromStartJoan }}</td>
+            </tr>
+            <tr>
+                <th>ToArrivalJoan</th>
+                <td>{{ transfer_joan.toArrivalJoan }}</td>
+            </tr>
+            <tr>
+                <th>DateHourJoan</th>
+                <td>{{ transfer_joan.dateHourJoan ? transfer_joan.dateHourJoan|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FlightNumberJoan</th>
+                <td>{{ transfer_joan.flightNumberJoan }}</td>
+            </tr>
+            <tr>
+                <th>PrivateCollectiveJoan</th>
+                <td>{{ transfer_joan.privateCollectiveJoan }}</td>
+            </tr>
+            <tr>
+                <th>PickupTime</th>
+                <td>{{ transfer_joan.pickupTime ? transfer_joan.pickupTime|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TransportCompany</th>
+                <td>{{ transfer_joan.transportCompany }}</td>
+            </tr>
+            <tr>
+                <th>VehicleNumber</th>
+                <td>{{ transfer_joan.vehicleNumber }}</td>
+            </tr>
+            <tr>
+                <th>VehicleType</th>
+                <td>{{ transfer_joan.vehicleType }}</td>
+            </tr>
+            <tr>
+                <th>TransferArea</th>
+                <td>{{ transfer_joan.transferArea }}</td>
+            </tr>
+            <tr>
+                <th>VoucherNumber</th>
+                <td>{{ transfer_joan.voucherNumber }}</td>
+            </tr>
+            <tr>
+                <th>AdultsNumber</th>
+                <td>{{ transfer_joan.adultsNumber }}</td>
+            </tr>
+            <tr>
+                <th>ChuldrenNumber</th>
+                <td>{{ transfer_joan.chuldrenNumber }}</td>
+            </tr>
+            <tr>
+                <th>BabiesNumber</th>
+                <td>{{ transfer_joan.babiesNumber }}</td>
+            </tr>
+            <tr>
+                <th>NatureTransfer</th>
+                <td>{{ transfer_joan.natureTransfer }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_joan_index') }}">back to list</a>
+
+    <a href="{{ path('app_transfer_joan_edit', {'id': transfer_joan.id}) }}">edit</a>
+
+    {{ include('transfer_joan/_delete_form.html.twig') }}
+{% endblock %}

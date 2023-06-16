@@ -1,146 +1,212 @@
-{{ include('partials/header-reproupement.html.twig') }}
+{{ include('partials/main.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
+    <head>
+
+        {{ include('partials/title-meta.html.twig', {title: 'Bienvenue Sur le Kino Dashboard'}) }}
+
+        {{ include('partials/head-css.html.twig') }}
+
+        <script type="text/javascript">
+              function imprimer_page(){
+              window.print();
+              }
+          </script>
 
 
-  <script type="text/javascript">
-        function imprimer_page(){
-        window.print();
-        }
-    </script>
-
-  <style>
-      @page {
-        size: letter portrait; 
-        margin-top: 2.5cm;
-
-      }
-    @media print {
-
-     /* body {
-        margin: 0.5in 0.15in;
-      } */
-
-    .labels-container {
-        display: grid;
-        grid-template-columns: repeat(2, 4in);
-        grid-template-rows: repeat(5, 2in);
-        gap: 0 0.15in;
-        margin: 0.5in 0.15in;    
-      }
-      .page-break {
-        page-break-inside:avoid;
-        page-break-after:always;
-      }
-
-      .label {
-        display: inline-block;
-        width: 4in;
-        height: 2in;
-        border: 1px solid black;
-        padding: 0px 15px;
-        box-sizing: border-box;
-        border-radius: 10px; 
-        font-size: 15px;
-        line-height: 0.6;
-      }
-      
-
-    .container {
-        display:flex;
-        align-items: flex-start;
-        justify-content: space-between;
-
-    }
-    .informations {
-        line-height:0.3;
-        flex-shrink: 3;
-        align-self: flex-start;
-    }
-    .qrcode {
-         flex-shrink: 1;
-         text-align:center;
-    }
-
-    .notImpressed {
-        display: none;
-      }
-    }
-  </style>
-
-<div class="text-center notImpressed">
-	<form action="{{ path('app_admin_stickers_par_date') }}" method="GET">
-		<input name="date" type="date" value="{{date | date('Y-m-d') }}">
-		<input type="submit">
-	</form>
-</div>
-
-<div class="text-center my-3">
-	<form class="notImpressed ">
-		<input class="btn-success .btn-soft-success" id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
-	</form>
-</div>
+        <style>
 
 
 
-<div>
-	{% set i = 1 %} 
+            body {
+                margin: 0.56in 0.15in 0.48in 0.15in;
+            }
+            @page {
+                size: letter;
+            }
+            
+            .break{
+                page-break-after: always;
 
-	{% for meetingInfos in meetings %}
-			
-		{% if (i == 1) %} 
-			<div class="labels-container">
-		{% endif %} 
+            }
+
+            @media print {
+                
+                .labels-container {
+                display: grid;
+                grid-template-columns: repeat(2, 4in);
+                grid-template-rows: repeat(5, 2in);
+                gap: 0in 0.16in;
+                box-sizing: border-box;
+                } 
+
+                .container-suivant {
+                    margin: 0.56in 0.15in 0.48in 0in;
+                }
+                .label {
+                display: inline-block;
+                width: 4in;
+                height: 2.01in;
+                padding: 10px 15px;
+                box-sizing: border-box;
+                border-radius: 10px; 
+                font-size: 15px;
+                line-height: 15px;
+				position: relative;
+                }
+
+				.line-height-5 {
+                line-height: 5px;
+
+				}
+
+              .main-content,.page-content,.container-fluid {
+                margin: 0px;
+                padding: 0px;
+              }
+
+				.qrcode {
+					text-align:center;
+					position: absolute;
+					left: 3.2in;
+					top: 1in;
+					border: 1px black solid;
+					border-radius: 10px;
+					padding-top: 5px;
+				}
+				.chattez-rep {
+					-webkit-print-color-adjust:exact !important;
+  					print-color-adjust:exact !important;
+					font-size: 10px;
+					line-height: 10px;
+					margin-top: 5px;
+					background-color: green;
+					border-radius: 0 0 8px 8px;
+					padding: 2px;
+					color: white;
+					font-weight: bold;
+				}
+
+				.notImpressed {
+					display: none;
+				}
+
+				.crimson {
+					color: crimson;
+		
+				}
+
+            }
+
+        </style>
 
 
 
-			<div class="label">
-				<p><strong>Nom: </strong> {{ meetingInfos.holder }}</p>
-				<p><strong>Hôtel:</strong> 
-					{% for infosTransfer in meetingInfos.transfers %}
-						{{ infosTransfer.toArrival}}
-					{% endfor %}
-				</p>
-				<p><strong>Reunion de Bienvenue &amp; d'Information</strong></p>
+    </head>
 
+    {{ include('partials/body.html.twig') }}
 
-				<div class="container">
+        <!-- Begin page -->
+        <div id="layout-wrapper">
 
-					<div class="informations">
-						<p><strong>Jour:</strong> Demain</p>
-						<p><strong>Lieu de rencontre:</strong> {{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}}</p>
-						<p><strong>Votre représentant:</strong> {{ meetingInfos.staff }}</p>
-						<p><strong>Whatsapp:</strong> +1 809 723 0945</p>
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+					<div class="notImpressed">
+						<div class="text-center">
+							<form action="{{ path('app_admin_stickers_par_date') }}" method="GET">
+								<input name="date" type="date" value="{{date | date('Y-m-d') }}">
+								<input type="submit">
+							</form>
+						</div>
+
+						<div class="text-center my-3">
+							<form>
+								<input class="btn-success .btn-soft-success" id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
+							</form>
+						</div>
 					</div>
+			<div class="break">	
+				{% set i = 1 %} 
+				{% set page = 1 %} 
 
-					<div class="qrcode">
-						{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber != null %}   
+				{% for meetingInfos in meetings %}
+						
+					{% if (i == 1) %} 
+						{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
+						<div class="labels-container {{ pagesSuivantes }}">
+					{% endif %} 
 
-							<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
-							<div class="chattez-rep">Chattez Avec Florence</div>
-						{% endif %}
-					</div>
+						<div class="label d-flex flex-column justify-content-between">
+							
+							
+							
+							{% if meetingInfos.staff %}
+
+							<div class="qrcode">
+								{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}   
+									<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
+									<div class="chattez-rep">Chattez Avec<br>{{ meetingInfos.staff }}</div>
+								{% endif %}
+							</div>
+
+							{% endif %}
+
+							<div class="mt-2">
+								<p class="my-1"><strong>Nom: </strong> {{ meetingInfos.holder }}</p>
+								<p class="mt-1 mb-2"><strong>Hôtel:</strong> 
+									{% for infosTransfer in meetingInfos.transfers %}
+										{{ infosTransfer.toArrival}}
+									{% endfor %}
+								</p>
+							</div>
+							<div class="mb-2">
+								<p class="line-height-5" ><strong class="crimson">Reunion de Bienvenue &amp; d'Information</strong></p>
+								<p class="line-height-5"><strong class="crimson"> Demain à {{ meetingInfos.meetingAtTime }} </strong></p>
+								<p class="line-height-5">Lieu de rencontre: <strong class="crimson">{{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}} </strong></p>
+								<p class="line-height-5">Votre représentant: <strong class="crimson">{{ meetingInfos.staff }}</strong></p>
+								<p class="line-height-5">Whatsapp:  
+									{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
+									
+								</p>
+							</div>
+						</div>
+
+					{% if (i == 10) %}     
+						</div></div>
+					{% endif %}
+					{# si $i = 10 alors $i == 1 sinon $i++ #}
+					{% if (i == 10) %}  
+						{% set i = 1 %} 
+						{% set page = page + 1 %}
+						<div class="break">
+					{% else %}  
+						{% set i = i + 1 %} 
+					{% endif %} 
+
+				{% endfor %}
 				</div>
 			</div>
 
 
-		{% if (i == 10) %}     
-			</div>
-		{% endif %}
+        <!-- Bloc Javascript -->
+{#         <script>
+            let myRules = document.styleSheets[0].cssRules;
+            console.log(myRules[0]); // a CSSPageRule
 
-		{# si $i = 10 alors $i == 1 sinon $i++ #}
-		{% if (i == 10) %}  
-			{% set i = 1 %} 
-			<div class="page-break"></div>
-		{% else %}  
-			{% set i = i + 1 %} 
-		{% endif %} 
+        </script> #}
 
-	{% endfor %}
+    </body>
+</html>
 
 
 
-	</div>
-</div>
+
 
 {{ include('partials/footer-regroupement.html.twig') }}
