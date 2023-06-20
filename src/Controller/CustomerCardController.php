@@ -13,6 +13,9 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferJoanRepository;
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeImmutable;
+use PhpParser\Node\Expr\New_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,18 +28,72 @@ class CustomerCardController extends AbstractController
     public function index(Request $request, CustomerCardRepository $customerCardRepository, StatusRepository $statusRepository, UserRepository $userRepository): Response
     {
 
-       $agenciesList = $customerCardRepository->agenciesList();
-       $statusList = $statusRepository->findAll();
-       $users = $userRepository->findAll();
-       $reps = [];
-       foreach ($users as $user) {
-           if (in_array("ROLE_REP", $user->getRoles() )) {
-               $reps[] = $user;
-           }
-       }
-       //dd($request->query);
+            //Listes des informations a afficher dans les tris
+        $agenciesList = $customerCardRepository->agenciesList();
+        $statusList = $statusRepository->findAll();
+        $users = $userRepository->findAll();
+        $reps = [];
+        foreach ($users as $user) {
+            if (in_array("ROLE_REP", $user->getRoles() )) {
+                $reps[] = $user;
+            }
+        }
 
+        // si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            $empty = true;
+            //on vérifie si on a envoyé au moins un élément de tri
+            foreach ($request->query as $param) {
+                if ($param != null) {
+                    $empty = false;
+                    break;
+                }
+                
+            }
+            // si y a au moins un élément envoyé au tri
+            if ($empty == false) {
+                //dd(checkdate(01, 13, 2019));
+                
+                // todo  : alors on peut récupérer les données et les filtrer
+                
+                // si tout va bien  on envoie la dql 
+                $rep = $request->query->get('reps');
+                $status = $request->query->get('status');
+                $agency = $request->query->get('agency');
+                $dateStart = $request->query->get('dateStart');
+                $dateEnd = $request->query->get('dateEnd');
+                $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
+                $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
+                    
 
+                $natureTransfer = $request->query->get('natureTransfer');
+                $flightNumber = $request->query->get('flightNumber');
+                $search = $request->query->get('search');
+                
+                $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
+
+                
+                
+
+                //$result = $customerCardRepository->customerCardPageSearch($rep);
+                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $rep, $status, $agency, $search, $natureTransfer, $flightNumber);
+
+                // et on envoi la nouvelle page 
+                return $this->render('customer_card/index.html.twig', [
+                    'customer_cards' => $results,
+                    'agenciesList' => $agenciesList,
+                    'statusList' => $statusList,
+                    'reps' => $reps
+                ]);
+                
+                
+                // sinon renvoyer la page de base
+                
+
+            }
+            // sinon on renvoie la page de base 
+            // todo ? peut etre un message flash ?
+        }
 
 
         return $this->render('customer_card/index.html.twig', [

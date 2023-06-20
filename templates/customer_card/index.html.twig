@@ -43,7 +43,7 @@
         <div class="col-lg-6">
                 <div class="mb-3">
                     <label class="form-label">Search date</label>
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
+                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd-mm-yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
                         
                         {#                         
                             {{ (ability.id in company_abilities) ? 'selected' : '' }}
@@ -59,8 +59,8 @@
 
         <div class="col-md-2">
             <div class="form-floating mb-3">
-                <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>All Reps</option>
+                <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>All Reps</option>
                     {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
                         <option value="{{ rep.id }}">{{ rep }}</option>
                     {% endfor %}
@@ -76,10 +76,10 @@
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>Nature Transfer</option>
-                    <option value="1">Arrival</option>
-                    <option value="2">Inter Hotel</option>
-                    <option value="3">Departure</option>
+                    <option value="all" selected>Nature Transfer</option>
+                    <option value="Arrivée">Arrival</option>
+                    <option value="Inter Hotel">Inter Hotel</option>
+                    <option value="Départ">Departure</option>
                 </select>
                 <label for="floatingSelectGrid">Works with selects</label>
             </div>
@@ -87,9 +87,8 @@
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>Status</option>
+                    <option value="all" selected>Status</option>
                     {% for status in statusList%}
-                        {{ dump(status) }}
                         <option value="{{ status.id }}">{{ status.name }}</option>
                     {% endfor %}
 
@@ -100,7 +99,7 @@
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                        <option   value="" selected>Agencies</option>
+                        <option value="all" selected>Agencies</option>
                         {% for agency in agenciesList%}
                             <option value="{{ agency.agency }}">{{ agency.agency }}</option>
                         {% endfor %}

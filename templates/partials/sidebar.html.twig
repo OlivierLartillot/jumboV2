@@ -34,12 +34,12 @@
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
 
-                <li class="menu-title">{% trans %}Menu{% endtrans %}</li>
+                <li class="menu-title">{% trans %}Import File{% endtrans %}</li>
 
                 <li>
                     <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
-                        <span>{% trans %}Import Reservations{% endtrans %}</span>
+                        <span>{% trans %}Import Booking{% endtrans %}</span>
                     </a>
                 </li>
 
@@ -50,61 +50,66 @@
                     </a>
                 </li>
 
-                <li class="menu-title">{% trans %}Customers{% endtrans %}</li>
+                <li class="menu-title">{% trans %}Clients{% endtrans %}</li>
 
                 <li>
                     <a href="{{ path('app_customer_card_index') }}">
                         <i class="fas fa-id-card"></i>
-                        <span>{% trans %}Customers Infos{% endtrans %}</span>
+                        <span>{% trans %}Clients Cards{% endtrans %}</span>
                     </a>
                 </li>
                 
-                <li class="menu-title">{% trans %}Briefing MANAGER{% endtrans %}</li>
+                <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 
                 <li>
                     <a href="{{ path('app_admin_team_manager') }}">
                         <i class="uil-pen"></i>
-                        <span>{% trans %}Attributions Rep{% endtrans %}</span>
+                        <span>{% trans %}Rep assignment{% endtrans %}</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ path('app_admin_team_manager_replist') }}">
                         <i class="uil-calendar-alt"></i>
-                        <span>{% trans %}Briefing Rep{% endtrans %}</span>
+                        <span>{% trans %}Rep Briefings{% endtrans %}</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ path('app_admin_stickers_par_date') }}">
                         <i class="uil-print"></i>
-                        <span>{% trans %}Print Labels{% endtrans %}</span>
+                        <span>{% trans %}Labels printing{% endtrans %}</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ path('app_customer_card_pax') }}">
-                        <i class="uil-print"></i>
-                        <span>{% trans %}Pax{% endtrans %}</span>
+                        <i class="uil-users-alt"></i>
+                        <span>{% trans %}Pax calculation{% endtrans %}</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ path('app_customer_card_pax_par_rep', {'id': 1 }) }}">
-                        <i class="uil-print"></i>
+                        <i class="uil-users-alt"></i>
                         <span>{% trans %}My pax app.user.id{% endtrans %}</span>
                     </a>
                 </li>
 
-                <li>
-                    <a href="{{ path('app_customer_card_transportation_management', {'id': 1 }) }}">
-                        <i class="uil-print"></i>
-                        <span>{% trans %}Transportation Management{% endtrans %}</span>
-                    </a>
-                </li>
+
+                <li class="menu-title">{% trans %}Airport Team{% endtrans %}</li>
 
                 <li>
                     <a href="{{ path('app_customer_card_airport') }}">
                         <i class="uil-print"></i>
-                        <span>{% trans %}Airport{% endtrans %}</span>
+                        <span>{% trans %}Clients Arrivals{% endtrans %}</span>
+                    </a>
+                </li>
+
+                <li class="menu-title">{% trans %}Accounting{% endtrans %}</li>
+
+                <li>
+                    <a href="{{ path('app_customer_card_transportation_management', {'id': 1 }) }}">
+                        <i class="uil-bus"></i>
+                        <span>{% trans %}Transfer calculation{% endtrans %}</span>
                     </a>
                 </li>
 

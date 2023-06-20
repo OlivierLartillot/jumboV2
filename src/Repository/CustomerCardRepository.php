@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\CustomerCard;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -145,6 +146,57 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+
+    public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $rep, $status, $agency, $search, $natureTransfer, $flightNumber): ?array
+    {      
+
+
+
+         $requete = $this->createQueryBuilder('c')
+                            ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
+                            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard');
+
+        // todo: date
+            if ($dateStart != "") {
+                $requete = $requete->andWhere('transfer.dateHour > :dateStart')->setParameter('dateStart', $dateStart);
+            }
+            if ($dateEnd != "") { 
+                $requete = $requete->andWhere('transfer.dateHour < :dateEnd')->setParameter('dateEnd', $dateEnd);
+            }
+            if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
+            if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
+
+
+        // recup de l agence
+        if ($agency != "all") {
+            $requete = $requete->andWhere('c.agency LIKE :agency')->setParameter('agency', '%'.$agency.'%');
+        }
+
+
+        // SEARCH : jointure avec la table transfer Joan pour le numéro de bon
+        $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
+                            OR c.holder LIKE :holder
+                            OR c.jumboNumber LIKE :jumboNumber
+                            OR transferJoan.voucherNumber LIKE :voucherNumber
+                            ')
+                            ->setParameter('reservationNumber', '%'.$search.'%')
+                            ->setParameter('holder', '%'.$search.'%')
+                            ->setParameter('jumboNumber', '%'.$search.'%')
+                            ->setParameter('voucherNumber', '%'.$search.'%');
+
+        if ($natureTransfer != "all") {
+            $requete = $requete->andWhere('transfer.natureTransfer = :natureTransfer')->setParameter('natureTransfer', $natureTransfer);
+        }
+        if ($flightNumber != "all") {
+            $requete = $requete->andWhere('transfer.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
+        }
+
+        $requete = $requete ->getQuery()->getResult();
+
+        return $requete;
+
+    } 
 
 
 

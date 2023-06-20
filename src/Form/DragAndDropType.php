@@ -14,7 +14,7 @@ class DragAndDropType extends AbstractType
     {
         $builder
             ->add('name', DropzoneType::class, [
-                'label' => false,
+                'label' => true,
             ])
         ;
     }
