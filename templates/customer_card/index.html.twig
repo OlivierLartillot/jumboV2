@@ -38,112 +38,105 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
 
-<form method="GET">
-    <div class="row">
-        <div class="col-lg-6">
-                <div class="mb-3">
-                    <label class="form-label">Search date</label>
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd-mm-yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
-                        
-                        {#                         
-                            {{ (ability.id in company_abilities) ? 'selected' : '' }}
-                            app.request.query 
-                        #}
+                        <form method="GET">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Search date</label>
+                                            <div class="input-daterange input-group" id="datepicker6" data-date-format="dd-mm-yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
+                                                
+                                                {#                         
+                                                    {{ (ability.id in company_abilities) ? 'selected' : '' }}
+                                                    app.request.query 
+                                                #}
 
-                        <input type="date" class="form-control" name="dateStart" placeholder="Start Date" />
-                        <input type="date" class="form-control" name="dateEnd" placeholder="End Date" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="all" selected>All Reps</option>
-                    {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
-                        <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
-                    {% endfor %}
-                </select>
-                <label for="floatingSelectGrid">Select a rep</label>
-            </div>
-        </div>
-
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="all" selected>Nature Transfer</option>
-                    <option value="Arrivée" {{ (app.request.query.get('natureTransfer') == "Arrivée" ) ? 'selected' : '' }}>Arrival</option>
-                    <option value="Inter Hotel" {{ (app.request.query.get('natureTransfer') == "Inter Hotel" ) ? 'selected' : '' }}>Inter Hotel</option>
-                    <option value="Départ" {{ (app.request.query.get('natureTransfer') == "Départ" ) ? 'selected' : '' }}>Departure</option>
-                </select>
-                <label for="floatingSelectGrid">Works with selects</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="all" selected>Status</option>
-                    {% for status in statusList%}
-                        <option value="{{ status.id }}" {{ (app.request.query.get('status') == status.id ) ? 'selected' : '' }}>{{ status.name }}</option>
-                    {% endfor %}
-
-                </select>
-                <label for="floatingSelectGrid">Works with selects</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                        <option value="all" selected>Agencies</option>
-                        {% for agency in agenciesList%}
-                            <option value="{{ agency.agency }}" {{ (app.request.query.get('agency') == agency.agency ) ? 'selected' : '' }}>{{ agency.agency|title }}</option>
-                        {% endfor %}
-                </select>
-                <label for="floatingSelectGrid">Select Agency</label>
-            </div>
-        </div>        
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
-                <label for="floatingnameInput">Flight Number</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
-                <label for="floatingnameInput">Name, # RSA, # Voucher, # Jumbo </label>
-            </div>
-        </div>
-        <div class="text-center text-md-start col-md-2 ">
-            <input type="submit" class="btn btn-primary px-5 py-3">
-        </div>
-
-    </div>
+                                                <input type="date" class="form-control" name="dateStart" placeholder="Start Date" />
+                                                <input type="date" class="form-control" name="dateEnd" placeholder="End Date" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
 
-</form>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                            <option value="all" selected>All Reps</option>
+                                            {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
+                                                <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
+                                            {% endfor %}
+                                        </select>
+                                        <label for="floatingSelectGrid">Select a rep</label>
+                                    </div>
+                                </div>
 
 
+                            </div>
 
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                            <option value="all" selected>Nature Transfer</option>
+                                            <option value="Arrivée" {{ (app.request.query.get('natureTransfer') == "Arrivée" ) ? 'selected' : '' }}>Arrival</option>
+                                            <option value="Inter Hotel" {{ (app.request.query.get('natureTransfer') == "Inter Hotel" ) ? 'selected' : '' }}>Inter Hotel</option>
+                                            <option value="Départ" {{ (app.request.query.get('natureTransfer') == "Départ" ) ? 'selected' : '' }}>Departure</option>
+                                        </select>
+                                        <label for="floatingSelectGrid">Works with selects</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                            <option value="all" selected>Status</option>
+                                            {% for status in statusList%}
+                                                <option value="{{ status.id }}" {{ (app.request.query.get('status') == status.id ) ? 'selected' : '' }}>{{ status.name }}</option>
+                                            {% endfor %}
 
+                                        </select>
+                                        <label for="floatingSelectGrid">Works with selects</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                                <option value="all" selected>Agencies</option>
+                                                {% for agency in agenciesList%}
+                                                    <option value="{{ agency.agency }}" {{ (app.request.query.get('agency') == agency.agency ) ? 'selected' : '' }}>{{ agency.agency|title }}</option>
+                                                {% endfor %}
+                                        </select>
+                                        <label for="floatingSelectGrid">Select Agency</label>
+                                    </div>
+                                </div>        
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
+                                        <label for="floatingnameInput">Flight Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
+                                        <label for="floatingnameInput">Name, # RSA, # Voucher, # Jumbo </label>
+                                    </div>
+                                </div>
+                                <div class="text-center text-md-start col-md-2 ">
+                                    <input type="submit" class="btn btn-primary px-5 py-3">
+                                </div>
+
+                            </div>
+
+                        </form>
 
 
                         <div class="row">
-
-
 
                             {% for customer_card in customer_cards %}
 
                             <div class="col-xl-4 col-sm-6">
                                 <div class="card">
+                                <div class="ribbon ribbon-top-right"><span>{{ customer_card.staff }}</span></div>
                                     <div class="card-body">
                                         <div class="d-flex align-items-start">
                                             <div class="d-none d-md-block flex-shrink-0 me-4">
