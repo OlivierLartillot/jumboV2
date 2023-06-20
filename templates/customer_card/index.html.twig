@@ -50,19 +50,21 @@
                             app.request.query 
                         #}
 
-                        <input type="text" class="form-control" name="dateStart" placeholder="Start Date" />
-                        <input type="text" class="form-control" name="dateEnd" placeholder="End Date" />
+                        <input type="date" class="form-control" name="dateStart" placeholder="Start Date" />
+                        <input type="date" class="form-control" name="dateEnd" placeholder="End Date" />
                     </div>
                 </div>
             </div>
         </div>
+
+
 
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
                     <option value="all" selected>All Reps</option>
                     {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
-                        <option value="{{ rep.id }}">{{ rep }}</option>
+                        <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
                     {% endfor %}
                 </select>
                 <label for="floatingSelectGrid">Select a rep</label>
@@ -77,9 +79,9 @@
             <div class="form-floating mb-3">
                 <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
                     <option value="all" selected>Nature Transfer</option>
-                    <option value="Arrivée">Arrival</option>
-                    <option value="Inter Hotel">Inter Hotel</option>
-                    <option value="Départ">Departure</option>
+                    <option value="Arrivée" {{ (app.request.query.get('natureTransfer') == "Arrivée" ) ? 'selected' : '' }}>Arrival</option>
+                    <option value="Inter Hotel" {{ (app.request.query.get('natureTransfer') == "Inter Hotel" ) ? 'selected' : '' }}>Inter Hotel</option>
+                    <option value="Départ" {{ (app.request.query.get('natureTransfer') == "Départ" ) ? 'selected' : '' }}>Departure</option>
                 </select>
                 <label for="floatingSelectGrid">Works with selects</label>
             </div>
@@ -89,7 +91,7 @@
                 <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
                     <option value="all" selected>Status</option>
                     {% for status in statusList%}
-                        <option value="{{ status.id }}">{{ status.name }}</option>
+                        <option value="{{ status.id }}" {{ (app.request.query.get('status') == status.id ) ? 'selected' : '' }}>{{ status.name }}</option>
                     {% endfor %}
 
                 </select>
@@ -101,7 +103,7 @@
                 <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
                         <option value="all" selected>Agencies</option>
                         {% for agency in agenciesList%}
-                            <option value="{{ agency.agency }}">{{ agency.agency }}</option>
+                            <option value="{{ agency.agency }}" {{ (app.request.query.get('agency') == agency.agency ) ? 'selected' : '' }}>{{ agency.agency|title }}</option>
                         {% endfor %}
                 </select>
                 <label for="floatingSelectGrid">Select Agency</label>
@@ -109,13 +111,13 @@
         </div>        
         <div class="col-md-2">
             <div class="form-floating mb-3">
-                <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name">
+                <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
                 <label for="floatingnameInput">Flight Number</label>
             </div>
         </div>
         <div class="col-md-2">
             <div class="form-floating mb-3">
-                <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name">
+                <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
                 <label for="floatingnameInput">Name, # RSA, # Voucher, # Jumbo </label>
             </div>
         </div>
