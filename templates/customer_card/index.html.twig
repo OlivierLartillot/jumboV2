@@ -136,7 +136,7 @@
 
                             <div class="col-xl-4 col-sm-6">
                                 <div class="card">
-                                <div class="ribbon ribbon-top-right"><span>{{ customer_card.staff }}</span></div>
+                                    {% if customer_card.staff is not null %}<div class="ribbon ribbon-top-right"><span>{{ customer_card.staff }}</span></div>{% endif %}
                                     <div class="card-body">
                                         <div class="d-flex align-items-start">
                                             <div class="d-none d-md-block flex-shrink-0 me-4">
@@ -148,10 +148,10 @@
                                             </div>
                                             <div class="flex-grow-1 align-self-center">
                                                 <div class="border-bottom pb-1">
-                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
                                                     <p class="text-muted">
                                                         <i class="me-1">#</i> {{ customer_card.reservationNumber }}
                                                     </p>
+                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
                                                     <p>
                                                      {% if customer_card.status == "No Show" %}
                                                         <span class="badge rounded-pill bg-danger">{{ customer_card.status }}</span>
