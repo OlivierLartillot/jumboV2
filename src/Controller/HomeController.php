@@ -7,14 +7,14 @@ use App\Entity\Airport;
 use App\Entity\AirportHotel;
 use App\Entity\CustomerCard;
 use App\Entity\DragAndDrop;
-use App\Entity\Transfer;
+use App\Entity\TransferArrival;
+use App\Entity\TransferInterHotel;
 use App\Form\DragAndDropType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
-use App\Repository\TransferRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -63,9 +63,11 @@ class HomeController extends AbstractController
                                     MeetingPointRepository $meetingPointRepository, 
                                     UserRepository $userRepository,
                                     CustomerCardRepository $customerCardRepository,
-                                    TransferRepository $transferRepository,
                                     AirportHotelRepository $airportHotelRepository,
-                                    AgencyRepository $agencyRepository
+                                    AgencyRepository $agencyRepository,
+                                    TransferArrival $transferArrival,
+                                    TransferInterHotel $transferInterHotel,
+                                    TransferArrival $transferDeparture,
                                     ): Response
     {
 
@@ -323,7 +325,7 @@ class HomeController extends AbstractController
                 
 
                 // on essaie de récupérer la fiche pour savoir si on va create or update
-                $transferResult = $transferRepository->findOneBy(['customerCard' => $customerCard]);
+                //$transferResult = $transferRepository->findOneBy(['customerCard' => $customerCard]);
                 // $transfer = $this->transferRepository
                 // si l'enregistrement existe déja, on va le mettre a jour
                 if ($transferResult) {

@@ -177,7 +177,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
 
-    public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
+    public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
     {      
 
 
@@ -188,15 +188,28 @@ class CustomerCardRepository extends ServiceEntityRepository
                             ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transfer.fromStart OR airportHotel.id = transfer.toArrival')
                             ;
 
-        // todo: date
-            if ($dateStart != "") {
-                $requete = $requete->andWhere('transfer.dateHour > :dateStart')->setParameter('dateStart', $dateStart);
+        // sinon on filtre juste si la date match 
+            if ($customerPresence == "on") {
+                $requete = $requete->andWhere('transfer.natureTransfer = 1 and transfer.dateHour < :dateStart and transfer.natureTransfer = 3 and transfer.dateHour > :dateStart' )
+                ->setParameter('dateStart', $dateStart)
+                ;
+            } 
+
+            else {
+                if ($dateStart != "") {
+                    $requete = $requete->andWhere('transfer.dateHour > :dateStart')->setParameter('dateStart', $dateStart);
+                }
+                if ($dateEnd != "") { 
+                    $requete = $requete->andWhere('transfer.dateHour < :dateEnd')->setParameter('dateEnd', $dateEnd);
+                }
+
             }
-            if ($dateEnd != "") { 
-                $requete = $requete->andWhere('transfer.dateHour < :dateEnd')->setParameter('dateEnd', $dateEnd);
-            }
-            if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
-            if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
+           
+
+
+        
+        if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
+        if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
 
 
         // recup de l agence

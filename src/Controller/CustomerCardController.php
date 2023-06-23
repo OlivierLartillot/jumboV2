@@ -66,6 +66,12 @@ class CustomerCardController extends AbstractController
                 
                 // todo  : alors on peut récupérer les données et les filtrer
                 
+
+                $customerPresence = $request->query->get('customerPresence');
+
+
+
+
                 // si tout va bien  on envoie la dql 
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
@@ -84,9 +90,9 @@ class CustomerCardController extends AbstractController
                 $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
 
                 // la requete qui execute la recherche
-                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
-                dd($results);
+                //dd($results);
                 // et on envoi la nouvelle page 
                 return $this->render('customer_card/index.html.twig', [
                     'customer_cards' => $results,

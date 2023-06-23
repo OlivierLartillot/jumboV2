@@ -44,6 +44,11 @@
                                 {{ (ability.id in company_abilities) ? 'selected' : '' }}
                                 app.request.query 
                             #}
+
+                            <input type="checkbox" id="customerPresence" name="customerPresence" {{ (app.request.query.get('customerPresence') != null) ? 'checked' : '' }}>
+                            <label for="customerPresence"> Clients présents a cette date</label><br>
+
+
                             <div class="row mb-3">
                                 {% set now = "now"|date("Y-m-d") %}
                                 <div class="col-md-3">

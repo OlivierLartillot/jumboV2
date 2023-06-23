@@ -60,9 +60,6 @@ class CustomerCard
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: CustomerReport::class)]
     private Collection $customerReports;
 
-    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: Transfer::class)]
-    private Collection $transfers;
-
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: StatusHistory::class, orphanRemoval: true)]
     private Collection $statusHistories;
 
@@ -75,14 +72,24 @@ class CustomerCard
     #[ORM\ManyToOne(inversedBy: 'customerCards')]
     private ?Agency $agency = null;
 
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferArrival::class)]
+    private Collection $transferArrivals;
+
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferInterHotel::class)]
+    private Collection $transferInterHotels;
+
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferDeparture::class)]
+    private Collection $transferDepartures;
+
 
     public function __construct()
     {
         $this->customerReports = new ArrayCollection();
-        $this->transfers = new ArrayCollection();
         $this->statusHistories = new ArrayCollection();
         $this->transferJoans = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->transferInterHotels = new ArrayCollection(); 
+        $this->transferDepartures = new ArrayCollection(); 
     }
 
     public function getId(): ?int
@@ -277,36 +284,6 @@ class CustomerCard
         return $this;
     }
     
-    /**
-     * @return Collection<int, Transfer>
-     */
-    public function getTransfers(): Collection
-    {
-        return $this->transfers;
-    }
-    
-    public function addTransfer(Transfer $transfer): self
-    {
-        if (!$this->transfers->contains($transfer)) {
-            $this->transfers->add($transfer);
-            $transfer->setCustomerCard($this);
-        }
-        
-        return $this;
-    }
-    
-    public function removeTransfer(Transfer $transfer): self
-    {
-        if ($this->transfers->removeElement($transfer)) {
-            // set the owning side to null (unless already changed)
-            if ($transfer->getCustomerCard() === $this) {
-                $transfer->setCustomerCard(null);
-            }
-        }
-        
-        return $this;
-    }
-
     public function getMeetingAtDate() {
         return $this->meetingAt->format('d-m-Y');
     }
@@ -424,5 +401,95 @@ class CustomerCard
         return $this;
     }
 
+    /**
+     * @return Collection<int, TransferArrival>
+     */
+    public function getTransferArrivals(): Collection
+    {
+        return $this->transferArrivals;
+    }
+
+    public function addTransferArrival(TransferArrival $transferArrival): self
+    {
+        if (!$this->transferArrivals->contains($transferArrival)) {
+            $this->transferArrivals->add($transferArrival);
+            $transferArrival->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferArrival(TransferArrival $transferArrival): self
+    {
+        if ($this->transferArrivals->removeElement($transferArrival)) {
+            // set the owning side to null (unless already changed)
+            if ($transferArrival->getCustomerCard() === $this) {
+                $transferArrival->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, TransferInterHotel>
+     */
+    public function getTransferInterHotels(): Collection
+    {
+        return $this->transferInterHotels;
+    }
+
+    public function addTransferInterHotel(TransferInterHotel $transferInterHotel): self
+    {
+        if (!$this->transferInterHotels->contains($transferInterHotel)) {
+            $this->transferInterHotels->add($transferInterHotel);
+            $transferInterHotel->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferInterHotel(TransferInterHotel $transferInterHotel): self
+    {
+        if ($this->transferInterHotels->removeElement($transferInterHotel)) {
+            // set the owning side to null (unless already changed)
+            if ($transferInterHotel->getCustomerCard() === $this) {
+                $transferInterHotel->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+/**
+     * @return Collection<int, TransferDeparture>
+     */
+    public function getTransferDeparture(): Collection
+    {
+        return $this->transferDepartures;
+    }
+
+    public function addTransferDeparture(TransferDeparture $transferDeparture): self
+    {
+        if (!$this->transferDepartures->contains($transferDeparture)) {
+            $this->transferDepartures->add($transferDeparture);
+            $transferDeparture->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferDeparture(TransferDeparture $transferDeparture): self
+    {
+        if ($this->transferDepartures->removeElement($transferDeparture)) {
+            // set the owning side to null (unless already changed)
+            if ($transferDeparture->getCustomerCard() === $this) {
+                $transferDeparture->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

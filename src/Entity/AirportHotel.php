@@ -21,16 +21,24 @@ class AirportHotel
     #[ORM\Column]
     private ?bool $isAirport = null;
 
-    #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: Transfer::class)]
-    private Collection $transfers;
-
     #[ORM\OneToMany(mappedBy: 'toArrival', targetEntity: Transfer::class)]
     private Collection $transfersArrival;
 
+    #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: TransferArrival::class)]
+    private Collection $transferArrivals;
+
+    #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: TransferInterHotel::class)]
+    private Collection $transferInterHotels;
+
+    #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: TransferDeparture::class)]
+    private Collection $transferDepartures;
+
     public function __construct()
     {
-        $this->transfers = new ArrayCollection();
         $this->transfersArrival = new ArrayCollection();
+        $this->transferArrivals = new ArrayCollection();
+        $this->transferInterHotels = new ArrayCollection();
+        $this->transferDepartures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,59 +71,89 @@ class AirportHotel
     }
 
     /**
-     * @return Collection<int, Transfer>
+     * @return Collection<int, TransferArrival>
      */
-    public function getTransfers(): Collection
+    public function getTransferArrivals(): Collection
     {
-        return $this->transfers;
+        return $this->transferArrivals;
     }
 
-    public function addTransfer(Transfer $transfer): self
+    public function addTransferArrival(TransferArrival $transferArrival): self
     {
-        if (!$this->transfers->contains($transfer)) {
-            $this->transfers->add($transfer);
-            $transfer->setFromStart($this);
+        if (!$this->transferArrivals->contains($transferArrival)) {
+            $this->transferArrivals->add($transferArrival);
+            $transferArrival->setFromStart($this);
         }
 
         return $this;
     }
 
-    public function removeTransfer(Transfer $transfer): self
+    public function removeTransferArrival(TransferArrival $transferArrival): self
     {
-        if ($this->transfers->removeElement($transfer)) {
+        if ($this->transferArrivals->removeElement($transferArrival)) {
             // set the owning side to null (unless already changed)
-            if ($transfer->getFromStart() === $this) {
-                $transfer->setFromStart(null);
+            if ($transferArrival->getFromStart() === $this) {
+                $transferArrival->setFromStart(null);
+            }
+        }
+
+        return $this;
+    }    
+
+    /**
+     * @return Collection<int, TransferInterHotel>
+     */
+    public function getTransferInterHotels(): Collection
+    {
+        return $this->transferInterHotels;
+    }
+
+    public function addTransferInterHotel(TransferInterHotel $transferInterHotel): self
+    {
+        if (!$this->transferInterHotels->contains($transferInterHotel)) {
+            $this->transferInterHotels->add($transferInterHotel);
+            $transferInterHotel->setFromStart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferInterHotel(TransferInterHotel $transferInterHotel): self
+    {
+        if ($this->transferInterHotels->removeElement($transferInterHotel)) {
+            // set the owning side to null (unless already changed)
+            if ($transferInterHotel->getFromStart() === $this) {
+                $transferInterHotel->setFromStart(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Transfer>
+   /**
+     * @return Collection<int, TransferDeparture>
      */
-    public function getTransfersArrival(): Collection
+    public function getTransferDepartures(): Collection
     {
-        return $this->transfersArrival;
+        return $this->transferDepartures;
     }
 
-    public function addTransfersArrival(Transfer $transfersArrival): self
+    public function addTransferDeparture(TransferDeparture $transferDeparture): self
     {
-        if (!$this->transfersArrival->contains($transfersArrival)) {
-            $this->transfersArrival->add($transfersArrival);
-            $transfersArrival->setToArrival($this);
+        if (!$this->transferDepartures->contains($transferDeparture)) {
+            $this->transferDepartures->add($transferDeparture);
+            $transferDeparture->setFromStart($this);
         }
 
         return $this;
     }
 
-    public function removeTransfersArrival(Transfer $transfersArrival): self
+    public function removeTransferDeparture(TransferDeparture $transferDeparture): self
     {
-        if ($this->transfersArrival->removeElement($transfersArrival)) {
+        if ($this->transferDepartures->removeElement($transferDeparture)) {
             // set the owning side to null (unless already changed)
-            if ($transfersArrival->getToArrival() === $this) {
-                $transfersArrival->setToArrival(null);
+            if ($transferDeparture->getFromStart() === $this) {
+                $transferDeparture->setFromStart(null);
             }
         }
 
