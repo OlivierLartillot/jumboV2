@@ -56,9 +56,11 @@ class CustomerCardRepository extends ServiceEntityRepository
  */
 
      return $this->createQueryBuilder('c')
-            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
-            ->andWhere('transfer.dateHour >= :date_start')
-            ->andWhere('transfer.dateHour <= :date_end')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->andWhere('transferArrival.dateHour >= :date_start')
+            ->andWhere('transferArrival.dateHour <= :date_end')
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
             ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
             ->orderBy('c.id', 'ASC')
@@ -181,10 +183,9 @@ class CustomerCardRepository extends ServiceEntityRepository
     {      
 
 
-
          $requete = $this->createQueryBuilder('c')
                             ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
-                            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
+                            //->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
                             ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transfer.fromStart OR airportHotel.id = transfer.toArrival')
                             ;
 

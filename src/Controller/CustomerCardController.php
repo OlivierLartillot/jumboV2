@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
-use App\Entity\TransferJoan;
-use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
 use App\Repository\AgencyRepository;
@@ -15,9 +13,7 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferJoanRepository;
 use App\Repository\UserRepository;
-use DateTime;
 use DateTimeImmutable;
-use PhpParser\Node\Expr\New_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +35,7 @@ class CustomerCardController extends AbstractController
         $agencies = $agencyRepository->findAllAsc();
         $hotels = $airportHotelRepository->findAllAsc();
    
-
+        
         $statusList = $statusRepository->findAll();
         $users = $userRepository->findAll();
         $reps = [];
@@ -48,7 +44,7 @@ class CustomerCardController extends AbstractController
                 $reps[] = $user;
             }
         }
-
+        
         // si on a cliqué sur envoyé
         if (count($request->query) > 0) {
             $empty = true;
@@ -60,6 +56,7 @@ class CustomerCardController extends AbstractController
                 }
                 
             }
+
             // si y a au moins un élément envoyé au tri
             if ($empty == false) {
                 //dd(checkdate(01, 13, 2019));
@@ -89,8 +86,10 @@ class CustomerCardController extends AbstractController
                     
                 $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
 
+
+                dd('jusque la tout va bien ? ');
                 // la requete qui execute la recherche
-                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+                //$results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
                 //dd($results);
                 // et on envoi la nouvelle page 
