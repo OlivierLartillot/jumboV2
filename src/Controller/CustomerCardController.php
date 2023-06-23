@@ -8,6 +8,8 @@ use App\Entity\TransferJoan;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
+use App\Repository\AgencyRepository;
+use App\Repository\AirportHotelRepository;
 use App\Repository\CommentRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\StatusRepository;
@@ -25,11 +27,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerCardController extends AbstractController
 {
     #[Route('/', name: 'app_customer_card_index', methods: ['GET'])]
-    public function index(Request $request, CustomerCardRepository $customerCardRepository, StatusRepository $statusRepository, UserRepository $userRepository): Response
+    public function index(Request $request, 
+                          CustomerCardRepository $customerCardRepository, 
+                          StatusRepository $statusRepository, 
+                          UserRepository $userRepository,
+                          AgencyRepository $agencyRepository,
+                          AirportHotelRepository $airportHotelRepository): Response
     {
 
             //Listes des informations a afficher dans les tris
-        $agenciesList = $customerCardRepository->agenciesList();
+        $agencies = $agencyRepository->findAllAsc();
+        $hotels = $airportHotelRepository->findAllAsc();
+   
+
         $statusList = $statusRepository->findAll();
         $users = $userRepository->findAll();
         $reps = [];
@@ -57,31 +67,31 @@ class CustomerCardController extends AbstractController
                 // todo  : alors on peut récupérer les données et les filtrer
                 
                 // si tout va bien  on envoie la dql 
-                $rep = $request->query->get('reps');
-                $status = $request->query->get('status');
-                $agency = $request->query->get('agency');
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
                 $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
                 $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
-                    
-
+                $rep = $request->query->get('reps');
                 $natureTransfer = $request->query->get('natureTransfer');
+                $status = $request->query->get('status');
+
+                //! hotels
+                $hotel = $request->query->get('hotel');
+                $agency = $request->query->get('agency');
                 $flightNumber = $request->query->get('flightNumber');
                 $search = $request->query->get('search');
-                
+                    
                 $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
 
-                
-                
+                // la requete qui execute la recherche
+                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
-                //$result = $customerCardRepository->customerCardPageSearch($rep);
-                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $rep, $status, $agency, $search, $natureTransfer, $flightNumber);
-
+                dd($results);
                 // et on envoi la nouvelle page 
                 return $this->render('customer_card/index.html.twig', [
                     'customer_cards' => $results,
-                    'agenciesList' => $agenciesList,
+                    'agencies' => $agencies,
+                    'hotels' => $hotels,
                     'statusList' => $statusList,
                     'reps' => $reps
                 ]);
@@ -96,9 +106,13 @@ class CustomerCardController extends AbstractController
         }
 
 
+        // quand on arrive sur la page on récupere les mouvements du jour
+        $findAllByNow = $customerCardRepository->findByNow();
+
         return $this->render('customer_card/index.html.twig', [
-            'customer_cards' => $customerCardRepository->findAll(),
-            'agenciesList' => $agenciesList,
+            'customer_cards' => $findAllByNow,
+            'agencies' => $agencies,
+            'hotels' => $hotels,
             'statusList' => $statusList,
             'reps' => $reps
         ]);
@@ -107,12 +121,7 @@ class CustomerCardController extends AbstractController
     #[Route('/search', name: 'app_customer_card_search', methods: ['GET', 'POST'])]
     public function search(Request $request, CustomerCardRepository $customerCardRepository): Response
     {
-
-
-        
-        
         $results = $customerCardRepository->search($request->request->get('search'));
-
 
         return $this->render('customer_card/search.html.twig', [
             'customer_cards' => $results

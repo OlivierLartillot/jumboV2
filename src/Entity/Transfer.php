@@ -17,23 +17,11 @@ class Transfer
     #[ORM\Column(length: 24, nullable: true)]
     private ?string $serviceNumber = null;
 
-    #[ORM\Column(length: 24)]
-    private ?string $natureTransfer = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $dateHour = null;
 
     #[ORM\Column(length: 24, nullable: true)]
     private ?string $flightNumber = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $fromStart = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $toArrival = null;
-
-    #[ORM\Column(length: 24, nullable: true)]
-    private ?string $privateCollective = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $adultsNumber = null;
@@ -47,6 +35,21 @@ class Transfer
     #[ORM\ManyToOne(inversedBy: 'transfers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transfers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AirportHotel $fromStart = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transfersArrival')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AirportHotel $toArrival = null;
+
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $natureTransfer = null;
+
+    #[ORM\Column]
+    private ?bool $isCollective = null;
+
 
     public function getId(): ?int
     {
@@ -65,17 +68,7 @@ class Transfer
         return $this;
     }
 
-    public function getNatureTransfer(): ?string
-    {
-        return $this->natureTransfer;
-    }
 
-    public function setNatureTransfer(string $natureTransfer): self
-    {
-        $this->natureTransfer = $natureTransfer;
-
-        return $this;
-    }
 
     public function getDateHour(): ?\DateTimeImmutable
     {
@@ -97,42 +90,6 @@ class Transfer
     public function setFlightNumber(?string $flightNumber): self
     {
         $this->flightNumber = $flightNumber;
-
-        return $this;
-    }
-
-    public function getFromStart(): ?string
-    {
-        return $this->fromStart;
-    }
-
-    public function setFromStart(string $fromStart): self
-    {
-        $this->fromStart = $fromStart;
-
-        return $this;
-    }
-
-    public function getToArrival(): ?string
-    {
-        return $this->toArrival;
-    }
-
-    public function setToArrival(string $toArrival): self
-    {
-        $this->toArrival = $toArrival;
-
-        return $this;
-    }
-
-    public function getPrivateCollective(): ?string
-    {
-        return $this->privateCollective;
-    }
-
-    public function setPrivateCollective(?string $privateCollective): self
-    {
-        $this->privateCollective = $privateCollective;
 
         return $this;
     }
@@ -189,5 +146,52 @@ class Transfer
         return $this->dateHour->format('H:i');
     }
 
+    public function getFromStart(): ?AirportHotel
+    {
+        return $this->fromStart;
+    }
+
+    public function setFromStart(?AirportHotel $fromStart): self
+    {
+        $this->fromStart = $fromStart;
+
+        return $this;
+    }
+
+    public function getToArrival(): ?AirportHotel
+    {
+        return $this->toArrival;
+    }
+
+    public function setToArrival(?AirportHotel $toArrival): self
+    {
+        $this->toArrival = $toArrival;
+
+        return $this;
+    }
+
+    public function getNatureTransfer(): ?int
+    {
+        return $this->natureTransfer;
+    }
+
+    public function setNatureTransfer(int $natureTransfer): self
+    {
+        $this->natureTransfer = $natureTransfer;
+
+        return $this;
+    }
+
+    public function isIsCollective(): ?bool
+    {
+        return $this->isCollective;
+    }
+
+    public function setIsCollective(bool $isCollective): self
+    {
+        $this->isCollective = $isCollective;
+
+        return $this;
+    }
 
 }

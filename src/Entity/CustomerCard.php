@@ -25,9 +25,6 @@ class CustomerCard
     #[ORM\Column(length: 255)]
     private ?string $holder = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $agency = null;
-
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $adultsNumber = null;
 
@@ -74,6 +71,9 @@ class CustomerCard
 
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: Comment::class)]
     private Collection $comments;
+
+    #[ORM\ManyToOne(inversedBy: 'customerCards')]
+    private ?Agency $agency = null;
 
 
     public function __construct()
@@ -123,18 +123,6 @@ class CustomerCard
     public function setHolder(string $holder): self
     {
         $this->holder = $holder;
-        
-        return $this;
-    }
-    
-    public function getAgency(): ?string
-    {
-        return $this->agency;
-    }
-    
-    public function setAgency(string $agency): self
-    {
-        $this->agency = $agency;
         
         return $this;
     }
@@ -420,6 +408,18 @@ class CustomerCard
                 $comment->setCustomerCard(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAgency(): ?Agency
+    {
+        return $this->agency;
+    }
+
+    public function setAgency(?Agency $agency): self
+    {
+        $this->agency = $agency;
 
         return $this;
     }

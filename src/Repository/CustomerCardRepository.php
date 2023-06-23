@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\CustomerCard;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,6 +41,33 @@ class CustomerCardRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by now (day)
+     */
+    public function findByNow(): array
+    {
+
+        $dateTimeImmutable = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo'));
+        $dateTime = $dateTimeImmutable->format("Y-m-d");
+        //America/Dominica / America/Santo_Domingo
+/*         $timezone_identifiers = DateTimeZone::listIdentifiers( DateTimeZone::AMERICA );
+        dd(join( ', ', $timezone_identifiers ));
+ */
+
+     return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
+            ->andWhere('transfer.dateHour >= :date_start')
+            ->andWhere('transfer.dateHour <= :date_end')
+            ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
+            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
 
 
 
@@ -132,8 +160,9 @@ class CustomerCardRepository extends ServiceEntityRepository
         ;
     }
 
+
  /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by meeting date (day) and 
+     * @return CustomerCard[] Returns an array of CustomerCard objects by agencies 
      */
     public function agenciesList(): array
     {
@@ -148,14 +177,16 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
 
-    public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $rep, $status, $agency, $search, $natureTransfer, $flightNumber): ?array
+    public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
     {      
 
 
 
          $requete = $this->createQueryBuilder('c')
                             ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
-                            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard');
+                            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
+                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transfer.fromStart OR airportHotel.id = transfer.toArrival')
+                            ;
 
         // todo: date
             if ($dateStart != "") {
@@ -170,7 +201,11 @@ class CustomerCardRepository extends ServiceEntityRepository
 
         // recup de l agence
         if ($agency != "all") {
-            $requete = $requete->andWhere('c.agency LIKE :agency')->setParameter('agency', '%'.$agency.'%');
+            $requete = $requete->andWhere('c.agency = :agency')->setParameter('agency', $agency);
+        }
+        // recup de l agence
+        if ($hotel != "all") {
+            $requete = $requete->andWhere('airportHotel.id = :hotel')->setParameter('hotel', $hotel)->orWhere();
         }
 
 
