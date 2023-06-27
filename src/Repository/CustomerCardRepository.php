@@ -181,47 +181,90 @@ class CustomerCardRepository extends ServiceEntityRepository
 
     public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
     {      
-
-
-        
-
         $requete = $this->createQueryBuilder('c');
         
+         $requete = $requete->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard');
 
-         // todo ! Pour les transferts arrivée/interHotel/departure, géréer dans l affichage ! nous avons toujours besoin de select arrival car on utilise les données dans l affichage !!!!
-            $requete = $requete->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
-            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
-            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
-            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
-            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival')
+        // Les résultats dépendent de la nature du transfert
+        if ($natureTransfer == "all") {
+            $requete = $requete
+                            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+                            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+                            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival')
             ;
-        
-                
-        //si la date 1 est avant l'intervalle et que la date deux est différent d'avant l intervalle
-        
-        // si la date1 est choisie 
-        
-        // si la date
-            if ($customerPresence == "on") {
-                $requete = $requete->andWhere('(transferArrival.date = :dateStart and transferArrival.date = :dateEnd) 
-                                            or (transferInterHotel.date = :dateStart and transferInterHotel.date = :dateEnd)
-                                            or (transferDeparture.date = :dateStart and transferDeparture.date = :dateEnd)' )
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('(transferArrival.date = :dateStart or transferArrival.date = :dateEnd) 
+                                            or (transferInterHotel.date = :dateStart or transferInterHotel.date = :dateEnd)
+                                            or (transferDeparture.date = :dateStart or transferDeparture.date = :dateEnd)' )
                 ->setParameter('dateStart', $dateStart->format('Y-m-d'))
                 ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
                 ;
 
             }  else {
-                if ($dateStart != "") {
-                    $requete = $requete->andWhere('transferArrival.date >= :dateStart
-                                                or transferInterHotel.date >= :dateStart
-                                                or transferDeparture.date >= :dateStart')->setParameter('dateStart', $dateStart);
-                }
-                if ($dateEnd != "") { 
-                    $requete = $requete->andWhere('transferArrival.date <= :dateEnd
-                                                or transferInterHotel.date <= :dateEnd
-                                                or transferDeparture.date <= :dateEnd')->setParameter('dateEnd',  $dateEnd);
-                } 
+                $requete = $requete->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
+                                    ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
+                                    ->orWhere('(transferArrival.date <= :dateStart 
+                                                and transferArrival.date <= :dateEnd) 
+                                                and (transferDeparture.date >= :dateStart 
+                                                or transferDeparture.date is null)')
+                                    ->orWhere('(transferArrival.date >= :dateStart 
+                                                and transferArrival.date >= :dateEnd)
+                                                and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
+                                                or transferDeparture.date is null)')
+  
+/*                                     ->orWhere('transferArrival.date <= :dateStart and transferDeparture.date >= :dateStart')
+                                    ->orWhere('transferArrival.date >= :dateStart and transferDeparture.date is null') */
+                                    ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
+
             }
+        }
+        elseif ($natureTransfer == 1){
+            $requete = $requete->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival');
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('transferArrival.date = :dateStart or transferArrival.date = :dateEnd' )
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+            } else {
+                    $requete = $requete->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')->setParameter('dateStart', $dateStart);
+                    $requete = $requete->orWhere('transferArrival.date <= :dateStart and transferArrival.date >= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+            }
+        }
+        elseif ($natureTransfer == 2){
+            $requete = $requete->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival');
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('transferInterHotel.date = :dateStart or transferInterHotel.date = :dateEnd' )
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+            } else {
+                    $requete = $requete->andWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')->setParameter('dateStart', $dateStart);
+                    $requete = $requete->orWhere('transferInterHotel.date <= :dateStart and transferInterHotel.date >= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+
+            }
+        }
+        else{
+            $requete = $requete->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival');
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('transferDeparture.date = :dateStart or transferDeparture.date = :dateEnd' )
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+            } else {
+            
+                    $requete = $requete->andWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+                    $requete = $requete->orWhere('transferDeparture.date <= :dateStart and transferDeparture.date >= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+            }
+        }
+         
 
                             
         // si la date 1 ou la date 2 est dans l'intervalle
@@ -250,21 +293,24 @@ class CustomerCardRepository extends ServiceEntityRepository
                             ->setParameter('jumboNumber', '%'.$search.'%')
                             ->setParameter('voucherNumber', '%'.$search.'%');
 
-
-
-
-
-
-
-
-        if ($flightNumber != "all") {
-            $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival')->setParameter('transferArrival', '%'.$flightNumber.'%');
+        // traitement du numéro de vol (est associé a la nature du transfer)
+        if ($flightNumber != 'all') {
+            if ($natureTransfer == "all") {
+                $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival 
+                                OR transferDeparture.flightNumber LIKE :transferDeparture')
+                                ->setParameter('transferArrival', '%'.$flightNumber.'%')
+                                ->setParameter('transferDeparture', '%'.$flightNumber.'%');
+            } elseif ($natureTransfer == 1) {
+                $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival')->setParameter('transferArrival', '%'.$flightNumber.'%');
+            } elseif ($natureTransfer == 3) {
+                $requete = $requete->andWhere('transferDeparture.flightNumber LIKE :transferDeparture')->setParameter('transferDeparture', '%'.$flightNumber.'%');
+            }
+            elseif($natureTransfer == 2) {
+                $requete = $requete->andWhere('transferInterHotel.flightNumber LIKE :transferInterHotel')->setParameter('transferInterHotel', '%'.$flightNumber.'%');
+            }
         }
 
         $requete = $requete ->getQuery()->getResult();
-
-
-       //dd($requete);
 
         return $requete;
 
