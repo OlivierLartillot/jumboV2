@@ -248,8 +248,11 @@ class HomeController extends AbstractController
                 $desde = $airportHotelRepository->findOneBy(['name' => $record['Traslado desde']]);
                 $hasta = $airportHotelRepository->findOneBy(['name' => $record['Traslado hasta']]);
                 //définir si c est une arrivée/depart/interHotel
+
+                // si c est une arrivée
                 if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
-                    $fechaHora = $record['Fecha/Hora Origen'];
+                    //$fechaHora = $record['Fecha/Hora Origen'];
+                    $fechaHora = explode(" ", $record['Fecha/Hora Origen']);
                     $natureTransfer = 1;
                     $flightNumber = $record['Nº Vuelo/Transporte Origen'];
                     $dateTime = explode(" ", $record['Fecha/Hora Origen']);
@@ -272,13 +275,14 @@ class HomeController extends AbstractController
                         // hasta = $airport hotel courant
                         $hasta = $airportHotel;
                     };
-
-                } else if ($record['Nº Vuelo/Transporte Destino'] != NULL) {
-                    $fechaHora = $record['Fecha/Hora Destino'];
+                // Si c est un départ
+                } 
+                else if ($record['Nº Vuelo/Transporte Destino'] != NULL) {
+                    //$fechaHora = $record['Fecha/Hora Destino'];
+                    $fechaHora = explode(" ", $record['Fecha/Hora Destino']);
                     $natureTransfer = 3;
                     $flightNumber = $record['Nº Vuelo/Transporte Destino'];
                     $dateTime = explode(" ", $record['Fecha/Hora Destino']);
-
                     // check si cet hotel existe
                     if (empty($desde) ){
                         // ajouter l'hotel dans la table
@@ -296,12 +300,13 @@ class HomeController extends AbstractController
                         $manager->flush($airportHotel);
                         $hasta = $airportHotel;
                      };
+                // si c est un interHotel
                 } else {
-                    $fechaHora = $record['Fecha/Hora recogida'];
+                    //$fechaHora = $record['Fecha/Hora recogida'];
+                    $fechaHora = explode(" ", $record['Fecha/Hora recogida']);
                     $natureTransfer = 2;
                     $flightNumber = NULL;
                     $dateTime = explode(" ", $record['Fecha/Hora recogida']);
-
                     // check si cet hotel existe
                     if (empty($desde)){
                         // ajouter l'hotel dans la table
@@ -320,21 +325,22 @@ class HomeController extends AbstractController
                         $hasta = $airportHotel;
                     } ;
                 }
-
+               
 
                 $date = new DateTime($dateTime[0]);
                 $dateTime = $date->format('Y-d-m ' .$dateTime[1]);
-                $fechaHora = new DateTimeImmutable($dateTime);
+                $fechaHora = new DateTimeImmutable($dateTime);;        
                 
-
                 // on essaie de récupérer la fiche pour savoir si on va create or update
                 //$transferResult = $transferRepository->findOneBy(['customerCard' => $customerCard]);
                 if ($natureTransfer == 1) {
                     $transferResult = $transferArrivalRepository->findOneBy(['customerCard' => $customerCard]);
+                    
                 } elseif ($natureTransfer == 2) {
                     $transferResult = $transferInterHotelRepository->findOneBy(['customerCard' => $customerCard]);
                 } else {
                     $transferResult = $transferDepartureRepository->findOneBy(['customerCard' => $customerCard]);
+                    //dd($transferResult);
                 }
                 // $transfer = $this->transferRepository
                 // si l'enregistrement existe déja, on va le mettre a jour
@@ -352,6 +358,8 @@ class HomeController extends AbstractController
                  // sinon on va créer un nouvel objet
                  $transfer->setServiceNumber($record['Número Servicio']);
                  $transfer->setDateHour($fechaHora);
+                 $transfer->setDate($fechaHora);
+                 $transfer->setHour($fechaHora);
                  $transfer->setFlightNumber($flightNumber);
                  
                  /*                dd($record['Traslado desde']);

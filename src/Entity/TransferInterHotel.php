@@ -38,6 +38,12 @@ class TransferInterHotel
     #[ORM\Column]
     private ?bool $isCollective = null;
 
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $date = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $hour = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,6 +129,30 @@ class TransferInterHotel
     public function setIsCollective(bool $isCollective): self
     {
         $this->isCollective = $isCollective;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeImmutable $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getHour(): ?\DateTimeImmutable
+    {
+        return $this->hour;
+    }
+
+    public function setHour(\DateTimeImmutable $hour): self
+    {
+        $this->hour = $hour;
 
         return $this;
     }

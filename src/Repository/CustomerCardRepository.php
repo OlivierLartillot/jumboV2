@@ -183,32 +183,48 @@ class CustomerCardRepository extends ServiceEntityRepository
     {      
 
 
-         $requete = $this->createQueryBuilder('c')
-                            ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
-                            //->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
-                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transfer.fromStart OR airportHotel.id = transfer.toArrival')
-                            ;
+        
 
-        // sinon on filtre juste si la date match 
+        $requete = $this->createQueryBuilder('c');
+        
+
+         // todo ! Pour les transferts arrivée/interHotel/departure, géréer dans l affichage ! nous avons toujours besoin de select arrival car on utilise les données dans l affichage !!!!
+            $requete = $requete->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival')
+            ;
+        
+                
+        //si la date 1 est avant l'intervalle et que la date deux est différent d'avant l intervalle
+        
+        // si la date1 est choisie 
+        
+        // si la date
             if ($customerPresence == "on") {
-                $requete = $requete->andWhere('transfer.natureTransfer = 1 and transfer.dateHour < :dateStart and transfer.natureTransfer = 3 and transfer.dateHour > :dateStart' )
-                ->setParameter('dateStart', $dateStart)
+                $requete = $requete->andWhere('(transferArrival.date = :dateStart and transferArrival.date = :dateEnd) 
+                                            or (transferInterHotel.date = :dateStart and transferInterHotel.date = :dateEnd)
+                                            or (transferDeparture.date = :dateStart and transferDeparture.date = :dateEnd)' )
+                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
                 ;
-            } 
 
-            else {
+            }  else {
                 if ($dateStart != "") {
-                    $requete = $requete->andWhere('transfer.dateHour > :dateStart')->setParameter('dateStart', $dateStart);
+                    $requete = $requete->andWhere('transferArrival.date >= :dateStart
+                                                or transferInterHotel.date >= :dateStart
+                                                or transferDeparture.date >= :dateStart')->setParameter('dateStart', $dateStart);
                 }
                 if ($dateEnd != "") { 
-                    $requete = $requete->andWhere('transfer.dateHour < :dateEnd')->setParameter('dateEnd', $dateEnd);
-                }
-
+                    $requete = $requete->andWhere('transferArrival.date <= :dateEnd
+                                                or transferInterHotel.date <= :dateEnd
+                                                or transferDeparture.date <= :dateEnd')->setParameter('dateEnd',  $dateEnd);
+                } 
             }
-           
 
-
-        
+                            
+        // si la date 1 ou la date 2 est dans l'intervalle
         if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
         if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
 
@@ -234,14 +250,21 @@ class CustomerCardRepository extends ServiceEntityRepository
                             ->setParameter('jumboNumber', '%'.$search.'%')
                             ->setParameter('voucherNumber', '%'.$search.'%');
 
-        if ($natureTransfer != "all") {
-            $requete = $requete->andWhere('transfer.natureTransfer = :natureTransfer')->setParameter('natureTransfer', $natureTransfer);
-        }
+
+
+
+
+
+
+
         if ($flightNumber != "all") {
-            $requete = $requete->andWhere('transfer.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
+            $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival')->setParameter('transferArrival', '%'.$flightNumber.'%');
         }
 
         $requete = $requete ->getQuery()->getResult();
+
+
+       //dd($requete);
 
         return $requete;
 

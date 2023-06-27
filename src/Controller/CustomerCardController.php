@@ -63,11 +63,7 @@ class CustomerCardController extends AbstractController
                 
                 // todo  : alors on peut récupérer les données et les filtrer
                 
-
                 $customerPresence = $request->query->get('customerPresence');
-
-
-
 
                 // si tout va bien  on envoie la dql 
                 $dateStart = $request->query->get('dateStart');
@@ -87,9 +83,8 @@ class CustomerCardController extends AbstractController
                 $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
 
 
-                dd('jusque la tout va bien ? ');
                 // la requete qui execute la recherche
-                //$results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
                 //dd($results);
                 // et on envoi la nouvelle page 
