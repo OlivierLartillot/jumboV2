@@ -49,10 +49,16 @@
                             <label for="customerPresence">Présents dans cette pèriode</label><br> #}
 
 
+                            <div class="row mb-3" style="background-color:#cff4fc">
+                                <p class="p-3 ">
+                                    *Pour les présences, vous devez sélectionner la période et laisser "Nature Transfer" sur tous.
+                                </p>
+
+                            </div>
 
                             <div class="row mb-3 pb-3 border border-dark rounded" style="background-color: #cfe2ff;">
                                 <div class="col-md-2">
-                                    <div class="form-floating mt-4">
+                                    <div class="form-floating mt-3">
                                         <select name="customerPresence" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
                                             <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>Pèriode</option>
                                             <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>Mouvements à ces dates</option>
@@ -62,25 +68,9 @@
                                 </div>                            
                                 {% set now = "now"|date("Y-m-d") %}
                                 <div class="col-md-3">
-                                    <div><label for="dateStart" class=" col-form-label">Date Start</label></div>
-                                    <input class="form-control" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
-                                </div>
-                                <div class="col-md-3">  
-                                    <div><label for="dateEnd" class="2 col-form-label">Date End</label></div>
+                                    {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
+                                    <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
                                     <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="form-floating mb-3">
-                                        <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                                            <option value="all" selected>All Reps</option>
-                                            {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
-                                                <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
-                                            {% endfor %}
-                                        </select>
-                                        <label for="floatingSelectGrid">Select a rep</label>
-                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -93,6 +83,19 @@
                                             <option value="3" {{ (app.request.query.get('natureTransfer') == 3 ) ? 'selected' : '' }}>Departure</option>
                                         </select>
                                         <label for="floatingSelectGrid">Works with selects</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                            <option value="all" selected>All Reps</option>
+                                            {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
+                                                <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
+                                            {% endfor %}
+                                        </select>
+                                        <label for="floatingSelectGrid">Select a rep</label>
                                     </div>
                                 </div>
                                 <div class="col-md-2">

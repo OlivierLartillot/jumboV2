@@ -58,12 +58,11 @@
 
                                     <p class="text-muted">
                                         <i class="fas fa-hotel"></i> 
-                                        {% for transfer in customer_card.transfers %} 
-                                            {% if transfer.natureTransfer|lower == "arrivée" %}
+                                        {% for transfer in customer_card.transferArrivals %} 
                                                 {{ transfer.toArrival }}
-                                            {% elseif  transfer.natureTransfer|lower == "inter hotel" %}
+                                        {% endfor %}
+                                        {% for transfer in customer_card.transferinterHotels %} 
                                                 <br> <i class="fas fa-hotel"></i> {{ transfer.toArrival }}
-                                            {% endif  %}
                                         {% endfor %}
                                     </p>
                                 </div>
@@ -196,10 +195,8 @@
                                             <h5 class="my-0 text-primary"><i class="uil uil-calendar-alt me-3"></i>Date</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                            {% for transfer in customer_card.transfers %} 
-                                                {% if transfer.natureTransfer|lower == "arrivée" %}
-                                                    <h5 class="card-title">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                {% endif %}
+                                            {% for transfer in customer_card.transferArrivals %}        
+                                                <h5 class="card-title">{{ transfer.date | date('d-m-Y') }}</h5>
                                             {% endfor %}            
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -211,10 +208,8 @@
                                             <h5 class="my-0 text-primary"><i class="uil uil-clock me-3"></i>Hour</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                            {% for transfer in customer_card.transfers %} 
-                                                {% if transfer.natureTransfer|lower == "arrivée" %}
-                                                    <h5 class="card-title">{{ transfer.transferHourArrival }}</h5>
-                                                {% endif %}
+                                            {% for transfer in customer_card.transferArrivals %} 
+                                                    <h5 class="card-title">{{ transfer.hour | date('H:i') }}</h5>
                                         {% endfor %}
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -226,10 +221,8 @@
                                             <h5 class="my-0 text-primary"><i class="fas fa-plane me-3"></i>Flight #</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                            {% for transfer in customer_card.transfers %} 
-                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                            {% for transfer in customer_card.transferArrivals %} 
                                                     <h5 class="card-title">{{ transfer.flightNumber }}</h5>
-                                                {% endif %}
                                         {% endfor %}
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -247,10 +240,8 @@
                                             <h5 class="my-0 text-primary"><i class="uil uil-arrow-from-right me-3"></i>From</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                            {% for transfer in customer_card.transfers %} 
-                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                            {% for transfer in customer_card.transferArrivals %} 
                                                     <h5 class="card-title">{{ transfer.fromStart }}</h5>
-                                                {% endif %}
                                             {% endfor %}            
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -262,10 +253,8 @@
                                             <h5 class="my-0 text-primary"><i class="uil uil-arrow-to-right me-3"></i>To</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                            {% for transfer in customer_card.transfers %} 
-                                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                                            {% for transfer in customer_card.transferArrivals %} 
                                                     <h5 class="card-title">{{ transfer.toArrival }}</h5>
-                                                {% endif %}
                                             {% endfor %}
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -348,8 +337,8 @@
 
                        <div class="tab-pane" id="interHotel" role="tabpanel">
 
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "inter hotel" %}
+                            {% for transfer in customer_card.transferInterHotels %} 
+                               
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="card border border-primary">
@@ -374,14 +363,13 @@
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
                                 </div>
-                                {% endif %}
+                            
                             {% endfor %}
 
                             <hr class="my-4">
 
 
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "inter hotel" %}
+                            {% for transfer in customer_card.transferInterHotels %} 
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="card border border-primary">
@@ -407,7 +395,7 @@
                                     </div><!-- end col-md-4 -->
                 
                                 </div>
-                                {% endif %}
+                       
                             {% endfor %}       
 
                             <hr class="my-4">
@@ -475,8 +463,7 @@
                         {# Départ #}
                         <div class="tab-pane" id="departure" role="tabpanel">
 
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "départ" %}
+                            {% for transfer in customer_card.transferDeparture %} 
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <div class="card border border-primary">
@@ -507,7 +494,7 @@
                                                 <h5 class="my-0 text-primary"><i class="fas fa-plane me-3"></i> Flight Hour</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transfer.transferHourArrival }}</h5>
+                                                <h5 class="card-title">{{ transfer.hour| date('H:i') }}</h5>
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
@@ -524,14 +511,12 @@
                                     </div><!-- end col-md-4 -->
                 
                                 </div>
-                                {% endif %}
                             {% endfor %}
 
                             <hr class="my-4">
 
 
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "départ" %}
+                            {% for transfer in customer_card.transferDeparture %} 
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="card border border-primary">
@@ -557,7 +542,6 @@
                                     </div><!-- end col-md-4 -->
                 
                                 </div>
-                                {% endif %}
                             {% endfor %}       
 
                             <hr class="my-4">
@@ -641,8 +625,7 @@
 
                         <ul class="activity-feed mb-0 ps-2">
 
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "arrivée" %}
+                            {% for transfer in customer_card.transferDeparture %} 
                                     <li class="feed-item">
                                         <div class="feed-item-list">
                                             <p class="text-muted mb-1">Arrival: {{ transfer.dateHour | date('d-m-Y') }}</p>
@@ -653,7 +636,6 @@
                                             #}
                                         </div>
                                     </li>
-                                {% endif %}
                             {% endfor %}
 
                             <li class="feed-item">
@@ -671,23 +653,19 @@
                             </li>
 
 
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "inter hotel" %}
+                            {% for transfer in customer_card.transferInterHotels %} 
                                     <li class="feed-item">
                                         <div class="feed-item-list">
                                             <p class="text-muted mb-1">Inter Hotel: {{ transfer.dateHour | date('d-m-Y') }}</p>
                                         </div>
                                     </li>
-                                {% endif %}
                             {% endfor %}        
-                            {% for transfer in customer_card.transfers %} 
-                                {% if transfer.natureTransfer|lower == "départ" %}
+                            {% for transfer in customer_card.transferArrivals %} 
                                     <li class="feed-item">
                                         <div class="feed-item-list">
                                             <p class="text-muted mb-1">Departure: {{ transfer.dateHour | date('d-m-Y') }}</p>
                                         </div>
                                     </li>
-                                {% endif %}
                             {% endfor %}
 
                         </ul>

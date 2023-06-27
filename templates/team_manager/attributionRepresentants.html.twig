@@ -32,12 +32,11 @@
                                 <div class="mb-3">
                                     Agence: <strong>{{ firstClient.agency }}</strong> <br>
                                     Hôtel:
-                                    {% for infosTransfer in firstClient.transfers %}
+                                    {% for infosTransfer in firstClient.transferArrivals %}
                                         <strong>{{ infosTransfer.toArrival}}</strong><br/>
-                                    Pax: <strong>A:{{ infosTransfer.adultsNumber }}, N: {{ infosTransfer.childrenNumber}}, B: {{ infosTransfer.babiesNumber}}</strong><br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
-
                                     {% endfor %}
 
+                                    Pax: <strong>A:{{ firstClient.adultsNumber }}, N: {{ firstClient.childrenNumber}}, B: {{ firstClient.babiesNumber}}</strong><br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
                                     Nom: <b>{{ firstClient.holder }}</b> <br>
                                     Date d'arrivée: <b>{{ firstClient.meetingAt | date('d-m-Y') }}</b>
                                 </div>

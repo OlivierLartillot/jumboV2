@@ -54,6 +54,30 @@ class TeamManagerController extends AbstractController
             
             if ($form->isSubmitted() && $form->isValid()) {
                 
+                $hotels = [];
+                foreach ($firstClient->getTransferArrivals() as $arrival) {
+                    $hotels[] = $arrival->getFromStart();
+                }
+            
+                $staff = $firstClient->getStaff();
+                $agency = $firstClient->getAgency();
+                $hotel = $hotels[0];
+  
+
+                // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
+                // Todo : Faire une dql pour pouvoir récupérer l hotel ou regarder peux etre si on peux obtenir tous les arrivées de ce jour ci pour cet hotel puis apres passer le deuxieme filtre
+                 $customers = $customerCardRepository->findBy([
+                    'staff' => NULL,
+                    'meetingAt' => $date,
+                    'getFromStart' => $hotel,
+                    'agency' => $agency
+                ]); 
+                // hydrater chaque objet avec le nouveau rep et sauvegarder
+                dd($customers);
+
+
+
+
                 $customerCardRepository->save($firstClient, true);                
                 return $this->redirect($this->generateUrl('app_admin_team_manager'));
 
