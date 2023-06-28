@@ -59,11 +59,11 @@
                             <div class="row mb-3 pb-3 border border-dark rounded" style="background-color: #cfe2ff;">
                                 <div class="col-md-2">
                                     <div class="form-floating mt-3">
-                                        <select name="customerPresence" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                                            <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>Pèriode</option>
-                                            <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>Mouvements à ces dates</option>
+                                        <select name="customerPresence" class="form-select" id="customerPresence" aria-label="Floating label select example">
+                                            <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>Présence</option>
+                                            <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>Opérations</option>
                                         </select>
-                                        <label for="floatingSelectGrid">Rechercher sur: </label>
+                                        <label for="customerPresence">Rechercher sur: </label>
                                     </div>
                                 </div>                            
                                 {% set now = "now"|date("Y-m-d") %}
@@ -74,74 +74,74 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-2">
+                                <div id="divNatureTransfer" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
                                     <div class="form-floating mb-3">
-                                        <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                        <select name="natureTransfer" class="form-select" id="natureTransfer" aria-label="Floating label select example">
                                             <option value="all" selected>Nature Transfer</option>
                                             <option value="1" {{ (app.request.query.get('natureTransfer') == 1 ) ? 'selected' : '' }}>Arrival</option>
                                             <option value="2" {{ (app.request.query.get('natureTransfer') == 2 ) ? 'selected' : '' }}>Inter Hotel</option>
                                             <option value="3" {{ (app.request.query.get('natureTransfer') == 3 ) ? 'selected' : '' }}>Departure</option>
                                         </select>
-                                        <label for="floatingSelectGrid">Works with selects</label>
+                                        <label for="natureTransfer">Works with selects</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                        <select name="reps" class="form-select" id="reps" aria-label="Floating label select example">
                                             <option value="all" selected>All Reps</option>
                                             {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
                                                 <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
                                             {% endfor %}
                                         </select>
-                                        <label for="floatingSelectGrid">Select a rep</label>
+                                        <label for="reps">Select a rep</label>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <select name="status" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                        <select name="status" class="form-select" id="statusForm" aria-label="Floating label select example">
                                             <option value="all" selected>Status</option>
                                             {% for status in statusList%}
                                                 <option value="{{ status.id }}" {{ (app.request.query.get('status') == status.id ) ? 'selected' : '' }}>{{ status.name }}</option>
                                             {% endfor %}
 
                                         </select>
-                                        <label for="floatingSelectGrid">Works with selects</label>
+                                        <label for="statusForm">Works with selects</label>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <select name="agency" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                        <select name="agency" class="form-select" id="agency" aria-label="Floating label select example">
                                                 <option value="all" selected>Agencies</option>
                                                 {% for agency in agencies%}
                                                     <option value="{{ agency.id }}" {{ (app.request.query.get('agency') == agency.id ) ? 'selected' : '' }}>{{ agency.name|title }}</option>
                                                 {% endfor %}
                                         </select>
-                                        <label for="floatingSelectGrid">Select Agency</label>
+                                        <label for="agency">Select Agency</label>
                                     </div>
                                 </div>      
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <select name="hotel" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                        <select name="hotel" class="form-select" id="hotel" aria-label="Floating label select example">
                                                 <option value="all" selected>Hotels</option>
                                                 {% for hotel in hotels%}
                                                     <option value="{{ hotel.id }}" {{ (app.request.query.get('hotel') == hotel.id ) ? 'selected' : '' }}>{{ hotel.name|title }}</option>
                                                 {% endfor %}
                                         </select>
-                                        <label for="floatingSelectGrid">Select Hotel</label>
+                                        <label for="hotel">Select Hotel</label>
                                     </div>
                                 </div>    
-                                <div class="col-md-2">
+                                <div id="divFlightNumber" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
                                     <div class="form-floating mb-3">
-                                        <input name="flightNumber" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
-                                        <label for="floatingnameInput">Flight Number</label>
+                                        <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
+                                        <label for="flightNumber">Flight Number</label>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <input name="search" type="text" class="form-control" id="floatingnameInput" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
-                                        <label for="floatingnameInput">Name, # RSA, # Voucher, # Jumbo </label>
+                                        <input name="search" type="text" class="form-control" id="search" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
+                                        <label for="search">Name, # RSA, # Voucher, # Jumbo </label>
                                     </div>
                                 </div>
                                 <div class="text-center text-md-start col-md-2 ">
@@ -356,6 +356,7 @@
         <script src="/js/pages/form-advanced.init.js"></script>
 
         <!-- App js -->
+        <script src="/js/jsPersos/gestionFiltreCustomerCards.js"></script>
         <script src="/js/app.js"></script>
 
     </body>
