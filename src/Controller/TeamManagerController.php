@@ -45,40 +45,41 @@ class TeamManagerController extends AbstractController
             ]
         
         ));
-
-
+        
+        //On récupère l'hotel d'arrivé
+        $hotels = [];
+        foreach ($firstClient->getTransferArrivals() as $arrival) {
+            $hotels[] = $arrival->getToArrival();
+        }
+        
+        $agency = $firstClient->getAgency();
+        $hotel = $hotels[0];
+        $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($date, $hotel, $agency);
+        $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($date, $hotel, $agency);
+        $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($date, $hotel, $agency);
+        
+        
         if ($firstClient != NULL) {
-
+            
             $form = $this->createForm(RepAttributionType::class, $firstClient);
             $form->handleRequest($request);
             
             if ($form->isSubmitted() && $form->isValid()) {
                 
-                $hotels = [];
-                foreach ($firstClient->getTransferArrivals() as $arrival) {
-                    $hotels[] = $arrival->getFromStart();
-                }
-            
+                //Attribuer le représentant a toutes les personnes sans représentants avec la date 00:01 et qui ont le meme couple hotels-agence
                 $staff = $firstClient->getStaff();
-                $agency = $firstClient->getAgency();
-                $hotel = $hotels[0];
-  
-
+                
                 // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
-                // Todo : Faire une dql pour pouvoir récupérer l hotel ou regarder peux etre si on peux obtenir tous les arrivées de ce jour ci pour cet hotel puis apres passer le deuxieme filtre
-                 $customers = $customerCardRepository->findBy([
-                    'staff' => NULL,
-                    'meetingAt' => $date,
-                    'getFromStart' => $hotel,
-                    'agency' => $agency
-                ]); 
-                // hydrater chaque objet avec le nouveau rep et sauvegarder
-                dd($customers);
-
-
-
-
-                $customerCardRepository->save($firstClient, true);                
+                $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($date, $hotel, $agency);
+                
+                
+                // pour chacun de ces objets, leur attribuer le staff correpondant
+                foreach ($customersWithoutRep as $customer) {
+                    $customer->setStaff($staff);
+                }
+                
+                $customerCardRepository->save($customer, true);   
+                            
                 return $this->redirect($this->generateUrl('app_admin_team_manager'));
 
             }
@@ -88,7 +89,10 @@ class TeamManagerController extends AbstractController
                 'form' => $form,
                 'controller_name' => 'team_managerController',
                 'countNonAttributedClients' => $countNonAttributedClients,
-                'date' => $date
+                'date' => $date,
+                'paxAdults' => $paxAdults,
+                'paxChildren' => $paxChildren,
+                'paxBabies' => $paxBabies
             ]);
         }  
 
@@ -96,7 +100,10 @@ class TeamManagerController extends AbstractController
             return $this->render('team_manager/attributionRepresentants.html.twig', [
                 'notClient' => true,
                 'controller_name' => 'team_managerController',
-                'date' => $date
+                'date' => $date,
+                'paxAdults' => $paxAdults,
+                'paxChildren' => $paxChildren,
+                'paxBabies' => $paxBabies
             ]); 
         } 
 

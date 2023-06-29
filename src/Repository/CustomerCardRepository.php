@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @extends ServiceEntityRepository<CustomerCard>
@@ -318,6 +319,94 @@ class CustomerCardRepository extends ServiceEntityRepository
     } 
 
 
+    // team Manager
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findByForAttribbutionRep($date, $hotel, $agency): array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function countPaxAdultsAttribbutionRep($date, $hotel, $agency)
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.adultsNumber)')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function countPaxChildrenAttribbutionRep($date, $hotel, $agency)
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.childrenNumber)')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+        /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function countPaxBabiesAttribbutionRep($date, $hotel, $agency)
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.babiesNumber)')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
 
 
 

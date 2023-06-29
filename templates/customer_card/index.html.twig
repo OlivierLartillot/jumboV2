@@ -45,7 +45,7 @@
                                 app.request.query 
                             #}
 
-{#                             <input type="checkbox" id="customerPresence" name="customerPresence" {{ (app.request.query.get('customerPresence') != null) ? 'checked' : '' }}>
+{#                          <input type="checkbox" id="customerPresence" name="customerPresence" {{ (app.request.query.get('customerPresence') != null) ? 'checked' : '' }}>
                             <label for="customerPresence">Présents dans cette pèriode</label><br> #}
 
 
@@ -123,13 +123,13 @@
                                 </div>      
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <select name="hotel" class="form-select" id="hotel" aria-label="Floating label select example">
+                                        <select name="hotel" class="form-select-perso" id="hotel" aria-label="Floating label select example">
                                                 <option value="all" selected>Hotels</option>
                                                 {% for hotel in hotels%}
                                                     <option value="{{ hotel.id }}" {{ (app.request.query.get('hotel') == hotel.id ) ? 'selected' : '' }}>{{ hotel.name|title }}</option>
                                                 {% endfor %}
                                         </select>
-                                        <label for="hotel">Select Hotel</label>
+                                        {# <label for="hotel">Select Hotel</label> #}
                                     </div>
                                 </div>    
                                 <div id="divFlightNumber" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
@@ -140,8 +140,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <input name="search" type="text" class="form-control" id="search" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
-                                        <label for="search">Name, # RSA, # Voucher, # Jumbo </label>
+                                        <input name="search" type="text" class="form-control-perso" id="search" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
+                                        {# <label for="search">Name, # RSA, # Voucher, # Jumbo </label> #}
                                     </div>
                                 </div>
                                 <div class="text-center text-md-start col-md-2 ">

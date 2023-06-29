@@ -37,7 +37,7 @@
                                 {% for client in attributionClientsByRepAndDate %}
                                     <tr>
                                         <td>
-                                        {% for infosTransfer in client.transfers %}
+                                        {% for infosTransfer in client.transferArrivals %}
                                             {{ infosTransfer.toArrival}}
                                         {% endfor %}
                                         </td>

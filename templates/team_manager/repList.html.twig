@@ -38,12 +38,11 @@
                                     {% set currentStaff = "" %}
                                     {% for client in reps %}   
                                         <p class="card-text {{(client.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
-                                            {% for infosTransfer in client.transfers %}
-                                                <strong>{{ infosTransfer.toArrival}}</strong><br/>
-                                                <strong>Pax:</strong> A:{{ infosTransfer.adultsNumber }}, N: {{ infosTransfer.childrenNumber}}, B: {{ infosTransfer.babiesNumber}}<br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
-                                    
+                                            {% for infosTransfer in client.transferArrivals %}
+                                                <strong>{{ infosTransfer.toArrival }}</strong><br/>
                                             {% endfor %}
-                                            {{ client.holder }} <br> 
+                                                <strong>Pax:</strong> A:{{ client.adultsNumber }}, N: {{ client.childrenNumber}}, B: {{ client.babiesNumber}}<br/>
+                                                {{ client.holder }} <br> 
                                             client meeting at: {{ client.getMeetingAtTime }} - {{ client.meetingPoint != null ? client.meetingPoint.name  : "" }}
                                             {% set currentStaff = client.staff.id %}
                                         </p>

@@ -9,12 +9,6 @@
                 <div>
                     <h4 class="mb-1 mt-1">Attributions rep</h4>
 
-                        <div class="bg-danger">
-                            <p>Trouver la premiere occurence du jour qui n a pas de staff</p>
-                            <p>Afficher le couple hotel - agence</p>
-                            <p>valider le staff pour tous les couples hotels-agence qui sont égaux a cet objet</p>
-                            <p>QUANTITée de PAX pour ce couple</p>
-                        </div>
                         <form action={{ path('app_admin_team_manager') }} method="GET">
                             <input name="date" type="date" value="{{date | date('Y-m-d') }}">
                             <input type="submit">
@@ -30,22 +24,24 @@
                                 <p class="alert alert-danger" role="alert">Il reste encore {{ countNonAttributedClients }} client(s)  à attribuer </p>
 
                                 <div class="mb-3">
+                                    Date d'arrivée: <b>{{ firstClient.meetingAt | date('d-m-Y') }}</b><br>
                                     Agence: <strong>{{ firstClient.agency }}</strong> <br>
                                     Hôtel:
                                     {% for infosTransfer in firstClient.transferArrivals %}
                                         <strong>{{ infosTransfer.toArrival}}</strong><br/>
                                     {% endfor %}
+                                    <p>
+                                        Pax: <b>Adults: {{ paxAdults }}, Children:  {{ paxChildren }}, Babies: {{ paxBabies }}</b>
+                                    </p>
 
-                                    Pax: <strong>A:{{ firstClient.adultsNumber }}, N: {{ firstClient.childrenNumber}}, B: {{ firstClient.babiesNumber}}</strong><br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
-                                    Nom: <b>{{ firstClient.holder }}</b> <br>
-                                    Date d'arrivée: <b>{{ firstClient.meetingAt | date('d-m-Y') }}</b>
+                                    
                                 </div>
 
                             {{ form(form) }}
                         {% endif %}
 
                 </div>
-                <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i class="mdi mdi-arrow-up-bold me-1"></i>2.65%</span> since last week</p>
+              
             </div>
         </div>
     </div> <!-- end col-->
