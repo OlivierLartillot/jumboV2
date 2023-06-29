@@ -126,9 +126,34 @@ class TeamManagerController extends AbstractController
 
 
         // nombre de clients sans attributions
+        // TODO : ici on reprend ceux qui n ont pas de rep !!! Nous ici on a des rep
         $countNonAssignedClient = $customerCardRepository->countNumberNonAttributedMeetingsByDate($date);
+        $users = [];
+        $paxTab = [];
+        foreach($repUsers as $user) {
+            if(in_array('ROLE_REP', $user->getRoles())){  
+                $users[] = $user; 
+                $paxTab[$user->getUsername()]['adults'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "adults");
+                $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "children");
+                $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "babies");
+            }
+        }
+        $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
+        
+/*         //initialisation du tableau des résultats
+        $clientsListByRepAndDate = [];
 
-        //initialisation du tableau des résultats
+        // pour chaque rep, recupere la liste des gens attribués ce jour la par rep et date
+        foreach($repUsers as $user) {
+            if(in_array('ROLE_REP', $user->getRoles())){ 
+                $attributionClientsByRepAndDate =  $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
+                $clientsListByRepAndDate[$user->getUsername()] = $attributionClientsByRepAndDate;
+            }
+        }  */
+
+
+
+/*                 //initialisation du tableau des résultats
         $clientsListByRepAndDate = [];
 
         // pour chaque rep, recupere la liste des gens attribués ce jour la par rep et date
@@ -137,14 +162,30 @@ class TeamManagerController extends AbstractController
                 $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
                 $clientsListByRepAndDate[$user->getUsername()] = $attributionClientsByRepAndDate;
             }
-        }
+        } */
 
-        dump($clientsListByRepAndDate);
+
+
+        //initialisation du tableau des résultats
+/*         $clientsListByRepAndDate = [];
+
+        // pour chaque rep, recupere la liste des gens attribués ce jour la par rep et date
+        foreach($repUsers as $user) {
+            if(in_array('ROLE_REP', $user->getRoles())){ 
+                $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
+                $clientsListByRepAndDate[$user->getUsername()] = $attributionClientsByRepAndDate;
+            }
+        } */
+
+        
 
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
-            'clientsListByRepAndDate' => $clientsListByRepAndDate,
-            'countNonAssignedClient' => $countNonAssignedClient
+            'users' => $users,
+            'regroupementsClients' => $regroupementsClients,
+            /* 'clientsListByRepAndDate' => $clientsListByRepAndDate,  */
+            'countNonAssignedClient' => $countNonAssignedClient,
+            'paxTab' => $paxTab
         ]);
 
     } 

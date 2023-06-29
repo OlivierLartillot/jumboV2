@@ -37,7 +37,7 @@
                                 {% for client in attributionClientsByRepAndDate %}
                                     <tr>
                                         <td>
-                                        {% for infosTransfer in client.transferArrivals %}
+                                        {% for infosTransfer in client.transferAryrivals %}
                                             {{ infosTransfer.toArrival}}
                                         {% endfor %}
                                         </td>
@@ -68,6 +68,43 @@
                             
                                 {% endfor %}
 
+
+
+
+                                {# {% for client in attributionClientsByRepAndDate %}
+                                    <tr>
+                                        <td>
+                                        {% for infosTransfer in client.transferAryrivals %}
+                                            {{ infosTransfer.toArrival}}
+                                        {% endfor %}
+                                        </td>
+                                        <td>{{ client.holder }}</td> 
+                                        <td> <input type="time" value="{{ client.getMeetingAtTime}}" name="hour_{{ client.id }}"/></td> 
+                                        <td> 
+                                            <select name="staff_{{ client.id }}">
+                                                {% for user in users %}
+                                                    {% if "ROLE_REP" in user.roles %}
+                                                        <option value="{{user.id}}" {{ user.id == client.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td> 
+                                        <td>
+                                            <select name="meetingPoint_{{ client.id }}">
+                                                {% for meetingPoint in meetingPoints %}
+
+                                                    {% if  client.meetingPoint is not null %}
+                                                        <option value="{{meetingPoint.id}}" {{ meetingPoint.id == client.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
+                                                    {% else %}
+                                                        <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td> 
+                                    </tr>
+                            
+                                {% endfor %}
+ #}
                         </tbody>
                     </table>
                 </div>

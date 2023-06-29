@@ -25,7 +25,48 @@
         {% endif %}
 
         <div class="row">
-            {% for  key,reps in clientsListByRepAndDate %}
+            {% for user in users %}
+                <div class="col-sm-5 mb-3 mb-sm-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ user }} </h5>
+                                {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
+                                {% if paxCount == 0 %}  <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p> 
+                                {% else %}   
+                                <p>Adults: {{ paxTab[user.username]['adults'] }}  / Children: {{ paxTab[user.username]['children'] }}  / Babies: {{ paxTab[user.username]['babies'] }} </p>
+                                {% endif %}
+                                <hr>
+                                {% for regroupement in regroupementsClients %}
+                                    {% if (regroupement is empty) %}                                                        
+                                    {% endif %}
+                                    {% if regroupement.staff == user %}
+                                        <p class="card-text {{(regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
+                                            {% for infosTransfer in regroupement.transferArrivals %}
+                                                <strong>{{ infosTransfer.toArrival }}</strong><br/>
+                                            {% endfor %}
+                                            <strong>{{ regroupement.agency }}</strong><br/>
+                                            <strong>Pax:</strong> A:{{ regroupement.adultsNumber }}, N: {{ regroupement.childrenNumber}}, B: {{ regroupement.babiesNumber}}<br/>
+                                            Meeting at: {{ regroupement.getMeetingAtTime }} - {{ regroupement.meetingPoint != null ? regroupement.meetingPoint.name  : "" }}
+                                            
+                                        </p>
+                                        <hr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if paxCount > 0 %}
+                                    <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">Modifier Heure / Representant</a> 
+                                {% endif %}
+                        </div>              
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+
+{#             {% for key,reps in clientsListByRepAndDate %}
+
+                    {% for regroupment in reps %} {{ regroupment.staff }} {% endfor %}
                     <div class="col-sm-5 mb-3 mb-sm-0">
                         <div class="card">
                             <div class="card-body">
@@ -53,7 +94,39 @@
                             </div>
                         </div>
                     </div>
-            {% endfor %}
+            {% endfor %} #}
+
+{#             {% for  key,reps in clientsListByRepAndDate %}
+                    <div class="col-sm-5 mb-3 mb-sm-0">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if (reps is empty) %} 
+                                    <h5 class="card-title">{{ key }} </h5>
+                                        <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p>
+                                {% else %} 
+                                    <h5 class="card-title">{{ key }}</h5>
+                                
+                                    {% set currentStaff = "" %}
+                                    {% for client in reps %}   
+                                        <p class="card-text {{(client.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
+                                            {% for infosTransfer in client.transferArrivals %}
+                                                <strong>{{ infosTransfer.toArrival }}</strong><br/>
+                                            {% endfor %}
+                                                <strong>Pax:</strong> A:{{ client.adultsNumber }}, N: {{ client.childrenNumber}}, B: {{ client.babiesNumber}}<br/>
+                                                {{ client.holder }} <br> 
+                                            client meeting at: {{ client.getMeetingAtTime }} - {{ client.meetingPoint != null ? client.meetingPoint.name  : "" }}
+                                            {% set currentStaff = client.staff.id %}
+                                        </p>
+                                        <hr>
+                                    {% endfor %}
+                                <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: currentStaff })}}" class="btn btn-primary">Modifier Heure / Representant</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %} #}
+
+
         </div> 
 
 
