@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @extends ServiceEntityRepository<CustomerCard>
@@ -56,9 +57,11 @@ class CustomerCardRepository extends ServiceEntityRepository
  */
 
      return $this->createQueryBuilder('c')
-            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
-            ->andWhere('transfer.dateHour >= :date_start')
-            ->andWhere('transfer.dateHour <= :date_end')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->andWhere('transferArrival.date >= :date_start')
+            ->andWhere('transferArrival.date <= :date_end')
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
             ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
             ->orderBy('c.id', 'ASC')
@@ -179,35 +182,94 @@ class CustomerCardRepository extends ServiceEntityRepository
 
     public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
     {      
+        $requete = $this->createQueryBuilder('c');
+        
+         $requete = $requete->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard');
 
+        // Les résultats dépendent de la nature du transfert
+        if ($natureTransfer == "all") {
+            $requete = $requete
+                            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+                            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+                            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival')
+            ;
+            if ($customerPresence == 2) {
+                $requete = $requete->orWhere('transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd')
+                                    ->orWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd')
+                                    ->orWhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd')
 
-
-         $requete = $this->createQueryBuilder('c')
-                            ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
-                            ->leftJoin('App\Entity\Transfer', 'transfer', 'WITH', 'c.id = transfer.customerCard')
-                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transfer.fromStart OR airportHotel.id = transfer.toArrival')
-                            ;
-
-        // sinon on filtre juste si la date match 
-            if ($customerPresence == "on") {
-                $requete = $requete->andWhere('transfer.natureTransfer = 1 and transfer.dateHour < :dateStart and transfer.natureTransfer = 3 and transfer.dateHour > :dateStart' )
-                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
                 ;
-            } 
 
-            else {
-                if ($dateStart != "") {
-                    $requete = $requete->andWhere('transfer.dateHour > :dateStart')->setParameter('dateStart', $dateStart);
-                }
-                if ($dateEnd != "") { 
-                    $requete = $requete->andWhere('transfer.dateHour < :dateEnd')->setParameter('dateEnd', $dateEnd);
-                }
+            }  else {
+                $requete = $requete->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
+                                    ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
+                                    ->orWhere('(transferArrival.date <= :dateStart 
+                                                and transferArrival.date <= :dateEnd) 
+                                                and (transferDeparture.date >= :dateStart 
+                                                or transferDeparture.date is null)')
+                                    ->orWhere('(transferArrival.date >= :dateStart 
+                                                and transferArrival.date >= :dateEnd)
+                                                and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
+                                                or transferDeparture.date is null)')
+  
+/*                                     ->orWhere('transferArrival.date <= :dateStart and transferDeparture.date >= :dateStart')
+                                    ->orWhere('transferArrival.date >= :dateStart and transferDeparture.date is null') */
+                                    ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
 
             }
-           
+        }
+        elseif ($natureTransfer == 1){
+            $requete = $requete->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival');
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd' )
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+            } else {
+                    $requete = $requete->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')->setParameter('dateStart', $dateStart);
+                    $requete = $requete->orWhere('transferArrival.date <= :dateStart and transferArrival.date >= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+            }
+        }
+        elseif ($natureTransfer == 2){
+            $requete = $requete->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival');
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd' )
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+            } else {
+                    $requete = $requete->andWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')->setParameter('dateStart', $dateStart);
+                    $requete = $requete->orWhere('transferInterHotel.date <= :dateStart and transferInterHotel.date >= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
 
+            }
+        }
+        else{
+            $requete = $requete->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival');
+            if ($customerPresence == 2) {
+                $requete = $requete->andWhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd' )
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+            } else {
+            
+                    $requete = $requete->andWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+                    $requete = $requete->orWhere('transferDeparture.date <= :dateStart and transferDeparture.date >= :dateEnd ')
+                    ->setParameter('dateStart', $dateStart)->setParameter('dateEnd',  $dateEnd);
+            }
+        }
+         
 
-        
+                            
+        // si la date 1 ou la date 2 est dans l'intervalle
         if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
         if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
 
@@ -233,11 +295,21 @@ class CustomerCardRepository extends ServiceEntityRepository
                             ->setParameter('jumboNumber', '%'.$search.'%')
                             ->setParameter('voucherNumber', '%'.$search.'%');
 
-        if ($natureTransfer != "all") {
-            $requete = $requete->andWhere('transfer.natureTransfer = :natureTransfer')->setParameter('natureTransfer', $natureTransfer);
-        }
-        if ($flightNumber != "all") {
-            $requete = $requete->andWhere('transfer.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
+        // traitement du numéro de vol (est associé a la nature du transfer)
+        if ($flightNumber != 'all') {
+            if ($natureTransfer == "all") {
+                $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival 
+                                OR transferDeparture.flightNumber LIKE :transferDeparture')
+                                ->setParameter('transferArrival', '%'.$flightNumber.'%')
+                                ->setParameter('transferDeparture', '%'.$flightNumber.'%');
+            } elseif ($natureTransfer == 1) {
+                $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival')->setParameter('transferArrival', '%'.$flightNumber.'%');
+            } elseif ($natureTransfer == 3) {
+                $requete = $requete->andWhere('transferDeparture.flightNumber LIKE :transferDeparture')->setParameter('transferDeparture', '%'.$flightNumber.'%');
+            }
+            elseif($natureTransfer == 2) {
+                $requete = $requete->andWhere('transferInterHotel.flightNumber LIKE :transferInterHotel')->setParameter('transferInterHotel', '%'.$flightNumber.'%');
+            }
         }
 
         $requete = $requete ->getQuery()->getResult();
@@ -247,7 +319,288 @@ class CustomerCardRepository extends ServiceEntityRepository
     } 
 
 
+    // team Manager
 
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findByForAttribbutionRep($date, $hotel, $agency): array
+    {
+
+
+        return $this->createQueryBuilder('c')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an sum of CustomerCards Adults pax
+     * Attribution des représentants
+     */
+    public function countPaxAdultsAttribbutionRep($date, $hotel, $agency)
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.adultsNumber)')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an sum of CustomerCards children pax
+     * Attribution des représentants
+     */
+    public function countPaxChildrenAttribbutionRep($date, $hotel, $agency) 
+    {
+
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.childrenNumber)')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns the sum of CustomerCards Babies pax
+     * Attribution des représentants
+     */
+    public function countPaxBabiesAttribbutionRep($date, $hotel, $agency) 
+    {
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.babiesNumber)')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff is null')
+            ->andWhere('c.meetingAt = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of customersCards at this choosen date grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des représentants
+     */
+    public function regroupmentByDayStaffAgencyAndHotel($date) :array
+    {
+
+       
+        return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff is not null')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->groupBy('c.staff, c.agency ,transferArrival.toArrival')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of each date for customers without rep 
+     * Attribution des représentants
+     */
+    public function datesForCustomersWithoutRep() :array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->select('transferArrival.date')
+            ->where('c.staff is null')
+            ->groupBy('transferArrival.date')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+
+    /**
+     * @return CustomerCard[] Returns an sum of CustomerCards pax by age and date
+     * nombre de pax attribués pour un rep à ce jour
+     */
+    public function staffPaxAdultsByDate($staff,$date, $age)
+    {
+        $date = $date->format('Y-m-d');
+        $requete = $this->createQueryBuilder('c');
+
+        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
+        else { $requete = $requete->select('sum(c.babiesNumber)') ;}
+       
+        return 
+            $requete
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('transferArrival.date = :date')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('date', $date)     
+            ->setParameter('staff', $staff)     
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+        /**
+     * @return CustomerCard[] Returns an sum of CustomerCards pax by age and date
+     * nombre de pax attribués pour un rep à ce jour
+     */
+    public function staffPaxByDateHotelAgenceAge($date, $age, $hotel, $agency)
+    {
+        $date = $date->format('Y-m-d');
+        $requete = $this->createQueryBuilder('c');
+
+        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
+        else { $requete = $requete->select('sum(c.babiesNumber)') ;}
+       
+        return 
+            $requete
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('transferArrival.date = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)     
+            ->setParameter('hotel', $hotel)     
+            ->setParameter('agency', $agency)     
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des meetings
+     */
+    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
+    {
+
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('staff', $staff)
+            ->groupBy('c.staff, c.agency ,transferArrival.toArrival')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des meetings
+     */
+    public function meetingByDayStaff($date, $staff) :array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('staff', $staff) 
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findCustomersByDateHotelAgency($date, $hotel, $agency): array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function paxForRegroupementHotelAndAgencies($date, $hotel, $agency, $staff, $age)
+    {
+
+        $requete = $this->createQueryBuilder('c');
+
+        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
+        else { $requete = $requete->select('sum(c.babiesNumber)') ;}
+
+        return $requete
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff = :staff')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->setParameter('staff', $staff)
+            /* ->groupBy('transferArrival.toArrival, c.agency') */
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
 
 
 //    public function findOneBySomeField($value): ?CustomerCard

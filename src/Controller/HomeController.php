@@ -8,6 +8,7 @@ use App\Entity\AirportHotel;
 use App\Entity\CustomerCard;
 use App\Entity\DragAndDrop;
 use App\Entity\TransferArrival;
+use App\Entity\TransferDeparture;
 use App\Entity\TransferInterHotel;
 use App\Form\DragAndDropType;
 use App\Repository\AgencyRepository;
@@ -15,6 +16,8 @@ use App\Repository\AirportHotelRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
+use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -65,9 +68,9 @@ class HomeController extends AbstractController
                                     CustomerCardRepository $customerCardRepository,
                                     AirportHotelRepository $airportHotelRepository,
                                     AgencyRepository $agencyRepository,
-                                    TransferArrival $transferArrival,
-                                    TransferInterHotel $transferInterHotel,
-                                    TransferArrival $transferDeparture,
+                                    TransferArrivalRepository $transferArrivalRepository,
+                                    TransferInterHotelRepository $transferInterHotelRepository,
+                                    TransferArrivalRepository $transferDepartureRepository,
                                     ): Response
     {
 
@@ -168,14 +171,14 @@ class HomeController extends AbstractController
                     // on peut comparer si la date est la meme que celle de l'objet
                     // on vérifie que la date n'ai pas changée
                     //définir si c est une arrivée car les meetings se font a l arrivée
-                    $mettreAjour = false;
                     if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
                         $fechaHora = $record['Fecha/Hora Origen'];
                         
-                        foreach ($customerCard->getTransfers() as $transfer) {
+
+                        foreach ($customerCard->getTransferArrivals() as $transfer) {
                             // si le transfer est arrivée ! il faut regarder si les dates correpondent (fichier et bdd)
                             // si la date est différente on met a jour le briefing
-                            if ( ($transfer->getNatureTransfer() == 1) and ($fechaHora != $transfer->getDateHour()->format('m/d/Y'. ' H:i')) ){ 
+                            if ( ($fechaHora != $transfer->getDateHour()->format('m/d/Y'. ' H:i')) ){ 
                                 // mettre ajour le briefing
                                 if ($record['Fecha/Hora Origen']) {
                                     $dateTime = explode(" ", $record['Fecha/Hora Origen']);
@@ -245,8 +248,11 @@ class HomeController extends AbstractController
                 $desde = $airportHotelRepository->findOneBy(['name' => $record['Traslado desde']]);
                 $hasta = $airportHotelRepository->findOneBy(['name' => $record['Traslado hasta']]);
                 //définir si c est une arrivée/depart/interHotel
+
+                // si c est une arrivée
                 if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
-                    $fechaHora = $record['Fecha/Hora Origen'];
+                    //$fechaHora = $record['Fecha/Hora Origen'];
+                    $fechaHora = explode(" ", $record['Fecha/Hora Origen']);
                     $natureTransfer = 1;
                     $flightNumber = $record['Nº Vuelo/Transporte Origen'];
                     $dateTime = explode(" ", $record['Fecha/Hora Origen']);
@@ -269,13 +275,14 @@ class HomeController extends AbstractController
                         // hasta = $airport hotel courant
                         $hasta = $airportHotel;
                     };
-
-                } else if ($record['Nº Vuelo/Transporte Destino'] != NULL) {
-                    $fechaHora = $record['Fecha/Hora Destino'];
+                // Si c est un départ
+                } 
+                else if ($record['Nº Vuelo/Transporte Destino'] != NULL) {
+                    //$fechaHora = $record['Fecha/Hora Destino'];
+                    $fechaHora = explode(" ", $record['Fecha/Hora Destino']);
                     $natureTransfer = 3;
                     $flightNumber = $record['Nº Vuelo/Transporte Destino'];
                     $dateTime = explode(" ", $record['Fecha/Hora Destino']);
-
                     // check si cet hotel existe
                     if (empty($desde) ){
                         // ajouter l'hotel dans la table
@@ -293,12 +300,13 @@ class HomeController extends AbstractController
                         $manager->flush($airportHotel);
                         $hasta = $airportHotel;
                      };
+                // si c est un interHotel
                 } else {
-                    $fechaHora = $record['Fecha/Hora recogida'];
+                    //$fechaHora = $record['Fecha/Hora recogida'];
+                    $fechaHora = explode(" ", $record['Fecha/Hora recogida']);
                     $natureTransfer = 2;
                     $flightNumber = NULL;
                     $dateTime = explode(" ", $record['Fecha/Hora recogida']);
-
                     // check si cet hotel existe
                     if (empty($desde)){
                         // ajouter l'hotel dans la table
@@ -317,45 +325,56 @@ class HomeController extends AbstractController
                         $hasta = $airportHotel;
                     } ;
                 }
-
+               
 
                 $date = new DateTime($dateTime[0]);
                 $dateTime = $date->format('Y-d-m ' .$dateTime[1]);
-                $fechaHora = new DateTimeImmutable($dateTime);
+                $fechaHora = new DateTimeImmutable($dateTime);;        
                 
-
                 // on essaie de récupérer la fiche pour savoir si on va create or update
                 //$transferResult = $transferRepository->findOneBy(['customerCard' => $customerCard]);
+                if ($natureTransfer == 1) {
+                    $transferResult = $transferArrivalRepository->findOneBy(['customerCard' => $customerCard]);
+                    
+                } elseif ($natureTransfer == 2) {
+                    $transferResult = $transferInterHotelRepository->findOneBy(['customerCard' => $customerCard]);
+                } else {
+                    $transferResult = $transferDepartureRepository->findOneBy(['customerCard' => $customerCard]);
+                    //dd($transferResult);
+                }
                 // $transfer = $this->transferRepository
                 // si l'enregistrement existe déja, on va le mettre a jour
                 if ($transferResult) {
                     $transfer = $transferResult;
-                } 
-                else // sinon on va créer un nouvel objet
-                {
-                    $transfer = new Transfer();
+                } else {
+                    if ($natureTransfer == 1) {
+                        $transfer = new TransferArrival();
+                    } elseif ($natureTransfer == 2) {
+                        $transfer= new TransferInterHotel();
+                    } else {
+                        $transfer = new TransferDeparture();
+                    }
                 }
-                
-                $transfer->setServiceNumber($record['Número Servicio']);
-                $transfer->setNatureTransfer($natureTransfer);
-                $transfer->setDateHour($fechaHora);
-                $transfer->setFlightNumber($flightNumber);
+                 // sinon on va créer un nouvel objet
+                 $transfer->setServiceNumber($record['Número Servicio']);
+                 $transfer->setDateHour($fechaHora);
+                 $transfer->setDate($fechaHora);
+                 $transfer->setHour($fechaHora);
+                 $transfer->setFlightNumber($flightNumber);
+                 
+                 /*                dd($record['Traslado desde']);
+                 dd($hotelRepository->findBy(['name' => $record['Traslado desde']])); */
+                 $transfer->setFromStart($desde);
+                 $transfer->setToArrival($hasta);
+                 $transfer->setIsCollective($record['Tipo traslado']);
 
- /*                dd($record['Traslado desde']);
-                dd($hotelRepository->findBy(['name' => $record['Traslado desde']])); */
-                $transfer->setFromStart($desde);
-                $transfer->setToArrival($hasta);
-                $transfer->setIsCollective($record['Tipo traslado']);
-                $transfer->setAdultsNumber($adultsNumber);  
-                $transfer->setChildrenNumber($childrenNumber);
-                $transfer->setBabiesNumber($babiesNumber);
-                if ($transferResult == NULL) {
-                    $transfer->setCustomerCard($customerCard);
+                 if ($transferResult == NULL) {
+                     $transfer->setCustomerCard($customerCard);
                     $manager->persist($transfer);
                 }
-
-                }
                 
+            }
+            
                 $manager->flush();
                 
                     // TODO : regarder si un enregistrement a été supprimé

@@ -3,11 +3,11 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
 
 
-<div class="alert alert-danger" role="alert">
-  pour la visualisation des reps, enlever le bouton modifier heure / representant <br>
-  n afficher que la carte du user courant<br>
-  Bouton google calendar ???
-</div>
+    <div class="alert alert-danger" role="alert">
+        Pour la visualisation des reps, enlever le bouton modifier heure / representant <br>
+        n afficher que la carte du user courant<br>
+        Bouton google calendar ???
+    </div>
 
     <a href="{{ path('app_admin_stickers_par_date') }}" class="btn btn-secondary my-3">Stickers</a>
 
@@ -25,38 +25,55 @@
         {% endif %}
 
         <div class="row">
-            {% for  key,reps in clientsListByRepAndDate %}
-                    <div class="col-sm-5 mb-3 mb-sm-0">
-                        <div class="card">
-                            <div class="card-body">
-                                {% if (reps is empty) %} 
-                                    <h5 class="card-title">{{ key }} </h5>
-                                        <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p>
-                                {% else %} 
-                                    <h5 class="card-title">{{ key }}</h5>
-                                
-                                    {% set currentStaff = "" %}
-                                    {% for client in reps %}   
-                                        <p class="card-text {{(client.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
-                                            {% for infosTransfer in client.transfers %}
-                                                <strong>{{ infosTransfer.toArrival}}</strong><br/>
-                                                <strong>Pax:</strong> A:{{ infosTransfer.adultsNumber }}, N: {{ infosTransfer.childrenNumber}}, B: {{ infosTransfer.babiesNumber}}<br/>{# {{ infosTransfer.adultsNumber + infosTransfer.childrenNumber + infosTransfer.babiesNumber}} #}
-                                    
+            {% for user in users %}
+                <div class="col-sm-5 mb-3 mb-sm-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ user }} </h5>
+                                {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
+                                {% if paxCount == 0 %}  <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p> 
+                                {% else %}   
+                                <p>Adults: {{ paxTab[user.username]['adults'] }}  / Children: {{ paxTab[user.username]['children'] }}  / Babies: {{ paxTab[user.username]['babies'] }} </p>
+                                {% endif %}
+                                <hr>
+                                {% for regroupement in regroupementsClients %}
+                                    {% if (regroupement is empty) %}                                                        
+                                    {% endif %}
+                                    {% if regroupement.staff == user %}
+                                        <p class="card-text {{(regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
+                                            {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
+                                            {% set hotel = null %}
+                                            {% for infosTransfer in regroupement.transferArrivals %}
+                                                {# Construire le tableau #}
+                                                {% set hotel =  infosTransfer.toArrival %}
                                             {% endfor %}
-                                            {{ client.holder }} <br> 
-                                            client meeting at: {{ client.getMeetingAtTime }} - {{ client.meetingPoint != null ? client.meetingPoint.name  : "" }}
-                                            {% set currentStaff = client.staff.id %}
+                                            <strong>{{ hotel.name|title }}</strong><br/>
+                                            <strong>{{ regroupement.agency|title }}</strong><br/>
+                                            <strong>Pax:</strong>
+                                            {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
+                                            {% if paxPerHotelAgency[user.username~'_adults'][regroupement.agency.id~'_'~hotel.id] is defined %}
+                                                A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.agency.id~'_'~hotel.id] }}, 
+                                            {% endif %}
+                                            {% if paxPerHotelAgency[user.username~'_children'][regroupement.agency.id~'_'~hotel.id] is defined %}
+                                                N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.agency.id~'_'~hotel.id] }}, 
+                                            {% endif %}
+                                            {% if paxPerHotelAgency[user.username~'_babies'][regroupement.agency.id~'_'~hotel.id] is defined %}
+                                                B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.agency.id~'_'~hotel.id] }} 
+                                            {% endif %}
+                                            <br/>
+                                            Meeting at: {{ regroupement.getMeetingAtTime }} - {{ regroupement.meetingPoint != null ? regroupement.meetingPoint.name  : "" }}
                                         </p>
                                         <hr>
-                                    {% endfor %}
-                                <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: currentStaff })}}" class="btn btn-primary">Modifier Heure / Representant</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if paxCount > 0 %}
+                                    <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">Modifier Heure / Representant</a> 
                                 {% endif %}
-                            </div>
-                        </div>
+                        </div>              
                     </div>
+                </div>
             {% endfor %}
-        </div> 
-
+        </div>
 
 {{ include('partials/footer-regroupement.html.twig') }}
 
