@@ -60,8 +60,8 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
             ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
             ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
-            ->andWhere('transferArrival.dateHour >= :date_start')
-            ->andWhere('transferArrival.dateHour <= :date_end')
+            ->andWhere('transferArrival.date >= :date_start')
+            ->andWhere('transferArrival.date <= :date_end')
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
             ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
             ->orderBy('c.id', 'ASC')
@@ -343,7 +343,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * @return CustomerCard[] Returns an sum of CustomerCards Adults pax
      * Attribution des représentants
      */
     public function countPaxAdultsAttribbutionRep($date, $hotel, $agency)
@@ -365,10 +365,10 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * @return CustomerCard[] Returns an sum of CustomerCards children pax
      * Attribution des représentants
      */
-    public function countPaxChildrenAttribbutionRep($date, $hotel, $agency)
+    public function countPaxChildrenAttribbutionRep($date, $hotel, $agency) 
     {
 
         return $this->createQueryBuilder('c')
@@ -387,10 +387,10 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * @return CustomerCard[] Returns the sum of CustomerCards Babies pax
      * Attribution des représentants
      */
-    public function countPaxBabiesAttribbutionRep($date, $hotel, $agency)
+    public function countPaxBabiesAttribbutionRep($date, $hotel, $agency) 
     {
         return $this->createQueryBuilder('c')
             ->select('sum(c.babiesNumber)')
@@ -408,10 +408,11 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) group by staff, agence and arrival
+     * @return CustomerCard[] Returns an array of customersCards at this choosen date grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
      * Attribution des représentants
      */
-    public function regroupmentByDayStaffAgencyAndHotel($date)
+    public function regroupmentByDayStaffAgencyAndHotel($date) :array
     {
 
        
@@ -429,7 +430,27 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) group by staff, agence and arrival
+     * @return CustomerCard[] Returns an array of each date for customers without rep 
+     * Attribution des représentants
+     */
+    public function datesForCustomersWithoutRep() :array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->select('transferArrival.date')
+            ->where('c.staff is null')
+            ->groupBy('transferArrival.date')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+
+    /**
+     * @return CustomerCard[] Returns an sum of CustomerCards pax by age and date
      * nombre de pax attribués pour un rep à ce jour
      */
     public function staffPaxAdultsByDate($staff,$date, $age)

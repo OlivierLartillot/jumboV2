@@ -43,21 +43,28 @@ class TeamManagerController extends AbstractController
                 'staff' => NULL,
                 'meetingAt' => $date
             ]
-        
         ));
-        
-        //On récupère l'hotel d'arrivé
-        $hotels = [];
-        foreach ($firstClient->getTransferArrivals() as $arrival) {
-            $hotels[] = $arrival->getToArrival();
+
+
+        $daterestantes = $customerCardRepository->datesForCustomersWithoutRep();
+
+        // si il y a encore des clients (firstclient)
+        if ($firstClient != null) {
+            //On récupère l'hotel d'arrivé
+            $hotels = [];
+            foreach ($firstClient->getTransferArrivals() as $arrival) {
+                $hotels[] = $arrival->getToArrival();
+            }
+            $agency = $firstClient->getAgency();
+            $hotel = $hotels[0];
+            $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($date, $hotel, $agency);
+            $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($date, $hotel, $agency);
+            $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($date, $hotel, $agency);
+        } else {
+            $paxAdults = null;
+            $paxChildren = null;
+            $paxBabies = null;
         }
-        
-        $agency = $firstClient->getAgency();
-        $hotel = $hotels[0];
-        $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($date, $hotel, $agency);
-        $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($date, $hotel, $agency);
-        $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($date, $hotel, $agency);
-        
         
         if ($firstClient != NULL) {
             
@@ -92,7 +99,8 @@ class TeamManagerController extends AbstractController
                 'date' => $date,
                 'paxAdults' => $paxAdults,
                 'paxChildren' => $paxChildren,
-                'paxBabies' => $paxBabies
+                'paxBabies' => $paxBabies,
+                'daterestantes' => $daterestantes
             ]);
         }  
 
@@ -103,7 +111,8 @@ class TeamManagerController extends AbstractController
                 'date' => $date,
                 'paxAdults' => $paxAdults,
                 'paxChildren' => $paxChildren,
-                'paxBabies' => $paxBabies
+                'paxBabies' => $paxBabies,
+                'daterestantes' =>  $daterestantes
             ]); 
         } 
 
