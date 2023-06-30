@@ -328,13 +328,16 @@ class CustomerCardRepository extends ServiceEntityRepository
     public function findByForAttribbutionRep($date, $hotel, $agency): array
     {
 
+
         return $this->createQueryBuilder('c')
-            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
             ->andWhere('c.staff is null')
-            ->andWhere('c.meetingAt = :date')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
             ->andWhere('transferArrival.toArrival = :hotel')
             ->andWhere('c.agency = :agency')
-            ->setParameter('date', $date)
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
             ->setParameter('hotel', $hotel)
             ->setParameter('agency', $agency)
             ->getQuery()
@@ -474,6 +477,33 @@ class CustomerCardRepository extends ServiceEntityRepository
         ;
     }
 
+        /**
+     * @return CustomerCard[] Returns an sum of CustomerCards pax by age and date
+     * nombre de pax attribués pour un rep à ce jour
+     */
+    public function staffPaxByDateHotelAgenceAge($date, $age, $hotel, $agency)
+    {
+        $date = $date->format('Y-m-d');
+        $requete = $this->createQueryBuilder('c');
+
+        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
+        else { $requete = $requete->select('sum(c.babiesNumber)') ;}
+       
+        return 
+            $requete
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('transferArrival.date = :date')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('date', $date)     
+            ->setParameter('hotel', $hotel)     
+            ->setParameter('agency', $agency)     
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
     /**
      * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
      * This return the first customerCard of each groupment
@@ -482,7 +512,6 @@ class CustomerCardRepository extends ServiceEntityRepository
     public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
     {
 
-        $dateStart = $date->format("Y-m-d");
 
         return $this->createQueryBuilder('c')
             ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
@@ -538,6 +567,38 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->setParameter('agency', $agency)
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function paxForRegroupementHotelAndAgencies($date, $hotel, $agency, $staff, $age)
+    {
+
+        $requete = $this->createQueryBuilder('c');
+
+        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
+        else { $requete = $requete->select('sum(c.babiesNumber)') ;}
+
+        return $requete
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.staff = :staff')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->setParameter('staff', $staff)
+            /* ->groupBy('transferArrival.toArrival, c.agency') */
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
     }
 

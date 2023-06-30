@@ -135,19 +135,33 @@ class TeamManagerController extends AbstractController
 
 
         // nombre de clients sans attributions
-        // TODO : ici on reprend ceux qui n ont pas de rep !!! Nous ici on a des rep
         $countNonAssignedClient = $customerCardRepository->countNumberNonAttributedMeetingsByDate($date);
         $users = [];
-        $paxTab = [];
+        $paxTab = []; // on va récupérer les paw globaux pour chaque rep
+        $paxPerHotelAgency = []; // on va récupérer les pax pour chaque rep et par agence et hotels 
+        $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
+        // pour chaque staff on va définir les infos a récupérer
         foreach($repUsers as $user) {
             if(in_array('ROLE_REP', $user->getRoles())){  
                 $users[] = $user; 
                 $paxTab[$user->getUsername()]['adults'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "adults");
                 $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "children");
                 $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "babies");
+            
+                foreach ($regroupementsClients as $clients) {
+                    $agency = $clients->getAgency();
+                    $hotels = [];
+                    foreach ($clients->getTransferArrivals() as $hotel) { $hotels[] = $hotel->getToArrival(); }
+                        $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults');
+                        $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children');
+                        $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies');
+                        
+                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupAdults;
+                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupChildren;
+                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupBabies;
+                } 
             }
         }
-        $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
 
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
@@ -155,7 +169,8 @@ class TeamManagerController extends AbstractController
             'regroupementsClients' => $regroupementsClients,
             /* 'clientsListByRepAndDate' => $clientsListByRepAndDate,  */
             'countNonAssignedClient' => $countNonAssignedClient,
-            'paxTab' => $paxTab
+            'paxTab' => $paxTab,
+            'paxPerHotelAgency' => $paxPerHotelAgency
         ]);
 
     } 
