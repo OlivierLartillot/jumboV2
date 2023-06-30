@@ -23,16 +23,16 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Hotel</th>
-                                    <th scope="col">Name</th>
                                     <th scope="col">Time</th>
+                                    <th scope="col">Rep</th>
                                     <th scope="col">Place</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                    {% for client in attributionClientsByRepAndDate %}
+{#                                     {% for client in attributionClientsByRepAndDate %}
                                         <tr>
                                             <td>
-                                            {% for infosTransfer in client.transferAryrivals %}
+                                            {% for infosTransfer in client.transferArrivals %}
                                                 {{ infosTransfer.toArrival}}
                                             {% endfor %}
                                             </td>
@@ -53,6 +53,40 @@
 
                                                         {% if  client.meetingPoint is not null %}
                                                             <option value="{{meetingPoint.id}}" {{ meetingPoint.id == client.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
+                                                        {% else %}
+                                                            <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </td> 
+                                        </tr>
+                                
+                                    {% endfor %} #}
+
+
+                                     {% for customers in customersGrouping %}
+                                        <tr>
+                                            <td>
+                                            {% for infosTransfer in customers.transferArrivals %}
+                                                {{ infosTransfer.toArrival}} <br>{{ customers.agency }}
+                                            {% endfor %}
+                                            </td>
+                                            <td> <input type="time" value="{{ customers.getMeetingAtTime}}" name="hour_{{ customers.id }}"/></td> 
+                                            <td> 
+                                                <select name="staff_{{ customers.id }}">
+                                                    {% for user in users %}
+                                                        {% if "ROLE_REP" in user.roles %}
+                                                            <option value="{{user.id}}" {{ user.id == customers.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </td> 
+                                            <td>
+                                                <select name="meetingPoint_{{ customers.id }}">
+                                                    {% for meetingPoint in meetingPoints %}
+
+                                                        {% if  customers.meetingPoint is not null %}
+                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == customers.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
                                                         {% else %}
                                                             <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
                                                         {% endif %}

@@ -474,6 +474,72 @@ class CustomerCardRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des meetings
+     */
+    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
+    {
+
+        $dateStart = $date->format("Y-m-d");
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('staff', $staff)
+            ->groupBy('c.staff, c.agency ,transferArrival.toArrival')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des meetings
+     */
+    public function meetingByDayStaff($date, $staff) :array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('staff', $staff) 
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findCustomersByDateHotelAgency($date, $hotel, $agency): array
+    {
+
+        return $this->createQueryBuilder('c')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('transferArrival.toArrival = :hotel')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 
 //    public function findOneBySomeField($value): ?CustomerCard

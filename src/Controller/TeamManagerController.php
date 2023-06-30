@@ -148,45 +148,6 @@ class TeamManagerController extends AbstractController
             }
         }
         $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-        
-/*         //initialisation du tableau des résultats
-        $clientsListByRepAndDate = [];
-
-        // pour chaque rep, recupere la liste des gens attribués ce jour la par rep et date
-        foreach($repUsers as $user) {
-            if(in_array('ROLE_REP', $user->getRoles())){ 
-                $attributionClientsByRepAndDate =  $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-                $clientsListByRepAndDate[$user->getUsername()] = $attributionClientsByRepAndDate;
-            }
-        }  */
-
-
-
-/*                 //initialisation du tableau des résultats
-        $clientsListByRepAndDate = [];
-
-        // pour chaque rep, recupere la liste des gens attribués ce jour la par rep et date
-        foreach($repUsers as $user) {
-            if(in_array('ROLE_REP', $user->getRoles())){ 
-                $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
-                $clientsListByRepAndDate[$user->getUsername()] = $attributionClientsByRepAndDate;
-            }
-        } */
-
-
-
-        //initialisation du tableau des résultats
-/*         $clientsListByRepAndDate = [];
-
-        // pour chaque rep, recupere la liste des gens attribués ce jour la par rep et date
-        foreach($repUsers as $user) {
-            if(in_array('ROLE_REP', $user->getRoles())){ 
-                $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
-                $clientsListByRepAndDate[$user->getUsername()] = $attributionClientsByRepAndDate;
-            }
-        } */
-
-        
 
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
@@ -216,31 +177,66 @@ class TeamManagerController extends AbstractController
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
 
+
+        $customersGrouping = $customerCardRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+
         if (!empty($_POST) and $request->getMethod() == "POST") { 
 
+            // récupérer toutes les personnes avec ce couple ce jour et staff 
+            
+            // pour chacun de ces objets, mettre a jour time, rep et place
+            
+            $testCustomersId = [];
             foreach ($request->request as $key => $currentRequest) {
+                
+                
                 // convertir la clé en tableau
                 $keyTab = explode("_", $key);
-                // récupérer l'objet correspondant a l id
-                $currentCustommerCard = $customerCardRepository->find($keyTab[1]);
-                // si c est heure set l objet avec l heure
-                if ($keyTab[0] == 'hour') {
-                    $dateTimeImmutable = new DateTimeImmutable($day . ' '. $currentRequest);
-                    $currentCustommerCard->setMeetingAt($dateTimeImmutable);
+
+                $firstClient = $customerCardRepository->find($keyTab[1]);
+                $staff = $firstClient->getStaff();
+                $agency = $firstClient->getAgency();
+                $hotels = []; 
+
+                foreach ($firstClient->getTransferArrivals() as $arrivals) {
+                    $hotels[] = $arrivals->getToArrival();
                 }
-                // si c est l'endroit convertir l objet avec l endroit 
-                else if ($keyTab[0] == 'meetingPoint') {
-                    $meetingPoint = $meetingPointRepository->find($currentRequest);
-                    $currentCustommerCard->setMeetingPoint($meetingPoint);
-                }
-                // si c est l'endroit convertir l objet avec l endroit 
-                else if ($keyTab[0] == 'staff') {
-                    $staff = $userRepository->find($currentRequest);
-                    $currentCustommerCard->setStaff($staff);
+                $hotel = $hotels[0];
+                //dump('client id: ' . $firstClient->getId() . ' s: ' .$staff . ' a: ' . $agency . ' h: ' . $hotel);
+                // pour chaque personne ce jour et ce staff, cet hotel et cet agence mettre a jour
+                // 1st récupérer la liste de ces personnes
+                $customersListForThisCouple = $customerCardRepository->findCustomersByDateHotelAgency($date, $hotel, $agency);
+                    
+                // 2d mettre a jour
+                // récupérer chaque couple hotel agence pour ce rep a ce jour 
+                // pour chaque résultats  
+
+                foreach ($customersListForThisCouple as $customer ) {
+
+                    // récupérer l'objet correspondant a l id
+                    //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
+                    $currentCustommerCard = $customer;
+
+                    // si c est heure set l objet avec l heure
+                    if ($keyTab[0] == 'hour') {
+                        $dateTimeImmutable = new DateTimeImmutable($day . ' '. $currentRequest);
+                        $currentCustommerCard->setMeetingAt($dateTimeImmutable);
+                    }
+                    // si c est l'endroit convertir l objet avec l endroit 
+                    else if ($keyTab[0] == 'meetingPoint') {
+                        $meetingPoint = $meetingPointRepository->find($currentRequest);
+                        $currentCustommerCard->setMeetingPoint($meetingPoint);
+                    }
+                    // si c est l'endroit convertir l objet avec l endroit 
+                    else if ($keyTab[0] == 'staff') {
+                        $staff = $userRepository->find($currentRequest);
+                        $currentCustommerCard->setStaff($staff);
+                    }
                 }
 
             }
 
+            
             $manager->flush();
             return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));
         }
@@ -260,7 +256,8 @@ class TeamManagerController extends AbstractController
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
             "user" => $user,
-            "users" => $users
+            "users" => $users,
+            'customersGrouping' => $customersGrouping
         ]);
     }
 
