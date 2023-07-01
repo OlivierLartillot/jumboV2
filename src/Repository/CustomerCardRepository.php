@@ -192,7 +192,11 @@ class CustomerCardRepository extends ServiceEntityRepository
                             ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
                             ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
                             ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
-                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival')
+                            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
+                                        'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival 
+                                        OR airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival
+                                        OR airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival
+                                        ')
             ;
             if ($customerPresence == 2) {
                 $requete = $requete->orWhere('transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd')
@@ -204,7 +208,7 @@ class CustomerCardRepository extends ServiceEntityRepository
                 ;
 
             }  else {
-                $requete = $requete->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
+                $requete = $requete->orWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
                                     ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
                                     ->orWhere('(transferArrival.date <= :dateStart 
                                                 and transferArrival.date <= :dateEnd) 
@@ -214,7 +218,7 @@ class CustomerCardRepository extends ServiceEntityRepository
                                                 and transferArrival.date >= :dateEnd)
                                                 and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
                                                 or transferDeparture.date is null)')
-  
+                                    ->orWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')
 /*                                     ->orWhere('transferArrival.date <= :dateStart and transferDeparture.date >= :dateStart')
                                     ->orWhere('transferArrival.date >= :dateStart and transferDeparture.date is null') */
                                     ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
@@ -268,8 +272,6 @@ class CustomerCardRepository extends ServiceEntityRepository
         }
          
 
-                            
-        // si la date 1 ou la date 2 est dans l'intervalle
         if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
         if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
 
