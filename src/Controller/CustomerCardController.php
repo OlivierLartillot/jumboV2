@@ -296,6 +296,7 @@ class CustomerCardController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_customer_card_show', methods: ['GET' , 'POST'])]
     public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
     {
@@ -309,43 +310,46 @@ class CustomerCardController extends AbstractController
         $i = 0;
         // date d'arrivée
         foreach ($customerCard->getTransferArrivals() as $arrival) {
-            $tableauTimeline[$i]['name'] = 'arrival';
-            $tableauTimeline[$i]['date'] = $arrival->getDate()->format('d-m-Y');
+            $tableauTimeline[$i]['name'] = 'Arrival';
+            $tableauTimeline[$i]['date'] = $arrival->getDate();
             $tableauTimeline[$i]['hour'] = $arrival->getHour()->format('H:i');
             $i++;
         }
+
         foreach ($customerCard->getTransferInterHotels() as $interHotel) {
             $tableauTimeline[$i]['name'] = 'Inter Hotel';
-            $tableauTimeline[$i]['date'] = $interHotel->getDate()->format('d-m-Y');
+            $tableauTimeline[$i]['date'] = $interHotel->getDate();
             $tableauTimeline[$i]['hour'] = $interHotel->getHour()->format('H:i');
             $i++;
         }
         foreach ($customerCard->getTransferDeparture() as $departure) {
             $tableauTimeline[$i]['name'] = 'Departure';
-            $tableauTimeline[$i]['date'] = $departure->getDate()->format('d-m-Y');
+            $tableauTimeline[$i]['date'] = $departure->getDate();
             $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
             $i++;
         }
             $tableauTimeline[$i]['name'] = 'Meeting';
-            $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt()->format('d-m-Y');
+            $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt();
             $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
             $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
-            $tableauTimeline[$i]['staff'] = $customerCard->getMeetingPoint();
+            $tableauTimeline[$i]['meetingPoint'] = $customerCard->getMeetingPoint();
             $i++;
 
 
             if (count($customerCard->getStatusHistories())  > 0 ) {
                 foreach ($customerCard->getStatusHistories() as $modifiedStatus) {
-                    $tableauTimeline[$i]['name'] = $modifiedStatus->getStatus();
-                    $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt()->format('d-m-Y');
+                    $tableauTimeline[$i]['name'] = 'Status';
+                    $tableauTimeline[$i]['title'] = $modifiedStatus->getStatus();
+                    $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt();
                     $tableauTimeline[$i]['hour'] = $modifiedStatus->getCreatedAt()->format('H:i');
                     $tableauTimeline[$i]['updatedBy'] = $modifiedStatus->getUpdatedBy();
                     $i++;
                 }
 
-            }
+            }         
 
-        //dd($tableauTimeline);
+           
+       /*  dd($tableauTimeline); */
 
 
 
