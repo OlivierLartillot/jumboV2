@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
+use App\Entity\TransferArrival;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
 use App\Repository\AgencyRepository;
@@ -11,13 +12,17 @@ use App\Repository\AirportHotelRepository;
 use App\Repository\CommentRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\StatusRepository;
+use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferJoanRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\DateImmutableType;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[Route('/customer/card')]
 class CustomerCardController extends AbstractController
@@ -61,7 +66,7 @@ class CustomerCardController extends AbstractController
             if ($empty == false) {
                 //dd(checkdate(01, 13, 2019));
                 
-                // todo  : alors on peut récupérer les données et les filtrer
+                // alors on peut récupérer les données et les filtrer
                 
                 $customerPresence = $request->query->get('customerPresence');
 
@@ -126,13 +131,13 @@ class CustomerCardController extends AbstractController
         return $this->render('customer_card/search.html.twig', [
             'customer_cards' => $results
         ]); 
-
+        
     }
-
-    #[Route('/pax', name: 'app_customer_card_pax', methods: ['GET', 'POST'])]
+    
+    #[Route('/pax', name: 'app_customer_card_pax', methods: ['GET'])]
     public function pax(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
-
+        
         $users = $userRepository->findAll();
         $reps = [];
         foreach ($users as $user) {
@@ -140,9 +145,55 @@ class CustomerCardController extends AbstractController
                 $reps[] = $user;
             }
         }
+        // on va ranger les résultats dans un tableau pour les transmettre a la vue en une fois
+        $results = [];
+        // si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            $empty = true;
+            //on vérifie si on a envoyé au moins un élément de tri
+            foreach ($request->query as $param) {
+                if ($param != null) {
+                    $empty = false;
+                    break;
+                }
+                
+            }
+            // si y a au moins un élément envoyé au tri
+            if ($empty == false) {
+                // todo  : alors on peut récupérer les données et les filtrer
+                $dateStart = $request->query->get('dateStart');
+                $dateEnd = $request->query->get('dateEnd');
+                $rep = $request->query->get('reps');
+            } 
+        } else {
+            $dateStart = new DateTimeImmutable('now');
+                $dateEnd = new DateTimeImmutable('now');
+                $rep="all";
+        }
+        //pax adults de tel date à tel date
+        $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults");
+        $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
+        $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children");
+        $results['nbrTotalChildren'] = intval($results['nbrTotalChildren']);
+        $results['paxTotalChildren'] = $results['nbrTotalChildren'] * 0.5;
+        $results['nbrTotalbabies'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "babies");
+        $results['nbrTotalbabies'] = intval($results['nbrTotalbabies']);
+        $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
+        $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
+        // pax adults sans no show
+        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults", 'No Show');
+        $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
+        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children", 'No Show');
+        $results['nbrChildrenShow'] = intval($results['nbrChildrenShow']);
+        $results['paxChildrenShow'] = $results['nbrChildrenShow'] * 0.5;
+        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "babies", 'No Show');
+        $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
+        $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
+        $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
 
         return $this->render('customer_card/calcul_pax_rep.html.twig', [
-            'reps' => $reps
+            'reps' => $reps,
+            'results' =>$results
         ]); 
     }
 
@@ -178,12 +229,49 @@ class CustomerCardController extends AbstractController
         ]);
     }
 
-    #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET', 'POST'])]
-    public function airport(Request $request, TransferJoanRepository $transferJoanRepository, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET'])]
+    public function airport(Request $request, TransferArrivalRepository $transferArrivalRepository, AirportHotelRepository $airportHotelRepository, StatusRepository $statusRepository): Response
     {
+        
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        $status = $statusRepository->findAll();
 
+        //dd($request->query);
+        // si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            $empty = true;
+            //on vérifie si on a envoyé au moins un élément de tri
+            foreach ($request->query as $param) {
+                if ($param != null) {
+                    $empty = false;
+                    break;
+                }
+                
+            }
+            // si y a au moins un élément envoyé au tri
+            if ($empty == false) { 
+                $date= htmlspecialchars($request->query->get('date'));
+                $date = new DateTimeImmutable($date);
+                $airport= trim(htmlspecialchars($request->query->get('airports')));
+                $flightNumber =  trim(htmlspecialchars($request->query->get('flightNumber')));
+                $voucherNumber =  trim(htmlspecialchars($request->query->get('voucherNumber')));
+                
+                $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, null);
+                return $this->render('customer_card/airport.html.twig', [
+                    'results' => $results,
+                    'airports' => $airports,
+                    'airport' => $airport,
+                    'status' =>  $status
+                ]);                
+            }
+        }
+
+        $date = new DateTimeImmutable('now');
+        $results = $transferArrivalRepository->findBy(['date' => $date]);
         return $this->render('customer_card/airport.html.twig', [
-
+            'results' => $results,
+            'airports' => $airports,
+            'status' =>  $status
         ]);
 
     }
@@ -212,8 +300,60 @@ class CustomerCardController extends AbstractController
     public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
     {
 
-        $user = $userRepository->find(3);
+        $user = $customerCard->getStaff();
         $comments = $commentRepository->findAll();
+
+        // enregistre les date
+
+        $tableauTimeline = [];
+        $i = 0;
+        // date d'arrivée
+        foreach ($customerCard->getTransferArrivals() as $arrival) {
+            $tableauTimeline[$i]['name'] = 'arrival';
+            $tableauTimeline[$i]['date'] = $arrival->getDate()->format('d-m-Y');
+            $tableauTimeline[$i]['hour'] = $arrival->getHour()->format('H:i');
+            $i++;
+        }
+        foreach ($customerCard->getTransferInterHotels() as $interHotel) {
+            $tableauTimeline[$i]['name'] = 'Inter Hotel';
+            $tableauTimeline[$i]['date'] = $interHotel->getDate()->format('d-m-Y');
+            $tableauTimeline[$i]['hour'] = $interHotel->getHour()->format('H:i');
+            $i++;
+        }
+        foreach ($customerCard->getTransferDeparture() as $departure) {
+            $tableauTimeline[$i]['name'] = 'Departure';
+            $tableauTimeline[$i]['date'] = $departure->getDate()->format('d-m-Y');
+            $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
+            $i++;
+        }
+            $tableauTimeline[$i]['name'] = 'Meeting';
+            $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt()->format('d-m-Y');
+            $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
+            $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
+            $tableauTimeline[$i]['staff'] = $customerCard->getMeetingPoint();
+            $i++;
+
+
+            if (count($customerCard->getStatusHistories())  > 0 ) {
+                foreach ($customerCard->getStatusHistories() as $modifiedStatus) {
+                    $tableauTimeline[$i]['name'] = $modifiedStatus->getStatus();
+                    $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt()->format('d-m-Y');
+                    $tableauTimeline[$i]['hour'] = $modifiedStatus->getCreatedAt()->format('H:i');
+                    $tableauTimeline[$i]['updatedBy'] = $modifiedStatus->getUpdatedBy();
+                    $i++;
+                }
+
+            }
+
+        //dd($tableauTimeline);
+
+
+
+        
+        // date des inter hotels
+        // date de départ 
+
+
 
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -269,7 +409,8 @@ class CustomerCardController extends AbstractController
         return $this->render('customer_card/show.html.twig', [
             'customer_card' => $customerCard,
             'comments' => $comments,
-            'form' => $form
+            'form' => $form,
+            'tableauTimeline' => $tableauTimeline
         ]);
     }
 

@@ -623,6 +623,31 @@
                     <div class="card-body">
                         <h5 class="font-size-16 mb-4">TimeLine</h5>
 
+
+
+
+
+
+<ul class="activity-feed mb-0 ps-2">
+
+    {% for timeline in tableauTimeline|sort((a, b) => a.date <=> b.date) %}
+
+    <li class="feed-item">
+        <div class="feed-item-list">
+            <p class="text-muted mb-1">{{ timeline.name|title }}</p>
+            <p>at {{ timeline.date }} the {{ timeline.hour }}</p>
+            <p class="text-muted">By ben at 10:00 le 05-10-2023</p>
+        </div>
+    </li>
+
+    {% endfor %}
+</ul>
+
+
+
+
+
+
                         <ul class="activity-feed mb-0 ps-2">
 
                             {% for transfer in customer_card.transferDeparture %} 
@@ -648,7 +673,7 @@
                             <li class="feed-item">
                                 <div class="feed-item-list">
                                     <p class="text-muted mb-1">Meeting: {{ customer_card.meetingAt | date('d-m-Y')}}</p>
-                                    <p class="text-muted">with ben at 10:00 à Réception de l'hotel</p>
+                                    <p class="text-muted">with {{ customer_card.staff }} at  {{ customer_card.meetingAt| date('H:i')}}  à {{ customer_card.meetingPoint }} </p>
                                 </div>
                             </li>
 

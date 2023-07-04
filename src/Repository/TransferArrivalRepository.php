@@ -39,6 +39,36 @@ class TransferArrivalRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return TransferArrival[] Returns an array of TransferArrival objects
+     */
+    public function findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber): array
+    {
+        
+        // TODO VOUCHER NUMBER !!!
+        
+        $requete = $this->createQueryBuilder('ta');
+        $requete = $requete->andWhere('ta.date = :date')->setParameter('date', $date); 
+        if ($airport != 'all') {
+            $requete = $requete->andWhere('ta.fromStart = :airport')->setParameter('airport', $airport);
+        }
+        if ($flightNumber != '') {
+        $requete = $requete->andWhere('ta.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
+        }
+        if ($voucherNumber != '') {
+            $requete = $requete->andWhere('ta.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
+        }
+        
+        $requete = $requete->orderBy('ta.id', 'ASC')
+        ->getQuery()
+        ->getResult()
+        ;
+
+        return $requete;
+    }
+
+
+
 //    /**
 //     * @return TransferArrival[] Returns an array of TransferArrival objects
 //     */

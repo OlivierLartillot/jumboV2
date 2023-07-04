@@ -39,218 +39,166 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
 
 
-<div class="alert alert-danger" role="alert">
-Tri:
-Date (une seule date fixe), arrivée (pas de tri mais dans la récupération) , numéro de Vol, agence et Zona<br>
-possibilité de changer le status en No show / go show aeroport
-</div>
+                        <div class="alert alert-danger" role="alert">
+                        Tri:
+                        Date (une seule date fixe), arrivée (pas de tri mais dans la récupération) , numéro de Vol, agence et Zona<br>
+                        possibilité de changer le status en No show / go show aeroport
+                        </div>
+
+                        <div class="alert alert-danger" role="alert">
+                            Voucher Number a faire quand le transfert joan arrival sera fait 
+                        </div>
 
 
-<form method="GET">
-    <div class="row">
-        <div class="col-lg-6">
-                <div class="mb-3">
-                    <label class="form-label">Search date</label>
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
-                        
-                        {#                         
-                            {{ (ability.id in company_abilities) ? 'selected' : '' }}
-                            app.request.query 
-                        #}
-
-                        <input type="text" class="form-control" name="dateStart" placeholder="Start Date" />
-                        <input type="text" class="form-control" name="dateEnd" placeholder="End Date" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-2">
-{#             <div class="form-floating mb-3">
-                <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>All companies</option>
-                    {% for transportCompany in transportCompanies %} 
-                        <option value="{{ transportCompany.transportCompany }}">{{ transportCompany.transportCompany|capitalize }}</option>
-                    {% endfor %}
-                </select>
-                <label for="floatingSelectGrid">Select a transport company</label>
-            </div> #}
-        </div>
-
-        <div class="text-center text-md-start col-md-2 ">
-            <input type="submit" class="btn btn-primary px-5 py-3">
-        </div>
-
-    </div>
-
-</form>
-
-<p>
-    sortir un tableau de tous les services de transport arrivée / inter hotel / Départ avec toutes les infos du fichier de Joan et un bouton imprimer
-
-</p>
-
-
-
-{# 
-                        <div class="row">
-
-
-
-                            {% for customer_card in customer_cards %}
-
-                            <div class="col-xl-4 col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-start">
-                                            <div class="d-none d-md-block flex-shrink-0 me-4">
-                                                <div class="avatar-sm">
-                                                    <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
-                                                        <i class="fas fa-id-card text-dark"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 align-self-center">
-                                                <div class="border-bottom pb-1">
-                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
-                                                    <p class="text-muted">
-                                                        <i class="me-1">#</i> {{ customer_card.reservationNumber }}
-                                                    </p>
-                                                    <p>
-                                                     {% if customer_card.status == "No Show" %}
-                                                        <span class="badge rounded-pill bg-danger">{{ customer_card.status }}</span>
-                                                    {% else %}
-                                                        <span class="badge rounded-pill bg-success">{{ customer_card.status }}</span>
-                                                    {% endif %}
-                                                    </p>
-                                                    <p class="text-muted">
-                                                        {{ customer_card.agency }}
-                                                    </p>
-                                                </div>
-
-
-                                                <div class="border-bottom mt-3 pt-1 pb-1">
-
-                                                    <p class="text-muted">
-                                                        <i class="fas fa-hotel"></i> 
-                                                        {% for transfer in customer_card.transfers %} 
-                                                            {% if transfer.natureTransfer == "Arrivée" %}
-                                                                {{ transfer.toArrival }}
-                                                            {% elseif  transfer.natureTransfer == "Inter Hotel" %}
-                                                                <br> <i class="fas fa-hotel"></i> {{ transfer.toArrival }}
-                                                            {% endif  %}
-                                                        {% endfor %}
-                                                    </p>
-                                                </div>
-
-
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <div class="mt-3">
-                                                            <p class="text-muted mb-2">Adults</p>
-                                                            <h5 class="font-size-16 mb-0">{{ customer_card.adultsNumber }}</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <div class="mt-3">
-                                                            <p class="text-muted mb-2">Children</p>
-                                                            <h5 class="font-size-16 mb-0">{{ customer_card.childrenNumber }}</h5>
-                                                        </div>
-                                                    </div>                                                    
-                                                    <div class="col-4">
-                                                        <div class="mt-3">BB</p>
-                                                            <h5 class="font-size-16 mb-0">{{ customer_card.babiesNumber }}</h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <a href="" class="badge bg-primary"> Show more</a>
-
-                                                {% for transfer in customer_card.transfers %} 
-                                                    {% if transfer.natureTransfer == "Arrivée" %}
-                                                        <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
-                                                            <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Date</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Hour</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
-                                                                </div>
-                                                            </div>                                                    
-                                                            <div class="col-4">
-                                                                <div class="mt-3">Flight #</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    {% elseif transfer.natureTransfer == "Inter Hotel" %}
-                                                        <div class="row mt-3 p-3 shadow-lg  border border-1 border-primary rounded">
-                                                            <h6><i class="mdi mdi-car"></i> Inter Hotel</h6>
-                                                            <div class="col-6">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Date</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Hour</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
-                                                                </div>
-                                                            </div>                                                    
-                                                        </div>
-
-
-                                                    {% elseif transfer.natureTransfer == "Départ" %}
-                                                        <div class="row mt-3 p-3 shadow-lg  border border-1 border-primary rounded">
-                                                            <h6><i class="mdi mdi-airplane-takeoff"></i> Departure</h6>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Date</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Hour</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
-                                                                </div>
-                                                            </div>                                                    
-                                                            <div class="col-4">
-                                                                <div class="mt-3">Flight #</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    {% endif %}
-                                                {% endfor %}
-
-                                            </div>
+                        <form method="GET">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                        {% set now = "now"|date("Y-m-d") %}
+                                        <div class="mb-3">
+                                            <label class="form-label">Search date</label>
+                                            <input class="form-control" name="date" placeholder="Date" type="date" value="{{ (app.request.query.get('date') != '') ? app.request.query.get('date') : now }}" id="date">
                                         </div>
-
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="= mb-3">
+                                    <label class="form-label">Search Airport</label>
+                                        <select name="airports" class="form-select" id="airport" >
+                                            <option value="all" selected>All airports</option>
+                                            {% for airport in airports|sort((a, b) => a.name <=> b.name) %} 
+                                                <option value="{{ airport.id }}" {{ (app.request.query.get('airports') == airport.id ) ? 'selected' : '' }} >{{ airport }}  </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="= mb-3">
+                                        <label for="flightNumber">Flight Number</label>
+                                        <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Flight Numbers" value="{{ (app.request.query.get('flightNumber')) }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="= mb-3">
+                                        <label for="voucherNumber">Voucher Number</label>
+                                        <input name="voucherNumber" type="text" class="form-control" id="voucherNumber" placeholder="Voucher Number" value="{{ (app.request.query.get('voucherNumber')) }}">
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="text-center text-md-start col-md-2 ">
+                                    <input type="submit" class="btn btn-primary px-5 py-3">
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                        <div class="row mt-3">
+
+                            {% for result in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
+
+                                <div class="col-xl-4 col-sm-6">
+                                    <div class="card">
+                                        {% if result.customerCard.staff is not null %}<div class="ribbon ribbon-top-right"><span>{{ result.customerCard.staff }}</span></div>{% endif %}
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-none d-md-block flex-shrink-0 me-4">
+                                                    <div class="avatar-sm">
+                                                        <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
+                                                            <i class="fas fa-id-card text-dark"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 align-self-center">
+                                                    <div class="border-bottom pb-1">
+                                                        <p class="text-muted">
+                                                            <i class="me-1">#</i> {{ result.customerCard.reservationNumber }}
+                                                        </p>
+                                                        <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:result.customerCard.id}) }}" class="text-dark text-wrap">{{ result.customerCard.holder|title }}</a></h5>
+                                                        <p>
+                                                        {% if result.customerCard.status == "No Show" %}
+                                                            <span class="badge rounded-pill bg-danger">{{ result.customerCard.status }}</span>
+                                                        {% else %}
+                                                            <span class="badge rounded-pill bg-success">{{ result.customerCard.status }}</span>
+                                                        {% endif %}
+
+                            <form method="GET">
+                                                        <select name="changeStatus" class="form-select-perso text-light {% if result.customerCard.status == 'No Show' %} bg-danger {% else %} bg-success {% endif %} " id="changeStatus" aria-label="Floating label select example">                                                                
+                                                            {% for statu in status %}
+                                                                <option value="{{ statu }}" {{ (result.customerCard.status == statu ) ? 'selected' : '' }} class="{% if statu == 'No Show' %} bg-danger {% else %} bg-success {% endif %} ">{{ statu }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                            <input type="submit">
+                            </form>
+
+
+
+
+                                                        </p>
+                                                        <p class="text-muted">
+                                                            {{ result.customerCard.agency|title }}
+                                                        </p>
+                                                    </div>
+
+        
+                                                    <div class="border-bottom mt-3 pt-1 pb-1">
+                                                        <p>
+                                                            <i class="fas fa-hotel"></i> Arrival: {{ result.fromStart|title }} - {{ result.toArrival|title }}
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="mt-3">
+                                                                <p class="text-muted mb-2">Adults</p>
+                                                                <h5 class="font-size-16 mb-0">{{ result.customerCard.adultsNumber }}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="mt-3">
+                                                                <p class="text-muted mb-2">Children</p>
+                                                                <h5 class="font-size-16 mb-0">{{ result.customerCard.childrenNumber }}</h5>
+                                                            </div>
+                                                        </div>                                                    
+                                                        <div class="col-4">
+                                                            <div class="mt-3">BB</p>
+                                                                <h5 class="font-size-16 mb-0">{{ result.customerCard.babiesNumber }}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
+                                                        <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
+                                                        <div class="col-4">
+                                                            <div class="mt-3">
+                                                                <p class="text-muted mb-2">Date</p>
+                                                                <h5 class="font-size-16 mb-0">{{ result.date | date('d-m-Y') }}</h5>
+                                                            </div>
+                                                        </div>
+                                                    <div class="col-4">
+                                                            <div class="mt-3">
+                                                                <p class="text-muted mb-2">Hour</p>
+                                                                <h5 class="font-size-16 mb-0">{{ result.hour | date('h:i')}}</h5>
+                                                            </div>
+                                                        </div>            
+                                                        <div class="col-4">
+                                                            <div class="mt-3">
+                                                                <p class="text-muted mb-2">Flight #</p>
+                                                                <h5 class="font-size-16 mb-0">{{ result.flightNumber }}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
 
                             {% endfor %}
 
 
-
-
-
-
-
-                        </div> #}
-
+                        </div>
 
 
 
@@ -259,6 +207,49 @@ possibilité de changer le status en No show / go show aeroport
 
 
 
+
+
+
+
+
+
+
+
+                        <div class="">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Colored Bordered table</h4>
+                                    <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
+                                        the table and cells.</p>    
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered border-primary mb-0">
+    
+                                            <thead class="bg-primary bg-gradient text-light border-end-light">
+                                                <tr>
+                                                    <th>Customer</th>
+                                                    <th>Airport</th>
+                                                    <th>Flight Number</th>
+                                                    <th>Agence</th>
+                                                    <th>No Show / Go Show Airport</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for result in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
+                                                <tr {{ (result.customerCard.status == 'No Show') ? 'class="text-danger"' : ''}} >
+                                                    <td>{{ result.customerCard.holder|title}}</td>
+                                                    <td>{{ result.fromStart|title}}</td>
+                                                    <td>{{ result.flightNumber }}</td>
+                                                    <td>{{ result.customerCard.agency|title}}</td>
+                                                    <td>{{ result.customerCard.status }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div> <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
@@ -273,22 +264,7 @@ possibilité de changer le status en No show / go show aeroport
 
         {{ include('partials/vendor-scripts.html.twig') }}
 
-        <!-- plugins -->
-        <script src="/libs/select2/js/select2.min.js"></script>
-        <script src="/libs/spectrum-colorpicker2/spectrum.min.js"></script>
-        <script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-        <script src="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-        <script src="/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-        <script src="/libs/@chenfengyuan/datepicker/datepicker.min.js"></script>
 
-        <!-- datepicker js -->
-        <script src="/libs/flatpickr/flatpickr.min.js"></script>
-
-        <!-- init js -->
-        <script src="/js/pages/form-advanced.init.js"></script>
-
-        <!-- App js -->
-        <script src="/js/app.js"></script>
 
     </body>
 </html>

@@ -186,7 +186,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         
          $requete = $requete->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard');
 
-        // Les résultats dépendent de la nature du transfert
+        // tous les transferts
         if ($natureTransfer == "all") {
             $requete = $requete
                             ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
@@ -198,6 +198,7 @@ class CustomerCardRepository extends ServiceEntityRepository
                                         OR airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival
                                         ')
             ;
+            // opérations
             if ($customerPresence == 2) {
                 $requete = $requete->orWhere('transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd')
                                     ->orWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd')
@@ -207,20 +208,21 @@ class CustomerCardRepository extends ServiceEntityRepository
                 ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
                 ;
 
-            }  else {
+            } 
+            // presence
+            else {
+
                 $requete = $requete->orWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
                                     ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
                                     ->orWhere('(transferArrival.date <= :dateStart 
                                                 and transferArrival.date <= :dateEnd) 
                                                 and (transferDeparture.date >= :dateStart 
                                                 or transferDeparture.date is null)')
-                                    ->orWhere('(transferArrival.date >= :dateStart 
+/*                                     ->orWhere('(transferArrival.date >= :dateStart 
                                                 and transferArrival.date >= :dateEnd)
                                                 and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
-                                                or transferDeparture.date is null)')
+                                                or transferDeparture.date is null)') */
                                     ->orWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')
-/*                                     ->orWhere('transferArrival.date <= :dateStart and transferDeparture.date >= :dateStart')
-                                    ->orWhere('transferArrival.date >= :dateStart and transferDeparture.date is null') */
                                     ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
 
             }
@@ -282,7 +284,13 @@ class CustomerCardRepository extends ServiceEntityRepository
         }
         // recup de l agence
         if ($hotel != "all") {
-            $requete = $requete->andWhere('airportHotel.id = :hotel')->setParameter('hotel', $hotel)->orWhere();
+            $requete = $requete
+                            ->andWhere('
+                                (transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd AND airportHotel.id = :hotel ) 
+                                or (transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd AND airportHotel.id = :hotel)
+                                or (transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd AND airportHotel.id = :hotel)
+                                ')
+                            ->setParameter('hotel', $hotel);
         }
 
 
@@ -602,6 +610,40 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult()
         ;
+    }
+
+    // PAX CALCULATION
+    /**
+     * @return sum(pax) -  of CustomerCard[] pax -   Returns the sum of pax per age (adults, children, babies)
+     */
+    public function numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, $age, $status = null)
+    {
+  
+        $requete = $this->createQueryBuilder('c');
+
+        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
+        else { $requete = $requete->select('sum(c.babiesNumber)') ;} 
+
+        $requete = $requete->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard');
+        $requete = $requete->innerJoin('App\Entity\Status', 'status', 'WITH', 'c.status = status.id')
+            ->andWhere('transferArrival.date >= :date_start')
+            ->andWhere('transferArrival.date <= :date_end');
+
+        if ($rep != 'all') {
+            $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep);
+        }
+
+        if ($status == 'No Show') {
+            $requete = $requete->andWhere('status.name != :status')->setParameter('status', $status);
+        }
+
+        $requete = $requete->setParameter('date_start', $dateStart)
+            ->setParameter('date_end',   $dateEnd)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $requete;
     }
 
 
