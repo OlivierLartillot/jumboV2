@@ -179,7 +179,12 @@ class HomeController extends AbstractController
                         foreach ($customerCard->getTransferArrivals() as $transfer) {
                             // si le transfer est arrivée ! il faut regarder si les dates correpondent (fichier et bdd)
                             // si la date est différente on met a jour le briefing
-                            if ( ($fechaHora != $transfer->getDateHour()->format('m/d/Y'. ' H:i')) ){ 
+                            $dateTransfer = $transfer->getDate()->format('m/d/Y');
+                            $heureTransfer = $transfer->getHour()->format('H:i');
+                            $dateTime = new DateTime($dateTransfer . '' . $heureTransfer);
+                          
+                            /* if ( ($fechaHora != $transfer->getDateHour()->format('m/d/Y'. ' H:i')) ){  */
+                            if ( ($fechaHora != $dateTime) ){ 
                                 // mettre ajour le briefing
                                 if ($record['Fecha/Hora Origen']) {
                                     $dateTime = explode(" ", $record['Fecha/Hora Origen']);
