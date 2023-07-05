@@ -628,26 +628,26 @@
 
 
 
-<ul class="activity-feed mb-0 ps-2">
+                            <ul class="activity-feed mb-0 ps-2">
 
-    {% for timeline in tableauTimeline| sort((a, b) => a.date <=> b.date)  %}
+                                {% for timeline in tableauTimeline| sort((a, b) => a.date <=> b.date)  %}
 
-    <li class="feed-item">
-        <div class="feed-item-list">
-            <p class="text-muted mb-1">{{ timeline.name }} {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}</p>
-            <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour }}</p>
-            {# si c est meeting #}
-            {% if timeline.name == 'Meeting' %} 
-                <p> with {{ timeline.staff }} to {{ timeline.meetingPoint }}</p>
-            {% endif %}
-             {% if timeline.name == 'Status' %}
-                <p>Updated by: {{ timeline.updatedBy }} </p>
-             {% endif %}
-        </div>
-    </li>
+                                <li class="feed-item">
+                                    <div class="feed-item-list">
+                                        <p class="text-muted mb-1">{{ timeline.name }} {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}</p>
+                                        <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour }}</p>
+                                        {# si c est meeting #}
+                                        {% if timeline.name == 'Meeting' %} 
+                                            <p> with {{ timeline.staff }} to {{ timeline.meetingPoint }}</p>
+                                        {% endif %}
+                                        {% if timeline.name == 'Status' %}
+                                            <p>Updated by: {{ timeline.updatedBy }} </p>
+                                        {% endif %}
+                                    </div>
+                                </li>
 
-    {% endfor %}
-</ul>
+                                {% endfor %}
+                            </ul>
 
 
 

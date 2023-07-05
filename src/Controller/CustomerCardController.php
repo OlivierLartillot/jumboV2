@@ -302,7 +302,7 @@ class CustomerCardController extends AbstractController
     {
 
         $user = $customerCard->getStaff();
-        $comments = $commentRepository->findAll();
+        $comments = $commentRepository->findby(['customerCard' => $customerCard]);
 
         // enregistre les date
 
@@ -328,12 +328,15 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
             $i++;
         }
+        if ($customerCard->getMeetingAt()) {
             $tableauTimeline[$i]['name'] = 'Meeting';
             $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt();
             $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
             $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
             $tableauTimeline[$i]['meetingPoint'] = $customerCard->getMeetingPoint();
             $i++;
+        }
+
 
 
             if (count($customerCard->getStatusHistories())  > 0 ) {

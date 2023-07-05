@@ -211,20 +211,37 @@ class CustomerCardRepository extends ServiceEntityRepository
             } 
             // presence
             else {
+                if ($hotel == 'all') {
+                    $requete = $requete->orWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
+                                        ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
+                                        ->orWhere('(transferArrival.date <= :dateStart 
+                                                    and transferArrival.date <= :dateEnd) 
+                                                    and (transferDeparture.date >= :dateStart 
+                                                    or transferDeparture.date is null)')
+    /*                                     ->orWhere('(transferArrival.date >= :dateStart 
+                                                    and transferArrival.date >= :dateEnd)
+                                                    and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
+                                                    or transferDeparture.date is null)') */
+                                        ->orWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')
+                                        ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
 
-                $requete = $requete->orWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
-                                    ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
-                                    ->orWhere('(transferArrival.date <= :dateStart 
-                                                and transferArrival.date <= :dateEnd) 
-                                                and (transferDeparture.date >= :dateStart 
-                                                or transferDeparture.date is null)')
-/*                                     ->orWhere('(transferArrival.date >= :dateStart 
-                                                and transferArrival.date >= :dateEnd)
-                                                and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
-                                                or transferDeparture.date is null)') */
-                                    ->orWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')
-                                    ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
+                }
+/*                 else {
+                    $requete = $requete->andWhere('transferArrival.toArrival = :hotel and transferArrival
+                                                    or transferInterHotel.toArrival = :hotel
+                                                    or transferDeparture.fromStart = :hotel) ');
+            
+                    $requete = $requete->setParameter('hotel', $hotel);
+                                         
+                   
 
+
+
+
+
+                } */
+        
+        
             }
         }
         elseif ($natureTransfer == 1){
@@ -290,9 +307,10 @@ class CustomerCardRepository extends ServiceEntityRepository
                                 or (transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd AND airportHotel.id = :hotel)
                                 or (transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd AND airportHotel.id = :hotel)
                                 ')
-                            ->setParameter('hotel', $hotel);
+                            ->setParameter('hotel', $hotel)
+                            ->setParameter('dateStart', $dateStart)
+                            ->setParameter('dateEnd', $dateEnd);
         }
-
 
         // SEARCH : jointure avec la table transfer Joan pour le numéro de bon
         $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 

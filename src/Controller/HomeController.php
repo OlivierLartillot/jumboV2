@@ -17,6 +17,7 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use DateTime;
@@ -70,7 +71,7 @@ class HomeController extends AbstractController
                                     AgencyRepository $agencyRepository,
                                     TransferArrivalRepository $transferArrivalRepository,
                                     TransferInterHotelRepository $transferInterHotelRepository,
-                                    TransferArrivalRepository $transferDepartureRepository,
+                                    TransferDepartureRepository $transferDepartureRepository,
                                     ): Response
     {
 
@@ -183,6 +184,7 @@ class HomeController extends AbstractController
                                 if ($record['Fecha/Hora Origen']) {
                                     $dateTime = explode(" ", $record['Fecha/Hora Origen']);
                                     $date = new DateTime($dateTime[0]);
+                                    $date = $date->modify('+1 month');
                                     $hour = '00:01';
                                     $meetingAt = new DateTimeImmutable($date->format('Y-d-m') . $hour);
                                     $customerCard->setMeetingAt($meetingAt);
@@ -210,6 +212,7 @@ class HomeController extends AbstractController
                     if ($record['Fecha/Hora Origen']) {
                         $dateTime = explode(" ", $record['Fecha/Hora Origen']);
                         $date = new DateTime($dateTime[0]);
+                        $date = $date->modify('+1 month');
                         $hour = '00:01';
                         $meetingAt = new DateTimeImmutable($date->format('Y-d-m') . $hour);
                         $customerCard->setMeetingAt($meetingAt);
