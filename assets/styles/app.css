@@ -220,3 +220,19 @@
       padding-left: 1rem;
       font-size: 1.125rem;
       border-radius: 0.4rem; }
+
+
+.body-rep {
+  font-size: 2rem;
+}
+
+.header-rep {
+  height: 7rem;
+}
+
+.menu-footer-rep {
+  margin: 0;
+  position: absolute;
+  bottom: 0;
+  height: 7rem;
+}

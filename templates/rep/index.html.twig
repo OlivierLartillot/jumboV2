@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+{% block stylesheets %}
+
+    <!-- Bootstrap Css -->
+    <link href="/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    {{ encore_entry_link_tags('app') }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+<title>Hello RepController!</title>
+
+
+{% block body %}
+
+<body class="m-0 body-rep">
+
+
+
+<div>
+
+    <div class="header-rep bg-primary container-fluid">
+        ici c est le header
+    
+    </div>
+
+    <div class="row justify-content-center" >
+        <div class="col-6">
+            <form>
+                <input type="date" name="date" value="{{ app.request.get('date') ?  app.request.get('date') : '' }}" class="form-control mt-3">
+                <input type="submit" class="btn btn-primary mt-3 px-5 py-3">
+            </form>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+        {% if allCustomersDeparture is defined and allCustomersDeparture|length > 0 %} 
+            {{ dump(allCustomersDeparture) }}
+            {# Les customersCards ici ! #}
+
+            {% for infosDeparture in allCustomersDeparture %}
+            <div class="col-sm-10 col-xl-4 ">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="d-none d-md-block flex-shrink-0 me-4">
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
+                                        <i class="fas fa-id-card text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 align-self-center">
+                                <div class="border-bottom pb-1">
+                                    <p class="text-muted">
+                                        <i class="me-1">#</i> 123456789
+                                    </p>
+                                    <h5 class="text-truncate font-size-16 mb-1">{{ infosDeparture.customerCard.holder|title}}</h5>
+
+                                    <p>From: <br>
+                                        {{ infosDeparture.fromStart|title}} 
+                                    </p>
+                                    <p>To: <br>
+                                        {{ infosDeparture.toArrival|title}} 
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        
+        {% elseif allCustomersDeparture is defined and allCustomersDeparture|length == 0 %}
+
+            il n y a pas de résultat a afficher
+
+        {% endif %}
+
+        </div>
+    </div>
+
+    <div class="menu-footer-rep bg-primary container-fluid">
+        ici c est le header
+    
+    </div>
+
+</div>
+
+</div>
+{% endblock %}

@@ -30,21 +30,22 @@ class TeamManagerController extends AbstractController
         // utilisation du service qui définit si on utilise la query ou la session
         $day =  $defineQueryDate->returnDay($request);
 
-
         $date = new DateTimeImmutable($day . '00:01:00');
+        dump($date);
+        $meetingDate = $date->modify('+1 day');
+
         // Récupérer tous les customerCards qui n'ont pas de staff id et qui colle avec la date
         $firstClient = $customerCardRepository->findOneBy(
             [
                 'staff' => NULL,
-                'meetingAt' => $date
+                'meetingAt' => $meetingDate
             ]);
         $countNonAttributedClients = count($customerCardRepository->findBy(
             [
                 'staff' => NULL,
-                'meetingAt' => $date
+                'meetingAt' => $meetingDate
             ]
         ));
-
 
         $daterestantes = $customerCardRepository->datesForCustomersWithoutRep();
 
@@ -57,9 +58,9 @@ class TeamManagerController extends AbstractController
             }
             $agency = $firstClient->getAgency();
             $hotel = $hotels[0];
-            $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($date, $hotel, $agency);
-            $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($date, $hotel, $agency);
-            $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($date, $hotel, $agency);
+            $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($meetingDate, $hotel, $agency);
+            $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($meetingDate, $hotel, $agency);
+            $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($meetingDate, $hotel, $agency);
         } else {
             $paxAdults = null;
             $paxChildren = null;
@@ -77,7 +78,7 @@ class TeamManagerController extends AbstractController
                 $staff = $firstClient->getStaff();
                 
                 // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
-                $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($date, $hotel, $agency);
+                $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency);
                 
                 
                 // pour chacun de ces objets, leur attribuer le staff correpondant

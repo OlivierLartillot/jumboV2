@@ -365,7 +365,7 @@ class HomeController extends AbstractController
                 }
                  // sinon on va créer un nouvel objet
                  $transfer->setServiceNumber($record['Número Servicio']);
-                 $transfer->setDateHour($fechaHora);
+                 /* $transfer->setDateHour($fechaHora); */
                  $transfer->setDate($fechaHora);
                  $transfer->setHour($fechaHora);
                  $transfer->setFlightNumber($flightNumber);

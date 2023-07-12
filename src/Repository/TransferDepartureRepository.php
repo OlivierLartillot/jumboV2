@@ -39,20 +39,22 @@ class TransferDepartureRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return TransferDeparture[] Returns an array of TransferDeparture objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return TransferDeparture[] Returns an array of TransferDeparture objects
+     */
+    public function findByUserAndDate($user, $date): array
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->andWhere('c.staff = :user')
+            ->andWhere('t.date = :date')
+            ->setParameter('user', $user)
+            ->setParameter('date', $date)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?TransferDeparture
 //    {

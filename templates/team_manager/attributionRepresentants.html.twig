@@ -24,7 +24,11 @@
                                     <p class="alert alert-danger" role="alert">Il reste encore {{ countNonAttributedClients }} client(s)  à attribuer </p>
 
                                     <div class="mb-3">
-                                        Date d'arrivée: <b>{{ firstClient.meetingAt | date('d-m-Y') }}</b><br>
+                                        Date d'arrivée: 
+                                            <b>{% for arrival in firstClient.transferArrivals  %}
+                                                    {{ arrival.date| date('d-m-Y')}}
+                                               {% endfor %}
+                                            </b><br>
                                         Agence: <strong>{{ firstClient.agency }}</strong> <br>
                                         Hôtel:
                                         {% for infosTransfer in firstClient.transferArrivals %}
