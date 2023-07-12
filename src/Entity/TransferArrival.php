@@ -17,6 +17,9 @@ class TransferArrival
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $serviceNumber = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateHour = null;
+
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $flightNumber = null;
 
@@ -54,6 +57,18 @@ class TransferArrival
     public function setServiceNumber(int $serviceNumber): self
     {
         $this->serviceNumber = $serviceNumber;
+
+        return $this;
+    }
+
+    public function getDateHour(): ?\DateTimeImmutable
+    {
+        return $this->dateHour;
+    }
+
+    public function setDateHour(\DateTimeImmutable $dateHour): self
+    {
+        $this->dateHour = $dateHour;
 
         return $this;
     }
