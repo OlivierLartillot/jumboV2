@@ -31,7 +31,6 @@ class TeamManagerController extends AbstractController
         $day =  $defineQueryDate->returnDay($request);
 
         $date = new DateTimeImmutable($day . '00:01:00');
-        dump($date);
         $meetingDate = $date->modify('+1 day');
 
         // Récupérer tous les customerCards qui n'ont pas de staff id et qui colle avec la date

@@ -87,7 +87,7 @@ class HomeController extends AbstractController
         if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
             // ... do something, like deleting an object
            // redirige vers page erreur token
-           dd('stop erreur token');
+           //dd('stop erreur token');
         }
 
         
