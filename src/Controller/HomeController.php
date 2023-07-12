@@ -113,6 +113,7 @@ class HomeController extends AbstractController
             // a faire dans le traitement
             //load the CSV document from a stream
             /*  $stream = fopen('csv/servicios.csv', 'r'); */
+            error_reporting(E_ALL ^ E_STRICT);
             $csv = Reader::createFromStream(fopen($fileToUpload, 'r+'));
             //$csv = Reader::createFromPath($_FILES["fileToUpload"]["tmp_name"], 'r');
             $csv->setDelimiter(',');
