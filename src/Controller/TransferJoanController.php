@@ -8,6 +8,8 @@ use App\Entity\TransferDeparture;
 use App\Entity\TransferInterHotel;
 use App\Entity\TransferJoan;
 use App\Entity\TransferVehicleArrival;
+use App\Entity\TransferVehicleDeparture;
+use App\Entity\TransferVehicleInterHotel;
 use App\Form\DragAndDropType;
 use App\Form\TransferJoanType;
 use App\Repository\CustomerCardRepository;
@@ -16,15 +18,13 @@ use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
 use App\Repository\TransferJoanRepository;
 use App\Repository\TransferVehicleArrivalRepository;
-use DateTime;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\TimeImmutableType;
+use App\Repository\TransferVehicleDepartureRepository;
+use App\Repository\TransferVehicleInterHotelRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use League\Csv\Reader;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 #[Route('/transfer')]
@@ -46,8 +46,8 @@ class TransferJoanController extends AbstractController
                           EntityManagerInterface $manager,
                           CustomerCardRepository $customerCardRepository,
                           TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
-                          TransferInterHotelRepository $transferInterHotelRepository,
-                          TransferDepartureRepository $transferDepartureRepository
+                          TransferVehicleInterHotelRepository $transferVehicleInterHotelRepository,
+                          TransferVehicleDepartureRepository $transferVehicleDepartureRepository
                           ): Response
     {
 
@@ -103,18 +103,21 @@ class TransferJoanController extends AbstractController
         // 1. on va récupérer le nom pour savoir si c est llegada/interHotel/salida
         // LLEGADAS - INTERHOTEL - SALIDAS -> llegadas - interhotel - salidas
         $natureTransfer = strtolower($rows[2][1]);  
+    
         if ($natureTransfer == 'llegadas') { 
             $natureTransferRepository = $transferVehicleArrivalRepository;
             $natureTransferObject = new TransferVehicleArrival();
         }
         else if ($natureTransfer == 'interhotel') { 
-            $natureTransferRepository = $transferInterHotelRepository;
-            $natureTransferObject = new TransferInterHotel();
+            $natureTransferRepository = $transferVehicleInterHotelRepository;
+            $natureTransferObject = new TransferVehicleInterHotel();
         
         }
-        else { 
-            $natureTransferRepository = $transferDepartureRepository;
-            $natureTransferObject = new TransferDeparture();
+        else if ($natureTransfer == 'salidas') { 
+            $natureTransferRepository = $transferVehicleDepartureRepository;
+            $natureTransferObject = new TransferVehicleDeparture();
+        } else {
+            die('La nature du transfer n est pas reconnue !');
         }
  
         // recuperer toutes les entrees qui ont la date du nouvel envoi
@@ -125,18 +128,12 @@ class TransferJoanController extends AbstractController
         while ( ($rows[$d][4] == NULL) OR ($rows[$d][4]=='Dia Vuelo') ){
             $d++;
         }
-        $date = $rows[$d][4];
-        $hour = $rows[$d][5];
-        $inOut = $rows[$d][12];
 
 
-        $dateTransfer = new DateTime($date);
-        $dateFormat = $dateTransfer->format('Y-d-m');
-        //dd($dateFormat . ' ' . $hour); 
-
+        
         $i = 0;
         foreach ($rows as $row) {
-
+            
             if ( ($i<9) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
                 $i++;
                 continue;
@@ -161,8 +158,9 @@ class TransferJoanController extends AbstractController
                 $pickup = $row[15]; 
                 $suplidor = $row[16]; 
                 $bono = $row[17]; 
-                $zonas = $row[18]; 
-
+                $zonas = $row[18];
+               
+                
             }
             if ($agencia != null) {
                 $agencia=str_replace("\n"," ",$agencia);
@@ -189,8 +187,7 @@ class TransferJoanController extends AbstractController
             if ($customerCard) {
                 // on regarde si le nature transfert existe 
                 $natureTransferExiste = $natureTransferRepository->findOneBy(['customerCard' => $customerCard]); 
-               
-
+                
                 if ($natureTransferExiste) {
                     // on met a jour le natureTransfer
                         dd('on est ici dans le met a jour le nature transfer');
@@ -199,6 +196,10 @@ class TransferJoanController extends AbstractController
                 } else {
                     if ($natureTransfer == 'llegadas') { 
                         $natureTransferObject = new TransferVehicleArrival();
+                    } else if ($natureTransfer == 'interhotel') { 
+                        $natureTransferObject = new TransferVehicleInterHotel();
+                    } else if ($natureTransfer == 'salidas') { 
+                        $natureTransferObject = new TransferVehicleDeparture();
                     }
 
                   
@@ -207,7 +208,7 @@ class TransferJoanController extends AbstractController
                     $natureTransferObject->setIsCollective($tipo_trf);
                     $natureTransferObject->setVehicleNumber($n_veh);
                     $natureTransferObject->setVehicleType($t_veh);
-                    $natureTransferObject->setPickUp(new DateTimeImmutable());
+                    $natureTransferObject->setPickUp($pickup);
                     $natureTransferObject->setTransportCompany($suplidor);
                     $natureTransferObject->setVoucherNumber($bono);
                     $natureTransferObject->setArea($zonas);
@@ -216,6 +217,10 @@ class TransferJoanController extends AbstractController
                     //dd('ce nature transfert n existe PAS');
                     
                 }
+            } 
+            // customer card "bateau" ou rendre nullable customer card et insérer le numéro de reserva dans une nouvelle colonne
+            else {
+
             }
             
             

@@ -81,6 +81,9 @@ class CustomerCard
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferDeparture::class)]
     private Collection $transferDepartures;
 
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferVehicleInterHotel::class)]
+    private Collection $transferVehicleInterHotels;
+
 
     public function __construct()
     {
@@ -89,7 +92,8 @@ class CustomerCard
         $this->transferJoans = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->transferInterHotels = new ArrayCollection(); 
-        $this->transferDepartures = new ArrayCollection(); 
+        $this->transferDepartures = new ArrayCollection();
+        $this->transferVehicleInterHotels = new ArrayCollection(); 
     }
 
     public function getId(): ?int
@@ -486,6 +490,36 @@ class CustomerCard
             // set the owning side to null (unless already changed)
             if ($transferDeparture->getCustomerCard() === $this) {
                 $transferDeparture->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransferVehicleInterHotel>
+     */
+    public function getTransferVehicleInterHotels(): Collection
+    {
+        return $this->transferVehicleInterHotels;
+    }
+
+    public function addTransferVehicleInterHotel(TransferVehicleInterHotel $transferVehicleInterHotel): self
+    {
+        if (!$this->transferVehicleInterHotels->contains($transferVehicleInterHotel)) {
+            $this->transferVehicleInterHotels->add($transferVehicleInterHotel);
+            $transferVehicleInterHotel->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferVehicleInterHotel(TransferVehicleInterHotel $transferVehicleInterHotel): self
+    {
+        if ($this->transferVehicleInterHotels->removeElement($transferVehicleInterHotel)) {
+            // set the owning side to null (unless already changed)
+            if ($transferVehicleInterHotel->getCustomerCard() === $this) {
+                $transferVehicleInterHotel->setCustomerCard(null);
             }
         }
 

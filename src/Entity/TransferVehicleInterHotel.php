@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\TransferVehicleArrivalRepository;
+use App\Repository\TransferVehicleInterHotelRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TransferVehicleArrivalRepository::class)]
-class TransferVehicleArrival
+#[ORM\Entity(repositoryClass: TransferVehicleInterHotelRepository::class)]
+class TransferVehicleInterHotel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,9 +23,6 @@ class TransferVehicleArrival
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $vehicleType = null;
 
-/*     #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $pickUp = null; */
-
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $pickUp = null;
 
@@ -38,7 +35,7 @@ class TransferVehicleArrival
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $area = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'transferVehicleInterHotels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
 
@@ -136,10 +133,11 @@ class TransferVehicleArrival
         return $this->customerCard;
     }
 
-    public function setCustomerCard(CustomerCard $customerCard): self
+    public function setCustomerCard(?CustomerCard $customerCard): self
     {
         $this->customerCard = $customerCard;
 
         return $this;
     }
+
 }

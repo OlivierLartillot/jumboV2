@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\TransferVehicleArrivalRepository;
+use App\Repository\TransferVehicleDepartureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TransferVehicleArrivalRepository::class)]
-class TransferVehicleArrival
+#[ORM\Entity(repositoryClass: TransferVehicleDepartureRepository::class)]
+class TransferVehicleDeparture
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,9 +22,6 @@ class TransferVehicleArrival
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $vehicleType = null;
-
-/*     #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $pickUp = null; */
 
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $pickUp = null;
