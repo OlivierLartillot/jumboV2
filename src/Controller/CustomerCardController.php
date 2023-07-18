@@ -256,7 +256,7 @@ class CustomerCardController extends AbstractController
                 $flightNumber =  trim(htmlspecialchars($request->query->get('flightNumber')));
                 $voucherNumber =  trim(htmlspecialchars($request->query->get('voucherNumber')));
                 
-                $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, null);
+                $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
                 return $this->render('customer_card/airport.html.twig', [
                     'results' => $results,
                     'airports' => $airports,

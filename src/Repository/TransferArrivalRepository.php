@@ -47,7 +47,9 @@ class TransferArrivalRepository extends ServiceEntityRepository
         
         // TODO VOUCHER NUMBER !!!
         
-        $requete = $this->createQueryBuilder('ta');
+        $requete = $this->createQueryBuilder('ta')
+                        ->innerJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'ta.customerCard = transferVehicleArrival.customerCard');
+
         $requete = $requete->andWhere('ta.date = :date')->setParameter('date', $date); 
         if ($airport != 'all') {
             $requete = $requete->andWhere('ta.fromStart = :airport')->setParameter('airport', $airport);
@@ -56,7 +58,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
         $requete = $requete->andWhere('ta.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
         }
         if ($voucherNumber != '') {
-            $requete = $requete->andWhere('ta.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
+            $requete = $requete->andWhere('transferVehicleArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
         }
         
         $requete = $requete->orderBy('ta.id', 'ASC')
