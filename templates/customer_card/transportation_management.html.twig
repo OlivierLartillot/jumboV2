@@ -104,7 +104,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for result in results|sort((a, b) => a.date <=> b.date) %}
+                        {% for result in results|sort((c, d) => c.pickUp <=> d.pickUp)|sort((a, b) => a.date <=> b.date) %}
                         <tr>
                             <td>{{ (result.customerCard) ? result.customerCard.reservationNumber : 'pas de fiche client associée'}} </td>
                             <td>{{ (result.customerCard) ? result.customerCard.jumboNumber : '-' }} </td>

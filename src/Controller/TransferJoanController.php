@@ -171,7 +171,9 @@ class TransferJoanController extends AbstractController
                 $bono = $row[17]; 
                 $zonas = $row[18];
                
-                $dia_vuelo = new DateTimeImmutable($dia_vuelo);
+                $dia = new DateTime($dia_vuelo);
+                $dia = $dia->format('Y-d-m');
+                $dia_vuelo = new DateTimeImmutable($dia);
             }
             if ($agencia != null) {
                 $agencia=str_replace("\n"," ",$agencia);

@@ -61,18 +61,11 @@ class TransferVehicleDepartureRepository extends ServiceEntityRepository
     public function findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company): array
     {
 
-
         $dateStart = new DateTimeImmutable($dateStart);
         $dateEnd = new DateTimeImmutable($dateEnd);
 
         $requete = $this->createQueryBuilder('td')
-            ->leftJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = td.customerCard')
-            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'customerCard.id = transferArrival.customerCard')
-            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'customerCard.id = transferInterHotel.customerCard')
-            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'customerCard.id = transferDeparture.customerCard')
-            ->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
-            ->orWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')
-            ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
+            ->andWhere('td.date >= :dateStart and td.date <= :dateEnd')
             ->setParameter('dateStart', $dateStart->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $dateEnd->format('Y-m-d 23:59:59'));
 
