@@ -665,6 +665,51 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company): array
+    {
+
+
+        $dateStart = new DateTimeImmutable($dateStart);
+        $dateEnd = new DateTimeImmutable($dateEnd);
+
+        $requete = $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'c.id = transferVehicleArrival.customerCard')
+            ->leftJoin('App\Entity\TransferVehicleInterHotel', 'transferVehicleInterHotel', 'WITH', 'c.id = transferVehicleInterHotel.customerCard')
+            ->leftJoin('App\Entity\TransferVehicleDeparture', 'transferVehicleDeparture', 'WITH', 'c.id = transferVehicleDeparture.customerCard')
+            ->andWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd')
+            ->orWhere('transferInterHotel.date >= :dateStart and transferInterHotel.date <= :dateEnd')
+            ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd')
+            ->setParameter('dateStart', $dateStart->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $dateEnd->format('Y-m-d 23:59:59'));
+
+        if ($company != 'all') {
+            $requete = $requete
+                ->andWhere('transferVehicleArrival.transportCompany = :company') 
+                ->orWhere('transferVehicleInterHotel.transportCompany = :company') 
+                ->orWhere('transferVehicleDeparture.transportCompany = :company') 
+            ->setParameter('company', $company)
+                
+                ;
+
+        }
+
+
+        $requete = $requete
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $requete;
+    }
+
+
 //    public function findOneBySomeField($value): ?CustomerCard
 //    {
 //        return $this->createQueryBuilder('c')

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
 use App\Entity\TransferArrival;
+use App\Entity\TransferVehicleArrival;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
 use App\Repository\AgencyRepository;
@@ -14,7 +15,11 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferJoanRepository;
+use App\Repository\TransferVehicleArrivalRepository;
+use App\Repository\TransferVehicleDepartureRepository;
+use App\Repository\TransferVehicleInterHotelRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\DateImmutableType;
 use phpDocumentor\Reflection\Types\Integer;
@@ -218,16 +223,87 @@ class CustomerCardController extends AbstractController
     }
 
     #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
-    public function transportationManagement(Request $request, TransferJoanRepository $transferJoanRepository, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    public function transportationManagement(Request $request, 
+                                             TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
+                                             TransferVehicleInterHotelRepository $transferVehicleInterHotelRepository,
+                                             TransferVehicleDepartureRepository $transferVehicleDepartureRepository
+    
+        , CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     {
 
+        // TODO refaire les compagnies a partir du repos vehicleArrival
 
-        $transportCompanies = $transferJoanRepository->transportCompanyList();
+        $transportCompaniesArr = $transferVehicleArrivalRepository->transportCompanyList();
+        $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
+        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyList();
+
+        $transportCompanies = [];
+        foreach ($transportCompaniesArr as $company) {
+            if (!in_Array($company, $transportCompanies) ) {
+                $transportCompanies[] = $company ;
+            }
+        }
+        foreach ($transportCompaniesInt as $company) {
+            if (!in_Array($company, $transportCompanies) ) {
+                $transportCompanies[] = $company ;
+            }
+        }
+        foreach ($transportCompaniesDep as $company) {
+            if (!in_Array($company, $transportCompanies) ) {
+                $transportCompanies[] = $company ;
+            }
+        }
+
+        // si on recoit le formulaire
+        // si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            $empty = true;
+            //on vérifie si on a envoyé au moins un élément de tri
+            foreach ($request->query as $param) {
+                if ($param != null) {
+                    $empty = false;
+                    break;
+                }
+                
+            }
+            // si y a au moins un élément envoyé au tri
+            if ($empty == false) {
+                // todo  : alors on peut récupérer les données et les filtrer
+                $dateStart = $request->query->get('dateStart');
+                $dateEnd = $request->query->get('dateEnd');
+                $company= $request->query->get('company');
+            } 
+        } else {
+                $dateStart = new DateTime();
+                $dateStart = $dateStart->format('Y-m-d');
+                $dateEnd = new DateTime();
+                $dateEnd = $dateEnd->format('Y-m-d');
+                $company="all";
+        }
+
+
+        $transferArrivals = $transferVehicleArrivalRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
+        $transferInterHotels = $transferVehicleInterHotelRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
+        $transferDepartures = $transferVehicleDepartureRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
+
+        $results = [];
+
+        foreach ($transferArrivals as $transferArrival) {
+            $results[] = $transferArrival; 
+        }
+        foreach ($transferInterHotels as $transferInterHotel) {
+            $results[] = $transferInterHotel; 
+        }
+        foreach ($transferDepartures as $transferDeparture) {
+            $results[] = $transferDeparture; 
+        }
 
         return $this->render('customer_card/transportation_management.html.twig', [
-            'transportCompanies' => $transportCompanies
+            'transportCompanies' => $transportCompanies,
+            'results' => $results
         ]);
     }
+
 
     #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET'])]
     public function airport(Request $request, TransferArrivalRepository $transferArrivalRepository, AirportHotelRepository $airportHotelRepository, StatusRepository $statusRepository): Response

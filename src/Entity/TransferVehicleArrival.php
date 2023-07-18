@@ -23,8 +23,8 @@ class TransferVehicleArrival
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $vehicleType = null;
 
-/*     #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $pickUp = null; */
+    #[ORM\Column]
+    private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $pickUp = null;
@@ -38,9 +38,13 @@ class TransferVehicleArrival
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $area = null;
 
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $reservationNumber = null;
+
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
+
 
     public function getId(): ?int
     {
@@ -79,6 +83,18 @@ class TransferVehicleArrival
     public function setVehicleType(?string $vehicleType): self
     {
         $this->vehicleType = $vehicleType;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeImmutable $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }
@@ -131,15 +147,34 @@ class TransferVehicleArrival
         return $this;
     }
 
+    
+    public function getReservationNumber(): ?string
+    {
+        return $this->reservationNumber;
+    }
+
+    public function setReservationNumber(?string $reservationNumber): self
+    {
+        $this->reservationNumber = $reservationNumber;
+
+        return $this;
+    }
+    
+    public function getTypeTransfer() {
+        return 'vehicleArrival';
+    }
+
     public function getCustomerCard(): ?CustomerCard
     {
         return $this->customerCard;
     }
 
-    public function setCustomerCard(CustomerCard $customerCard): self
+    public function setCustomerCard(?CustomerCard $customerCard): self
     {
         $this->customerCard = $customerCard;
 
         return $this;
     }
+
+
 }

@@ -43,15 +43,11 @@
         <div class="col-lg-6">
                 <div class="mb-3">
                     <label class="form-label">Search date</label>
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
-                        
-                        {#                         
-                            {{ (ability.id in company_abilities) ? 'selected' : '' }}
-                            app.request.query 
-                        #}
-
-                        <input type="text" class="form-control" name="dateStart" placeholder="Start Date" />
-                        <input type="text" class="form-control" name="dateEnd" placeholder="End Date" />
+                    {% set now = "now"|date("Y-m-d") %}
+                    <div class="col-md-3">
+                        {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
+                        <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
+                        <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
                     </div>
                 </div>
             </div>
@@ -61,9 +57,9 @@
     <div class="row">
         <div class="col-md-2">
             <div class="form-floating mb-3">
-                <select name="natureTransfer" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="" selected>All companies</option>
-                    {% for transportCompany in transportCompanies %} 
+                <select name="company" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>All companies</option>
+                    {% for transportCompany in transportCompanies|sort %} 
                         <option value="{{ transportCompany.transportCompany }}">{{ transportCompany.transportCompany|capitalize }}</option>
                     {% endfor %}
                 </select>
@@ -85,7 +81,52 @@
 </p>
 
 
+<div class="">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Colored Bordered table</h4>
+            <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
+                the table and cells.</p>    
+            
+            <div class="table-responsive">
+                <table class="table table-bordered border-primary mb-0 text-center">
 
+                    <thead class="bg-primary bg-gradient text-light border-end-light">
+                        <tr>
+                            <th>#</th>
+                            <th># Jumbo</th>
+                            <th>A.</th>
+                            <th>C.</th>
+                            <th>B.</th>
+                            <th>Voucher</th>
+                            <th>Date</th>
+                            <th>Hour</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results|sort((a, b) => a.date <=> b.date) %}
+                        <tr>
+                            <td>{{ (result.customerCard) ? result.customerCard.reservationNumber : 'pas de fiche client associée'}} </td>
+                            <td>{{ (result.customerCard) ? result.customerCard.jumboNumber : '-' }} </td>
+                            <td>{{ (result.customerCard) ? result.customerCard.adultsNumber : '-' }} </td>
+                            <td>{{ (result.customerCard) ? result.customerCard.childrenNumber }} </td>
+                            <td>{{ (result.customerCard) ? result.customerCard.babiesNumber : '-' }} </td>
+                            <td>{{ result.voucherNumber }} </td>
+                            <td> 
+                                {{ result.date|date('d-m-Y') }}
+                            </td>
+                            <td> 
+                                {{ result.pickUp }}
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {# 
                         <div class="row">
 

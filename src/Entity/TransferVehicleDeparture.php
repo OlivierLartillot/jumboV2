@@ -23,6 +23,9 @@ class TransferVehicleDeparture
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $vehicleType = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $date = null;
+
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $pickUp = null;
 
@@ -36,8 +39,10 @@ class TransferVehicleDeparture
     private ?string $area = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $reservationNumber = null;
 
     public function getId(): ?int
     {
@@ -79,6 +84,18 @@ class TransferVehicleDeparture
 
         return $this;
     }
+
+    public function getDate(): ?\DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeImmutable $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }    
 
     public function getPickUp(): ?string
     {
@@ -138,5 +155,21 @@ class TransferVehicleDeparture
         $this->customerCard = $customerCard;
 
         return $this;
+    }
+
+    public function getReservationNumber(): ?string
+    {
+        return $this->reservationNumber;
+    }
+
+    public function setReservationNumber(?string $reservationNumber): self
+    {
+        $this->reservationNumber = $reservationNumber;
+
+        return $this;
+    }
+
+    public function getTypeTransfer() {
+        return 'vehicleDeparture';
     }
 }

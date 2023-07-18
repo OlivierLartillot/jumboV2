@@ -20,6 +20,8 @@ use App\Repository\TransferJoanRepository;
 use App\Repository\TransferVehicleArrivalRepository;
 use App\Repository\TransferVehicleDepartureRepository;
 use App\Repository\TransferVehicleInterHotelRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -133,10 +135,19 @@ class TransferJoanController extends AbstractController
         
         $i = 0;
         foreach ($rows as $row) {
+
+
             
             if ( ($i<9) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
                 $i++;
                 continue;
+            }
+            // si les deux premieres cellules de la ligne sont vides 
+            // on considère qu'il n'y a plus de données à récupérer
+            // et on sort de la boucle
+            else if ( ($row[0] == null) and ($row[1] == null) ) {
+                
+                break;
             }
             else {
                 $reservaId= trim($row[0]); 
@@ -160,7 +171,7 @@ class TransferJoanController extends AbstractController
                 $bono = $row[17]; 
                 $zonas = $row[18];
                
-                
+                $dia_vuelo = new DateTimeImmutable($dia_vuelo);
             }
             if ($agencia != null) {
                 $agencia=str_replace("\n"," ",$agencia);
@@ -208,7 +219,11 @@ class TransferJoanController extends AbstractController
                     $natureTransferObject->setIsCollective($tipo_trf);
                     $natureTransferObject->setVehicleNumber($n_veh);
                     $natureTransferObject->setVehicleType($t_veh);
-                    $natureTransferObject->setPickUp($pickup);
+                    $natureTransferObject->setDate($dia_vuelo);
+                    ($natureTransfer == 'llegadas') ? $natureTransferObject->setPickUp($hora_v) : $natureTransferObject->setPickUp($pickup);
+
+                    
+                    
                     $natureTransferObject->setTransportCompany($suplidor);
                     $natureTransferObject->setVoucherNumber($bono);
                     $natureTransferObject->setArea($zonas);
@@ -221,16 +236,36 @@ class TransferJoanController extends AbstractController
             // customer card "bateau" ou rendre nullable customer card et insérer le numéro de reserva dans une nouvelle colonne
             else {
 
-            }
-            
-            
-            // si les deux premieres cellules de la ligne sont vides 
-            // on considère qu'il n'y a plus de données à récupérer
-            // et on sort de la boucle
-            if ( ($row[0] == null) and ($row[1] == null) ) {
+                if ($natureTransfer == 'llegadas') { 
+                    $natureTransferObject = new TransferVehicleArrival();
+                } else if ($natureTransfer == 'interhotel') { 
+                    $natureTransferObject = new TransferVehicleInterHotel();
+                } else if ($natureTransfer == 'salidas') { 
+                    $natureTransferObject = new TransferVehicleDeparture();
+                }
+
+              
+                // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
+                $natureTransferObject->setIsCollective($tipo_trf);
+                $natureTransferObject->setVehicleNumber($n_veh);
+                $natureTransferObject->setVehicleType($t_veh);
+                $natureTransferObject->setDate($dia_vuelo);
+                ($natureTransfer == 'llegadas') ? $natureTransferObject->setPickUp($hora_v) : $natureTransferObject->setPickUp($pickup);
+                $natureTransferObject->setTransportCompany($suplidor);
+                $natureTransferObject->setVoucherNumber($bono);
+                $natureTransferObject->setArea($zonas);
+                $natureTransferObject->setReservationNumber($reservaId);
+
+
+                $manager->persist($natureTransferObject);
+                //dd('ce nature transfert n existe PAS');
                 
-                break;
+
+
             }
+            
+            
+
         }
         
         $manager->flush();
