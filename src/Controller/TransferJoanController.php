@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-#[Route('/transfer')]
+#[Route('admin/transfer')]
 class TransferJoanController extends AbstractController
 {
 

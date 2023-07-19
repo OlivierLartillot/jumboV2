@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 
-#[Route('/customer/card')]
+#[Route('admin/customer/card')]
 class CustomerCardController extends AbstractController
 {
     #[Route('/', name: 'app_customer_card_index', methods: ['GET'])]
