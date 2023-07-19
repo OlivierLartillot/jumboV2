@@ -287,20 +287,36 @@ class CustomerCardController extends AbstractController
         $transferDepartures = $transferVehicleDepartureRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
 
         $results = [];
+        $adultsNumber = 0;
+        $childrenNumber = 0;
+        $babiesNumber = 0;
 
         foreach ($transferArrivals as $transferArrival) {
             $results[] = $transferArrival; 
+            $adultsNumber +=  $transferArrival->getCustomerCard()->getAdultsNumber();
+            $childrenNumber +=  $transferArrival->getCustomerCard()->getChildrenNumber();
+            $babiesNumber +=  $transferArrival->getCustomerCard()->getBabiesNumber();
         }
         foreach ($transferInterHotels as $transferInterHotel) {
-            $results[] = $transferInterHotel; 
+            $results[] = $transferInterHotel;
+            $adultsNumber += $transferInterHotel->getCustomerCard()->getAdultsNumber();
+            $childrenNumber += $transferInterHotel->getCustomerCard()->getChildrenNumber();
+            $babiesNumber += $transferInterHotel->getCustomerCard()->getBabiesNumber();
+
         }
         foreach ($transferDepartures as $transferDeparture) {
             $results[] = $transferDeparture; 
+            $adultsNumber += $transferDeparture->getCustomerCard()->getAdultsNumber();
+            $childrenNumber += $transferDeparture->getCustomerCard()->getChildrenNumber();
+            $babiesNumber += $transferDeparture->getCustomerCard()->getBabiesNumber();
         }
 
         return $this->render('customer_card/transportation_management.html.twig', [
             'transportCompanies' => $transportCompanies,
-            'results' => $results
+            'results' => $results,
+            'adultsNumber' => $adultsNumber,
+            'childrenNumber' => $childrenNumber,
+            'babiesNumber' => $babiesNumber
         ]);
     }
 

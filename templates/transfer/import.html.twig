@@ -6,6 +6,32 @@
                     <div class="container-fluid">
 
 
+                    
+                    {% if errorClients is defined %}
+
+                        {% if errorClients|length > 0 %}
+                            <div class="alert alert-danger" role="alert">
+                                Attention ces clients n'ont pas été importé car ils ne possèdent pas de fiche. Veuillez créer la fiche client correpsondant au Numéro Client du fichier avant de recommencer.
+
+                                {% for error in errorClients %} 
+                                    <ul>
+                                        <li>{{ error }}</li>
+                                    </ul>
+                                {% endfor %}
+
+                            </div>
+                        
+                       
+                        {% else %} 
+                            <div class="alert alert-success" role="alert">       
+                                Tous les clients ont bien été importés
+                            </div>
+                        {% endif %}                    
+                    {% endif %}                    
+                    
+                    </p>
+
+
                         <div class="row">
                             <div class="col">
                                 <div class="card">

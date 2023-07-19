@@ -59,7 +59,8 @@ class TransferJoanController extends AbstractController
  
         // récupération du token
         $submittedToken = $request->request->get('token');
-                                        
+        //les clients n'ayant pas de customerCard
+        $errorClients = [];                                        
         // 'delete-item' is the same value used in the template to generate the token
         if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
             // ... do something, like deleting an object
@@ -85,22 +86,11 @@ class TransferJoanController extends AbstractController
             die("l extension du fichier n est pas bonne !");
         }
 
-
-/*         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $reader->setReadDataOnly(true);
-        $spreadsheet = $reader->load($fileToUpload);
-
-        dd($spreadsheet); */
-
         // Charger le fichier Excel
         $spreadsheet = IOFactory::load($fileToUpload);
         //$spreadsheet->setActiveSheetIndexByName('OPERATIVA');
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
-        // Supprimez la première ligne si elle contient les en-têtes de colonne
-        //array_shift($rows);
-
-        
 
         // 1. on va récupérer le nom pour savoir si c est llegada/interHotel/salida
         // LLEGADAS - INTERHOTEL - SALIDAS -> llegadas - interhotel - salidas
@@ -131,13 +121,9 @@ class TransferJoanController extends AbstractController
             $d++;
         }
 
-
-        
         $i = 0;
         foreach ($rows as $row) {
 
-
-            
             if ( ($i<9) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
                 $i++;
                 continue;
@@ -200,20 +186,31 @@ class TransferJoanController extends AbstractController
             if ($customerCard) {
                 // on regarde si le nature transfert existe 
                 $natureTransferExiste = $natureTransferRepository->findOneBy(['customerCard' => $customerCard]); 
+                if ($natureTransfer == 'llegadas') { 
+                    $natureTransferObject = new TransferVehicleArrival();
+                } else if ($natureTransfer == 'interhotel') { 
+                    $natureTransferObject = new TransferVehicleInterHotel();
+                } else if ($natureTransfer == 'salidas') { 
+                    $natureTransferObject = new TransferVehicleDeparture();
+                }
                 
                 if ($natureTransferExiste) {
                     // on met a jour le natureTransfer
-                        dd('on est ici dans le met a jour le nature transfer');
+                    // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
+                    $natureTransferExiste->setCustomerCard($customerCard);
+                    $natureTransferExiste->setIsCollective($tipo_trf);
+                    $natureTransferExiste->setVehicleNumber($n_veh);
+                    $natureTransferExiste->setVehicleType($t_veh);
+                    $natureTransferExiste->setDate($dia_vuelo);
+                    ($natureTransfer == 'llegadas') ? $natureTransferExiste->setPickUp($hora_v) : $natureTransferExiste->setPickUp($pickup);
+                    $natureTransferExiste->setTransportCompany($suplidor);
+                    $natureTransferExiste->setVoucherNumber($bono);
+                    $natureTransferExiste->setArea($zonas);
+
+                   
 
                     //dd('ce nature transfert existe déja');
                 } else {
-                    if ($natureTransfer == 'llegadas') { 
-                        $natureTransferObject = new TransferVehicleArrival();
-                    } else if ($natureTransfer == 'interhotel') { 
-                        $natureTransferObject = new TransferVehicleInterHotel();
-                    } else if ($natureTransfer == 'salidas') { 
-                        $natureTransferObject = new TransferVehicleDeparture();
-                    }
 
                   
                     // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
@@ -235,54 +232,20 @@ class TransferJoanController extends AbstractController
                     
                 }
             } 
-            // customer card "bateau" ou rendre nullable customer card et insérer le numéro de reserva dans une nouvelle colonne
+            // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
-
-                if ($natureTransfer == 'llegadas') { 
-                    $natureTransferObject = new TransferVehicleArrival();
-                } else if ($natureTransfer == 'interhotel') { 
-                    $natureTransferObject = new TransferVehicleInterHotel();
-                } else if ($natureTransfer == 'salidas') { 
-                    $natureTransferObject = new TransferVehicleDeparture();
-                }
-
-              
-                // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
-                $natureTransferObject->setIsCollective($tipo_trf);
-                $natureTransferObject->setVehicleNumber($n_veh);
-                $natureTransferObject->setVehicleType($t_veh);
-                $natureTransferObject->setDate($dia_vuelo);
-                ($natureTransfer == 'llegadas') ? $natureTransferObject->setPickUp($hora_v) : $natureTransferObject->setPickUp($pickup);
-                $natureTransferObject->setTransportCompany($suplidor);
-                $natureTransferObject->setVoucherNumber($bono);
-                $natureTransferObject->setArea($zonas);
-                $natureTransferObject->setReservationNumber($reservaId);
-
-
-                $manager->persist($natureTransferObject);
-                //dd('ce nature transfert n existe PAS');
-                
-
-
+                $errorClients[] = $reservaId;
             }
-            
-            
-
         }
         
         $manager->flush();
         
-        
-        
-
-
-
-
-
-
-
-        
-        return $this->redirectToRoute('app_transfer_import');
+        return $this->render('transfer/import.html.twig', [
+            'errorClients' => $errorClients
+        ]);
+        return $this->redirectToRoute('app_transfer_import', [
+            'errorClients' => $errorClients
+        ]);
     }
 
     #[Route('/new', name: 'app_transfer_joan_new', methods: ['GET', 'POST'])]

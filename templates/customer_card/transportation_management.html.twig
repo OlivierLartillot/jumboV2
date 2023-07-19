@@ -60,7 +60,7 @@
                 <select name="company" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
                     <option value="all" selected>All companies</option>
                     {% for transportCompany in transportCompanies|sort %} 
-                        <option value="{{ transportCompany.transportCompany }}">{{ transportCompany.transportCompany|capitalize }}</option>
+                        <option value="{{ transportCompany.transportCompany }}" {{ (app.request.query.get('company') == transportCompany.transportCompany) ? 'selected' : '' }}>{{ transportCompany.transportCompany|capitalize }}</option>
                     {% endfor %}
                 </select>
                 <label for="floatingSelectGrid">Select a transport company</label>
@@ -88,6 +88,11 @@
             <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
                 the table and cells.</p>    
             
+
+            Le nombre d adultes est {{ adultsNumber }} / 
+            Le nombre d enfants est {{ childrenNumber }} / 
+            Le nombre de bébé est {{ babiesNumber }}
+
             <div class="table-responsive">
                 <table class="table table-bordered border-primary mb-0 text-center">
 
