@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/meeting/point')]
+#[Route('team-manager/meeting/point')]
 class MeetingPointController extends AbstractController
 {
     #[Route('/', name: 'app_meeting_point_index', methods: ['GET'])]

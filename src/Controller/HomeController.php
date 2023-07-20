@@ -32,8 +32,8 @@ use League\Csv\Reader;
 class HomeController extends AbstractController
 {
 
-    #[Route('admin/', name: 'home' )]
-    public function test(UserRepository $userRepository)
+    #[Route('/admin', name: 'home' )]
+    public function accueil()
     {
         return $this->render('index.html.twig', [
         ]);

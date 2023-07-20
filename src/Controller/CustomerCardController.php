@@ -30,10 +30,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 
-#[Route('admin/customer/card')]
 class CustomerCardController extends AbstractController
 {
-    #[Route('/', name: 'app_customer_card_index', methods: ['GET'])]
+    #[Route('customer/card/', name: 'app_customer_card_index', methods: ['GET'])]
     public function index(Request $request, 
                           CustomerCardRepository $customerCardRepository, 
                           StatusRepository $statusRepository, 
@@ -140,7 +139,7 @@ class CustomerCardController extends AbstractController
         
     }
     
-    #[Route('/pax', name: 'app_customer_card_pax', methods: ['GET'])]
+    #[Route('team-manager/pax', name: 'app_customer_card_pax', methods: ['GET'])]
     public function pax(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
         
@@ -430,7 +429,7 @@ class CustomerCardController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_customer_card_show', methods: ['GET' , 'POST'])]
+    #[Route('customer/card/{id}', name: 'app_customer_card_show', methods: ['GET' , 'POST'])]
     public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
     {
 
@@ -554,7 +553,7 @@ class CustomerCardController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
+    #[Route('customer/card/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository): Response
     {
         $form = $this->createForm(CustomerCardType::class, $customerCard);

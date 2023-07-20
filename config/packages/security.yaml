@@ -32,7 +32,16 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_REP] }
+        - { path: ^/admin, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
+        - { path: ^/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
+        - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
+        - { path: ^/team-manager, roles: [ROLE_HULK, ROLE_SUPERMAN] }
+        - { path: ^/pax, roles: [ROLE_REP] }
+        - { path: ^/airport, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT] }
+        - { path: ^/transportation, roles: [ROLE_HULK, ROLE_SUPERMAN] }
+
+        
+
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

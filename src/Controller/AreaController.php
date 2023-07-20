@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/area')]
+#[Route('team-manager/area')]
 class AreaController extends AbstractController
 {
     #[Route('/', name: 'app_area_index', methods: ['GET'])]

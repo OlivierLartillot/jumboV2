@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,7 +19,7 @@ class RepAttributionType extends AbstractType
         ->add('staff', EntityType::class, [
             'placeholder' => 'Choose a User',
             'class' => User::class,
-            'autocomplete' =>true
+            'autocomplete' =>true,
         ] )
         ->add('validate', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary'],
