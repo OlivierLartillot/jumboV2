@@ -44,11 +44,9 @@ class TransferArrivalRepository extends ServiceEntityRepository
      */
     public function findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber): array
     {
-        
-        // TODO VOUCHER NUMBER !!!
-        
+            
         $requete = $this->createQueryBuilder('ta')
-                        ->innerJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'ta.customerCard = transferVehicleArrival.customerCard');
+                        ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'ta.customerCard = transferVehicleArrival.customerCard');
 
         $requete = $requete->andWhere('ta.date = :date')->setParameter('date', $date); 
         if ($airport != 'all') {

@@ -36,214 +36,103 @@
                     <div class="container-fluid">
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Dashboard', title: 'Pax Calculation'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
 
-<form method="GET">
-    <div class="row">
-        <div class="col-lg-6">
-                <div class="mb-3">
-                    <label class="form-label">Search date</label>
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container='#datepicker6'>
-                        
-                        {#                         
-                            {{ (ability.id in company_abilities) ? 'selected' : '' }}
-                            app.request.query 
-                        #}
-
-                        <input type="date" class="form-control" name="dateStart" placeholder="Start Date" />
-                        <input type="text" class="form-control" name="dateEnd" placeholder="End Date" />
-                    </div>
-                </div>
-        </div>
-        
-
-        <div class="text-center text-md-start col-md-2 ">
-            <input type="submit" class="btn btn-primary px-5 py-3">
-        </div>
-
+    <div>
+        !!! Le status No Show Doit s'appeler comme ca pour récupérer les pax des utilisateurs sauf s ils sont no show ...
+    
     </div>
 
+        <form method="GET">
+            <div class="row">
+                {% set now = "now"|date("Y-m-d") %}
+                <div class="col-md-3">
+                    {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
+                    <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
+                    <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
+                </div>
+            </div>
+
+            <div class="text-center text-md-start col-md-2 ">
+                <input type="submit" class="btn btn-primary px-5 py-3">
+            </div>
+
+            </div>
+
+        </form>
+
+        <p>
+            récupérer toutes les colonnes adultes dans cette tranche de date et pour le rep
+            si le rep est pas défini, c est tous !!!!!!!!!!!!!!!!!!!!!
 
 
-</form>
-
-<p>
-    récupérer toutes les colonnes adultes dans cette tranche de date et pour le rep USer courant
+        </p>
 
 
-</p>
+                        <div class="">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Colored Bordered table</h4>
+                                    <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
+                                        the table and cells.</p>    
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered border-primary mb-0 text-center">
 
-<ul>
-    <li>Adultes: 1</li>
-    <li>Enfants: 0.5</li>
-    <li>Bébés: 0</li>
-
-</ul>
-
-{# 
-                        <div class="row">
-
-
-
-                            {% for customer_card in customer_cards %}
-
-                            <div class="col-xl-4 col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-start">
-                                            <div class="d-none d-md-block flex-shrink-0 me-4">
-                                                <div class="avatar-sm">
-                                                    <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
-                                                        <i class="fas fa-id-card text-dark"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 align-self-center">
-                                                <div class="border-bottom pb-1">
-                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
-                                                    <p class="text-muted">
-                                                        <i class="me-1">#</i> {{ customer_card.reservationNumber }}
-                                                    </p>
-                                                    <p>
-                                                     {% if customer_card.status == "No Show" %}
-                                                        <span class="badge rounded-pill bg-danger">{{ customer_card.status }}</span>
-                                                    {% else %}
-                                                        <span class="badge rounded-pill bg-success">{{ customer_card.status }}</span>
-                                                    {% endif %}
-                                                    </p>
-                                                    <p class="text-muted">
-                                                        {{ customer_card.agency }}
-                                                    </p>
-                                                </div>
-
-
-                                                <div class="border-bottom mt-3 pt-1 pb-1">
-
-                                                    <p class="text-muted">
-                                                        <i class="fas fa-hotel"></i> 
-                                                        {% for transfer in customer_card.transfers %} 
-                                                            {% if transfer.natureTransfer == "Arrivée" %}
-                                                                {{ transfer.toArrival }}
-                                                            {% elseif  transfer.natureTransfer == "Inter Hotel" %}
-                                                                <br> <i class="fas fa-hotel"></i> {{ transfer.toArrival }}
-                                                            {% endif  %}
-                                                        {% endfor %}
-                                                    </p>
-                                                </div>
-
-
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <div class="mt-3">
-                                                            <p class="text-muted mb-2">Adults</p>
-                                                            <h5 class="font-size-16 mb-0">{{ customer_card.adultsNumber }}</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <div class="mt-3">
-                                                            <p class="text-muted mb-2">Children</p>
-                                                            <h5 class="font-size-16 mb-0">{{ customer_card.childrenNumber }}</h5>
-                                                        </div>
-                                                    </div>                                                    
-                                                    <div class="col-4">
-                                                        <div class="mt-3">BB</p>
-                                                            <h5 class="font-size-16 mb-0">{{ customer_card.babiesNumber }}</h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <a href="" class="badge bg-primary"> Show more</a>
-
-                                                {% for transfer in customer_card.transfers %} 
-                                                    {% if transfer.natureTransfer == "Arrivée" %}
-                                                        <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
-                                                            <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Date</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Hour</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
-                                                                </div>
-                                                            </div>                                                    
-                                                            <div class="col-4">
-                                                                <div class="mt-3">Flight #</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    {% elseif transfer.natureTransfer == "Inter Hotel" %}
-                                                        <div class="row mt-3 p-3 shadow-lg  border border-1 border-primary rounded">
-                                                            <h6><i class="mdi mdi-car"></i> Inter Hotel</h6>
-                                                            <div class="col-6">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Date</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Hour</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
-                                                                </div>
-                                                            </div>                                                    
-                                                        </div>
-
-
-                                                    {% elseif transfer.natureTransfer == "Départ" %}
-                                                        <div class="row mt-3 p-3 shadow-lg  border border-1 border-primary rounded">
-                                                            <h6><i class="mdi mdi-airplane-takeoff"></i> Departure</h6>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Date</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.dateHour | date('d-m-Y') }}</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="mt-3">
-                                                                    <p class="text-muted mb-2">Hour</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.transferHourArrival }}</h5>
-                                                                </div>
-                                                            </div>                                                    
-                                                            <div class="col-4">
-                                                                <div class="mt-3">Flight #</p>
-                                                                    <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    {% endif %}
-                                                {% endfor %}
-
-                                            </div>
-                                        </div>
-
+                                            <thead class="bg-primary bg-gradient text-light border-end-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Total pax</th>
+                                                    <th>Total personnes</th>
+                                                    <th>Adults</th>
+                                                    <th>Children</th>
+                                                    <th>Babies</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Show</td>
+                                                    <td> {{ results['sumPaxShow'] }} </td>
+                                                    <td>{{results['sumNbrShow']}}</td>
+                                                    <td>{{results['nbrAdultsShow']}}</td>
+                                                    <td>{{results['nbrChildrenShow']}}</td>
+                                                    <td>{{results['nbrBabiesShow']}}</td> 
+                                                </tr>
+                                                <tr>
+                                                    <td>With no Show</td>
+                                                    <td>{{results['sumPaxTotal']}}</td>
+                                                    <td>{{results['sumNbrTotal']}}</td>
+                                                    <td> {{results['nbrTotalAdults']}}</td>
+                                                    <td> {{results['nbrTotalChildren']}}</td>
+                                                    <td> {{results['nbrTotalbabies']}}</td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            {% endfor %}
+                        <h2>Somme pour show</h2>
+                        <ul>
+                            <li>Adultes: {{results['nbrAdultsShow']}} * 1 = </li>
+                            <li>Enfants: {{results['nbrChildrenShow']}} * 0.5 = {{results['paxChildrenShow']}} </li>
+                            <li>Bébés:  {{results['nbrBabiesShow']}} x 0 = </li>
+                            <li>Total Personnes:  {{results['sumNbrShow']}}</li>
+                            <li>Total Pax:  {{results['sumPaxShow']}}</li>
 
-
-
-
-
-
-
-                        </div> #}
-
-
-
+                        </ul>
 
 
+                        <h2>Somme totale No Show compris</h2>
+                        <ul>
+                            <li>Adultes: {{results['nbrTotalAdults']}}</li>
+                            <li>Enfants: {{results['nbrTotalChildren']}}</li>
+                            <li>Bébés:  {{results['nbrTotalbabies']}}</li>
+                            <li>Total Personnes:  {{results['sumNbrTotal']}}</li>
+                            <li>Total Pax:  {{results['sumPaxTotal']}}</li>
 
-
-
+                        </ul>
 
                     </div> <!-- container-fluid -->
                 </div>

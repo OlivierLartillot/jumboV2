@@ -161,7 +161,7 @@
 							<div class="mt-2">
 								<p class="my-1"><strong>Nom: </strong> {{ meetingInfos.holder }}</p>
 								<p class="mt-1 mb-2"><strong>Hôtel:</strong> 
-									{% for infosTransfer in meetingInfos.transfers %}
+									{% for infosTransfer in meetingInfos.transferArrivals %}
 										{{ infosTransfer.toArrival}}
 									{% endfor %}
 								</p>
