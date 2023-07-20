@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\CustomerCard;
 use App\Entity\TransferArrival;
 use App\Entity\TransferVehicleArrival;
+use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
 use App\Repository\AgencyRepository;
@@ -29,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 
-#[Route('/customer/card')]
+#[Route('admin/customer/card')]
 class CustomerCardController extends AbstractController
 {
     #[Route('/', name: 'app_customer_card_index', methods: ['GET'])]
@@ -203,23 +204,62 @@ class CustomerCardController extends AbstractController
     }
 
     #[Route('/pax/rep/{id}', name: 'app_customer_card_pax_par_rep', methods: ['GET', 'POST'])]
-    public function paxParRep(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    public function paxParRep(Request $request, User $user, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
 
+        
         //! Attention si l id est différent du user courant, pas le droit
-
-
-        $users = $userRepository->findAll();
-        $reps = [];
-        foreach ($users as $user) {
-            if (in_array("ROLE_REP", $user->getRoles() )) {
-                $reps[] = $user;
-            }
+        if ($user != $this->getUser()) {
+            return throw $this->createAccessDeniedException();
         }
 
+        // on va ranger les résultats dans un tableau pour les transmettre a la vue en une fois
+        $results = [];
+        // si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            $empty = true;
+            //on vérifie si on a envoyé au moins un élément de tri
+            foreach ($request->query as $param) {
+                if ($param != null) {
+                    $empty = false;
+                    break;
+                }
+                
+            }
+            // si y a au moins un élément envoyé au tri
+            if ($empty == false) {
+                // todo  : alors on peut récupérer les données et les filtrer
+                $dateStart = $request->query->get('dateStart');
+                $dateEnd = $request->query->get('dateEnd');
+            } 
+        } else {
+            $dateStart = new DateTimeImmutable('now');
+            $dateEnd = new DateTimeImmutable('now');
+        }
+        //pax adults de tel date à tel date
+        $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
+        $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
+        $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children");
+        $results['nbrTotalChildren'] = intval($results['nbrTotalChildren']);
+        $results['paxTotalChildren'] = $results['nbrTotalChildren'] * 0.5;
+        $results['nbrTotalbabies'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies");
+        $results['nbrTotalbabies'] = intval($results['nbrTotalbabies']);
+        $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
+        $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
+        // pax adults sans no show
+        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", 'No Show');
+        $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
+        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children", 'No Show');
+        $results['nbrChildrenShow'] = intval($results['nbrChildrenShow']);
+        $results['paxChildrenShow'] = $results['nbrChildrenShow'] * 0.5;
+        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies", 'No Show');
+        $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
+        $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
+        $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
+
         return $this->render('customer_card/calcul_pax_par_rep.html.twig', [
-            'reps' => $reps
-        ]); 
+            'results' =>$results
+        ]);
     }
 
     #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
@@ -348,6 +388,7 @@ class CustomerCardController extends AbstractController
                 $flightNumber =  trim(htmlspecialchars($request->query->get('flightNumber')));
                 $voucherNumber =  trim(htmlspecialchars($request->query->get('voucherNumber')));
                 
+
                 $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
                 return $this->render('customer_card/airport.html.twig', [
                     'results' => $results,

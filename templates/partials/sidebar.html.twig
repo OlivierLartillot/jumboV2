@@ -88,7 +88,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ path('app_customer_card_pax_par_rep', {'id': 1 }) }}">
+                    <a href="{{ path('app_customer_card_pax_par_rep', {'id': app.user.id }) }}">
                         <i class="uil-users-alt"></i>
                         <span>{% trans %}My pax app.user.id{% endtrans %}</span>
                     </a>
