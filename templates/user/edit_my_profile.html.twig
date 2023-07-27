@@ -1,0 +1,72 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <a href="{{ path('app_user_list') }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>back to list</a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-4 mb-3 text-center">
+            {# read and display just one flash message type #}
+            {% for message in app.flashes('success') %}
+                <div class="border rounded p-3 bg-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <div>
+                <h3>Role(s)</h3>
+                <ul>
+                {% for role in app.user.roles %}
+                    {% if role != "ROLE_USER" %} 
+                    <li>
+                        {% if role == "ROLE_HULK" %} Super Admin
+                            {% elseif role == "ROLE_SUPERMAN" %} Admin
+                            {% elseif role == "ROLE_REP" %} Rep
+                            {% elseif role == "ROLE_AIRPORT" %} Airport
+                            {% elseif role == "ROLE_OPERATIONS" %} Operations
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            <div> 
+                <h3>Area</h3>
+                {{ app.user.area }}
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row justify-content-center">
+
+
+        <div class="col-md-4">
+            <h3>Update</h3>
+
+            {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+
+
+        </div>
+
+
+    </div>
+
+    <div class="row justify-content-center mt-3">
+
+        <div class="col-md-4">
+            <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+            </form>
+        </div>
+    </diV>
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
