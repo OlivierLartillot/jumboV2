@@ -47,50 +47,77 @@
                                                 <tbody>
 
                                                     {% for user in users %}
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <div class="form-check font-size-16">
-                                                                <input type="checkbox" class="form-check-input" id="contacusercheck1">
-                                                                <label class="form-check-label" for="contacusercheck1"></label>
-                                                            </div>
-                                                        </th>
-                                                        <td>
-                                                            <img src="/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle me-2">
-                                                            <a href="#" class="text-body">{{user}}</a>
-                                                        </td>
-                                                        <td>
-                                                            {% for role in user.roles %}
-                                                               {% if role != "ROLE_USER" %} {{ role }} {% endif %}
-                                                            {% endfor %}
-                                                        </td>
-                                                        <td>{{user.phoneNumber}}</td>
-                                                        <td>
-                                                            <ul class="list-inline mb-0">
-                                                                <li class="list-inline-item">
-                                                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="px-2 text-primary"><i class="uil uil-pen font-size-18"></i></a>
-                                                                </li>
-                                                                <li class="list-inline-item">
-                                                                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                                                                    <a href="javascript:void(0);" class="px-2 text-danger"><i class="uil uil-trash-alt font-size-18"></i></a>
-                                                                </li>
-                                                                <li class="list-inline-item dropdown">
-                                                                    <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                                        <i class="uil uil-ellipsis-v"></i>
-                                                                    </a>
+
+                
+                                                         {# si le user courant n a pas role hulk dans ses roles et que sans le user.roles y a hulk alors on saute la ligne #}
+
+                                                        {% if "ROLE_HULK" not in app.user.roles and "ROLE_HULK" in user.roles %} 
+                                                        
+                                                        {% else %}
+                                                        
+                                                        
+
+                                                           
+ 
+
                                                                 
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </td>
-                                                    </tr>
+
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <div class="form-check font-size-16">
+                                                                                <input type="checkbox" class="form-check-input" id="contacusercheck1">
+                                                                                <label class="form-check-label" for="contacusercheck1"></label>
+                                                                            </div>
+                                                                        </th>
+                                                                        <td>
+                                                                            <img src="/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle me-2">
+                                                                            <a href="#" class="text-body">{{user}}</a>
+                                                                        </td>
+                                                                        <td>
+                                                                            {% set roleExist = 1 %}
+                                                                            {% for role in user.roles %}
+
+                                                                                    {% if role == "ROLE_USER" %}{% endif %}
+                                                                                    {% if role == "ROLE_SUPERMAN" %} <span class="badge bg-danger">{% set roleExist = roleExist + 1 %} Admin  {% if roleExist < user.roles|length %} / {% endif %} </span> {% endif %}
+                                                                                    {% if role == "ROLE_REP" %}{% set roleExist = roleExist + 1 %} Rep {% if roleExist < user.roles|length %} / {% endif %} {% endif %}
+                                                                                    {% if role == "ROLE_OPERATIONS" %}{% set roleExist = roleExist + 1 %} Operations {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
+                                                                                    {% if role == "ROLE_AIRPORT" %}{% set roleExist = roleExist + 1 %} Airport {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
+                                                                                   
+
+                                                                                    
+                                                                            {% endfor %}
+                                                                        </td>
+                                                                        <td>{{user.phoneNumber}}</td>
+                                                                        <td>
+                                                                            <ul class="list-inline mb-0">
+                                                                                <li class="list-inline-item">
+                                                                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="px-2 text-primary"><i class="uil uil-pen font-size-18"></i></a>
+                                                                                </li>
+                                                                                <li class="list-inline-item">
+                                                                                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+                                                                                    <a href="javascript:void(0);" class="px-2 text-danger"><i class="uil uil-trash-alt font-size-18"></i></a>
+                                                                                </li>
+                                                                                <li class="list-inline-item dropdown">
+                                                                                    <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                                                                        <i class="uil uil-ellipsis-v"></i>
+                                                                                    </a>
+                                                                                
+                                                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                                                        <a class="dropdown-item" href="#">Action</a>
+                                                                                        <a class="dropdown-item" href="#">Another action</a>
+                                                                                        <a class="dropdown-item" href="#">Something else here</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </td>
+                                                                    </tr>
+                                                         
+                                                           
+                                                       {% endif %}
                                                     {% else %}
-                                                    <tr>
-                                                        <td colspan="4">no records found</td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td colspan="4">no records found</td>
+                                                        </tr>
                                                     {% endfor %}
                                                 </tbody>
                                             </table>

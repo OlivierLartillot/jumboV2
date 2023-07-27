@@ -27,7 +27,6 @@ class UserType extends AbstractType
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe*'],
                 'second_options' => ['label' => 'Confirmez le mot de passe*'],
-
                 'constraints' => [
                         new NotBlank([
                             'message' => 'Un mot de passe est nécessaire',
@@ -43,8 +42,10 @@ class UserType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'Etes-vous ?',
                 'choices' => [
+                    'Admin' => 'ROLE_ADMIN',
                     'Rep' => 'ROLE_REP',
-                    'Aeroport' => 'ROLE_AEROPORT'
+                    'Aeroport' => 'ROLE_AIRPORT',
+                    'Opérations' => 'ROLE_OPERATIONS'
                 ],
                 'multiple' => true,
                 'expanded' => true
