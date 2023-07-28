@@ -354,10 +354,8 @@
                                         <div class="card bg-success border-success text-white-50">
                                             <div class="card-body">
                                                 <h5 class="text-white"><i class="uil uil-check-circle me-3"></i> Pick Up Hour</h5>
-                                                {% for transferJoan in transfer.customerCard.transferJoans  %} 
-                                                    {% if transferJoan.natureTransfer|lower == "inter hotel" %}
-                                                    <p class="text-white">{{ transferJoan.getPickupTime }}</p>
-                                                    {% endif %}
+                                                {% for transferVehicle in transfer.customerCard.transferVehicleInterHotels  %} 
+                                                    <h5 class="card-title text-white">{{ transferVehicle.pickup }}</h5>
                                                 {% endfor %}
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
@@ -471,7 +469,7 @@
                                                 <h5 class="my-0 text-primary"><i class="uil uil-calendar-alt me-3"></i>Date</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transfer.dateHour | date('d-m-Y') }}</h5>
+                                                <h5 class="card-title">{{ transfer.date | date('d-m-Y') }}</h5>
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
@@ -479,11 +477,7 @@
                                         <div class="card bg-success border-success text-white-50">
                                             <div class="card-body">
                                                 <h5 class="text-white"><i class="uil uil-check-circle me-3"></i> Pick Up Hour</h5>
-                                                {% for transferJoan in transfer.customerCard.transferJoans  %} 
-                                                    {% if transferJoan.natureTransfer|lower == "salida" %}
-                                                    <p class="text-white">{{ transferJoan.getPickupTime }}</p>
-                                                    {% endif %}
-                                                {% endfor %}
+                                                <h5 class="card-title text-white">{{transfer.customerCard.transferVehicleDeparture.pickUp }}</h5>
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
@@ -712,7 +706,7 @@
                 <div class="card mb-0">
 
                     <div class="card-body">
-                        <h5 class="font-size-16 mb-4">Comments => Revoir le User dans l enregistrement du formulaire</h5>
+                        <h5 class="font-size-16 mb-1">Comments</h5>
                         <div class=" align-items-start border-bottom py-4 ps-3">
 
                             {% for comment in comments %}

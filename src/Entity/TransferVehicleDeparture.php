@@ -38,11 +38,13 @@ class TransferVehicleDeparture
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $area = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?CustomerCard $customerCard = null;
-
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $reservationNumber = null;
+
+    #[ORM\OneToOne(inversedBy: 'transferVehicleDeparture', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?CustomerCard $customerCard = null;
+
 
     public function getId(): ?int
     {
@@ -145,17 +147,6 @@ class TransferVehicleDeparture
         return $this;
     }
 
-    public function getCustomerCard(): ?CustomerCard
-    {
-        return $this->customerCard;
-    }
-
-    public function setCustomerCard(CustomerCard $customerCard): self
-    {
-        $this->customerCard = $customerCard;
-
-        return $this;
-    }
 
     public function getReservationNumber(): ?string
     {
@@ -172,4 +163,18 @@ class TransferVehicleDeparture
     public function getTypeTransfer() {
         return 'vehicleDeparture';
     }
+
+    public function getCustomerCard(): ?CustomerCard
+    {
+        return $this->customerCard;
+    }
+
+    public function setCustomerCard(CustomerCard $customerCard): self
+    {
+        $this->customerCard = $customerCard;
+
+        return $this;
+    }
+
+
 }

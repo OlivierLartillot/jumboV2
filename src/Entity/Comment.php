@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -46,8 +47,8 @@ class Comment
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
-        $this->updatedAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo'));
+        $this->updatedAt = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo'));
     }
 
     public function getId(): ?int

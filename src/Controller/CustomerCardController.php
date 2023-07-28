@@ -433,7 +433,7 @@ class CustomerCardController extends AbstractController
     public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
     {
 
-        $user = $customerCard->getStaff();
+        $user = $this->getUser();
         $comments = $commentRepository->findby(['customerCard' => $customerCard]);
 
         // enregistre les date
@@ -483,17 +483,9 @@ class CustomerCardController extends AbstractController
 
             }         
 
-           
-       /*  dd($tableauTimeline); */
-
-
-
-        
+        /*  dd($tableauTimeline); */
         // date des inter hotels
         // date de départ 
-
-
-
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);

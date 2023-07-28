@@ -84,6 +84,9 @@ class CustomerCard
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferVehicleInterHotel::class)]
     private Collection $transferVehicleInterHotels;
 
+    #[ORM\OneToOne(mappedBy: 'customerCard', cascade: ['persist', 'remove'])]
+    private ?TransferVehicleDeparture $transferVehicleDeparture = null;
+
 
     public function __construct()
     {
@@ -525,5 +528,25 @@ class CustomerCard
 
         return $this;
     }
+
+    public function getTransferVehicleDeparture(): ?TransferVehicleDeparture
+    {
+        return $this->transferVehicleDeparture;
+    }
+
+    public function setTransferVehicleDeparture(TransferVehicleDeparture $transferVehicleDeparture): self
+    {
+        // set the owning side of the relation if necessary
+        if ($transferVehicleDeparture->getCustomerCard() !== $this) {
+            $transferVehicleDeparture->setCustomerCard($this);
+        }
+
+        $this->transferVehicleDeparture = $transferVehicleDeparture;
+
+        return $this;
+    }
+
+
+     
 
 }
