@@ -2,7 +2,7 @@
 
     <head>
 
-        {{ include('partials/title-meta.html.twig', {title: 'Bienvenue Sur le Kino Dashboard'}) }}
+        {{ include('partials/title-meta.html.twig', {title: 'Labels printing'}) }}
 
         {{ include('partials/head-css.html.twig') }}
 
@@ -110,6 +110,7 @@
 
             {{ include('partials/menu.html.twig') }}
 
+
             <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
@@ -117,18 +118,19 @@
 
                 <div class="page-content">
                     <div class="container-fluid">
+			    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Labels printing'}) }}
 
 					<div class="notImpressed">
 						<div class="text-center">
 							<form action="{{ path('app_admin_stickers_par_date') }}" method="GET">
 								<input name="date" type="date" value="{{date | date('Y-m-d') }}">
-								<input type="submit">
+								<input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
 							</form>
 						</div>
 
 						<div class="text-center my-3">
 							<form>
-								<input class="btn-success .btn-soft-success" id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
+								<input class=" btn btn-success .btn-soft-success  waves-effect waves-light btn-sm" id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
 							</form>
 						</div>
 					</div>

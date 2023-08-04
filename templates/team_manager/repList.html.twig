@@ -1,6 +1,6 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'User Grid'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
 
 
     <div class="alert alert-danger" role="alert">
@@ -9,12 +9,10 @@
         Bouton google calendar ???
     </div>
 
-    <a href="{{ path('app_admin_stickers_par_date') }}" class="btn btn-secondary my-3">Stickers</a>
-
         <div class="row mb-3">    
             <form action={{ path('app_admin_team_manager_replist') }} method="GET">
                 <input name="date" type="date" value="{{date | date('Y-m-d') }}">
-                <input type="submit">
+                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
             </form>
         </div>
 
@@ -30,6 +28,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ user }} </h5>
+
+                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
+                                    {% set rights = true %}
+                                {% elseif  app.user == user %}
+                                    {% set rights = true %}
+                                {% else %}
+                                    {% set rights = false %}
+                                {% endif %}
                                 {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
                                 {% if paxCount == 0 %}  <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p> 
                                 {% else %}   
@@ -66,7 +72,7 @@
                                         <hr>
                                     {% endif %}
                                 {% endfor %}
-                                {% if paxCount > 0 %}
+                                {% if rights %}
                                     <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">Modifier Heure / Representant</a> 
                                 {% endif %}
                         </div>              
