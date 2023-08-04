@@ -16,7 +16,7 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                 
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
-                                        <a class="dropdown-item" href="{{ path('app_customer_card_edit', {id:customer_card.id})}}">Edit</a>
+                                        <a class="dropdown-item" href="{{ path('app_customer_card_edit', {id:customer_card.id}|merge(app.request.query.all) )}}">Edit</a>
                                     {% endif %}
                                     <a class="dropdown-item" href="#">Action</a>
                                     <a class="dropdown-item" href="#">Remove</a>

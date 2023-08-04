@@ -12,18 +12,22 @@ class CustomerCardType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('reservationNumber')
-            ->add('jumboNumber')
+            ->add('reservationNumber', null, [
+                'disabled' => true,
+            ] )
+            ->add('jumboNumber', null, [
+                'disabled' => true,
+            ])
             ->add('holder')
             ->add('agency')
             ->add('adultsNumber')
             ->add('childrenNumber')
             ->add('babiesNumber')
-            ->add('statusUpdatedAt')
-            ->add('meetingAt')
+            ->add('meetingAt', null, [
+                'widget' => 'single_text',
+            ])
             ->add('reservationCancelled')
             ->add('status')
-            ->add('statusUpdatedBy')
             ->add('meetingPoint')
             ->add('staff')
         ;

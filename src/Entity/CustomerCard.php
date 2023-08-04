@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CustomerCardRepository;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;

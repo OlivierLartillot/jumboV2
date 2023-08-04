@@ -6,16 +6,6 @@
 
         {{ include('partials/head-css.html.twig') }}
 
-        <!-- plugin css -->
-        <link href="/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-        <link href="/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
-        <link href="/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
-        <link href="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/libs/@chenfengyuan/datepicker/datepicker.min.css">
-
-        <!-- datepicker css -->
-        <link rel="stylesheet" href="/libs/flatpickr/flatpickr.min.css">
-
         {{ include('partials/head-css.html.twig') }}
 
     </head>
@@ -84,14 +74,12 @@
 <div class="">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Colored Bordered table</h4>
-            <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
-                the table and cells.</p>    
-            
+           
+            <p> Adults: {{ adultsNumber }} / 
+            Children: {{ childrenNumber }} / 
+            Babies: {{ babiesNumber }}</p>
 
-            Le nombre d adultes est {{ adultsNumber }} / 
-            Le nombre d enfants est {{ childrenNumber }} / 
-            Le nombre de bébé est {{ babiesNumber }}
+           
 
             <div class="table-responsive">
                 <table class="table table-bordered border-primary mb-0 text-center">
