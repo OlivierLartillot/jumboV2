@@ -548,6 +548,13 @@ class CustomerCardController extends AbstractController
     #[Route('customer/card/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository): Response
     {
+        // si l'utilisateur n'a pas les droits
+        $user = $this->getUser();
+        if ( (!in_array('ROLE_HULK', $user->getRoles())) and (!in_array('ROLE_SUPERMAN', $user->getRoles())) ) {
+            return throw $this->createAccessDeniedException();
+        }
+
+
         $form = $this->createForm(CustomerCardType::class, $customerCard);
         $form->handleRequest($request);
 
