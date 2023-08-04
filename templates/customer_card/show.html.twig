@@ -3,6 +3,8 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
 
+        <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_customer_card_index', {}|merge(app.request.query.all)) }}">back to list</a>
+
         <div class="row mb-4">
             <div class="col-xl-4">
                 <div class="card h-100">

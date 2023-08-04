@@ -3,7 +3,7 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'edit', title: 'Customer Cards'}) }}
   
-    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_customer_card_index') }}">back to list</a>
+    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_customer_card_index', {}|merge(app.request.query.all)) }}">back to list</a>
 
     {{ include('customer_card/_form.html.twig', {'button_label': 'Update'}) }}
 
