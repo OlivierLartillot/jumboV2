@@ -29,10 +29,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+#[Route('team-transfer')]
 class TransferJoanController extends AbstractController
 {
-
-
     #[Route('/import/transfer', name: 'app_transfer_import', methods: ['GET'])]
     public function import(TransferJoanRepository $transferJoanRepository): Response
     {
