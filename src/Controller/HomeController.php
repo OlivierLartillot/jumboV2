@@ -41,7 +41,7 @@ class HomeController extends AbstractController
     }
 
 
-    #[Route('/import', name: 'app_import', methods: ['GET', 'POST'] )]
+    #[Route('/manager/import', name: 'app_import', methods: ['GET', 'POST'] )]
     public function import(Request $request)
     {
 
@@ -60,7 +60,7 @@ class HomeController extends AbstractController
 
     }
 
-    #[Route('/traitement_csv', name: 'admin_traitement_csv')]
+    #[Route('manager/traitement_csv', name: 'admin_traitement_csv')]
     public function traitement_csv(Request $request, EntityManagerInterface $manager, 
                                     StatusRepository $statusRepository, 
                                     MeetingPointRepository $meetingPointRepository, 
