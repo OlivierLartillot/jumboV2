@@ -4,8 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
-use App\Entity\TransferArrival;
-use App\Entity\TransferVehicleArrival;
+use App\Entity\StatusHistory;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
@@ -13,26 +12,25 @@ use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
 use App\Repository\CommentRepository;
 use App\Repository\CustomerCardRepository;
+use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
-use App\Repository\TransferJoanRepository;
 use App\Repository\TransferVehicleArrivalRepository;
 use App\Repository\TransferVehicleDepartureRepository;
 use App\Repository\TransferVehicleInterHotelRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
-use Doctrine\DBAL\Types\DateImmutableType;
-use phpDocumentor\Reflection\Types\Integer;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
+
 
 class CustomerCardController extends AbstractController
 {
-    #[Route('customer/card/', name: 'app_customer_card_index', methods: ['GET'])]
+    #[Route('customer/card', name: 'app_customer_card_index', methods: ['GET'])]
     public function index(Request $request, 
                           CustomerCardRepository $customerCardRepository, 
                           StatusRepository $statusRepository, 
@@ -69,15 +67,16 @@ class CustomerCardController extends AbstractController
 
             // si y a au moins un élément envoyé au tri
             if ($empty == false) {
-                //dd(checkdate(01, 13, 2019));
-                
+
+    
                 // alors on peut récupérer les données et les filtrer
                 
                 $customerPresence = $request->query->get('customerPresence');
-
+                
                 // si tout va bien  on envoie la dql 
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
+
                 $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
                 $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
                 $rep = $request->query->get('reps');
@@ -433,6 +432,8 @@ class CustomerCardController extends AbstractController
     public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
     {
 
+
+
         $user = $this->getUser();
         $comments = $commentRepository->findby(['customerCard' => $customerCard]);
 
@@ -546,15 +547,66 @@ class CustomerCardController extends AbstractController
     }
 
     #[Route('customer/card/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository): Response
+    public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository, StatusHistoryRepository $statusHistoryRepository): Response
     {
+
+        //$queryString = $request->query;
+        $customerPresence = $request->query->get('customerPresence');
+        $dateStart = $request->query->get('dateStart');
+        $dateEnd = $request->query->get('dateEnd');
+        $natureTransfer = $request->query->get('natureTransfer');
+        $reps = $request->query->get('reps');
+        $status = $request->query->get('status');
+        $agency = $request->query->get('agency');
+        $hotel = $request->query->get('hotel');
+        $flightNumber = $request->query->get('flightNumber');
+        $search = $request->query->get('search');
+       // dd($queryString);
+
+        // si l'utilisateur n'a pas les droits
+        $user = $this->getUser();
+        if ( (!in_array('ROLE_HULK', $user->getRoles())) and (!in_array('ROLE_SUPERMAN', $user->getRoles())) ) {
+            return throw $this->createAccessDeniedException();
+        }
+
+        // trouve le status
+        $oldStatus = $customerCard->getStatus();
+
         $form = $this->createForm(CustomerCardType::class, $customerCard);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // si le status à changé on met à jour le status updatedBy
+            $newStatus = $customerCard->getStatus();
+            if ($oldStatus->getName() != $newStatus->getName()) {
+                $dateNowDominican = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo')); 
+                $customerCard->setStatusUpdatedBy($user);
+                $customerCard->setStatusUpdatedAt($dateNowDominican);
+
+                $statusHistory = new StatusHistory();
+                $statusHistory->setStatus($newStatus);
+                $statusHistory->setCustomerCard($customerCard);
+                $statusHistory->setUpdatedBy($user);
+                $statusHistory->setCreatedAt($dateNowDominican);
+                $statusHistoryRepository->save($statusHistory, false);
+            }
+
             $customerCardRepository->save($customerCard, true);
 
-            return $this->redirectToRoute('app_customer_card_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_index', [
+                'customerPresence'=> $customerPresence,
+                'dateStart'=> $dateStart,
+                'dateEnd'=> $dateEnd,
+                'natureTransfer'=> $natureTransfer,
+                'reps'=> $reps,
+                'status'=> $status,
+                'agency'=> $agency,
+                'hotel'=> $hotel,
+                'flightNumber'=> $flightNumber,
+                'search'=> $search,         
+                ]
+                , Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('customer_card/edit.html.twig', [

@@ -2,7 +2,12 @@
 
     <head>
 
-        {{ include('partials/title-meta.html.twig', {title: 'Bienvenue Sur le Kino Dashboard'}) }}
+        {% if title is not defined %} 
+            {% set title = "Jumbo" %}
+        {% endif %}
+
+        
+        {{ include('partials/title-meta.html.twig', {  title: title}) }}
 
         {{ include('partials/head-css.html.twig') }}
 

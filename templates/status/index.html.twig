@@ -14,7 +14,7 @@
                                     <a href="{{ path('app_status_new') }}" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-plus me-2"></i> Add New</a>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+{#                             <div class="col-md-6">
                                 <div class="form-inline float-md-end mb-3">
                                     <div class="search-box ms-2">
                                         <div class="position-relative">
@@ -24,7 +24,7 @@
                                     </div>
                                     
                                 </div>
-                            </div>
+                            </div> #}
                         </div>
                         <!-- end row -->
                         <div class="table-responsive mb-4">
@@ -49,20 +49,25 @@
                                                     <a href="{{ path('app_status_edit', {'id': status.id}) }}" class="px-2 text-primary"><i class="uil uil-pen font-size-18"></i></a>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <a href="{{ path('app_status_show', {'id': status.id}) }}">show</a>
-                                                    <a href="javascript:void(0);" class="px-2 text-danger"><i class="uil uil-trash-alt font-size-18"></i></a>
+                                                    {# <a href="{{ path('app_status_show', {'id': status.id}) }}">show</a> #}
+                                                    <form method="post" action="{{ path('app_status_delete', {'id': status.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ status.id) }}">
+                                                        {# <a href="javascript:void(0);" class="px-2 text-danger"><i class="uil uil-trash-alt font-size-18"></i></a> #}
+                                                        <button class="btn px-2 text-danger"><i class="uil uil-trash-alt font-size-18"></i></button>
+                                                    </form>
+                                                    
                                                 </li>
-                                                <li class="list-inline-item dropdown">
+        
+{#                                                 <li class="list-inline-item dropdown">
                                                     <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
                                                         <i class="uil uil-ellipsis-v"></i>
                                                     </a>
-                                                
                                                     <div class="dropdown-menu dropdown-menu-end">
                                                         <a class="dropdown-item" href="#">Action</a>
                                                         <a class="dropdown-item" href="#">Another action</a>
                                                         <a class="dropdown-item" href="#">Something else here</a>
                                                     </div>
-                                                </li>
+                                                </li> #}
                                             </ul>
                                         </td>
                                     </tr>
