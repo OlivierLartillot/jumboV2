@@ -66,6 +66,7 @@
                                         <hr>
                                     {% endif %}
                                 {% endfor %}
+                                {{ dump(paxCount) }}
                                 {% if paxCount > 0 %}
                                     <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">Modifier Heure / Representant</a> 
                                 {% endif %}
