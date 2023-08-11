@@ -38,101 +38,72 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'User', title: 'Pax Calculation'}) }}
 
-    <div>
-        !!! Le status No Show Doit s'appeler comme ca pour récupérer les pax des utilisateurs sauf s ils sont no show ...
-    
-    </div>
+                        <div>
+                            NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"
+                        </div>
 
-        <form method="GET">
-            <div class="row">
-                {% set now = "now"|date("Y-m-d") %}
-                <div class="col-md-3">
-                    {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
-                    <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
-                    <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
-                </div>
-            </div>
+                        <form method="GET">
+                            <div class="row">
+                                {% set now = "now"|date("Y-m-d") %}
+                                <div class="col-md-3">
+                                    {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
+                                    <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
+                                    <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
+                                </div>
+                            </div>
 
-            <div class="text-center text-md-start col-md-2 ">
-                <input type="submit" class="btn btn-primary px-5 py-3">
-            </div>
+                            <div class="text-center text-md-start col-md-2 ">
+                                <input type="submit" class="btn btn-primary px-5 py-3">
+                            </div>
 
-            </div>
+                            </div>
 
-        </form>
-
-        <p>
-            récupérer toutes les colonnes adultes dans cette tranche de date et pour le rep
-            si le rep est pas défini, c est tous !!!!!!!!!!!!!!!!!!!!!
+                        </form>
 
 
-        </p>
 
+                    <div class="">
+                        <div class="card">
+                            <div class="card-body">
+                                  
+                                <div class="table-responsive">
+                                    <table class="table table-bordered border-primary mb-0 text-center">
 
-                        <div class="">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Colored Bordered table</h4>
-                                    <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
-                                        the table and cells.</p>    
-                                    
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered border-primary mb-0 text-center">
-
-                                            <thead class="bg-primary bg-gradient text-light border-end-light">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Total pax</th>
-                                                    <th>Total personnes</th>
-                                                    <th>Adults</th>
-                                                    <th>Children</th>
-                                                    <th>Babies</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Show</td>
-                                                    <td> {{ results['sumPaxShow'] }} </td>
-                                                    <td>{{results['sumNbrShow']}}</td>
-                                                    <td>{{results['nbrAdultsShow']}}</td>
-                                                    <td>{{results['nbrChildrenShow']}}</td>
-                                                    <td>{{results['nbrBabiesShow']}}</td> 
-                                                </tr>
-                                                <tr>
-                                                    <td>With no Show</td>
-                                                    <td>{{results['sumPaxTotal']}}</td>
-                                                    <td>{{results['sumNbrTotal']}}</td>
-                                                    <td> {{results['nbrTotalAdults']}}</td>
-                                                    <td> {{results['nbrTotalChildren']}}</td>
-                                                    <td> {{results['nbrTotalbabies']}}</td> 
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <thead class="bg-primary bg-gradient text-light border-end-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Total pax</th>
+                                                <th>Total personnes</th>
+                                                <th>Adults</th>
+                                                <th>Children</th>
+                                                <th>Babies</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Show</td>
+                                                <td> {{ results['sumPaxShow'] }} </td>
+                                                <td>{{results['sumNbrShow']}}</td>
+                                                <td>{{results['nbrAdultsShow']}}</td>
+                                                <td>{{results['nbrChildrenShow']}}</td>
+                                                <td>{{results['nbrBabiesShow']}}</td> 
+                                            </tr>
+                                            <tr>
+                                                <td>With no Show</td>
+                                                <td>{{results['sumPaxTotal']}}</td>
+                                                <td>{{results['sumNbrTotal']}}</td>
+                                                <td> {{results['nbrTotalAdults']}}</td>
+                                                <td> {{results['nbrTotalChildren']}}</td>
+                                                <td> {{results['nbrTotalbabies']}}</td> 
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-
-                        <h2>Somme pour show</h2>
-                        <ul>
-                            <li>Adultes: {{results['nbrAdultsShow']}} * 1 = </li>
-                            <li>Enfants: {{results['nbrChildrenShow']}} * 0.5 = {{results['paxChildrenShow']}} </li>
-                            <li>Bébés:  {{results['nbrBabiesShow']}} x 0 = </li>
-                            <li>Total Personnes:  {{results['sumNbrShow']}}</li>
-                            <li>Total Pax:  {{results['sumPaxShow']}}</li>
-
-                        </ul>
+                    </div>
 
 
-                        <h2>Somme totale No Show compris</h2>
-                        <ul>
-                            <li>Adultes: {{results['nbrTotalAdults']}}</li>
-                            <li>Enfants: {{results['nbrTotalChildren']}}</li>
-                            <li>Bébés:  {{results['nbrTotalbabies']}}</li>
-                            <li>Total Personnes:  {{results['sumNbrTotal']}}</li>
-                            <li>Total Pax:  {{results['sumPaxTotal']}}</li>
-
-                        </ul>
 
                     </div> <!-- container-fluid -->
                 </div>

@@ -39,7 +39,7 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Pax Calculation'}) }}
 
     <div>
-        !!! Le status No Show Doit s'appeler comme ca pour récupérer les pax des utilisateurs sauf s ils sont no show ...
+        NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"
     
     </div>
 
@@ -74,95 +74,47 @@
 
     </form>
 
-<p>
-    récupérer toutes les colonnes adultes dans cette tranche de date et pour le rep
-    si le rep est pas défini, c est tous 
 
+    <div class="">
+        <div class="card">
+            <div class="card-body">
+                    
+                <div class="table-responsive">
+                    <table class="table table-bordered border-primary mb-0 text-center">
 
-</p>
-
-
-<div class="">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Colored Bordered table</h4>
-            <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
-                the table and cells.</p>    
-            
-            <div class="table-responsive">
-                <table class="table table-bordered border-primary mb-0 text-center">
-
-                    <thead class="bg-primary bg-gradient text-light border-end-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Total pax</th>
-                            <th>Total personnes</th>
-                            <th>Adults</th>
-                            <th>Children</th>
-                            <th>Babies</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Show</td>
-                            <td> {{ results['sumPaxShow'] }} </td>
-                            <td>{{results['sumNbrShow']}}</td>
-                            <td>{{results['nbrAdultsShow']}}</td>
-                            <td>{{results['nbrChildrenShow']}}</td>
-                            <td>{{results['nbrBabiesShow']}}</td> 
-                        </tr>
-                        <tr>
-                            <td>With no Show</td>
-                            <td>{{results['sumPaxTotal']}}</td>
-                            <td>{{results['sumNbrTotal']}}</td>
-                            <td> {{results['nbrTotalAdults']}}</td>
-                            <td> {{results['nbrTotalChildren']}}</td>
-                            <td> {{results['nbrTotalbabies']}}</td> 
-                        </tr>
-                    </tbody>
-                </table>
+                        <thead class="bg-primary bg-gradient text-light border-end-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Total pax</th>
+                                <th>Total personnes</th>
+                                <th>Adults</th>
+                                <th>Children</th>
+                                <th>Babies</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Show</td>
+                                <td> {{ results['sumPaxShow'] }} </td>
+                                <td>{{results['sumNbrShow']}}</td>
+                                <td>{{results['nbrAdultsShow']}}</td>
+                                <td>{{results['nbrChildrenShow']}}</td>
+                                <td>{{results['nbrBabiesShow']}}</td> 
+                            </tr>
+                            <tr>
+                                <td>With no Show</td>
+                                <td>{{results['sumPaxTotal']}}</td>
+                                <td>{{results['sumNbrTotal']}}</td>
+                                <td> {{results['nbrTotalAdults']}}</td>
+                                <td> {{results['nbrTotalChildren']}}</td>
+                                <td> {{results['nbrTotalbabies']}}</td> 
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h2>Somme pour show</h2>
-<ul>
-    <li>Adultes: {{results['nbrAdultsShow']}} * 1 = </li>
-    <li>Enfants: {{results['nbrChildrenShow']}} * 0.5 = {{results['paxChildrenShow']}} </li>
-    <li>Bébés:  {{results['nbrBabiesShow']}} x 0 = </li>
-    <li>Total Personnes:  {{results['sumNbrShow']}}</li>
-    <li>Total Pax:  {{results['sumPaxShow']}}</li>
-
-</ul>
-
-
-<h2>Somme totale No Show compris</h2>
-<ul>
-    <li>Adultes: {{results['nbrTotalAdults']}}</li>
-    <li>Enfants: {{results['nbrTotalChildren']}}</li>
-    <li>Bébés:  {{results['nbrTotalbabies']}}</li>
-    <li>Total Personnes:  {{results['sumNbrTotal']}}</li>
-    <li>Total Pax:  {{results['sumPaxTotal']}}</li>
-
-</ul>
 
 {# 
                         <div class="row">

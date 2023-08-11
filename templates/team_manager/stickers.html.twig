@@ -161,10 +161,10 @@
 							{% endif %}
 
 							<div class="mt-2">
-								<p class="my-1"><strong>Nom: </strong> {{ meetingInfos.holder }}</p>
+								<p class="my-1"><strong>Nom: </strong> {{ meetingInfos.holder|title }}</p>
 								<p class="mt-1 mb-2"><strong>Hôtel:</strong> 
 									{% for infosTransfer in meetingInfos.transferArrivals %}
-										{{ infosTransfer.toArrival}}
+										{{ infosTransfer.toArrival|title}}
 									{% endfor %}
 								</p>
 							</div>
@@ -172,7 +172,7 @@
 								<p class="line-height-5" ><strong class="crimson">Reunion de Bienvenue &amp; d'Information</strong></p>
 								<p class="line-height-5"><strong class="crimson"> Demain à {{ meetingInfos.meetingAtTime }} </strong></p>
 								<p class="line-height-5">Lieu de rencontre: <strong class="crimson">{{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}} </strong></p>
-								<p class="line-height-5">Votre représentant: <strong class="crimson">{{ meetingInfos.staff }}</strong></p>
+								<p class="line-height-5">Votre représentant: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
 								<p class="line-height-5">Whatsapp:  
 									{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
 									

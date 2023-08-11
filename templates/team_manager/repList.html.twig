@@ -61,9 +61,9 @@
                                                 {# Construire le tableau #}
                                                 {% set hotel =  infosTransfer.toArrival %}
                                             {% endfor %}
-                                            <strong>{{ hotel.name|title }}</strong><br/>
-                                            <strong>{{ regroupement.agency|title }}</strong><br/>
-                                            <strong>Pax:</strong>
+                                            Hotel: <strong>{{ hotel.name|title }}</strong><br/>
+                                            Agency: <strong>{{ regroupement.agency|title }}</strong><br/>
+                                            Pax:<strong>
                                             {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
                                             {% if paxPerHotelAgency[user.username~'_adults'][regroupement.agency.id~'_'~hotel.id] is defined %}
                                                 A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.agency.id~'_'~hotel.id] }}, 
@@ -74,8 +74,9 @@
                                             {% if paxPerHotelAgency[user.username~'_babies'][regroupement.agency.id~'_'~hotel.id] is defined %}
                                                 B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.agency.id~'_'~hotel.id] }} 
                                             {% endif %}
+                                            </strong>
                                             <br/>
-                                            Meeting at: {{ regroupement.getMeetingAtTime }} - {{ regroupement.meetingPoint != null ? regroupement.meetingPoint.name  : "" }}
+                                            Meeting at <strong>{{ regroupement.getMeetingAtTime }} - {{ regroupement.meetingPoint != null ? regroupement.meetingPoint.name  : "" }}</strong>
                                         </p>
                                         <hr>
                                     {% endif %}
