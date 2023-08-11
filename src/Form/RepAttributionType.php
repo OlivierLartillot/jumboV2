@@ -31,7 +31,8 @@ class RepAttributionType extends AbstractType
 
         $builder
         ->add('staff', EntityType::class, [
-            'placeholder' => 'Choose a User',
+            'label' => "Reps",
+            'placeholder' => 'Choose a Rep',
             'class' => User::class,
             'autocomplete' =>true,
             'choices' => $repList,

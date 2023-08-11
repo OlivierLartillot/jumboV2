@@ -9,7 +9,7 @@
                     <div>
                    {#      <h4 class="mb-1 mt-1">Attributions rep</h4> #}
 
-                            <p>Choose the date</p>
+                            <p>Choose the arrival date</p>
                             <div class="mb-3">
                                 <form action={{ path('app_admin_team_manager') }} method="GET">
                                     <input name="date" type="date" value="{{date | date('Y-m-d') }}">
@@ -26,13 +26,20 @@
                                     <p class="alert alert-danger mt-3" role="alert">Il reste encore {{ countNonAttributedClients }} client(s)  à attribuer </p>
 
                                     <div class="mb-3">
-                                        Date d'arrivée: 
+                                        Arrival date: 
                                             <b>{% for arrival in firstClient.transferArrivals  %}
                                                     {{ arrival.date| date('d-m-Y')}}
                                                {% endfor %}
                                             </b><br>
-                                        Agence: <strong>{{ firstClient.agency }}</strong> <br>
-                                        Hôtel:
+                                        Briefing date: 
+                                        <b>{% for arrival in firstClient.transferArrivals  %}
+                                                {{ arrival.date|date_modify("+1 day")| date('d-m-Y')}}
+                                            {% endfor %}
+                                        </b><br>
+                                        <hr>
+                                        <P><u>Next group of clients:</u></P>
+                                        Agency: <strong>{{ firstClient.agency }}</strong> <br>
+                                        Hotel:
                                         {% for infosTransfer in firstClient.transferArrivals %}
                                             <strong>{{ infosTransfer.toArrival}}</strong><br/>
                                         {% endfor %}

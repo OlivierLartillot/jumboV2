@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+{{ include('partials/header-reproupement.html.twig') }}
 
-<title>New MeetingPoint</title>
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'New Briefing Place'}) }}
 
-{% block body %}
-    <h1>Create new MeetingPoint</h1>
+    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_meeting_point_index') }}">back to list</a>
+
 
     {{ include('meeting_point/_form.html.twig') }}
 
-    <a href="{{ path('app_meeting_point_index') }}">back to list</a>
-{% endblock %}
+{{ include('partials/footer-regroupement.html.twig') }}

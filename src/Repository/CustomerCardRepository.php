@@ -85,7 +85,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
              ->select('count(c.id)')
             ->andWhere('c.staff IS NOT NULL')
-            ->andWhere('c.meetingAt >= :date')
+            ->andWhere('c.meetingAt = :date')
             ->setParameter('date', $date)
             ->getQuery()
             ->getSingleScalarResult()

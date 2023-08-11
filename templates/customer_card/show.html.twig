@@ -1,7 +1,7 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card', title: 'Details'}) }}
 
         <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_customer_card_index', {}|merge(app.request.query.all)) }}">back to list</a>
 
@@ -39,7 +39,7 @@
                             </div>
                             <div class="flex-grow-1 align-self-center">
                                 <div class="border-bottom pb-1">
-                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
+                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}) }}" class="text-dark text-wrap">{{ customer_card.holder|title }}</a></h5>
                                     <p class="text-muted">
                                         <i class="me-1">#</i> {{ customer_card.reservationNumber }}
                                     </p>
@@ -54,7 +54,7 @@
                                     <hr class="my-4">
                                     <h5>Agency:</h5>
                                     <p class="text-muted">
-                                        {{ customer_card.agency }}
+                                        {{ customer_card.agency|title }}
                                     </p>
                                 </div>
 
@@ -64,10 +64,10 @@
                                     <p class="text-muted">
                                         <i class="fas fa-hotel"></i> 
                                         {% for transfer in customer_card.transferArrivals %} 
-                                                {{ transfer.toArrival }}
+                                                {{ transfer.toArrival|title }}
                                         {% endfor %}
                                         {% for transfer in customer_card.transferinterHotels %} 
-                                                <br> <i class="fas fa-hotel"></i> {{ transfer.toArrival }}
+                                                <br> <i class="fas fa-hotel"></i> {{ transfer.toArrival|title }}
                                         {% endfor %}
                                     </p>
                                 </div>
@@ -235,8 +235,7 @@
             
                             </div>
 
-                            <hr class="my-4">
-
+                            <hr class="my-4"> 
 
                             <div class="row">
                                 <div class="col-lg-6">
@@ -246,7 +245,7 @@
                                         </div><!-- end card-header -->
                                         <div class="card-body">
                                             {% for transfer in customer_card.transferArrivals %} 
-                                                    <h5 class="card-title">{{ transfer.fromStart }}</h5>
+                                                    <h5 class="card-title">{{ transfer.fromStart|title }}</h5>
                                             {% endfor %}            
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -259,7 +258,7 @@
                                         </div><!-- end card-header -->
                                         <div class="card-body">
                                             {% for transfer in customer_card.transferArrivals %} 
-                                                    <h5 class="card-title">{{ transfer.toArrival }}</h5>
+                                                    <h5 class="card-title">{{ transfer.toArrival|title }}</h5>
                                             {% endfor %}
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
@@ -269,6 +268,10 @@
 
 
                             <hr class="my-4">
+                            
+                                {# TODO #}
+                            <hr class="my-4">
+
 
                             <div class="row">
 
@@ -281,7 +284,7 @@
                                                 <h5 class="my-0 text-primary">Transport Company</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                            <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                            <h5 class="card-title">{{ transferJoan.transportCompany|title }} N° {{ transferJoan.vehicleNumber}}</h5>
                                                     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
@@ -380,7 +383,7 @@
                                                 <h5 class="my-0 text-primary"><i class="uil uil-arrow-from-right me-3"></i>From</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transfer.fromStart }}</h5>     
+                                                <h5 class="card-title">{{ transfer.fromStart|title }}</h5>     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
@@ -391,7 +394,7 @@
                                                 <h5 class="my-0 text-primary"><i class="uil uil-arrow-to-right me-3"></i>To</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transfer.toArrival }}</h5>
+                                                <h5 class="card-title">{{ transfer.toArrival|title }}</h5>
 
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
@@ -413,7 +416,7 @@
                                                 <h5 class="my-0 text-primary">Transport Company</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                            <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                            <h5 class="card-title">{{ transferJoan.transportCompany|title }} N° {{ transferJoan.vehicleNumber}}</h5>
                                                     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
@@ -523,7 +526,7 @@
                                                 <h5 class="my-0 text-primary"><i class="uil uil-arrow-from-right me-3"></i>From</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transfer.fromStart }}</h5>     
+                                                <h5 class="card-title">{{ transfer.fromStart|title }}</h5>     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
@@ -534,14 +537,74 @@
                                                 <h5 class="my-0 text-primary"><i class="uil uil-arrow-to-right me-3"></i>To</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ transfer.toArrival }}</h5>
+                                                <h5 class="card-title">{{ transfer.toArrival|title }}</h5>
 
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
                 
                                 </div>
-                            {% endfor %}       
+
+                                <hr class="my-4">
+
+                                {# TODO #}
+                                <div class="row">
+    
+                                        <div class="col-lg-3">
+                                            <div class="card border border-primary">
+                                                <div class="card-header bg-transparent border-primary">
+                                                    <h5 class="my-0 text-primary">Transport Company</h5>
+                                                </div><!-- end card-header -->
+                                                <div class="card-body">
+                                                                <h5 class="card-title">{{ transfer.transportCompany|title }} N° {{ transfer.vehicleNumber}}</h5>
+                                                        
+                                                </div><!-- end card-body -->
+                                            </div><!-- end card -->
+                                        </div><!-- end col-md-4 -->
+    
+                                        <div class="col-lg-3">
+                                            <div class="card border border-primary">
+                                                <div class="card-header bg-transparent border-primary">
+                                                    <h5 class="my-0 text-primary">Nature</h5>
+                                                </div><!-- end card-header -->
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ transfer.getPrivateCollective}}</h5>
+                                                        
+                                                </div><!-- end card-body -->
+                                            </div><!-- end card -->
+                                        </div><!-- end col-md-4 -->
+    
+                                        <div class="col-lg-3">
+                                            <div class="card border border-primary">
+                                                <div class="card-header bg-transparent border-primary">
+                                                    <h5 class="my-0 text-primary">Voucher #</h5>
+                                                </div><!-- end card-header -->
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ transfer.voucherNumber}}</h5>
+                                                        
+                                                </div><!-- end card-body -->
+                                            </div><!-- end card -->
+                                        </div><!-- end col-md-4 -->
+    
+                                        <div class="col-lg-3">
+                                            <div class="card border border-primary">
+                                                <div class="card-header bg-transparent border-primary">
+                                                    <h5 class="my-0 text-primary">Vehicle Type</h5>
+                                                </div><!-- end card-header -->
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ transfer.vehicleType}}</h5>
+                                                        
+                                                </div><!-- end card-body -->
+                                            </div><!-- end card -->
+                                        </div><!-- end col-md-4 -->
+    
+                              
+                                
+    
+                                </div>
+                            {% endfor %}
+
+
 
                             <hr class="my-4">
 
@@ -555,7 +618,7 @@
                                                 <h5 class="my-0 text-primary">Transport Company</h5>
                                             </div><!-- end card-header -->
                                             <div class="card-body">
-                                                            <h5 class="card-title">{{ transferJoan.transportCompany }} N° {{ transferJoan.vehicleNumber}}</h5>
+                                                            <h5 class="card-title">{{ transferJoan.transportCompany|title }} N° {{ transferJoan.vehicleNumber}}</h5>
                                                     
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->

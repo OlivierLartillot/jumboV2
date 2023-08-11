@@ -126,10 +126,10 @@ class TeamManagerController extends AbstractController
 
         // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
-
+        $arrivalDate = $date->modify('-1 day');
+        
         // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
         $repUsers = $userRepository->findAll();
-
 
         // nombre de clients sans attributions
         $countNonAssignedClient = $customerCardRepository->countNumberNonAttributedMeetingsByDate($date);
@@ -137,13 +137,16 @@ class TeamManagerController extends AbstractController
         $paxTab = []; // on va récupérer les paw globaux pour chaque rep
         $paxPerHotelAgency = []; // on va récupérer les pax pour chaque rep et par agence et hotels 
         $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
+
         // pour chaque staff on va définir les infos a récupérer
         foreach($repUsers as $user) {
             if(in_array('ROLE_REP', $user->getRoles())){  
                 $users[] = $user; 
-                $paxTab[$user->getUsername()]['adults'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "adults");
-                $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "children");
-                $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $date, "babies");
+
+                // pour la recherche date == meetingDate on récupere les pax de date -1 pour avoir les arrivées
+                $paxTab[$user->getUsername()]['adults'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "adults");
+                $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "children");
+                $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "babies");
             
                 foreach ($regroupementsClients as $clients) {
                     $agency = $clients->getAgency();

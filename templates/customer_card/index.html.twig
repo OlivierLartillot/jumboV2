@@ -2,8 +2,6 @@
 
     <head>
 
-        {{ include('partials/title-meta.html.twig', {title: 'Customers Cards'}) }}
-
         {{ include('partials/head-css.html.twig') }}
 
         <!-- plugin css -->
@@ -36,7 +34,7 @@
                     <div class="container-fluid">
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'All', title: 'Customer Cards'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'All', title: 'Clients Cards'}) }}
 
                         <form method="GET">
 
@@ -184,7 +182,7 @@
                                                     <p class="text-muted">
                                                         <i class="me-1">#</i> {{ customer_card.reservationNumber }}
                                                     </p>
-                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}|merge(app.request.query.all) ) }}" class="text-dark text-wrap">{{ customer_card.holder }}</a></h5>
+                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}|merge(app.request.query.all) ) }}" class="text-dark text-wrap">{{ customer_card.holder|title }}</a></h5>
                                                     <p>
                                                      {% if customer_card.status == "No Show" %}
                                                         <span class="badge rounded-pill bg-danger">{{ customer_card.status }}</span>
@@ -193,7 +191,7 @@
                                                     {% endif %}
                                                     </p>
                                                     <p class="text-muted">
-                                                        {{ customer_card.agency }}
+                                                        {{ customer_card.agency|title }}
                                                     </p>
                                                 </div>
 
@@ -201,15 +199,15 @@
                                                 <div class="border-bottom mt-3 pt-1 pb-1">
                                                     <p class="text-muted">
                                                         {% for hotel in customer_card.transferArrivals %} 
-                                                            <i class="fas fa-hotel"></i> Arrival: {{ hotel.fromStart }} - {{ hotel.toArrival }}
+                                                            <i class="fas fa-hotel"></i> Arrival: {{ hotel.fromStart|title }} - {{ hotel.toArrival|title }}
                                                         {% endfor %}
                                 
                                                         {% for hotel in customer_card.transferInterHotels %} 
-                                                            <br> <i class="fas fa-hotel"></i> Inter-Hotel: {{ hotel.toArrival }}
+                                                            <br> <i class="fas fa-hotel"></i> Inter-Hotel: {{ hotel.toArrival|title }}
                                                         {% endfor %} 
                                                                                         
                                                         {% for hotel in customer_card.transferDeparture %} 
-                                                            <br> <i class="fas fa-hotel"></i> Departure: {{ hotel.toArrival }}
+                                                            <br> <i class="fas fa-hotel"></i> Departure: {{ hotel.toArrival|title }}
                                                         {% endfor %} 
                                                     </p>
                                                 </div>

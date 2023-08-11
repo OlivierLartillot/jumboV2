@@ -3,12 +3,6 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
 
 
-    <div class="alert alert-danger" role="alert">
-        Pour la visualisation des reps, enlever le bouton modifier heure / representant <br>
-        n afficher que la carte du user courant<br>
-        Bouton google calendar ???
-    </div>
-
         <div class="row mb-3">    
             <form action={{ path('app_admin_team_manager_replist') }} method="GET">
                 <input name="date" type="date" value="{{date | date('Y-m-d') }}">
@@ -17,12 +11,18 @@
         </div>
 
         {% if countNonAssignedClient > 0 %}
-            <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} clients n'ont pas encore d'heure de meeting assignée"</p>
+            <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} {{ (countNonAssignedClient>1) ? "groups" : "group" }} of client do not yet have a meeting time assigned</p>
         {% else %}
-             <p class="alert alert-success" role="alert">Pas ou plus de client à attribuer pour cette date.</p>
+            <p class="alert alert-success" role="alert">No or more client groups to assign for this date.</p>
         {% endif %}
 
+        <p class="alert alert-info" role="alert">
+            Arrival date: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
+            Briefing date: <b>{{ date| date('d-m-Y')}}</b>
+        </p>
+
         <div class="row">
+            
             {% for user in users %}
                 <div class="col-sm-5 mb-3 mb-sm-0">
                     <div class="card">
@@ -36,17 +36,25 @@
                                 {% else %}
                                     {% set rights = false %}
                                 {% endif %}
+
                                 {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
+
                                 {% if paxCount == 0 %}  <p class="card-text">Ce rep n'a pas de client attribué ce jour.</p> 
                                 {% else %}   
                                 <p>Adults: {{ paxTab[user.username]['adults'] }}  / Children: {{ paxTab[user.username]['children'] }}  / Babies: {{ paxTab[user.username]['babies'] }} </p>
                                 {% endif %}
+
+
+
+
+
+
                                 <hr>
                                 {% for regroupement in regroupementsClients %}
                                     {% if (regroupement is empty) %}                                                        
                                     {% endif %}
                                     {% if regroupement.staff == user %}
-                                        <p class="card-text {{(regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success"}}">
+                                        <p class="card-text {{ (regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
                                             {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
                                             {% set hotel = null %}
                                             {% for infosTransfer in regroupement.transferArrivals %}
