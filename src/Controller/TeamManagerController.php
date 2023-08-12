@@ -296,7 +296,7 @@ class TeamManagerController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
 
         // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $customerCardRepository->findByMeetingDate($date);
+        $meetings = $customerCardRepository->findByMeetingDate($date, true);
 
         $agencies = $agencyRepository->findAll();
 

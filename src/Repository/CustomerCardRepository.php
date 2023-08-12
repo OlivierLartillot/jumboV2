@@ -119,14 +119,36 @@ class CustomerCardRepository extends ServiceEntityRepository
 
     /**
      * @return CustomerCard[] Returns an array of CustomerCard objects by meeting date (day) and 
+     * si l on a besoin de checker si l agence est activée (ex dans les étiquettes)
      */
-    public function findByMeetingDate($dateTimeImmutable): array
+    public function findByMeetingDate($dateTimeImmutable, $needIsActivate = false): array
     {
 
 
         $dateTime = $dateTimeImmutable->format('Y-m-d');
 
-  
+        $query = $this->createQueryBuilder('c');
+
+        if ($needIsActivate) {
+            $query = $query->leftJoin('App\Entity\Agency', 'agency', 'WITH', 'c.agency = agency.id');
+        }
+
+        $query = $query->andWhere('c.meetingAt >= :date_start')->andWhere('c.meetingAt <= :date_end')->andWhere('c.meetingPoint is not null');
+
+        if ($needIsActivate) {
+            $query = $query->andWhere('agency.isActive = :agencyIsActive');
+        }
+
+        $query = $query->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
+        ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'));
+
+        if ($needIsActivate) {
+            $query = $query->setParameter('agencyIsActive', true);
+        }
+        $query = $query->getQuery()->getResult();
+
+        return $query;
+
         return $this->createQueryBuilder('c')
             ->leftJoin('App\Entity\Agency', 'agency', 'WITH', 'c.agency = agency.id')
             ->andWhere('c.meetingAt >= :date_start')
