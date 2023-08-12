@@ -24,6 +24,9 @@ class Agency
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    #[ORM\Column(length: 6, nullable: true)]
+    private ?string $language = null;
+
     public function __construct()
     {
         $this->customerCards = new ArrayCollection();
@@ -89,6 +92,18 @@ class Agency
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): self
+    {
+        $this->language = $language;
 
         return $this;
     }

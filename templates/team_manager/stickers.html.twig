@@ -177,8 +177,25 @@
 			<div class="break">	
 				{% set i = 1 %} 
 				{% set page = 1 %} 
+				{# '' == null == en #}
+				{% set languageTab = {
+					0 : {'fr': "Chattez Avec", '' : "Chats with", 'es' : "Chatear con"  },
+					1 : {'fr': "Nom", '' : "Name", 'es' : "Apellido"  },
+					2 : {'fr': "Hôtel", '' : "Hotel", 'es' : "Hotel"  },
+					3 : {'fr': "Reunion de Bienvenue & d'Information", '' : "Welcome and Information Meeting", 'es' : "Reunión informativa y de bienvenida"  },
+					4 : {'fr': "Demain à", '' : "Tomorrow at", 'es' : "Mañana a"  },
+					5 : {'fr': "Lieu de rencontre", '' : "Meeting Place", 'es' : "Lugar de encuentro"  },
+					6 : {'fr': "Votre représentant", '' : "Your representative", 'es' : "Su representante"  },
+
+				}
+					
+				 %}
+
+				
 
 				{% for meetingInfos in meetings %}
+
+					{% set currentLanguage = meetingInfos.agency.language %}
 						
 					{% if (i == 1) %} 
 						{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
@@ -194,25 +211,25 @@
 							<div class="qrcode">
 								{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}   
 									<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
-									<div class="chattez-rep">Chattez Avec<br>{{ meetingInfos.staff }}</div>
+									<div class="chattez-rep">{{ languageTab[0][currentLanguage] }}<br>{{ meetingInfos.staff }}</div>
 								{% endif %}
 							</div>
 
 							{% endif %}
 
 							<div class="mt-2">
-								<p class="my-1"><strong>Nom: </strong> {{ meetingInfos.holder|title }}</p>
-								<p class="mt-1 mb-2"><strong>Hôtel:</strong> 
+								<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.holder|title }}</p>
+								<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 
 									{% for infosTransfer in meetingInfos.transferArrivals %}
 										{{ infosTransfer.toArrival|title}}
 									{% endfor %}
 								</p>
 							</div>
 							<div class="mb-2">
-								<p class="line-height-5" ><strong class="crimson">Reunion de Bienvenue &amp; d'Information</strong></p>
-								<p class="line-height-5"><strong class="crimson"> Demain à {{ meetingInfos.meetingAtTime }} </strong></p>
-								<p class="line-height-5">Lieu de rencontre: <strong class="crimson">{{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}} </strong></p>
-								<p class="line-height-5">Votre représentant: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
+								<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
+								<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }} {{ meetingInfos.meetingAtTime }} </strong></p>
+								<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: <strong class="crimson">{{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}} </strong></p>
+								<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
 								<p class="line-height-5">Whatsapp:  
 									{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
 									
