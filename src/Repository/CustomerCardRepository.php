@@ -128,12 +128,14 @@ class CustomerCardRepository extends ServiceEntityRepository
 
   
         return $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\Agency', 'agency', 'WITH', 'c.agency = agency.id')
             ->andWhere('c.meetingAt >= :date_start')
             ->andWhere('c.meetingAt <= :date_end')
             ->andWhere('c.meetingPoint is not null')
+            ->andWhere('agency.isActive = :agencyIsActive')
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
             ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
-            ->orderBy('c.id', 'ASC')
+            ->setParameter('agencyIsActive', true)
             ->getQuery()
             ->getResult()
         ;

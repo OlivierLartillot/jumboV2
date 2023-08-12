@@ -21,6 +21,9 @@ class Agency
     #[ORM\OneToMany(mappedBy: 'agency', targetEntity: CustomerCard::class)]
     private Collection $customerCards;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
     public function __construct()
     {
         $this->customerCards = new ArrayCollection();
@@ -76,5 +79,17 @@ class Agency
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
     }
 }

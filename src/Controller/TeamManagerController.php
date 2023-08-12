@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Agency;
 use App\Entity\User;
+use App\Form\AgenciesActivationType;
 use App\Form\RepAttributionType;
+use App\Repository\AgencyRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\UserRepository;
@@ -281,7 +284,12 @@ class TeamManagerController extends AbstractController
         // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team-manager/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
-    public function stickersParDate(CustomerCardRepository $customerCardRepository, MeetingPointRepository $meetingPointRepository,  EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function stickersParDate(CustomerCardRepository $customerCardRepository,
+                                    MeetingPointRepository $meetingPointRepository, 
+                                    EntityManagerInterface $manager, 
+                                    AgencyRepository $agencyRepository,
+                                    Request $request,
+                                    DefineQueryDate $defineQueryDate): Response 
     {
 
         $day =  $defineQueryDate->returnDay($request);
@@ -290,10 +298,29 @@ class TeamManagerController extends AbstractController
         // récupérer les cutomerCard correspondant à la meeting date
         $meetings = $customerCardRepository->findByMeetingDate($date);
 
+        $agencies = $agencyRepository->findAll();
+
+        $checkFormAgencies = $request->request->get("form_check_agencies");
+        if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
+            foreach ($agencies as $agency) {
+                 
+                $data = $request->request->get("agence_". $agency->getId());
+                
+                $test = ($data == "on") ? true : false;
+                if ($agency->getIsActive() != $test) {
+                    $agency->setIsActive($test);
+                    $manager->flush($agency);
+                } 
+    
+            }
+        }
+
 
         return $this->render('team_manager/stickers.html.twig', [
             "date" => $date,
             "meetings" => $meetings,
+            "agencies" => $agencies
+
    
 /*             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
