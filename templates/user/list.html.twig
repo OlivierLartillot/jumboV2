@@ -13,31 +13,13 @@
                                                     <a href="{{ path('app_user_new') }}" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-plus me-2"></i> Add New</a>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-inline float-md-end mb-3">
-                                                    <div class="search-box ms-2">
-                                                        <div class="position-relative">
-                                                            <input type="text" class="form-control rounded bg-light border-0" placeholder="Search...">
-                                                            <i class="mdi mdi-magnify search-icon"></i>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                
-                
                                         </div>
                                         <!-- end row -->
                                         <div class="table-responsive mb-4">
                                             <table class="table table-centered table-nowrap mb-0">
                                                 <thead>
                                                   <tr>
-                                                    <th scope="col" style="width: 50px;">
-                                                        <div class="form-check font-size-16">
-                                                            <input type="checkbox" class="form-check-input" id="contacusercheck">
-                                                            <label class="form-check-label" for="contacusercheck"></label>
-                                                        </div>
-                                                    </th>
+                                                    <th scope="col">#</th>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Position</th>
                                                     <th scope="col">Phone</th>
@@ -45,7 +27,7 @@
                                                   </tr>
                                                 </thead>
                                                 <tbody>
-
+                                                    {% set iLoop = 1 %}
                                                     {% for user in users %}
 
                 
@@ -63,12 +45,7 @@
                                                                 
 
                                                                     <tr>
-                                                                        <th scope="row">
-                                                                            <div class="form-check font-size-16">
-                                                                                <input type="checkbox" class="form-check-input" id="contacusercheck1">
-                                                                                <label class="form-check-label" for="contacusercheck1"></label>
-                                                                            </div>
-                                                                        </th>
+                                                                        <td>{{ iLoop }}</td>
                                                                         <td>
                                                                             <img src="/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle me-2">
                                                                             <a href="#" class="text-body">{{user}}</a>
@@ -113,6 +90,7 @@
                                                                     </tr>
                                                          
                                                            
+                                                        {% set iLoop = iLoop + 1 %}
                                                        {% endif %}
                                                     {% else %}
                                                         <tr>

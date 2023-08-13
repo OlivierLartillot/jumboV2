@@ -2,7 +2,6 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Client Status'}) }}
 
-    <h1>Edit Status</h1>
     <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_status_index') }}">back to list</a>
 
     {{ include('status/_form.html.twig', {'button_label': 'Update'}) }}
