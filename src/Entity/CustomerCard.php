@@ -504,6 +504,23 @@ class CustomerCard
         return $this;
     }
 
+    public function getTransferVehicleArrival(): ?TransferVehicleArrival
+    {
+        return $this->transferVehicleArrival;
+    }
+
+    public function setTransferVehicleArrival(TransferVehicleArrival $transferVehicleArrival): self
+    {
+        // set the owning side of the relation if necessary
+        if ($transferVehicleArrival->getCustomerCard() !== $this) {
+            $transferVehicleArrival->setCustomerCard($this);
+        }
+
+        $this->transferVehicleArrival = $transferVehicleArrival;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, TransferVehicleInterHotel>
      */
@@ -550,33 +567,5 @@ class CustomerCard
 
         return $this;
     }
-
-    
-
-
-
-
-
-
-
-    public function getTransferVehicleArrival(): ?TransferVehicleArrival
-    {
-        return $this->transferVehicleArrival;
-    }
-
-    public function setTransferVehicleArrival(TransferVehicleArrival $transferVehicleArrival): self
-    {
-        // set the owning side of the relation if necessary
-        if ($transferVehicleArrival->getCustomerCard() !== $this) {
-            $transferVehicleArrival->setCustomerCard($this);
-        }
-
-        $this->transferVehicleArrival = $transferVehicleArrival;
-
-        return $this;
-    }
-
-
-     
 
 }
