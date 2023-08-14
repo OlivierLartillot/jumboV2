@@ -89,6 +89,9 @@ class CustomerCard
     #[ORM\OneToOne(mappedBy: 'customerCard', cascade: ['persist', 'remove'])]
     private ?TransferVehicleDeparture $transferVehicleDeparture = null;
 
+    #[ORM\OneToOne(mappedBy: 'customerCard', cascade: ['persist', 'remove'])]
+    private ?TransferVehicleArrival $transferVehicleArrival = null;
+
 
     public function __construct()
     {
@@ -544,6 +547,31 @@ class CustomerCard
         }
 
         $this->transferVehicleDeparture = $transferVehicleDeparture;
+
+        return $this;
+    }
+
+    
+
+
+
+
+
+
+
+    public function getTransferVehicleArrival(): ?TransferVehicleArrival
+    {
+        return $this->transferVehicleArrival;
+    }
+
+    public function setTransferVehicleArrival(TransferVehicleArrival $transferVehicleArrival): self
+    {
+        // set the owning side of the relation if necessary
+        if ($transferVehicleArrival->getCustomerCard() !== $this) {
+            $transferVehicleArrival->setCustomerCard($this);
+        }
+
+        $this->transferVehicleArrival = $transferVehicleArrival;
 
         return $this;
     }
