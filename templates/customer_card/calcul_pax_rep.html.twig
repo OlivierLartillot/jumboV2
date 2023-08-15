@@ -2,7 +2,7 @@
 
     <head>
 
-        {{ include('partials/title-meta.html.twig', {title: 'Pax Calculation'}) }}
+        {{ include('partials/title-meta.html.twig', {title: 'Pax Calculation'|trans}) }}
 
         {{ include('partials/head-css.html.twig') }}
 
@@ -36,10 +36,10 @@
                     <div class="container-fluid">
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Pax Calculation'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Pax Calculation'|trans}) }}
 
     <div>
-        NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"
+        {% trans %}NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"{% endtrans %}.
     
     </div>
 
@@ -57,7 +57,7 @@
             <div class="col-md-2">
                 <div class="form-floating mb-3">
                     <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                        <option value="all" selected>All Reps</option>
+                        <option value="all" selected>{% trans %}All Reps{% endtrans %}</option>
                         {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
                             <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id) ? 'selected' : '' }}>{{ rep }}</option>
                         {% endfor %}
@@ -85,11 +85,11 @@
                         <thead class="bg-primary bg-gradient text-light border-end-light">
                             <tr>
                                 <th>#</th>
-                                <th>Total pax</th>
-                                <th>Total personnes</th>
-                                <th>Adults</th>
-                                <th>Children</th>
-                                <th>Babies</th>
+                                <th>{% trans %}Total pax{% endtrans %}</th>
+                                <th>{% trans %}Total people{% endtrans %}</th>
+                                <th>{% trans %}Adults{% endtrans %}</th>
+                                <th>{% trans %}Children{% endtrans %}</th>
+                                <th>{% trans %}Babies{% endtrans %}</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -294,6 +294,8 @@ class TeamManagerController extends AbstractController
 
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:01:00');
+        // sert a prévenir l utilisateur que lorsque qu il a changé les agences il faut aussi mettre a jour la date
+        $formAgencySend = false;
 
         // récupérer les cutomerCard correspondant à la meeting date
         $meetings = $customerCardRepository->findByMeetingDate($date, true);
@@ -311,15 +313,23 @@ class TeamManagerController extends AbstractController
                     $agency->setIsActive($test);
                     $manager->flush($agency);
                 } 
+            
     
             }
+            $this->addFlash(
+                'danger',
+                'Warning: To update the labels to be printed, please send back the date selection form'
+            );
+            $formAgencySend = true;
         }
 
 
         return $this->render('team_manager/stickers.html.twig', [
             "date" => $date,
             "meetings" => $meetings,
-            "agencies" => $agencies
+            "agencies" => $agencies,
+            "formAgencySend" => $formAgencySend
+
 
    
 /*             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,

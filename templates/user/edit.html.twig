@@ -1,20 +1,17 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit User'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit User'|trans}) }}
 
     <div class="row justify-content-center">
         <div class="col-md-4 mb-3">
-            <a href="{{ path('app_user_list') }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>back to list</a>
+            <a href="{{ path('app_user_list') }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}back to list{% endtrans %}</a>
         </div>
     </div>
 
     <div class="row justify-content-center">
 
         <div class="col-md-4">
-
             {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
-
-
         </div>
 
 

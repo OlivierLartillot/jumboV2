@@ -136,10 +136,10 @@
 						<div class="text-center mb-3">
 
 								<div class="accordion accordion-flush" id="accordionFlushExample">
-									<div class="accordion-item">
+									<div class="accordion-item border">
 										<h2 class="accordion-header">
-										<button class="accordion-button collapsed border" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-											Choose the agencies to print
+										<button class="accordion-button collapsed border border-primary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+											{% trans %}Choose the agencies to print{% endtrans %}
 										</button>
 										</h2>
 										<div id="flush-collapseOne" class="accordion-collapse collapse p-2 bg-light border border-primary mb-3" data-bs-parent="#accordionFlushExample">
@@ -147,27 +147,27 @@
 											<form action="" method="post">
 												<input type="hidden" name="form_check_agencies" id="form_check_agencies" value="ok">
 												<div>
-													{% for agency in agencies %}
+													{% for agency in agencies|sort((a,b)=>a.name <=> b.name )%}
 														<div class="form-check">
 															<input class="form-check-input" type="checkbox" id="{{agency.id}}" name="agence_{{agency.id}}" {{ agency.isActive ? "checked" : "" }} />
 															<label class="form-check-label" for="{{agency.id}}">{{agency.name|title}}</label>
 														</div>
 													{% endfor %}
-
 													<input type="submit" value="update" class="btn btn-primary waves-effect waves-light btn-sm">
 												</div>
 											</form>
-
 										</div>
 									</div>
 								</div>
 						</div>
 
 
+
+
 						<div class="card">
 								<div class="text-center">
 									<div class="card-body">
-										<h5 class="card-title">Choose the meeting date</h5>
+										<h5 class="card-title">{% trans %}Choose the meeting date{% endtrans %}</h5>
 										<p>
 										<form action="{{ path('app_admin_stickers_par_date') }}" method="GET">
 											<input name="date" type="date" value="{{date | date('Y-m-d') }}">
@@ -177,29 +177,81 @@
 									</div>
 								</div>
 
-								<div class="text-center my-3">
-									<form>
-										<input class="btn btn-success .btn-soft-success  waves-effect waves-light btn-sm" id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
-									</form>
-								</div>
+								{% for message in app.flashes('danger') %}
+									<div class="alert alert-danger text-center m-3">
+										<p>
+											<b>{{ message|trans }}</b>
+										<p>
+									</div>
+								{% endfor %}
+							
+								{% if formAgencySend == false  %}
+									<div class="text-center my-3">
+										<form>
+											<input class="btn btn-success .btn-soft-success  waves-effect waves-light btn-sm" id="impression" name="impression" type="button" onclick="imprimer_page()" value="{% trans %}Print{% endtrans %}" />
+										</form>
+									</div>
+								{% endif %}
 						</div>
 					</div>
 			<div class="break">	
 				{% set i = 1 %} 
 				{% set page = 1 %} 
 				{# '' == null == en #}
-				{% set languageTab = {
-					0 : {'fr': "Chattez Avec", '' : "Chats with", 'es' : "Chatear con"  },
-					1 : {'fr': "Nom", '' : "Name", 'es' : "Apellido"  },
-					2 : {'fr': "Hôtel", '' : "Hotel", 'es' : "Hotel"  },
-					3 : {'fr': "Reunion de Bienvenue & d'Information", '' : "Welcome and Information Meeting", 'es' : "Reunión informativa y de bienvenida"  },
-					4 : {'fr': "Demain à", '' : "Tomorrow at", 'es' : "Mañana a"  },
-					5 : {'fr': "Lieu de rencontre", '' : "Meeting Place", 'es' : "Lugar de encuentro"  },
-					6 : {'fr': "Votre représentant", '' : "Your representative", 'es' : "Su representante"  },
-
-				}
+				{% set 
+					languageTab = {
+						0 : {
+							'fr': "Chattez Avec", 
+							'' : "Chats with", 
+							'en' : "Chats with", 
+							'es' : "Chatear con",  
+							'it' : "Chattare con", 
+							},
+						1 : {
+							'fr': "Nom", 
+							'' : "Name", 
+							'en' : "Name", 
+							'es' : "Apellido",  
+							'it' : "Cognome", 
+							},
+						2 : {
+							'fr': "Hôtel", 
+							'' : "Hotel", 
+							'en' : "Hotel", 
+							'es' : "Hotel",  
+							'it' : "Hotel", 
+							},
+						3 : {
+							'fr': "Reunion de Bienvenue & d'Information", 
+							'' : "Welcome and Information Meeting", 
+							'en' : "Welcome and Information Meeting", 
+							'es' : "Reunión informativa y de bienvenida",  
+							'it' : "Incontro di benvenuto e informativo",  
+							},
+						4 : {
+							'fr': "Demain à", 
+							'' : "Tomorrow at",
+							'en' : "Tomorrow at",
+							'es' : "Mañana a",  
+							'it' : "Domani alle",  
+							},
+						5 : {
+							'fr': "Lieu de rencontre", 
+							'' : "Meeting Place", 
+							'en' : "Meeting Place", 
+							'es' : "Lugar de encuentro", 
+							'it' : "Luogo d'incontro", 
+							},
+						6 : {
+							'fr': "Votre représentant",
+							'' : "Your representative", 
+							'en' : "Your representative", 
+							'es' : "Lugar de encuentro", 
+							'it' : "Il tuo rappresentante", 
+							},
+					}
 					
-				 %}
+				%}
 
 				
 
