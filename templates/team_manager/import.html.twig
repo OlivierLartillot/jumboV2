@@ -33,7 +33,7 @@
                                                                     <i class="display-4 text-muted uil uil-cloud-upload"></i>
                                                                 </div>
                                                 
-                                                                    <h4>Drop files here or click to upload.</h4>
+                                                                    <h4>{% trans %}Drop files here or click to upload{% endtrans %}.</h4>
                                                             </div>
 
                                                             <div class="dropzone-preview" data-symfony--ux-dropzone--dropzone-target="preview" style="display: none">
@@ -54,7 +54,7 @@
                                                 
                                                 </div>
                                                 <div class="text-center">
-                                                    <button class="my-5 btn btn-primary waves-effect waves-light">Save</button>
+                                                    <button class="my-5 btn btn-primary waves-effect waves-light">{% trans %}Save{% endtrans %}</button>
                                                 </div>
                                                     <input type="hidden" name="token" value="{{ csrf_token('upload-item') }}"/>
                                             </form>

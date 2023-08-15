@@ -609,6 +609,154 @@
         <source>Search!</source>
         <target>__Search!</target>
       </trans-unit>
+      <trans-unit id="5DUEPHi" resname="*For attendance, you must select the period and leave &quot;Nature Transfer&quot; on all">
+        <source>*For attendance, you must select the period and leave "Nature Transfer" on all</source>
+        <target>__*For attendance, you must select the period and leave "Nature Transfer" on all</target>
+      </trans-unit>
+      <trans-unit id="1rPoyCj" resname="Presence">
+        <source>Presence</source>
+        <target>__Presence</target>
+      </trans-unit>
+      <trans-unit id="NYzCAfh" resname="Operations">
+        <source>Operations</source>
+        <target>__Operations</target>
+      </trans-unit>
+      <trans-unit id="a3HRlG0" resname="research on">
+        <source>research on</source>
+        <target>__research on</target>
+      </trans-unit>
+      <trans-unit id="hbCFYCB" resname="Works with selects">
+        <source>Works with selects</source>
+        <target>__Works with selects</target>
+      </trans-unit>
+      <trans-unit id="_N0gYOx" resname="All Reps">
+        <source>All Reps</source>
+        <target>__All Reps</target>
+      </trans-unit>
+      <trans-unit id="qdfQ31x" resname="Select a rep">
+        <source>Select a rep</source>
+        <target>__Select a rep</target>
+      </trans-unit>
+      <trans-unit id="qXZrYJh" resname="Select Agency">
+        <source>Select Agency</source>
+        <target>__Select Agency</target>
+      </trans-unit>
+      <trans-unit id="3NHVIj9" resname="Name">
+        <source>Name</source>
+        <target>__Name</target>
+      </trans-unit>
+      <trans-unit id="FV_BbAQ" resname="Submit">
+        <source>Submit</source>
+        <target>__Submit</target>
+      </trans-unit>
+      <trans-unit id="oW0a6y." resname="There are">
+        <source>There are</source>
+        <target>__There are</target>
+      </trans-unit>
+      <trans-unit id="nSGyrZc" resname="matching results">
+        <source>matching results</source>
+        <target>__matching results</target>
+      </trans-unit>
+      <trans-unit id="e7b9IJH" resname="Drop files here or click to upload">
+        <source>Drop files here or click to upload</source>
+        <target>__Drop files here or click to upload</target>
+      </trans-unit>
+      <trans-unit id="FQn1YfJ" resname="Save">
+        <source>Save</source>
+        <target>__Save</target>
+      </trans-unit>
+      <trans-unit id="4830dh3" resname="Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again">
+        <source>Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again</source>
+        <target>__Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again</target>
+      </trans-unit>
+      <trans-unit id="jutl_Ka" resname="Tous les clients ont bien été importés">
+        <source>Tous les clients ont bien été importés</source>
+        <target>__Tous les clients ont bien été importés</target>
+      </trans-unit>
+      <trans-unit id="F.mnAV0" resname="Choose the arrival date">
+        <source>Choose the arrival date</source>
+        <target>__Choose the arrival date</target>
+      </trans-unit>
+      <trans-unit id="ugUIzco" resname="Pas ou plus de client à attribuer pour cette date">
+        <source>Pas ou plus de client à attribuer pour cette date</source>
+        <target>__Pas ou plus de client à attribuer pour cette date</target>
+      </trans-unit>
+      <trans-unit id="nn7SKeI" resname="Il reste encore">
+        <source>Il reste encore</source>
+        <target>__Il reste encore</target>
+      </trans-unit>
+      <trans-unit id="Ezwhjdu" resname="client(s)  à attribuer">
+        <source>client(s)  à attribuer</source>
+        <target>__client(s)  à attribuer</target>
+      </trans-unit>
+      <trans-unit id="5sbN9gr" resname="Briefing date">
+        <source>Briefing date</source>
+        <target>__Briefing date</target>
+      </trans-unit>
+      <trans-unit id="kaPdpwr" resname="Next group of clients">
+        <source>Next group of clients</source>
+        <target>__Next group of clients</target>
+      </trans-unit>
+      <trans-unit id="UJs8Tl2" resname="Hotel">
+        <source>Hotel</source>
+        <target>__Hotel</target>
+      </trans-unit>
+      <trans-unit id="zRuYYbY" resname="Babies">
+        <source>Babies</source>
+        <target>__Babies</target>
+      </trans-unit>
+      <trans-unit id="BDHraFu" resname="Dates with unassigned reps">
+        <source>Dates with unassigned reps</source>
+        <target>__Dates with unassigned reps</target>
+      </trans-unit>
+      <trans-unit id="YZxo3oX" resname="No or no more customers to assign for this date">
+        <source>No or no more customers to assign for this date</source>
+        <target>__No or no more customers to assign for this date</target>
+      </trans-unit>
+      <trans-unit id="kaf6wAn" resname="They are still">
+        <source>They are still</source>
+        <target>__They are still</target>
+      </trans-unit>
+      <trans-unit id="CgorB7X" resname="client(s) to assign">
+        <source>client(s) to assign</source>
+        <target>__client(s) to assign</target>
+      </trans-unit>
+      <trans-unit id="hvNXz7j" resname="Agency">
+        <source>Agency</source>
+        <target>__Agency</target>
+      </trans-unit>
+      <trans-unit id="9Y.W1ZG" resname="No or more client groups to assign for this date">
+        <source>No or more client groups to assign for this date</source>
+        <target>__No or more client groups to assign for this date</target>
+      </trans-unit>
+      <trans-unit id="5HRQ4pD" resname="Arrival date">
+        <source>Arrival date</source>
+        <target>__Arrival date</target>
+      </trans-unit>
+      <trans-unit id="RFht.eN" resname="This rep has no client assigned today.">
+        <source>This rep has no client assigned today.</source>
+        <target>__This rep has no client assigned today.</target>
+      </trans-unit>
+      <trans-unit id="ai3fN46" resname="client does not">
+        <source>client does not</source>
+        <target>__client does not</target>
+      </trans-unit>
+      <trans-unit id="w8KBmNE" resname="yet have a meeting time assigned">
+        <source>yet have a meeting time assigned</source>
+        <target>__yet have a meeting time assigned</target>
+      </trans-unit>
+      <trans-unit id="Xy7s5WD" resname="clients do not">
+        <source>clients do not</source>
+        <target>__clients do not</target>
+      </trans-unit>
+      <trans-unit id="1u0sNBs" resname="Meeting at">
+        <source>Meeting at</source>
+        <target>__Meeting at</target>
+      </trans-unit>
+      <trans-unit id="wcEAnT8" resname="Update">
+        <source>Update</source>
+        <target>__Update</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

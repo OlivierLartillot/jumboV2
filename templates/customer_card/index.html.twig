@@ -5,16 +5,16 @@
         {{ include('partials/head-css.html.twig') }}
 
         <!-- plugin css -->
-        <link href="/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+{#         <link href="/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
         <link href="/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
         <link href="/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
         <link href="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/libs/@chenfengyuan/datepicker/datepicker.min.css">
+        <link rel="stylesheet" href="/libs/@chenfengyuan/datepicker/datepicker.min.css"> #}
 
         <!-- datepicker css -->
-        <link rel="stylesheet" href="/libs/flatpickr/flatpickr.min.css">
+        {# <link rel="stylesheet" href="/libs/flatpickr/flatpickr.min.css"> #}
 
-        {{ include('partials/head-css.html.twig') }}
+       
 
     </head>
 
@@ -59,7 +59,7 @@
 
                             <div class="row mb-3" style="background-color:#cff4fc">
                                 <p class="p-3 ">
-                                    *Pour les présences, vous devez sélectionner la période et laisser "Nature Transfer" sur tous.
+                                    {% trans %}*For attendance, you must select the period and leave "Nature Transfer" on all{% endtrans %}.
                                 </p>
 
                             </div>
@@ -68,10 +68,10 @@
                                 <div class="col-md-2">
                                     <div class="form-floating mt-3">
                                         <select name="customerPresence" class="form-select" id="customerPresence" aria-label="Floating label select example">
-                                            <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>Présence</option>
-                                            <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>Opérations</option>
+                                            <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>{% trans %}Presence{% endtrans %}</option>
+                                            <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>{% trans %}Operations{% endtrans %}</option>
                                         </select>
-                                        <label for="customerPresence">Rechercher sur: </label>
+                                        <label for="customerPresence">{% trans %}research on{% endtrans %}: </label>
                                     </div>
                                 </div>                            
                                 {% set now = "now"|date("Y-m-d") %}
@@ -86,11 +86,11 @@
                                     <div class="form-floating mb-3">
                                         <select name="natureTransfer" class="form-select" id="natureTransfer" aria-label="Floating label select example">
                                             <option value="all" selected>Nature Transfer</option>
-                                            <option value="1" {{ (app.request.query.get('natureTransfer') == 1 ) ? 'selected' : '' }}>Arrival</option>
-                                            <option value="2" {{ (app.request.query.get('natureTransfer') == 2 ) ? 'selected' : '' }}>Inter Hotel</option>
-                                            <option value="3" {{ (app.request.query.get('natureTransfer') == 3 ) ? 'selected' : '' }}>Departure</option>
+                                            <option value="1" {{ (app.request.query.get('natureTransfer') == 1 ) ? 'selected' : '' }}>{% trans %}Arrival{% endtrans %}</option>
+                                            <option value="2" {{ (app.request.query.get('natureTransfer') == 2 ) ? 'selected' : '' }}>{% trans %}Inter Hotel{% endtrans %}</option>
+                                            <option value="3" {{ (app.request.query.get('natureTransfer') == 3 ) ? 'selected' : '' }}>{% trans %}Departure{% endtrans %}</option>
                                         </select>
-                                        <label for="natureTransfer">Works with selects</label>
+                                        <label for="natureTransfer">{% trans %}Works with selects{% endtrans %}</label>
                                     </div>
                                 </div>
                             </div>
@@ -98,12 +98,12 @@
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
                                         <select name="reps" class="form-select" id="reps" aria-label="Floating label select example">
-                                            <option value="all" selected>All Reps</option>
+                                            <option value="all" selected>{% trans %}All Reps{% endtrans %}</option>
                                             {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
                                                 <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
                                             {% endfor %}
                                         </select>
-                                        <label for="reps">Select a rep</label>
+                                        <label for="reps">{% trans %}Select a rep{% endtrans %}</label>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -126,7 +126,7 @@
                                                     <option value="{{ agency.id }}" {{ (app.request.query.get('agency') == agency.id ) ? 'selected' : '' }}>{{ agency.name|title }}</option>
                                                 {% endfor %}
                                         </select>
-                                        <label for="agency">Select Agency</label>
+                                        <label for="agency">{% trans %}Select Agency{% endtrans %}</label>
                                     </div>
                                 </div>      
                                 <div class="col-md-2">
@@ -148,19 +148,19 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <input name="search" type="text" class="form-control-perso" id="search" placeholder="Enter Name" value="{{ (app.request.query.get('search')) }}">
+                                        <input name="search" type="text" class="form-control-perso" id="search" placeholder="{% trans %}Name{% endtrans %}, #RSA, #Voucher, #Jumbo" value="{{ (app.request.query.get('search')) }}">
                                         {# <label for="search">Name, # RSA, # Voucher, # Jumbo </label> #}
                                     </div>
                                 </div>
                                 <div class="text-center text-md-start col-md-2 ">
-                                    <input type="submit" class="btn btn-primary px-5 py-3">
+                                    <input type="submit" class="btn btn-primary px-5 py-3" value="{% trans %}Submit{% endtrans %}">
                                 </div>
 
                                 </form>
                             </div>
 
                         <div class="row ms-5 mt-5">
-                            il y a {{ customer_cards| length }} résultats correpondant.
+                            {% trans %}There are{% endtrans %}{{ customer_cards| length }} {% trans %}matching results{% endtrans %}.
                         </div>
                         <div class="row mt-5">
       
@@ -209,15 +209,15 @@
                                                 <div class="border-bottom mt-3 pt-1 pb-1">
                                                     <p class="text-muted">
                                                         {% for hotel in customer_card.transferArrivals %} 
-                                                            <i class="fas fa-hotel"></i> Arrival: {{ hotel.fromStart|title }} - {{ hotel.toArrival|title }}
+                                                            <i class="fas fa-hotel"></i> {% trans %}Arrival{% endtrans %}: {{ hotel.fromStart|title }} - {{ hotel.toArrival|title }}
                                                         {% endfor %}
                                 
                                                         {% for hotel in customer_card.transferInterHotels %} 
-                                                            <br> <i class="fas fa-hotel"></i> Inter-Hotel: {{ hotel.toArrival|title }}
+                                                            <br> <i class="fas fa-hotel"></i> {% trans %}Inter Hotel{% endtrans %}: {{ hotel.toArrival|title }}
                                                         {% endfor %} 
                                                                                         
                                                         {% for hotel in customer_card.transferDeparture %} 
-                                                            <br> <i class="fas fa-hotel"></i> Departure: {{ hotel.toArrival|title }}
+                                                            <br> <i class="fas fa-hotel"></i> {% trans %}Departure{% endtrans %}: {{ hotel.toArrival|title }}
                                                         {% endfor %} 
                                                     </p>
                                                 </div>
@@ -225,13 +225,13 @@
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <div class="mt-3">
-                                                            <p class="text-muted mb-2">Adults</p>
+                                                            <p class="text-muted mb-2">{% trans %}Adults{% endtrans %}</p>
                                                             <h5 class="font-size-16 mb-0">{{ customer_card.adultsNumber }}</h5>
                                                         </div>
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="mt-3">
-                                                            <p class="text-muted mb-2">Children</p>
+                                                            <p class="text-muted mb-2">{% trans %}Children{% endtrans %}</p>
                                                             <h5 class="font-size-16 mb-0">{{ customer_card.childrenNumber }}</h5>
                                                         </div>
                                                     </div>                                                    
@@ -248,29 +248,29 @@
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header">
                                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{ customer_card.id }}" aria-expanded="false" aria-controls="flush-collapseOne{{ customer_card.id }}">
-                                                           <span class="badge bg-primary"> Show more</span>
+                                                           <span class="badge bg-primary"> {% trans %}Show more{% endtrans %}</span>
                                                         </button>
                                                         </h2>
                                                         <div id="flush-collapseOne{{ customer_card.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ customer_card.id }}">
                                                             <div class="accordion-body">
                                                                 {% for transfer in customer_card.transferArrivals %}
                                                                     <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
-                                                                        <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
+                                                                        <h6><i class="mdi mdi-airplane-landing"></i> {% trans %}Arrival{% endtrans %}</h6>
                                                                         <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Date</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.date | date('d-m-Y') }}</h5>
                                                                             </div>
                                                                         </div>
                                                                     <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Hour</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.hour | date('h:i')}}</h5>
                                                                             </div>
                                                                         </div>            
                                                                         <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Flight #</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
                                                                             </div>
                                                                         </div>
@@ -278,16 +278,16 @@
                                                                 {% endfor %}
                                                                 {% for transfer in customer_card.transferInterHotels %}
                                                                     <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
-                                                                        <h6><i class="mdi mdi-airplane-landing"></i> Inter Hotel</h6>
+                                                                        <h6><i class="mdi mdi-airplane-landing"></i> {% trans %}Inter Hotel{% endtrans %}</h6>
                                                                         <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Date</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.date | date('d-m-Y') }}</h5>
                                                                             </div>
                                                                         </div>
                                                                     <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Hour</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.hour | date('h:i')}}</h5>
                                                                             </div>
                                                                         </div>            
@@ -297,22 +297,22 @@
 
                                                                 {% for transfer in customer_card.transferDeparture %}
                                                                     <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
-                                                                        <h6><i class="mdi mdi-airplane-landing"></i> Departure</h6>
+                                                                        <h6><i class="mdi mdi-airplane-landing"></i> {% trans %}Departure{% endtrans %}</h6>
                                                                         <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Date</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.date | date('d-m-Y') }}</h5>
                                                                             </div>
                                                                         </div>
                                                                     <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Hour</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.hour | date('h:i')}}</h5>
                                                                             </div>
                                                                         </div>            
                                                                         <div class="col-4">
                                                                             <div class="mt-3">
-                                                                                <p class="text-muted mb-2">Flight #</p>
+                                                                                <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
                                                                                 <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
                                                                             </div>
                                                                         </div>
