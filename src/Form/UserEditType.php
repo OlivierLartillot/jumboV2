@@ -17,7 +17,7 @@ class UserEditType extends AbstractType
         $builder
             ->add('username')
             ->add('roles', ChoiceType::class, [
-                'label' => 'Etes-vous ?',
+                'label' => 'Role',
                 'choices' => [
                     'Admin' => 'ROLE_SUPERMAN',
                     'Rep' => 'ROLE_REP',

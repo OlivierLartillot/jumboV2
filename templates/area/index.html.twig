@@ -10,22 +10,9 @@
                         <div class="row mb-2">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <a href="{{ path('app_area_new') }}" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-plus me-2"></i> Add New</a>
+                                    <a href="{{ path('app_area_new') }}" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-plus me-2"></i> {% trans %}Add New{% endtrans %}</a>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-inline float-md-end mb-3">
-                                    <div class="search-box ms-2">
-                                        <div class="position-relative">
-                                            <input type="text" class="form-control rounded bg-light border-0" placeholder="Search...">
-                                            <i class="mdi mdi-magnify search-icon"></i>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-
-
                         </div>
                         <!-- end row -->
                         <div class="table-responsive mb-4">
@@ -33,8 +20,8 @@
                                 <thead>
                                     <tr>
                                     <th scope="col">id</th>
-                                    <th scope="col">name</th>
-                                    <th scope="col" style="width: 200px;">Action</th>
+                                    <th scope="col">{% trans %}Name{% endtrans %}</th>
+                                    <th scope="col" style="width: 200px;">{% trans %}Edit{% endtrans %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,27 +36,12 @@
                                                 <li class="list-inline-item">
                                                     <a href="{{ path('app_area_edit', {'id': area.id}) }}" class="px-2 text-primary"><i class="uil uil-pen font-size-18"></i></a>
                                                 </li>
-                                                <li class="list-inline-item">
-                                                    <a href="{{ path('app_area_show', {'id': area.id}) }}">show</a>
-                                                    <a href="javascript:void(0);" class="px-2 text-danger"><i class="uil uil-trash-alt font-size-18"></i></a>
-                                                </li>
-                                                <li class="list-inline-item dropdown">
-                                                    <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                        <i class="uil uil-ellipsis-v"></i>
-                                                    </a>
-                                                
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#">Action</a>
-                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                    </div>
-                                                </li>
                                             </ul>
                                         </td>
                                     </tr>
                                     {% else %}
                                     <tr>
-                                        <td colspan="4">no records found</td>
+                                        <td colspan="4">{% trans %}no records found{% endtrans %}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

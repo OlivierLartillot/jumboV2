@@ -1,0 +1,1450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="it" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="uVlThXo" resname="Minible">
+        <source>Minible</source>
+        <target>Minible</target>
+      </trans-unit>
+      <trans-unit id="DDMQpke" resname="Welcome Back">
+        <source>Welcome Back</source>
+        <target>Ben tornato</target>
+      </trans-unit>
+      <trans-unit id="Z7aWRoY" resname="Dashboard">
+        <source>Dashboard</source>
+        <target>Pannello di controllo</target>
+      </trans-unit>
+      <trans-unit id="pTvK_2f" resname="Dashboards">
+        <source>Dashboards</source>
+        <target>Dashboard</target>
+      </trans-unit>
+      <trans-unit id="ma9mBv_" resname="Menu">
+        <source>Menu</source>
+        <target>Menù</target>
+      </trans-unit>
+      <trans-unit id="ScJmuqq" resname="Search">
+        <source>Search</source>
+        <target>Ricerca</target>
+      </trans-unit>
+      <trans-unit id="Eag82U2" resname="Mega Menu">
+        <source>Mega Menu</source>
+        <target>Mega Menù</target>
+      </trans-unit>
+      <trans-unit id="IbERy.5" resname="Default">
+        <source>Default</source>
+        <target>Predefinita</target>
+      </trans-unit>
+      <trans-unit id="5ukKNiW" resname="Saas">
+        <source>Saas</source>
+        <target>Saas</target>
+      </trans-unit>
+      <trans-unit id="vQJUE2z" resname="Saas Dashboard">
+        <source>Saas Dashboard</source>
+        <target>Saas Dashboard</target>
+      </trans-unit>
+      <trans-unit id="3xK4_Jt" resname="Crypto">
+        <source>Crypto</source>
+        <target>Crypto</target>
+      </trans-unit>
+      <trans-unit id="xu63rKd" resname="Crypto Dashboard">
+        <source>Crypto Dashboard</source>
+        <target>Crypto Dashboard</target>
+      </trans-unit>
+      <trans-unit id="jGvAmVN" resname="Blog">
+        <source>Blog</source>
+        <target>Blog</target>
+      </trans-unit>
+      <trans-unit id="i.y_xq_" resname="Blog Dashboard">
+        <source>Blog Dashboard</source>
+        <target>Dashboard del blog</target>
+      </trans-unit>
+      <trans-unit id="MDvQu.U" resname="Layouts">
+        <source>Layouts</source>
+        <target>Layout</target>
+      </trans-unit>
+      <trans-unit id="CrukQfF" resname="Horizontal">
+        <source>Horizontal</source>
+        <target>Orizzontale</target>
+      </trans-unit>
+      <trans-unit id="GxW.agT" resname="Horizontal Layout">
+        <source>Horizontal Layout</source>
+        <target>Layout orizzontale</target>
+      </trans-unit>
+      <trans-unit id="ri0_b5o" resname="Light Sidebar">
+        <source>Light Sidebar</source>
+        <target>Barra laterale leggera</target>
+      </trans-unit>
+      <trans-unit id="cnzTpk1" resname="Vertical">
+        <source>Vertical</source>
+        <target>Verticale</target>
+      </trans-unit>
+      <trans-unit id="GDH_mfx" resname="Vertical Layout">
+        <source>Vertical Layout</source>
+        <target>Verticale Layout</target>
+      </trans-unit>
+      <trans-unit id="mXfb8hI" resname="Dark Topbar">
+        <source>Dark Topbar</source>
+        <target>Topbar scuro</target>
+      </trans-unit>
+      <trans-unit id="v8K2JVA" resname="Boxed Horizontal">
+        <source>Boxed Horizontal</source>
+        <target>Orizzontale inscatolato</target>
+      </trans-unit>
+      <trans-unit id="lL.QAQn" resname="Dark Sidebar">
+        <source>Dark Sidebar</source>
+        <target>Dark Sidebar</target>
+      </trans-unit>
+      <trans-unit id="MwdKNAt" resname="Compact Sidebar">
+        <source>Compact Sidebar</source>
+        <target>Barra laterale compatta</target>
+      </trans-unit>
+      <trans-unit id="RWf95CW" resname="Icon Sidebar">
+        <source>Icon Sidebar</source>
+        <target>Icona Sidebar</target>
+      </trans-unit>
+      <trans-unit id="h1bVg2K" resname="Boxed Width">
+        <source>Boxed Width</source>
+        <target>Larghezza scatola</target>
+      </trans-unit>
+      <trans-unit id="4OpGftL" resname="Preloader">
+        <source>Preloader</source>
+        <target>Preloader</target>
+      </trans-unit>
+      <trans-unit id="BQNFcGK" resname="Preloader Layout">
+        <source>Preloader Layout</source>
+        <target>Layout del precaricatore</target>
+      </trans-unit>
+      <trans-unit id="b83XYPf" resname="Colored Sidebar">
+        <source>Colored Sidebar</source>
+        <target>Barra laterale colorata</target>
+      </trans-unit>
+      <trans-unit id="lnWQHuY" resname="Scrollable">
+        <source>Scrollable</source>
+        <target>Scorrevole</target>
+      </trans-unit>
+      <trans-unit id="3sgY8g2" resname="Horizontal Topbar Light">
+        <source>Horizontal Topbar Light</source>
+        <target>Layout scorrevole orizzontale</target>
+      </trans-unit>
+      <trans-unit id="TzvWKsp" resname="Horizontal Boxed Width">
+        <source>Horizontal Boxed Width</source>
+        <target>Larghezza scatola orizzontale</target>
+      </trans-unit>
+      <trans-unit id="RywdCiM" resname="Horizontal Preloader Layout">
+        <source>Horizontal Preloader Layout</source>
+        <target>Layout del precaricatore orizzontale</target>
+      </trans-unit>
+      <trans-unit id="QoBoESp" resname="Horizontal Topbar Colored">
+        <source>Horizontal Topbar Colored</source>
+        <target>Barra superiore orizzontale colorata</target>
+      </trans-unit>
+      <trans-unit id="cDo9ghm" resname="Horizontal Scrollable Layout">
+        <source>Horizontal Scrollable Layout</source>
+        <target>Layout scorrevole orizzontale</target>
+      </trans-unit>
+      <trans-unit id="SwKvwVV" resname="Topbar Light">
+        <source>Topbar Light</source>
+        <target>Topbar Light</target>
+      </trans-unit>
+      <trans-unit id="K1Y3SSY" resname="Colored Header">
+        <source>Colored Header</source>
+        <target>Intestazione colorata</target>
+      </trans-unit>
+      <trans-unit id="oSU8x5E" resname="Extra Pages">
+        <source>Extra Pages</source>
+        <target>Pagine extra</target>
+      </trans-unit>
+      <trans-unit id="id10hEL" resname="Apps">
+        <source>Apps</source>
+        <target>App</target>
+      </trans-unit>
+      <trans-unit id="1dCjC1F" resname="Calendar">
+        <source>Calendar</source>
+        <target>Calendario</target>
+      </trans-unit>
+      <trans-unit id="4LKwDPM" resname="Calendars">
+        <source>Calendars</source>
+        <target>Calendarios</target>
+      </trans-unit>
+      <trans-unit id="5imB.28" resname="TUI_Calendar">
+        <source>TUI_Calendar</source>
+        <target>Calendario TUI</target>
+      </trans-unit>
+      <trans-unit id="b0nXJO7" resname="Full_Calendar">
+        <source>Full_Calendar</source>
+        <target>Calendario completo</target>
+      </trans-unit>
+      <trans-unit id="GP3VSbL" resname="New">
+        <source>New</source>
+        <target>Nuova</target>
+      </trans-unit>
+      <trans-unit id="Rgs6faA" resname="Chat">
+        <source>Chat</source>
+        <target>Chiacchierare</target>
+      </trans-unit>
+      <trans-unit id="SoHmRkN" resname="File Manager">
+        <source>File Manager</source>
+        <target>File Manager</target>
+      </trans-unit>
+      <trans-unit id="qOW3RsA" resname="Ecommerce">
+        <source>Ecommerce</source>
+        <target>Ecommerce</target>
+      </trans-unit>
+      <trans-unit id="TtyL_vx" resname="Products">
+        <source>Products</source>
+        <target>Prodotti</target>
+      </trans-unit>
+      <trans-unit id="_574lBd" resname="Product">
+        <source>Product</source>
+        <target>Prodotto</target>
+      </trans-unit>
+      <trans-unit id="iqLw5_o" resname="Product Detail">
+        <source>Product Detail</source>
+        <target>Dettagli del prodotto</target>
+      </trans-unit>
+      <trans-unit id="t_is3VI" resname="Orders">
+        <source>Orders</source>
+        <target>Ordini</target>
+      </trans-unit>
+      <trans-unit id="qr528fT" resname="Customers">
+        <source>Customers</source>
+        <target>I clienti</target>
+      </trans-unit>
+      <trans-unit id="bS1ZrtR" resname="Cart">
+        <source>Cart</source>
+        <target>Carrello</target>
+      </trans-unit>
+      <trans-unit id="mecfSMS" resname="Checkout">
+        <source>Checkout</source>
+        <target>Check-out</target>
+      </trans-unit>
+      <trans-unit id="rnG6Vmx" resname="Shops">
+        <source>Shops</source>
+        <target>Negozi</target>
+      </trans-unit>
+      <trans-unit id="HverCac" resname="Add Product">
+        <source>Add Product</source>
+        <target>Aggiungi prodotto</target>
+      </trans-unit>
+      <trans-unit id="0cmgHVf" resname="Wallet">
+        <source>Wallet</source>
+        <target>Portafoglio</target>
+      </trans-unit>
+      <trans-unit id="5.1ikTO" resname="Wallets">
+        <source>Wallets</source>
+        <target>Portafogli</target>
+      </trans-unit>
+      <trans-unit id="A4lVphU" resname="Buy/Sell">
+        <source>Buy/Sell</source>
+        <target>Comprare vendere</target>
+      </trans-unit>
+      <trans-unit id="1goxjdi" resname="Exchange">
+        <source>Exchange</source>
+        <target>Scambio</target>
+      </trans-unit>
+      <trans-unit id="Qgf8uut" resname="Lending">
+        <source>Lending</source>
+        <target>Prestito</target>
+      </trans-unit>
+      <trans-unit id="WbqA7lG" resname="KYC Application">
+        <source>KYC Application</source>
+        <target>Applicazione KYC</target>
+      </trans-unit>
+      <trans-unit id="B6b8GId" resname="ICO Landing">
+        <source>ICO Landing</source>
+        <target>Atterraggio ICO</target>
+      </trans-unit>
+      <trans-unit id="lpzL089" resname="Email">
+        <source>Email</source>
+        <target>E-mail</target>
+      </trans-unit>
+      <trans-unit id="lINeovz" resname="Inbox">
+        <source>Inbox</source>
+        <target>Posta in arrivo</target>
+      </trans-unit>
+      <trans-unit id="ET3e20c" resname="Read Email">
+        <source>Read Email</source>
+        <target>Leggere l'e-mail</target>
+      </trans-unit>
+      <trans-unit id="VrVkt1x" resname="Templates">
+        <source>Templates</source>
+        <target>Modelli</target>
+      </trans-unit>
+      <trans-unit id="kFzjN0P" resname="Basic Action">
+        <source>Basic Action</source>
+        <target>Azione di base</target>
+      </trans-unit>
+      <trans-unit id="gG_BMCC" resname="Alert Email">
+        <source>Alert Email</source>
+        <target>Email di avviso</target>
+      </trans-unit>
+      <trans-unit id="UTMy06w" resname="Billing Email">
+        <source>Billing Email</source>
+        <target>Email di fatturazione</target>
+      </trans-unit>
+      <trans-unit id="WRa6QKF" resname="Email Template">
+        <source>Email Template</source>
+        <target>Modello di posta elettronica</target>
+      </trans-unit>
+      <trans-unit id="qf5cONw" resname="Basic Action Email Template">
+        <source>Basic Action Email Template</source>
+        <target>Modello email di azione di base</target>
+      </trans-unit>
+      <trans-unit id="zsenqlc" resname="Billing Email Template">
+        <source>Billing Email Template</source>
+        <target>Modello email di fatturazione</target>
+      </trans-unit>
+      <trans-unit id="uANVdQl" resname="Invoices">
+        <source>Invoices</source>
+        <target>Fatture</target>
+      </trans-unit>
+      <trans-unit id="KX7oEDZ" resname="Invoice List">
+        <source>Invoice List</source>
+        <target>Elenco fatture</target>
+      </trans-unit>
+      <trans-unit id="VS4.4Y3" resname="Invoice Detail">
+        <source>Invoice Detail</source>
+        <target>Dettaglio fattura</target>
+      </trans-unit>
+      <trans-unit id="tFBkXev" resname="Contacts">
+        <source>Contacts</source>
+        <target>Contatti</target>
+      </trans-unit>
+      <trans-unit id="dHsT0GR" resname="Blog List">
+        <source>Blog List</source>
+        <target>Elenco blog</target>
+      </trans-unit>
+      <trans-unit id=".EP6XeQ" resname="Blog Grid">
+        <source>Blog Grid</source>
+        <target>Blog Grid</target>
+      </trans-unit>
+      <trans-unit id="qlJr4Vb" resname="Blog Details">
+        <source>Blog Details</source>
+        <target>Dettagli del blog</target>
+      </trans-unit>
+      <trans-unit id="iMoyahC" resname="User Grid">
+        <source>User Grid</source>
+        <target>Griglia utente</target>
+      </trans-unit>
+      <trans-unit id="pvchPJX" resname="Contact User Grid">
+        <source>Contact User Grid</source>
+        <target>Contatta User Grid</target>
+      </trans-unit>
+      <trans-unit id="CGqrrh7" resname="Users Grid">
+        <source>Users Grid</source>
+        <target>Griglia utenti</target>
+      </trans-unit>
+      <trans-unit id="AxH2VNG" resname="Contact User List">
+        <source>Contact User List</source>
+        <target>Contatta l'elenco utenti</target>
+      </trans-unit>
+      <trans-unit id="6Q3ypTV" resname="Users List">
+        <source>Users List</source>
+        <target>Elenco utenti</target>
+      </trans-unit>
+      <trans-unit id="sIwK89t" resname="User List">
+        <source>User List</source>
+        <target>lista degli utenti</target>
+      </trans-unit>
+      <trans-unit id="1pajW90" resname="Profile">
+        <source>Profile</source>
+        <target>Profilo</target>
+      </trans-unit>
+      <trans-unit id="BOKpcor" resname="Projects">
+        <source>Projects</source>
+        <target>Projects</target>
+      </trans-unit>
+      <trans-unit id="gaCXagI" resname="Projects Grid">
+        <source>Projects Grid</source>
+        <target>Progetti Grid</target>
+      </trans-unit>
+      <trans-unit id="SorRmnb" resname="Projects List">
+        <source>Projects List</source>
+        <target>Elenco progetti</target>
+      </trans-unit>
+      <trans-unit id="v1YYt1H" resname="Project Overview">
+        <source>Project Overview</source>
+        <target>Panoramica del progetto</target>
+      </trans-unit>
+      <trans-unit id="2BGjEbl" resname="Projects Overview">
+        <source>Projects Overview</source>
+        <target>Panoramica dei progetti</target>
+      </trans-unit>
+      <trans-unit id="5qoiudK" resname="Create New Project">
+        <source>Create New Project</source>
+        <target>Crea nuovo progetto</target>
+      </trans-unit>
+      <trans-unit id="57npwk2" resname="Create New">
+        <source>Create New</source>
+        <target>Creare nuovo</target>
+      </trans-unit>
+      <trans-unit id="s6YOYaU" resname="Tasks">
+        <source>Tasks</source>
+        <target>Compiti</target>
+      </trans-unit>
+      <trans-unit id="TlELl_N" resname="Task List">
+        <source>Task List</source>
+        <target>Elenco delle attività</target>
+      </trans-unit>
+      <trans-unit id="jpAoBf4" resname="Kanban Board">
+        <source>Kanban Board</source>
+        <target>Tabellone Kanban</target>
+      </trans-unit>
+      <trans-unit id="WpEzzr_" resname="Create Task">
+        <source>Create Task</source>
+        <target>Crea attività</target>
+      </trans-unit>
+      <trans-unit id="kEbaFq6" resname="Pages">
+        <source>Pages</source>
+        <target>Pages</target>
+      </trans-unit>
+      <trans-unit id="ZogNLYI" resname="Authentication">
+        <source>Authentication</source>
+        <target>Autenticazione</target>
+      </trans-unit>
+      <trans-unit id="nWMiwfT" resname="Login">
+        <source>Login</source>
+        <target>Accesso</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>Registrati</target>
+      </trans-unit>
+      <trans-unit id="TAue51F" resname="Recover Password">
+        <source>Recover Password</source>
+        <target>Recupera la password</target>
+      </trans-unit>
+      <trans-unit id="TnDx.SS" resname="Reset Password">
+        <source>Reset Password</source>
+        <target>Resetta la password</target>
+      </trans-unit>
+      <trans-unit id="kaAHtYu" resname="Lock Screen">
+        <source>Lock Screen</source>
+        <target>Blocca schermo</target>
+      </trans-unit>
+      <trans-unit id="NZ__Ate" resname="Login 2">
+        <source>Login 2</source>
+        <target>Accesso 2</target>
+      </trans-unit>
+      <trans-unit id="AA3GFLv" resname="Register 2">
+        <source>Register 2</source>
+        <target>Registrati 2</target>
+      </trans-unit>
+      <trans-unit id="Qqp0ySX" resname="Recover Password 2">
+        <source>Recover Password 2</source>
+        <target>Recupera password 2</target>
+      </trans-unit>
+      <trans-unit id="jKJXTOF" resname="Lock Screen 2">
+        <source>Lock Screen 2</source>
+        <target>Schermata di blocco 2</target>
+      </trans-unit>
+      <trans-unit id="ONVL20f" resname="Confirm Mail">
+        <source>Confirm Mail</source>
+        <target>Conferma posta</target>
+      </trans-unit>
+      <trans-unit id="vnU9gOs" resname="Confirm Mail 2">
+        <source>Confirm Mail 2</source>
+        <target>Conferma posta 2</target>
+      </trans-unit>
+      <trans-unit id="NlddgZp" resname="Email Verification">
+        <source>Email Verification</source>
+        <target>Email Verification</target>
+      </trans-unit>
+      <trans-unit id="XaC6A1I" resname="Email Verification 2">
+        <source>Email Verification 2</source>
+        <target>Email Verification 2</target>
+      </trans-unit>
+      <trans-unit id="PiY1KQy" resname="Two Step Verification">
+        <source>Two Step Verification</source>
+        <target>Verifica in due passaggi</target>
+      </trans-unit>
+      <trans-unit id="c601DcW" resname="Two Step Verification 2">
+        <source>Two Step Verification 2</source>
+        <target>Verifica in due passaggi 2</target>
+      </trans-unit>
+      <trans-unit id="lFDYM.p" resname="Utility">
+        <source>Utility</source>
+        <target>Utilità</target>
+      </trans-unit>
+      <trans-unit id="a381JSh" resname="Starter Page">
+        <source>Starter Page</source>
+        <target>Pagina iniziale</target>
+      </trans-unit>
+      <trans-unit id="F8z6W2g" resname="Maintenance">
+        <source>Maintenance</source>
+        <target>Manutenzione</target>
+      </trans-unit>
+      <trans-unit id="_3aAEJC" resname="Maintenance Page">
+        <source>Maintenance Page</source>
+        <target>Página de mantenimiento</target>
+      </trans-unit>
+      <trans-unit id="vhCy_QX" resname="Coming Soon">
+        <source>Coming Soon</source>
+        <target>Prossimamente</target>
+      </trans-unit>
+      <trans-unit id="nc.5jid" resname="Timeline">
+        <source>Timeline</source>
+        <target>Sequenza temporale</target>
+      </trans-unit>
+      <trans-unit id="mFa3Qz_" resname="FAQs">
+        <source>FAQs</source>
+        <target>Domande frequenti</target>
+      </trans-unit>
+      <trans-unit id="3_lXg_3" resname="Pricing">
+        <source>Pricing</source>
+        <target>Prezzi</target>
+      </trans-unit>
+      <trans-unit id="VKDowX6" resname="Error">
+        <source>Error</source>
+        <target>Errore</target>
+      </trans-unit>
+      <trans-unit id="1ybmjKY" resname="404 Error Page">
+        <source>404 Error Page</source>
+        <target>Pagina di errore 404</target>
+      </trans-unit>
+      <trans-unit id="m8JFBxQ" resname="500 Error Page">
+        <source>500 Error Page</source>
+        <target>500 Pagina di errore</target>
+      </trans-unit>
+      <trans-unit id="oVDOIhY" resname="Components">
+        <source>Components</source>
+        <target>Componenti</target>
+      </trans-unit>
+      <trans-unit id="a_AqydR" resname="UI Elements">
+        <source>UI Elements</source>
+        <target>Elementi dell'interfaccia utente</target>
+      </trans-unit>
+      <trans-unit id="9i6SZ9G" resname="Alerts">
+        <source>Alerts</source>
+        <target>Avvisi</target>
+      </trans-unit>
+      <trans-unit id="1FJYOnT" resname="Buttons">
+        <source>Buttons</source>
+        <target>Bottoni</target>
+      </trans-unit>
+      <trans-unit id="pS.LvDN" resname="Cards">
+        <source>Cards</source>
+        <target>Carte</target>
+      </trans-unit>
+      <trans-unit id="NyGfvGW" resname="Carousel">
+        <source>Carousel</source>
+        <target>Giostra</target>
+      </trans-unit>
+      <trans-unit id="R7_veQ0" resname="Dropdowns">
+        <source>Dropdowns</source>
+        <target>Menu a discesa</target>
+      </trans-unit>
+      <trans-unit id="DX0SrGJ" resname="Grid">
+        <source>Grid</source>
+        <target>Griglia</target>
+      </trans-unit>
+      <trans-unit id="vn4vIBK" resname="Images">
+        <source>Images</source>
+        <target>immagini</target>
+      </trans-unit>
+      <trans-unit id="kqQB8jO" resname="Lightbox">
+        <source>Lightbox</source>
+        <target>Lightbox</target>
+      </trans-unit>
+      <trans-unit id="MTjNrLB" resname="Modals">
+        <source>Modals</source>
+        <target>Modali</target>
+      </trans-unit>
+      <trans-unit id="j5qTXDX" resname="Offcanvas">
+        <source>Offcanvas</source>
+        <target>Fuori tela</target>
+      </trans-unit>
+      <trans-unit id="_ZiANsb" resname="Range Slider">
+        <source>Range Slider</source>
+        <target>Range Slider</target>
+      </trans-unit>
+      <trans-unit id=".mvIVaw" resname="Range Sliders">
+        <source>Range Sliders</source>
+        <target>Cursori di intervallo</target>
+      </trans-unit>
+      <trans-unit id="PEs9P2F" resname="Session Timeout">
+        <source>Session Timeout</source>
+        <target>Timeout della sessione</target>
+      </trans-unit>
+      <trans-unit id="53lF5el" resname="Progress Bars">
+        <source>Progress Bars</source>
+        <target>Barre di avanzamento</target>
+      </trans-unit>
+      <trans-unit id="pGFvHqN" resname="Progress Bar">
+        <source>Progress Bar</source>
+        <target>Barra di avanzamento</target>
+      </trans-unit>
+      <trans-unit id="8fX8RsP" resname="SweetAlert 2">
+        <source>SweetAlert 2</source>
+        <target>SweetAlert 2</target>
+      </trans-unit>
+      <trans-unit id="SzcYPQ6" resname="Sweet-Alert">
+        <source>Sweet-Alert</source>
+        <target>Sweet-Alert</target>
+      </trans-unit>
+      <trans-unit id="5XpnDY5" resname="Tabs &amp; Accordions">
+        <source>Tabs &amp; Accordions</source>
+        <target>Schede e fisarmoniche</target>
+      </trans-unit>
+      <trans-unit id="yrlKuoT" resname="Typography">
+        <source>Typography</source>
+        <target>Tipografia</target>
+      </trans-unit>
+      <trans-unit id="1TS_gp4" resname="Video">
+        <source>Video</source>
+        <target>video</target>
+      </trans-unit>
+      <trans-unit id="yRDUdNz" resname="General">
+        <source>General</source>
+        <target>Generale</target>
+      </trans-unit>
+      <trans-unit id="JlnzR0u" resname="General UI">
+        <source>General UI</source>
+        <target>Interfaccia utente generale</target>
+      </trans-unit>
+      <trans-unit id="iMRdnlJ" resname="Colors">
+        <source>Colors</source>
+        <target>Colori</target>
+      </trans-unit>
+      <trans-unit id="nylTBGT" resname="Rating">
+        <source>Rating</source>
+        <target>Valutazione</target>
+      </trans-unit>
+      <trans-unit id="eIARgzp" resname="Notifications">
+        <source>Notifications</source>
+        <target>Notifiche</target>
+      </trans-unit>
+      <trans-unit id="p8W0OM8" resname="Image Cropper">
+        <source>Image Cropper</source>
+        <target>Ritaglia immagini</target>
+      </trans-unit>
+      <trans-unit id="hYRRJjs" resname="Forms">
+        <source>Forms</source>
+        <target>Forme</target>
+      </trans-unit>
+      <trans-unit id="hzQOpEw" resname="Form Elements">
+        <source>Form Elements</source>
+        <target>Elementi del modulo</target>
+      </trans-unit>
+      <trans-unit id="uRcONgR" resname="Form Layouts">
+        <source>Form Layouts</source>
+        <target>Layout dei moduli</target>
+      </trans-unit>
+      <trans-unit id="FpEw9xd" resname="Form Validation">
+        <source>Form Validation</source>
+        <target>Convalida del modulo</target>
+      </trans-unit>
+      <trans-unit id="YUgL516" resname="Form Advanced">
+        <source>Form Advanced</source>
+        <target>Modulo avanzato</target>
+      </trans-unit>
+      <trans-unit id="MXySnY5" resname="Form Editors">
+        <source>Form Editors</source>
+        <target>Editor di moduli</target>
+      </trans-unit>
+      <trans-unit id="hLFgwhy" resname="Form File Upload">
+        <source>Form File Upload</source>
+        <target>Caricamento file modulo</target>
+      </trans-unit>
+      <trans-unit id="CE6pGXz" resname="Form Xeditable">
+        <source>Form Xeditable</source>
+        <target>Modulo Xeditable</target>
+      </trans-unit>
+      <trans-unit id="vXuq26t" resname="Form Repeater">
+        <source>Form Repeater</source>
+        <target>Modulo ripetitore</target>
+      </trans-unit>
+      <trans-unit id="G5WR3aB" resname="Form Wizard">
+        <source>Form Wizard</source>
+        <target>Creazione guidata modulo</target>
+      </trans-unit>
+      <trans-unit id="ir70vQo" resname="Form Mask">
+        <source>Form Mask</source>
+        <target>Maschera di forma</target>
+      </trans-unit>
+      <trans-unit id="NJkFhZo" resname="Basic Elements">
+        <source>Basic Elements</source>
+        <target>Elementi basici</target>
+      </trans-unit>
+      <trans-unit id="aOHKV1K" resname="Validation">
+        <source>Validation</source>
+        <target>Validazione</target>
+      </trans-unit>
+      <trans-unit id="bzMCfko" resname="Advanced Plugins">
+        <source>Advanced Plugins</source>
+        <target>Plugin avanzati</target>
+      </trans-unit>
+      <trans-unit id="ux1hmGD" resname="Editors">
+        <source>Editors</source>
+        <target>Editrici</target>
+      </trans-unit>
+      <trans-unit id="L5fGTs." resname="File Upload">
+        <source>File Upload</source>
+        <target>Upload di file</target>
+      </trans-unit>
+      <trans-unit id="n3_tQ1D" resname="Xeditable">
+        <source>Xeditable</source>
+        <target>Xeditable</target>
+      </trans-unit>
+      <trans-unit id="Rue_4SH" resname="Repeater">
+        <source>Repeater</source>
+        <target>Ripetitrice</target>
+      </trans-unit>
+      <trans-unit id="iBbFK8W" resname="Wizard">
+        <source>Wizard</source>
+        <target>procedura guidata</target>
+      </trans-unit>
+      <trans-unit id="42iSmr0" resname="Mask">
+        <source>Mask</source>
+        <target>Maschera</target>
+      </trans-unit>
+      <trans-unit id="4.4qP_U" resname="Tables">
+        <source>Tables</source>
+        <target>Tabelle</target>
+      </trans-unit>
+      <trans-unit id="mPpGWRQ" resname="Basic Tables">
+        <source>Basic Tables</source>
+        <target>Tabelle di base</target>
+      </trans-unit>
+      <trans-unit id="m7Q9oAh" resname="Basic Table">
+        <source>Basic Table</source>
+        <target>Tabella di base</target>
+      </trans-unit>
+      <trans-unit id="M8GUia." resname="Data Tables">
+        <source>Data Tables</source>
+        <target>Tabelle dati</target>
+      </trans-unit>
+      <trans-unit id="OaJlCHD" resname="Data Table">
+        <source>Data Table</source>
+        <target>Tabella dati</target>
+      </trans-unit>
+      <trans-unit id="bXIV0dj" resname="Responsive Tables">
+        <source>Responsive Tables</source>
+        <target>Tabelle reattive</target>
+      </trans-unit>
+      <trans-unit id="m7UmVWB" resname="Responsive Table">
+        <source>Responsive Table</source>
+        <target>Tabella reattiva</target>
+      </trans-unit>
+      <trans-unit id="UjqsK90" resname="Editable Tables">
+        <source>Editable Tables</source>
+        <target>Tabelle modificabili</target>
+      </trans-unit>
+      <trans-unit id="OOH4mU2" resname="Editable Table">
+        <source>Editable Table</source>
+        <target>Tabella modificabile</target>
+      </trans-unit>
+      <trans-unit id="8xCFw6M" resname="Bootstrap Basic">
+        <source>Bootstrap Basic</source>
+        <target>Bootstrap Basic</target>
+      </trans-unit>
+      <trans-unit id="Ht6V4Tz" resname="Datatables">
+        <source>Datatables</source>
+        <target>Dati</target>
+      </trans-unit>
+      <trans-unit id="3neXlAD" resname="Responsive">
+        <source>Responsive</source>
+        <target>Reattiva</target>
+      </trans-unit>
+      <trans-unit id="FJNENNQ" resname="Editable">
+        <source>Editable</source>
+        <target>Modificabile</target>
+      </trans-unit>
+      <trans-unit id="_Rz2xiY" resname="Charts">
+        <source>Charts</source>
+        <target>Grafici</target>
+      </trans-unit>
+      <trans-unit id="H.1oNpp" resname="Apex Charts">
+        <source>Apex Charts</source>
+        <target>Grafici Apex</target>
+      </trans-unit>
+      <trans-unit id="00S5bT4" resname="Apex Chart">
+        <source>Apex Chart</source>
+        <target>Grafico Apex</target>
+      </trans-unit>
+      <trans-unit id="cDgnXvq" resname="E Charts">
+        <source>E Charts</source>
+        <target>Grafici E.</target>
+      </trans-unit>
+      <trans-unit id="MKF3f6D" resname="ECharts">
+        <source>ECharts</source>
+        <target>ECharts</target>
+      </trans-unit>
+      <trans-unit id="GB_ZSGN" resname="EChart">
+        <source>EChart</source>
+        <target>EChart</target>
+      </trans-unit>
+      <trans-unit id="9kbmaCh" resname="Chartjs">
+        <source>Chartjs</source>
+        <target>Chartjs</target>
+      </trans-unit>
+      <trans-unit id="CP_dblw" resname="Chartjs Chart">
+        <source>Chartjs Chart</source>
+        <target>Chartjs Chart</target>
+      </trans-unit>
+      <trans-unit id="dSx2otn" resname="Chartjs Charts">
+        <source>Chartjs Charts</source>
+        <target>Grafici Chartjs</target>
+      </trans-unit>
+      <trans-unit id="UfMX_oe" resname="Flot Chart">
+        <source>Flot Chart</source>
+        <target>Grafico a galleggiante</target>
+      </trans-unit>
+      <trans-unit id="hV1rY0i" resname="Flot Charts">
+        <source>Flot Charts</source>
+        <target>Grafici Flot</target>
+      </trans-unit>
+      <trans-unit id="qaVEye." resname="Toast UI Chart">
+        <source>Toast UI Chart</source>
+        <target>Grafico dell'interfaccia utente di Toast</target>
+      </trans-unit>
+      <trans-unit id="ocTUDwX" resname="Toast UI Charts">
+        <source>Toast UI Charts</source>
+        <target>Grafici dell'interfaccia utente di Toast</target>
+      </trans-unit>
+      <trans-unit id="OV.0RBu" resname="Jquery Knob Chart">
+        <source>Jquery Knob Chart</source>
+        <target>Grafico Jquery Knob</target>
+      </trans-unit>
+      <trans-unit id="OP7qEhH" resname="Jquery Knob Charts">
+        <source>Jquery Knob Charts</source>
+        <target>Grafici a manopola Jquery</target>
+      </trans-unit>
+      <trans-unit id="lsyDrNu" resname="Sparkline Chart">
+        <source>Sparkline Chart</source>
+        <target>Grafico sparkline</target>
+      </trans-unit>
+      <trans-unit id="G9Dk7fP" resname="Sparkline Charts">
+        <source>Sparkline Charts</source>
+        <target>Grafici sparkline</target>
+      </trans-unit>
+      <trans-unit id="6uluArv" resname="Icons">
+        <source>Icons</source>
+        <target>Icone</target>
+      </trans-unit>
+      <trans-unit id="ZnCu08B" resname="Unicons">
+        <source>Unicons</source>
+        <target>Unicons</target>
+      </trans-unit>
+      <trans-unit id="KBAno1Y" resname="Boxicons">
+        <source>Boxicons</source>
+        <target>Boxicons</target>
+      </trans-unit>
+      <trans-unit id="nYnNxk7" resname="Material Design">
+        <source>Material Design</source>
+        <target>Material Design</target>
+      </trans-unit>
+      <trans-unit id="K2gTVyw" resname="MDI">
+        <source>MDI</source>
+        <target>Icone del design dei materiali</target>
+      </trans-unit>
+      <trans-unit id="pdT2r0u" resname="Dripicons">
+        <source>Dripicons</source>
+        <target>Dripicons</target>
+      </trans-unit>
+      <trans-unit id="ItRVZ_F" resname="Font Awesome">
+        <source>Font Awesome</source>
+        <target>Carattere fantastico</target>
+      </trans-unit>
+      <trans-unit id="EZ5m0Re" resname="Maps">
+        <source>Maps</source>
+        <target>Mappe</target>
+      </trans-unit>
+      <trans-unit id="KSN0D_g" resname="Google Maps">
+        <source>Google Maps</source>
+        <target>Google Maps</target>
+      </trans-unit>
+      <trans-unit id="9vJJE7L" resname="Vector Maps">
+        <source>Vector Maps</source>
+        <target>Mappe vettoriali</target>
+      </trans-unit>
+      <trans-unit id="YOhwCGp" resname="Leaflet">
+        <source>Leaflet</source>
+        <target>Volantino</target>
+      </trans-unit>
+      <trans-unit id="KE8BIbV" resname="Leaflet Maps">
+        <source>Leaflet Maps</source>
+        <target>Mappe volantini</target>
+      </trans-unit>
+      <trans-unit id="4rHM2tZ" resname="Multi Level">
+        <source>Multi Level</source>
+        <target>Multi livello</target>
+      </trans-unit>
+      <trans-unit id="FwkwXJ_" resname="Level">
+        <source>Level</source>
+        <target>Livello</target>
+      </trans-unit>
+      <trans-unit id="_RHkFM9" resname="GitHub">
+        <source>GitHub</source>
+        <target>GitHub</target>
+      </trans-unit>
+      <trans-unit id="msjWqkn" resname="Bitbucket">
+        <source>Bitbucket</source>
+        <target>Bitbucket</target>
+      </trans-unit>
+      <trans-unit id="YbzlieZ" resname="Dribbble">
+        <source>Dribbble</source>
+        <target>Dribbble</target>
+      </trans-unit>
+      <trans-unit id="R1DQoS4" resname="Dropbox">
+        <source>Dropbox</source>
+        <target>Dropbox</target>
+      </trans-unit>
+      <trans-unit id="kvSDIWO" resname="Mail Chimp">
+        <source>Mail Chimp</source>
+        <target>Mail Chimp</target>
+      </trans-unit>
+      <trans-unit id="sn_zi6M" resname="Slack">
+        <source>Slack</source>
+        <target>Slack</target>
+      </trans-unit>
+      <trans-unit id="QaY0vtN" resname="View Profile">
+        <source>View Profile</source>
+        <target>Vedi profilo</target>
+      </trans-unit>
+      <trans-unit id="RtitIQ0" resname="My Wallet">
+        <source>My Wallet</source>
+        <target>Il mio portafoglio</target>
+      </trans-unit>
+      <trans-unit id="dKiDoDe" resname="Settings">
+        <source>Settings</source>
+        <target>impostazioni</target>
+      </trans-unit>
+      <trans-unit id="9Z2avkK" resname="Lock screen">
+        <source>Lock screen</source>
+        <target>Blocca schermo</target>
+      </trans-unit>
+      <trans-unit id="SPDT05f" resname="Sign out">
+        <source>Sign out</source>
+        <target>disconnessione</target>
+      </trans-unit>
+      <trans-unit id="uPUc_u5" resname="Choose Layouts">
+        <source>Choose Layouts</source>
+        <target>Scegli layout</target>
+      </trans-unit>
+      <trans-unit id="TXLnIwP" resname="Light Mode">
+        <source>Light Mode</source>
+        <target>Modalità luce</target>
+      </trans-unit>
+      <trans-unit id="34x8ibP" resname="Dark Mode">
+        <source>Dark Mode</source>
+        <target>Modalità scura</target>
+      </trans-unit>
+      <trans-unit id="tFRO8Jg" resname="RTL Mode">
+        <source>RTL Mode</source>
+        <target>Modalità RTL</target>
+      </trans-unit>
+      <trans-unit id="tcl424O" resname="Dark RTL Mode">
+        <source>Dark RTL Mode</source>
+        <target>Modalità Dark RTL</target>
+      </trans-unit>
+      <trans-unit id="70YsaH3" resname="UI Components">
+        <source>UI Components</source>
+        <target>Componenti dell'interfaccia utente</target>
+      </trans-unit>
+      <trans-unit id="mOM7DzE" resname="Applications">
+        <source>Applications</source>
+        <target>Applicazioni</target>
+      </trans-unit>
+      <trans-unit id="ic1QJj2" resname="Placeholders">
+        <source>Placeholders</source>
+        <target>segnaposto</target>
+      </trans-unit>
+      <trans-unit id="3TmbrIH" resname="Toasts">
+        <source>Toasts</source>
+        <target>brindisi</target>
+      </trans-unit>
+      <trans-unit id="11kmUOH" resname="Mark all as read">
+        <source>Mark all as read</source>
+        <target>Segna tutti come letti</target>
+      </trans-unit>
+      <trans-unit id=".1VzpvK" resname="View All">
+        <source>View All</source>
+        <target>Mostra tutto</target>
+      </trans-unit>
+      <trans-unit id="7K_jYNL" resname="Your order is placed">
+        <source>Your order is placed</source>
+        <target>Il tuo ordine è stato effettuato</target>
+      </trans-unit>
+      <trans-unit id="n8azsuy" resname="If several languages coalesce the grammar">
+        <source>If several languages coalesce the grammar</source>
+        <target>Se più lingue uniscono la grammatica</target>
+      </trans-unit>
+      <trans-unit id="kUoU7fK" resname="3 min ago">
+        <source>3 min ago</source>
+        <target>3 minuti fa</target>
+      </trans-unit>
+      <trans-unit id="QWKRqWZ" resname="It will seem like simplified English.">
+        <source>It will seem like simplified English.</source>
+        <target>Sembrerà un inglese semplificato.</target>
+      </trans-unit>
+      <trans-unit id="5Lwpc.r" resname="1 hour ago">
+        <source>1 hour ago</source>
+        <target>1 ora fa</target>
+      </trans-unit>
+      <trans-unit id="UrwPJ0q" resname="Your item is shipped">
+        <source>Your item is shipped</source>
+        <target>Il tuo articolo è stato spedito</target>
+      </trans-unit>
+      <trans-unit id="Xz.uGtT" resname="As a skeptical Cambridge friend of mine occidental.">
+        <source>As a skeptical Cambridge friend of mine occidental.</source>
+        <target>Come un mio scettico amico di Cambridge occidentale.</target>
+      </trans-unit>
+      <trans-unit id="YEzg8Q3" resname="5 hours ago">
+        <source>5 hours ago</source>
+        <target>5 ore fa</target>
+      </trans-unit>
+      <trans-unit id="FUNbMRy" resname="View More">
+        <source>View More</source>
+        <target>Visualizza di più</target>
+      </trans-unit>
+      <trans-unit id="5UDND5o" resname="Edit Agency">
+        <source>Edit Agency</source>
+        <target>__Edit Agency</target>
+      </trans-unit>
+      <trans-unit id="U0M9PNE" resname="back to list">
+        <source>back to list</source>
+        <target>__back to list</target>
+      </trans-unit>
+      <trans-unit id="wcEAnT8" resname="Update">
+        <source>Update</source>
+        <target>__Update</target>
+      </trans-unit>
+      <trans-unit id="CF90Oai" resname="Edit Area">
+        <source>Edit Area</source>
+        <target>__Edit Area</target>
+      </trans-unit>
+      <trans-unit id="wdySxoD" resname="Add New">
+        <source>Add New</source>
+        <target>__Add New</target>
+      </trans-unit>
+      <trans-unit id="3NHVIj9" resname="Name">
+        <source>Name</source>
+        <target>__Name</target>
+      </trans-unit>
+      <trans-unit id="RkxP.QG" resname="Edit">
+        <source>Edit</source>
+        <target>__Edit</target>
+      </trans-unit>
+      <trans-unit id="D5lam8." resname="no records found">
+        <source>no records found</source>
+        <target>__no records found</target>
+      </trans-unit>
+      <trans-unit id="4tClSWj" resname="Delete">
+        <source>Delete</source>
+        <target>__Delete</target>
+      </trans-unit>
+      <trans-unit id="c1AKpUH" resname="Client Cards">
+        <source>Client Cards</source>
+        <target>__Client Cards</target>
+      </trans-unit>
+      <trans-unit id="vL0fX6Q" resname="Search date">
+        <source>Search date</source>
+        <target>__Search date</target>
+      </trans-unit>
+      <trans-unit id="SzyaHW1" resname="Search Airport">
+        <source>Search Airport</source>
+        <target>__Search Airport</target>
+      </trans-unit>
+      <trans-unit id="qYsVVu1" resname="Flight Number">
+        <source>Flight Number</source>
+        <target>__Flight Number</target>
+      </trans-unit>
+      <trans-unit id="pYYrbZp" resname="Voucher Number">
+        <source>Voucher Number</source>
+        <target>__Voucher Number</target>
+      </trans-unit>
+      <trans-unit id="yKdZKAW" resname="Adults">
+        <source>Adults</source>
+        <target>__Adults</target>
+      </trans-unit>
+      <trans-unit id="NYOjWKW" resname="Children">
+        <source>Children</source>
+        <target>__Children</target>
+      </trans-unit>
+      <trans-unit id="zRuYYbY" resname="Babies">
+        <source>Babies</source>
+        <target>__Babies</target>
+      </trans-unit>
+      <trans-unit id="mcQKtAW" resname="Date">
+        <source>Date</source>
+        <target>__Date</target>
+      </trans-unit>
+      <trans-unit id="8AY7gIc" resname="Hour">
+        <source>Hour</source>
+        <target>__Hour</target>
+      </trans-unit>
+      <trans-unit id="2Dnw.dX" resname="Flight">
+        <source>Flight</source>
+        <target>__Flight</target>
+      </trans-unit>
+      <trans-unit id="DHf_Cas" resname="Client">
+        <source>Client</source>
+        <target>__Client</target>
+      </trans-unit>
+      <trans-unit id="f0QPWdA" resname="Airport">
+        <source>Airport</source>
+        <target>__Airport</target>
+      </trans-unit>
+      <trans-unit id="hvNXz7j" resname="Agency">
+        <source>Agency</source>
+        <target>__Agency</target>
+      </trans-unit>
+      <trans-unit id="AbMWk_K" resname="No Show / Go Show Airport">
+        <source>No Show / Go Show Airport</source>
+        <target>__No Show / Go Show Airport</target>
+      </trans-unit>
+      <trans-unit id="6HS_aeI" resname="NB: &quot;No Show&quot; status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in &quot;general settings-&gt;clients Status&quot;">
+        <source>NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings-&gt;clients Status"</source>
+        <target><![CDATA[__NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"]]></target>
+      </trans-unit>
+      <trans-unit id="3VooZvR" resname="Total pax">
+        <source>Total pax</source>
+        <target>__Total pax</target>
+      </trans-unit>
+      <trans-unit id="K7YNAlG" resname="Total personnes">
+        <source>Total personnes</source>
+        <target>__Total personnes</target>
+      </trans-unit>
+      <trans-unit id="MS6AOyx" resname="Pax Calculation">
+        <source>Pax Calculation</source>
+        <target>__Pax Calculation</target>
+      </trans-unit>
+      <trans-unit id="_N0gYOx" resname="All Reps">
+        <source>All Reps</source>
+        <target>__All Reps</target>
+      </trans-unit>
+      <trans-unit id="L5DNWFM" resname="Total people">
+        <source>Total people</source>
+        <target>__Total people</target>
+      </trans-unit>
+      <trans-unit id="5DUEPHi" resname="*For attendance, you must select the period and leave &quot;Nature Transfer&quot; on all">
+        <source>*For attendance, you must select the period and leave "Nature Transfer" on all</source>
+        <target>__*For attendance, you must select the period and leave "Nature Transfer" on all</target>
+      </trans-unit>
+      <trans-unit id="1rPoyCj" resname="Presence">
+        <source>Presence</source>
+        <target>__Presence</target>
+      </trans-unit>
+      <trans-unit id="NYzCAfh" resname="Operations">
+        <source>Operations</source>
+        <target>__Operations</target>
+      </trans-unit>
+      <trans-unit id="a3HRlG0" resname="research on">
+        <source>research on</source>
+        <target>__research on</target>
+      </trans-unit>
+      <trans-unit id="eUrbvGw" resname="Arrival">
+        <source>Arrival</source>
+        <target>__Arrival</target>
+      </trans-unit>
+      <trans-unit id="7plohyi" resname="Inter Hotel">
+        <source>Inter Hotel</source>
+        <target>__Inter Hotel</target>
+      </trans-unit>
+      <trans-unit id="g1aYOwc" resname="Departure">
+        <source>Departure</source>
+        <target>__Departure</target>
+      </trans-unit>
+      <trans-unit id="hbCFYCB" resname="Works with selects">
+        <source>Works with selects</source>
+        <target>__Works with selects</target>
+      </trans-unit>
+      <trans-unit id="qdfQ31x" resname="Select a rep">
+        <source>Select a rep</source>
+        <target>__Select a rep</target>
+      </trans-unit>
+      <trans-unit id="qXZrYJh" resname="Select Agency">
+        <source>Select Agency</source>
+        <target>__Select Agency</target>
+      </trans-unit>
+      <trans-unit id="FV_BbAQ" resname="Submit">
+        <source>Submit</source>
+        <target>__Submit</target>
+      </trans-unit>
+      <trans-unit id="oW0a6y." resname="There are">
+        <source>There are</source>
+        <target>__There are</target>
+      </trans-unit>
+      <trans-unit id="nSGyrZc" resname="matching results">
+        <source>matching results</source>
+        <target>__matching results</target>
+      </trans-unit>
+      <trans-unit id="9cm9ExS" resname="Show more">
+        <source>Show more</source>
+        <target>__Show more</target>
+      </trans-unit>
+      <trans-unit id="zM_Ajq9" resname="Transfer calculation">
+        <source>Transfer calculation</source>
+        <target>__Transfer calculation</target>
+      </trans-unit>
+      <trans-unit id="ObRgE2y" resname="All companies">
+        <source>All companies</source>
+        <target>__All companies</target>
+      </trans-unit>
+      <trans-unit id="kd5IZp5" resname="Select a transport company">
+        <source>Select a transport company</source>
+        <target>__Select a transport company</target>
+      </trans-unit>
+      <trans-unit id="SGYkRqi" resname="Voucher">
+        <source>Voucher</source>
+        <target>__Voucher</target>
+      </trans-unit>
+      <trans-unit id="Op5PUE_" resname="Edit Briefing Place">
+        <source>Edit Briefing Place</source>
+        <target>__Edit Briefing Place</target>
+      </trans-unit>
+      <trans-unit id="rGhFZcK" resname="Import File">
+        <source>Import File</source>
+        <target>__Import File</target>
+      </trans-unit>
+      <trans-unit id="fnfw2G_" resname="Import Booking">
+        <source>Import Booking</source>
+        <target>__Import Booking</target>
+      </trans-unit>
+      <trans-unit id="b4uI_Fp" resname="Import Transfers">
+        <source>Import Transfers</source>
+        <target>__Import Transfers</target>
+      </trans-unit>
+      <trans-unit id="ZaclZUL" resname="Clients">
+        <source>Clients</source>
+        <target>__Clients</target>
+      </trans-unit>
+      <trans-unit id="qheQP9X" resname="Clients Cards">
+        <source>Clients Cards</source>
+        <target>__Clients Cards</target>
+      </trans-unit>
+      <trans-unit id="sTUgJEn" resname="Briefing Manager">
+        <source>Briefing Manager</source>
+        <target>__Briefing Manager</target>
+      </trans-unit>
+      <trans-unit id="TX89dJj" resname="Rep assignment">
+        <source>Rep assignment</source>
+        <target>__Rep assignment</target>
+      </trans-unit>
+      <trans-unit id="xIvNrkX" resname="Rep Briefings">
+        <source>Rep Briefings</source>
+        <target>__Rep Briefings</target>
+      </trans-unit>
+      <trans-unit id="CQADqJS" resname="Labels printing">
+        <source>Labels printing</source>
+        <target>__Labels printing</target>
+      </trans-unit>
+      <trans-unit id="XsGjh_n" resname="Pax calculation">
+        <source>Pax calculation</source>
+        <target>__Pax calculation</target>
+      </trans-unit>
+      <trans-unit id="6qjD9m0" resname="My pax app.user.id">
+        <source>My pax app.user.id</source>
+        <target>__My pax app.user.id</target>
+      </trans-unit>
+      <trans-unit id="CPohRB9" resname="Airport Team">
+        <source>Airport Team</source>
+        <target>__Airport Team</target>
+      </trans-unit>
+      <trans-unit id="caIdO1B" resname="Clients Arrivals">
+        <source>Clients Arrivals</source>
+        <target>__Clients Arrivals</target>
+      </trans-unit>
+      <trans-unit id="q0j89wb" resname="Accounting">
+        <source>Accounting</source>
+        <target>__Accounting</target>
+      </trans-unit>
+      <trans-unit id="TUu_8e4" resname="_______________">
+        <source>_______________</source>
+        <target>_________________</target>
+      </trans-unit>
+      <trans-unit id="3jIvh7X" resname="General Settings">
+        <source>General Settings</source>
+        <target>__General Settings</target>
+      </trans-unit>
+      <trans-unit id="awzJBNC" resname="Users">
+        <source>Users</source>
+        <target>__Users</target>
+      </trans-unit>
+      <trans-unit id="LTZxWmz" resname="Areas">
+        <source>Areas</source>
+        <target>__Areas</target>
+      </trans-unit>
+      <trans-unit id="oE6X195" resname="Briefing Places">
+        <source>Briefing Places</source>
+        <target>__Briefing Places</target>
+      </trans-unit>
+      <trans-unit id="QFReYe_" resname="Client Status">
+        <source>Client Status</source>
+        <target>__Client Status</target>
+      </trans-unit>
+      <trans-unit id="O4eX9kj" resname="Agencies">
+        <source>Agencies</source>
+        <target>__Agencies</target>
+      </trans-unit>
+      <trans-unit id="w899PcO" resname="Search!">
+        <source>Search!</source>
+        <target>__Search!</target>
+      </trans-unit>
+      <trans-unit id="DrC5HPk" resname="Edit Client Status">
+        <source>Edit Client Status</source>
+        <target>__Edit Client Status</target>
+      </trans-unit>
+      <trans-unit id="ToZIduI" resname="Clients Status">
+        <source>Clients Status</source>
+        <target>__Clients Status</target>
+      </trans-unit>
+      <trans-unit id="xhPd8aU" resname="Rep Briefings Attributions details">
+        <source>Rep Briefings Attributions details</source>
+        <target>__Rep Briefings Attributions details</target>
+      </trans-unit>
+      <trans-unit id="YQmKS.K" resname="le">
+        <source>le</source>
+        <target>__le</target>
+      </trans-unit>
+      <trans-unit id="BnkLFuV" resname="Briefing Rep">
+        <source>Briefing Rep</source>
+        <target>__Briefing Rep</target>
+      </trans-unit>
+      <trans-unit id="UJs8Tl2" resname="Hotel">
+        <source>Hotel</source>
+        <target>__Hotel</target>
+      </trans-unit>
+      <trans-unit id="M7k0ds9" resname="Time">
+        <source>Time</source>
+        <target>__Time</target>
+      </trans-unit>
+      <trans-unit id="M57RWkC" resname="Rep">
+        <source>Rep</source>
+        <target>__Rep</target>
+      </trans-unit>
+      <trans-unit id="6UY9zPB" resname="Place">
+        <source>Place</source>
+        <target>__Place</target>
+      </trans-unit>
+      <trans-unit id="aKED7Jc" resname="Rep Assignment">
+        <source>Rep Assignment</source>
+        <target>__Rep Assignment</target>
+      </trans-unit>
+      <trans-unit id="F.mnAV0" resname="Choose the arrival date">
+        <source>Choose the arrival date</source>
+        <target>__Choose the arrival date</target>
+      </trans-unit>
+      <trans-unit id="YZxo3oX" resname="No or no more customers to assign for this date">
+        <source>No or no more customers to assign for this date</source>
+        <target>__No or no more customers to assign for this date</target>
+      </trans-unit>
+      <trans-unit id="kaf6wAn" resname="They are still">
+        <source>They are still</source>
+        <target>__They are still</target>
+      </trans-unit>
+      <trans-unit id="CgorB7X" resname="client(s) to assign">
+        <source>client(s) to assign</source>
+        <target>__client(s) to assign</target>
+      </trans-unit>
+      <trans-unit id="5sbN9gr" resname="Briefing date">
+        <source>Briefing date</source>
+        <target>__Briefing date</target>
+      </trans-unit>
+      <trans-unit id="kaPdpwr" resname="Next group of clients">
+        <source>Next group of clients</source>
+        <target>__Next group of clients</target>
+      </trans-unit>
+      <trans-unit id="BDHraFu" resname="Dates with unassigned reps">
+        <source>Dates with unassigned reps</source>
+        <target>__Dates with unassigned reps</target>
+      </trans-unit>
+      <trans-unit id="e7b9IJH" resname="Drop files here or click to upload">
+        <source>Drop files here or click to upload</source>
+        <target>__Drop files here or click to upload</target>
+      </trans-unit>
+      <trans-unit id="FQn1YfJ" resname="Save">
+        <source>Save</source>
+        <target>__Save</target>
+      </trans-unit>
+      <trans-unit id="Xy7s5WD" resname="clients do not">
+        <source>clients do not</source>
+        <target>__clients do not</target>
+      </trans-unit>
+      <trans-unit id="ai3fN46" resname="client does not">
+        <source>client does not</source>
+        <target>__client does not</target>
+      </trans-unit>
+      <trans-unit id="w8KBmNE" resname="yet have a meeting time assigned">
+        <source>yet have a meeting time assigned</source>
+        <target>__yet have a meeting time assigned</target>
+      </trans-unit>
+      <trans-unit id="9Y.W1ZG" resname="No or more client groups to assign for this date">
+        <source>No or more client groups to assign for this date</source>
+        <target>__No or more client groups to assign for this date</target>
+      </trans-unit>
+      <trans-unit id="5HRQ4pD" resname="Arrival date">
+        <source>Arrival date</source>
+        <target>__Arrival date</target>
+      </trans-unit>
+      <trans-unit id="RFht.eN" resname="This rep has no client assigned today.">
+        <source>This rep has no client assigned today.</source>
+        <target>__This rep has no client assigned today.</target>
+      </trans-unit>
+      <trans-unit id="1u0sNBs" resname="Meeting at">
+        <source>Meeting at</source>
+        <target>__Meeting at</target>
+      </trans-unit>
+      <trans-unit id="rJhot6y" resname="Choose the agencies to print">
+        <source>Choose the agencies to print</source>
+        <target>__Choose the agencies to print</target>
+      </trans-unit>
+      <trans-unit id="Nwjycce" resname="Choose the meeting date">
+        <source>Choose the meeting date</source>
+        <target>__Choose the meeting date</target>
+      </trans-unit>
+      <trans-unit id="3w.nmJj" resname="Print">
+        <source>Print</source>
+        <target>__Print</target>
+      </trans-unit>
+      <trans-unit id="4830dh3" resname="Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again">
+        <source>Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again</source>
+        <target>__Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again</target>
+      </trans-unit>
+      <trans-unit id="jutl_Ka" resname="Tous les clients ont bien été importés">
+        <source>Tous les clients ont bien été importés</source>
+        <target>__Tous les clients ont bien été importés</target>
+      </trans-unit>
+      <trans-unit id="6KiDUxl" resname="Edit User">
+        <source>Edit User</source>
+        <target>__Edit User</target>
+      </trans-unit>
+      <trans-unit id="14fAbp8" resname="Edit My Profile">
+        <source>Edit My Profile</source>
+        <target>__Edit My Profile</target>
+      </trans-unit>
+      <trans-unit id=".oWqpuT" resname="Role(s)">
+        <source>Role(s)</source>
+        <target>__Role(s)</target>
+      </trans-unit>
+      <trans-unit id="O8Pb6IV" resname="My area">
+        <source>My area</source>
+        <target>__My area</target>
+      </trans-unit>
+      <trans-unit id="zVX3M_I" resname="Super Admin">
+        <source>Super Admin</source>
+        <target>__Super Admin</target>
+      </trans-unit>
+      <trans-unit id="wcIksDz" resname="Admin">
+        <source>Admin</source>
+        <target>__Admin</target>
+      </trans-unit>
+      <trans-unit id="OnqBk.y" resname="Users list">
+        <source>Users list</source>
+        <target>__Users list</target>
+      </trans-unit>
+      <trans-unit id="FHNqLrn" resname="Role">
+        <source>Role</source>
+        <target>__Role</target>
+      </trans-unit>
+      <trans-unit id="Y9zriAC" resname="Phone">
+        <source>Phone</source>
+        <target>__Phone</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

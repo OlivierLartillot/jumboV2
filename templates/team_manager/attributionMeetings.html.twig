@@ -1,6 +1,6 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'Rep Briefings Attributions details'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'Rep Briefings Attributions details'|trans}) }}
 
         <!-- Loader -->
         <div id="preloader">
@@ -12,7 +12,7 @@
         </div>
 
 
-    <h1 class="text-center">{{ user }} le {{date | date('d m Y') }}</h1>
+    <h1 class="text-center">{{ user }} {% trans %}le{% endtrans %} {{date | date('d m Y') }}</h1>
 
     <div class="row">
         <div class="col-lg-12">
@@ -21,7 +21,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>Briefing Rep</a>
+                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
                             </div>
                         </div>
                     </div>
@@ -32,10 +32,10 @@
                         {# <table class="table table-striped border shadow"> #}
                             <thead>
                                 <tr>
-                                    <th scope="col">Hotel</th>
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Rep</th>
-                                    <th scope="col">Place</th>
+                                    <th scope="col">{% trans %}Hotel{% endtrans %}</th>
+                                    <th scope="col">{% trans %}Time{% endtrans %}</th>
+                                    <th scope="col">{% trans %}Rep{% endtrans %}</th>
+                                    <th scope="col">{% trans %}Place{% endtrans %}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -148,7 +148,7 @@
                         </table>
                     </div>
 
-                        <input type="submit">
+                        <input type="submit" value="{% trans %}Submit{% endtrans %}">
                     </form>
                 </div>
             </div>

@@ -39,7 +39,7 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'User', title: 'Pax Calculation'}) }}
 
                         <div>
-                            NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"
+                            {% trans %}NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status"{% endtrans %}
                         </div>
 
                         <form method="GET">
@@ -72,11 +72,11 @@
                                         <thead class="bg-primary bg-gradient text-light border-end-light">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Total pax</th>
-                                                <th>Total personnes</th>
-                                                <th>Adults</th>
-                                                <th>Children</th>
-                                                <th>Babies</th>
+                                                <th>{% trans %}Total pax{% endtrans %}</th>
+                                                <th>{% trans %}Total personnes{% endtrans %}</th>
+                                                <th>{% trans %}Adults{% endtrans %}</th>
+                                                <th>{% trans %}Children{% endtrans %}</th>
+                                                <th>{% trans %}Babies{% endtrans %}</th>
                                             </tr>
                                         </thead>
                                         <tbody>

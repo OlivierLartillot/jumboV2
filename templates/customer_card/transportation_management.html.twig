@@ -26,13 +26,13 @@
                     <div class="container-fluid">
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Transportation', title: 'Transfer calculation'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Transportation', title: 'Transfer calculation'|trans}) }}
 
 <form method="GET">
     <div class="row">
         <div class="col-lg-6">
                 <div class="mb-3">
-                    <label class="form-label">Search date</label>
+                    <label class="form-label">{% trans %}Search date{% endtrans %}</label>
                     {% set now = "now"|date("Y-m-d") %}
                     <div class="col-md-3">
                         {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
@@ -48,12 +48,12 @@
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="company" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                    <option value="all" selected>All companies</option>
+                    <option value="all" selected>{% trans %}All companies{% endtrans %}</option>
                     {% for transportCompany in transportCompanies|sort %} 
                         <option value="{{ transportCompany.transportCompany }}" {{ (app.request.query.get('company') == transportCompany.transportCompany) ? 'selected' : '' }}>{{ transportCompany.transportCompany|capitalize }}</option>
                     {% endfor %}
                 </select>
-                <label for="floatingSelectGrid">Select a transport company</label>
+                <label for="floatingSelectGrid">{% trans %}Select a transport company{% endtrans %}</label>
             </div>
         </div>
 
@@ -75,9 +75,9 @@
     <div class="card">
         <div class="card-body">
            
-            <p> Adults: {{ adultsNumber }} / 
-            Children: {{ childrenNumber }} / 
-            Babies: {{ babiesNumber }}</p>
+            <p> {% trans %}Adults{% endtrans %}: {{ adultsNumber }} / 
+            {% trans %}Children{% endtrans %}: {{ childrenNumber }} / 
+            {% trans %}Babies{% endtrans %}: {{ babiesNumber }}</p>
 
            
 
@@ -88,12 +88,12 @@
                         <tr>
                             <th>#</th>
                             <th># Jumbo</th>
-                            <th>A.</th>
-                            <th>C.</th>
-                            <th>B.</th>
-                            <th>Voucher</th>
-                            <th>Date</th>
-                            <th>Hour</th>
+                            <th>{% trans %}Adults{% endtrans %}</th>
+                            <th>{% trans %}Children{% endtrans %}</th>
+                            <th>{% trans %}Babies{% endtrans %}</th>
+                            <th>{% trans %}Voucher{% endtrans %}</th>
+                            <th>{% trans %}Date{% endtrans %}</th>
+                            <th>{% trans %}Hour{% endtrans %}</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -60,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: StatusHistory::class)]
     private Collection $statusHistories;
 
+    #[ORM\Column(length: 6, nullable: true)]
+    private ?string $language = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -278,6 +281,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $statusHistory->setUpdatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): self
+    {
+        $this->language = $language;
 
         return $this;
     }

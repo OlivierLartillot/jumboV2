@@ -57,58 +57,59 @@
                     </form>
                 </div>
             </div>
-
+            
             <div class="dropdown d-inline-block language-switch">
                 <button type="button" class="btn header-item waves-effect"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {% if app.request.locale == 'en' %}
+                    {% if app.user.language == 'en' %}
                        <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
-                    {% elseif app.request.locale == 'es' %}
+                    {% elseif app.user.language == 'es' %}
                        <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
-                    {% elseif app.request.locale == 'de' %}
+                    {% elseif app.user.language == 'de' %}
                         <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16">
-                    {% elseif app.request.locale == 'it' %}
+                    {% elseif app.user.language == 'it' %}
                         <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16">
-                    {% elseif app.request.locale == 'ru' %}
-                        <img class="header-lang-img" src="/images/flags/russia.jpg" alt="Header Language" height="16">
+                    {% elseif app.user.language == 'fr' %}
+                        <img class="header-lang-img" src="/images/flags/french.jpg" alt="Header Language" height="16">
                     {% else %}
                        <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
                     {% endif %}
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     
-                    {% if app.request.locale != 'en' %}
+
+                    {% if app.user.language != 'en' %}
                     <!-- item-->
-                    <a href="lang/en" class="dropdown-item notify-item language" data-lang="eng">
+                    <a href="{{ path('app_change_locale', {'locale': 'en'}) }}" class="dropdown-item notify-item language" data-lang="eng">
                         <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
                     </a>
                     {% endif %}
 
-                    {% if app.request.locale != 'es' %}
+                    {% if app.user.language != 'es' %}
                     <!-- item-->
-                    <a href="lang/es" class="dropdown-item notify-item language" data-lang="sp">
+                    <a href="{{ path('app_change_locale', {'locale': 'es'}) }}" class="dropdown-item notify-item language" data-lang="sp">
                         <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
                     </a>
                     {% endif %}
                     
-                    {% if app.request.locale != 'de' %}
+                    {% if app.user.language != 'de' %}
                     <!-- item-->
-                    <a href="lang/de" class="dropdown-item notify-item language" data-lang="gr">
+                    <a href="{{ path('app_change_locale', {'locale': 'de'}) }}" class="dropdown-item notify-item language" data-lang="gr">
                         <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
                     </a>
                     {% endif %}
 
-                    {% if app.request.locale != 'it' %}
+                    {% if app.user.language != 'it' %}
                     <!-- item-->
-                    <a href="lang/it" class="dropdown-item notify-item language" data-lang="it">
+                    <a href="{{ path('app_change_locale', {'locale': 'it'}) }}" class="dropdown-item notify-item language" data-lang="it">
                         <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
                     </a>
                     {% endif %}
 
-                    {% if app.request.locale != 'ru' %}
+                    {% if app.user.language != 'fr' %}
                     <!-- item-->
-                    <a href="lang/ru" class="dropdown-item notify-item language" data-lang="ru">
-                        <img src="/images/flags/russia.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
+                    <a href="{{ path('app_change_locale', {'locale': 'fr'}) }}" class="dropdown-item notify-item language" data-lang="ru">
+                        <img src="/images/flags/french.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">French</span>
                     </a>
                     {% endif %}
                     

@@ -1,12 +1,11 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Customer Cards'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Client Cards'|trans}) }}
 
 
                         <div class="alert alert-danger" role="alert">
-                        Tri:
-                        Date (une seule date fixe), arrivée (pas de tri mais dans la récupération) , numéro de Vol, agence et Zona<br>
+                        
                         possibilité de changer le status en No show / go show aeroport
                         </div>
 
@@ -20,13 +19,13 @@
                                 <div class="col-lg-3">
                                         {% set now = "now"|date("Y-m-d") %}
                                         <div class="mb-3">
-                                            <label class="form-label">Search date</label>
+                                            <label class="form-label">{% trans %}Search date{% endtrans %}</label>
                                             <input class="form-control" name="date" placeholder="Date" type="date" value="{{ (app.request.query.get('date') != '') ? app.request.query.get('date') : now }}" id="date">
                                         </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="= mb-3">
-                                    <label class="form-label">Search Airport</label>
+                                    <label class="form-label">{% trans %}Search Airport{% endtrans %}</label>
                                         <select name="airports" class="form-select" id="airport" >
                                             <option value="all" selected>All airports</option>
                                             {% for airport in airports|sort((a, b) => a.name <=> b.name) %} 
@@ -37,13 +36,13 @@
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="= mb-3">
-                                        <label for="flightNumber">Flight Number</label>
+                                        <label for="flightNumber">{% trans %}Flight Number{% endtrans %}</label>
                                         <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Flight Numbers" value="{{ (app.request.query.get('flightNumber')) }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="= mb-3">
-                                        <label for="voucherNumber">Voucher Number</label>
+                                        <label for="voucherNumber">{% trans %}Voucher Number{% endtrans %}</label>
                                         <input name="voucherNumber" type="text" class="form-control" id="voucherNumber" placeholder="Voucher Number" value="{{ (app.request.query.get('voucherNumber')) }}">
                                     </div>
                                 </div>
@@ -86,14 +85,14 @@
                                                             <span class="badge rounded-pill bg-success">{{ result.customerCard.status }}</span>
                                                         {% endif %}
 
-                            <form method="GET">
-                                                        <select name="changeStatus" class="form-select-perso text-light {% if result.customerCard.status == 'No Show' %} bg-danger {% else %} bg-success {% endif %} " id="changeStatus" aria-label="Floating label select example">                                                                
-                                                            {% for statu in status %}
-                                                                <option value="{{ statu }}" {{ (result.customerCard.status == statu ) ? 'selected' : '' }} class="{% if statu == 'No Show' %} bg-danger {% else %} bg-success {% endif %} ">{{ statu }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                            <input type="submit">
-                            </form>
+                                                        <form method="GET">
+                                                            <select name="changeStatus" class="form-select-perso text-light {% if result.customerCard.status == 'No Show' %} bg-danger {% else %} bg-success {% endif %} " id="changeStatus" aria-label="Floating label select example">                                                                
+                                                                {% for statu in status %}
+                                                                    <option value="{{ statu }}" {{ (result.customerCard.status == statu ) ? 'selected' : '' }} class="{% if statu == 'No Show' %} bg-danger {% else %} bg-success {% endif %} ">{{ statu }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <input type="submit">
+                                                        </form>
 
 
 
@@ -114,18 +113,18 @@
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <div class="mt-3">
-                                                                <p class="text-muted mb-2">Adults</p>
+                                                                <p class="text-muted mb-2">{% trans %}Adults{% endtrans %}</p>
                                                                 <h5 class="font-size-16 mb-0">{{ result.customerCard.adultsNumber }}</h5>
                                                             </div>
                                                         </div>
                                                         <div class="col-4">
                                                             <div class="mt-3">
-                                                                <p class="text-muted mb-2">Children</p>
+                                                                <p class="text-muted mb-2">{% trans %}Children{% endtrans %}</p>
                                                                 <h5 class="font-size-16 mb-0">{{ result.customerCard.childrenNumber }}</h5>
                                                             </div>
                                                         </div>                                                    
                                                         <div class="col-4">
-                                                            <div class="mt-3">BB</p>
+                                                            <div class="mt-3">{% trans %}Babies{% endtrans %}</p>
                                                                 <h5 class="font-size-16 mb-0">{{ result.customerCard.babiesNumber }}</h5>
                                                             </div>
                                                         </div>
@@ -135,19 +134,19 @@
                                                         <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
                                                         <div class="col-4">
                                                             <div class="mt-3">
-                                                                <p class="text-muted mb-2">Date</p>
+                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
                                                                 <h5 class="font-size-16 mb-0">{{ result.date | date('d-m-Y') }}</h5>
                                                             </div>
                                                         </div>
                                                     <div class="col-4">
                                                             <div class="mt-3">
-                                                                <p class="text-muted mb-2">Hour</p>
+                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
                                                                 <h5 class="font-size-16 mb-0">{{ result.hour | date('h:i')}}</h5>
                                                             </div>
                                                         </div>            
                                                         <div class="col-4">
                                                             <div class="mt-3">
-                                                                <p class="text-muted mb-2">Flight #</p>
+                                                                <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
                                                                 <h5 class="font-size-16 mb-0">{{ result.flightNumber }}</h5>
                                                             </div>
                                                         </div>
@@ -177,11 +176,11 @@
     
                                             <thead class="bg-primary bg-gradient text-light border-end-light">
                                                 <tr>
-                                                    <th>Customer</th>
-                                                    <th>Airport</th>
-                                                    <th>Flight Number</th>
-                                                    <th>Agence</th>
-                                                    <th>No Show / Go Show Airport</th>
+                                                    <th>{% trans %}Client{% endtrans %}</th>
+                                                    <th>{% trans %}Airport{% endtrans %}</th>
+                                                    <th>{% trans %}Flight Number{% endtrans %}</th>
+                                                    <th>{% trans %}Agency{% endtrans %}</th>
+                                                    <th>{% trans %}No Show / Go Show Airport{% endtrans %}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
