@@ -33,22 +33,27 @@
 
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
                 <li class="menu-title">{% trans %}Import File{% endtrans %}</li>
+                {% endif %} 
 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
                 <li>
                     <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
                         <span>{% trans %}Import Booking{% endtrans %}</span>
                     </a>
                 </li>
-
+                {% endif %}
+                
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
                 <li>
                     <a href="{{ path('app_transfer_import') }}">
                         <i class="uil-import"></i>
                         <span>{% trans %}Import Transfers{% endtrans %}</span>
                     </a>
                 </li>
+                {% endif %}
 
                 <li class="menu-title">{% trans %}Clients{% endtrans %}</li>
 
@@ -59,6 +64,7 @@
                     </a>
                 </li>
                 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
                 <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 
                 <li>
@@ -79,6 +85,7 @@
                         <span>{% trans %}Labels printing{% endtrans %}</span>
                     </a>
                 </li>
+                {% endif %}
 
                 <li>
                     <a href="{{ path('app_customer_card_pax') }}">
