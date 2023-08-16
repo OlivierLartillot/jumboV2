@@ -22,13 +22,14 @@ class LocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
+        dd($request->getSession()->get('_locale'));
         // On vérifie si la langue est passée en paramètre de l'URL
         if ($locale = $request->query->get('_locale')) {
             $request->setLocale($locale);
         } else {
             // Sinon on utilise celle de la session
-            $request->setLocale($request->getSession()->get('fr', $this->defaultLocale));
-        } 
+            $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        }
     }
 
     public static function getSubscribedEvents()
