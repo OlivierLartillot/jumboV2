@@ -1,6 +1,6 @@
 {{ include('partials/header-reproupement.html.twig') }}
     
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Rep Assignment'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Rep Assignment'|trans}) }}
 
 
     <!-- Loader -->
@@ -22,8 +22,10 @@
                             <p>{% trans %}Choose the arrival date{% endtrans %}</p>
                             <div class="mb-3">
                                 <form action={{ path('app_admin_team_manager') }} method="GET">
+                                
                                     <input name="date" type="date" value="{{date | date('Y-m-d') }}">
                                     <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+                                
                                 </form>
                             <div>
                             {# <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary my-3">Briefing Rep</a> #}

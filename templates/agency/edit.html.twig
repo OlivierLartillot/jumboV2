@@ -1,19 +1,16 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Agency'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Agency'|trans}) }}
 
 
 
-    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_agency_index') }}">back to list</a>
+    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_agency_index') }}">{% trans %}back to list{% endtrans %}</a>
 
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-
-
-    {{ include('agency/_form.html.twig', {'button_label': 'Update'}) }}
-
+                    {{ include('agency/_form.html.twig', {'button_label': 'Update'|trans}) }}
                 </div>
             </div>
         </div>

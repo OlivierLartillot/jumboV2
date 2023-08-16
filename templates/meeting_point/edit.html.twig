@@ -1,12 +1,18 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Briefing Place'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Briefing Place'|trans}) }}
 
-    <h1>Edit MeetingPoint</h1>
+    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_meeting_point_index') }}">{% trans %}back to list{% endtrans %}</a>
 
-    {{ include('meeting_point/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_meeting_point_index') }}">back to list</a>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('meeting_point/_form.html.twig', {'button_label': 'Update'|trans}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {{ include('meeting_point/_delete_form.html.twig') }}
 

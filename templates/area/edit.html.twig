@@ -1,14 +1,22 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Area'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Area'|trans}) }}
 
-            <h1>Edit Area</h1>
+    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_area_index') }}">{% trans %}back to list{% endtrans %}</a>
 
-            {{ include('area/_form.html.twig', {'button_label': 'Update'}) }}
+        
 
-            <a href="{{ path('app_area_index') }}">back to list</a>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('area/_form.html.twig', {'button_label': 'Update'|trans}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            {{ include('area/_delete_form.html.twig') }}
+        {{ include('area/_delete_form.html.twig') }}
             
 {{ include('partials/footer-regroupement.html.twig') }}
 

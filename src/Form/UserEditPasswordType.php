@@ -21,20 +21,20 @@ class UserEditPasswordType extends AbstractType
         $builder
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent être identiques.',
+                /* 'invalid_message' => 'Les mots de passe doivent être identiques.', */
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe*'],
-                'second_options' => ['label' => 'Confirmez le mot de passe*'],
+                'first_options'  => ['label' => 'Password*'],
+                'second_options' => ['label' => 'Confirm password*'],
                 'constraints' => [
                         new NotBlank([
-                            'message' => 'Un mot de passe est nécessaire',
+                            'message' => 'Password is required',
                         ]),
                         new Length([
-                            'min' => 6,
-                            'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                            'min' => 8,
+                            'minMessage' => 'Your password must contain at least {{ limit }} characters',
                             // max length allowed by Symfony for security reasons
-                            'max' => 4096,
+                            'max' => 21,
                         ]),
                     ],
                 ])         

@@ -1,12 +1,22 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Client Status'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'Edit Client Status'|trans}) }}
 
-    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_status_index') }}">back to list</a>
+    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_status_index') }}">{% trans %}back to list{% endtrans %}</a>
 
-    {{ include('status/_form.html.twig', {'button_label': 'Update'}) }}
-
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('status/_form.html.twig', {'button_label': 'Update'|trans}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {{ include('status/_delete_form.html.twig') }}
 
 {{ include('partials/footer-regroupement.html.twig') }}
+
+
+
