@@ -23,7 +23,7 @@ class TransferDeparture
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $flightNumber = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferDeparture')]
+    #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
 

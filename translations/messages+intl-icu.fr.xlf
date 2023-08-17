@@ -921,6 +921,70 @@
         <source>Phone</source>
         <target>__Phone</target>
       </trans-unit>
+      <trans-unit id="wqFHHfF" resname="*For attendance, you must select the period and leave &quot;Nature Transfer&quot; on all.............">
+        <source>*For attendance, you must select the period and leave "Nature Transfer" on all.............</source>
+        <target>__*For attendance, you must select the period and leave "Nature Transfer" on all.............</target>
+      </trans-unit>
+      <trans-unit id="nDvfQPS" resname="Client Card">
+        <source>Client Card</source>
+        <target>__Client Card</target>
+      </trans-unit>
+      <trans-unit id="RZid5J_" resname="Details">
+        <source>Details</source>
+        <target>__Details</target>
+      </trans-unit>
+      <trans-unit id="IYGXaTQ" resname="From">
+        <source>From</source>
+        <target>__From</target>
+      </trans-unit>
+      <trans-unit id="9LBu9tP" resname="To">
+        <source>To</source>
+        <target>__To</target>
+      </trans-unit>
+      <trans-unit id="8KmbnpF" resname="Transport Company">
+        <source>Transport Company</source>
+        <target>__Transport Company</target>
+      </trans-unit>
+      <trans-unit id="xxzozPO" resname="Nature">
+        <source>Nature</source>
+        <target>__Nature</target>
+      </trans-unit>
+      <trans-unit id="S84QnNj" resname="Vehicle Type">
+        <source>Vehicle Type</source>
+        <target>__Vehicle Type</target>
+      </trans-unit>
+      <trans-unit id="s_jckt8" resname="Pick Up Hour">
+        <source>Pick Up Hour</source>
+        <target>__Pick Up Hour</target>
+      </trans-unit>
+      <trans-unit id="DRRmo5_" resname="Flight Hour">
+        <source>Flight Hour</source>
+        <target>__Flight Hour</target>
+      </trans-unit>
+      <trans-unit id="1mk6Qh6" resname="TimeLine">
+        <source>TimeLine</source>
+        <target>__TimeLine</target>
+      </trans-unit>
+      <trans-unit id="BpW1Y6z" resname="with">
+        <source>with</source>
+        <target>__with</target>
+      </trans-unit>
+      <trans-unit id="Zj6hv.." resname="to">
+        <source>to</source>
+        <target>__to</target>
+      </trans-unit>
+      <trans-unit id="IPDEcp3" resname="Updated by">
+        <source>Updated by</source>
+        <target>__Updated by</target>
+      </trans-unit>
+      <trans-unit id="NV958p1" resname="Comments">
+        <source>Comments</source>
+        <target>__Comments</target>
+      </trans-unit>
+      <trans-unit id="aKED7Jc" resname="Rep Assignment">
+        <source>Rep Assignment</source>
+        <target>__Rep Assignment</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
