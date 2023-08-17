@@ -1,0 +1,190 @@
+{% extends 'basePrint.html.twig' %} 
+
+
+
+
+{% block body %}
+    <script type="text/javascript">
+        function imprimer_page(){
+        window.print();
+        }
+    </script>
+
+  <style>
+      @page {
+        size: letter portrait; 
+        margin-top: 2.5cm;
+
+      }
+    @media print {
+
+     /* body {
+        margin: 0.5in 0.15in;
+      } */
+
+    .labels-container {
+        display: grid;
+        grid-template-columns: repeat(2, 4in);
+        grid-template-rows: repeat(5, 2in);
+        gap: 0 0.15in;
+        margin: 0.5in 0.15in;    
+      }
+      .page-break {
+        page-break-inside:avoid;
+        page-break-after:always;
+      }
+
+      .label {
+        display: inline-block;
+        width: 4in;
+        height: 2in;
+        border: 1px solid black;
+        padding: 0px 15px;
+        box-sizing: border-box;
+        border-radius: 10px; 
+        font-size: 15px;
+        line-height: 0.6;
+      }
+      
+
+    .container {
+        display:flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+    }
+    .informations {
+        line-height:0.3;
+        flex-shrink: 3;
+        align-self: flex-start;
+    }
+    .qrcode {
+         flex-shrink: 1;
+         text-align:center;
+    }
+
+
+    .notImpressed {
+        display: none;
+      }
+    }
+  </style>
+
+{# <style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+
+    @media print {
+      .label {
+        display: inline-block;
+        width: 10.19cm;
+        height: 5.11cm;
+        border: 1px solid black;
+        padding-top: 10px;
+        padding-left: 10px;
+        margin: 0;
+        box-sizing: border-box;
+        border-radius: 25px; 
+        font-size: 15px;
+        line-height: 0.7;
+      }
+      
+      .labels-container {
+        display: grid;
+        grid-template-columns: repeat(2, 10.19cm);
+        grid-template-rows: repeat(5, 5.11cm);
+        gap: 0.0cm 0.4cm;
+        margin: 0cm 0.4cm;
+      }
+
+      .notImpressed {
+        display: none;
+      }
+    }
+
+
+</style> #}
+
+    <div class="example-wrapper notImpressed">
+        <form action={{ path('app_admin_stickers_par_date') }} method="GET">
+            <input name="date" type="date" value="{{date | date('Y-m-d') }}">
+            <input type="submit">
+        </form>
+
+    </div>
+
+
+    <a href="{{ path('admin') }}" class="btn btn-secondary my-3 notImpressed">Back to Admin</a>
+
+        <div>
+            <form class="notImpressed ">
+                <input id="impression" name="impression" type="button" onclick="imprimer_page()" value="Imprimer cette page" />
+            </form>
+        </div>
+
+
+        
+        {% set i = 1 %} 
+
+        {% for meetingInfos in meetings %}
+
+                
+            {% if (i == 1) %} 
+                <div class="labels-container">
+            {% endif %} 
+
+
+
+                <div class="label">
+                    <p><strong>Nom: {{ i }}</strong> {{ meetingInfos.holder }}</p>
+                    <p><strong>Hôtel:</strong> 
+                        {% for infosTransfer in meetingInfos.transfers %}
+                            {{ infosTransfer.toArrival}}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Reunion de Bienvenue &amp; d'Information</strong></p>
+
+
+                    <div class="container">
+
+                        <div class="informations">
+                            <p><strong>Jour:</strong> Demain</p>
+                            <p><strong>Lieu de rencontre:</strong> {{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}}</p>
+                            <p><strong>Votre représentant:</strong> {{ meetingInfos.staff }}</p>
+                            <p><strong>Whatsapp:</strong> +1 809 723 0945</p>
+                        </div>
+
+                        <div class="qrcode">
+                            {% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber != null %}   
+
+                                <img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
+                                <div class="chattez-rep">Chattez Avec Florence</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+
+            {% if (i == 10) %}     
+                </div>
+            {% endif %}
+
+            {# si $i = 10 alors $i == 1 sinon $i++ #}
+             {% if (i == 10) %}  
+                {% set i = 1 %} 
+                <div class="page-break"></div>
+            {% else %}  
+                {% set i = i + 1 %} 
+            {% endif %} 
+
+        {% endfor %}
+
+
+{% endblock %}
+
+
+
+
+
+
+

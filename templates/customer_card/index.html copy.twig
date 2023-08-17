@@ -1,0 +1,371 @@
+{{ include('partials/main.html.twig') }}
+
+    <head>
+
+        {{ include('partials/head-css.html.twig') }}
+
+        <!-- plugin css -->
+{#         <link href="/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+        <link href="/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+        <link href="/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+        <link href="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/libs/@chenfengyuan/datepicker/datepicker.min.css"> #}
+
+        <!-- datepicker css -->
+        {# <link rel="stylesheet" href="/libs/flatpickr/flatpickr.min.css"> #}
+
+       
+
+    </head>
+
+    {{ include('partials/body.html.twig') }}
+
+
+        <!-- Loader -->
+        <div id="preloader">
+            <div id="status">
+                <div class="spinner">
+                    <i class="uil-shutter-alt spin-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'All', title: 'Clients Cards'}) }}
+
+                        <form method="GET">
+
+                            {#                         
+                                {{ (ability.id in company_abilities) ? 'selected' : '' }}
+                                app.request.query 
+                            #}
+
+{#                          <input type="checkbox" id="customerPresence" name="customerPresence" {{ (app.request.query.get('customerPresence') != null) ? 'checked' : '' }}>
+                            <label for="customerPresence">Présents dans cette pèriode</label><br> #}
+
+
+                            <div class="row mb-3" style="background-color:#cff4fc">
+                                <p class="p-3 ">
+                                    {% trans %}*For attendance, you must select the period and leave "Nature Transfer" on all{% endtrans %}.
+                                </p>
+
+                            </div>
+
+                            <div class="row mb-3 pb-3 border border-dark rounded" style="background-color: #cfe2ff;">
+                                <div class="col-md-2">
+                                    <div class="form-floating mt-3">
+                                        <select name="customerPresence" class="form-select" id="customerPresence" aria-label="Floating label select example">
+                                            <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>{% trans %}Presence{% endtrans %}</option>
+                                            <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>{% trans %}Operations{% endtrans %}</option>
+                                        </select>
+                                        <label for="customerPresence">{% trans %}research on{% endtrans %}: </label>
+                                    </div>
+                                </div>                            
+                                {% set now = "now"|date("Y-m-d") %}
+                                <div class="col-md-3">
+                                    {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
+                                    <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
+                                    <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="divNatureTransfer" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
+                                    <div class="form-floating mb-3">
+                                        <select name="natureTransfer" class="form-select" id="natureTransfer" aria-label="Floating label select example">
+                                            <option value="all" selected>Nature Transfer</option>
+                                            <option value="1" {{ (app.request.query.get('natureTransfer') == 1 ) ? 'selected' : '' }}>{% trans %}Arrival{% endtrans %}</option>
+                                            <option value="2" {{ (app.request.query.get('natureTransfer') == 2 ) ? 'selected' : '' }}>{% trans %}Inter Hotel{% endtrans %}</option>
+                                            <option value="3" {{ (app.request.query.get('natureTransfer') == 3 ) ? 'selected' : '' }}>{% trans %}Departure{% endtrans %}</option>
+                                        </select>
+                                        <label for="natureTransfer">{% trans %}Works with selects{% endtrans %}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="reps" class="form-select" id="reps" aria-label="Floating label select example">
+                                            <option value="all" selected>{% trans %}All Reps{% endtrans %}</option>
+                                            {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
+                                                <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
+                                            {% endfor %}
+                                        </select>
+                                        <label for="reps">{% trans %}Select a rep{% endtrans %}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="status" class="form-select" id="statusForm" aria-label="Floating label select example">
+                                            <option value="all" selected>Status</option>
+                                            {% for status in statusList%}
+                                                <option value="{{ status.id }}" {{ (app.request.query.get('status') == status.id ) ? 'selected' : '' }}>{{ status.name }}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                        <label for="statusForm">Works with selects</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="agency" class="form-select" id="agency" aria-label="Floating label select example">
+                                                <option value="all" selected>Agencies</option>
+                                                {% for agency in agencies%}
+                                                    <option value="{{ agency.id }}" {{ (app.request.query.get('agency') == agency.id ) ? 'selected' : '' }}>{{ agency.name|title }}</option>
+                                                {% endfor %}
+                                        </select>
+                                        <label for="agency">{% trans %}Select Agency{% endtrans %}</label>
+                                    </div>
+                                </div>      
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <select name="hotel" class="form-select-perso" id="hotel" aria-label="Floating label select example">
+                                                <option value="all" selected>Hotels</option>
+                                                {% for hotel in hotels%}
+                                                    <option value="{{ hotel.id }}" {{ (app.request.query.get('hotel') == hotel.id ) ? 'selected' : '' }}>{{ hotel.name|title }}</option>
+                                                {% endfor %}
+                                        </select>
+                                        {# <label for="hotel">Select Hotel</label> #}
+                                    </div>
+                                </div>    
+                                <div id="divFlightNumber" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
+                                    <div class="form-floating mb-3">
+                                        <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
+                                        <label for="flightNumber">Flight Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input name="search" type="text" class="form-control-perso" id="search" placeholder="{% trans %}Name{% endtrans %}, #RSA, #Voucher, #Jumbo" value="{{ (app.request.query.get('search')) }}">
+                                        {# <label for="search">Name, # RSA, # Voucher, # Jumbo </label> #}
+                                    </div>
+                                </div>
+                                <div class="text-center text-md-start col-md-2 ">
+                                    <input type="submit" class="btn btn-primary px-5 py-3" value="{% trans %}Submit{% endtrans %}">
+                                </div>
+
+                                </form>
+                            </div>
+
+                        <div class="row ms-5 mt-5">
+                            {% trans %}There are{% endtrans %}{{ customer_cards| length }} {% trans %}matching results{% endtrans %}.
+                        </div>
+                        <div class="row mt-5">
+      
+                            {# si le nature transfert == 1 alors custommer card = customer cards ou le tranfer > 0 #}
+
+
+                            {% for customer_card in customer_cards %}
+
+                                 
+                                {# {% if  (app.request.query.get('natureTransfer') == 1 ) %} #}
+
+
+
+
+                            <div class="col-xl-4 col-sm-6">
+                                <div class="card">
+                                    {% if customer_card.staff is not null %}<div class="ribbon ribbon-top-right"><span>{{ customer_card.staff }}</span></div>{% endif %}
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start">
+                                            <div class="d-none d-md-block flex-shrink-0 me-4">
+                                                <div class="avatar-sm">
+                                                    <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
+                                                        <i class="fas fa-id-card text-dark"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 align-self-center">
+                                                <div class="border-bottom pb-1">
+                                                    <p class="text-muted">
+                                                        <i class="me-1">#</i> {{ customer_card.reservationNumber }}
+                                                    </p>
+                                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:customer_card.id}|merge(app.request.query.all) ) }}" class="text-dark text-wrap">{{ customer_card.holder|title }}</a></h5>
+                                                    <p>
+                                                     {% if customer_card.status == "No Show" %}
+                                                        <span class="badge rounded-pill bg-danger">{{ customer_card.status }}</span>
+                                                    {% else %}
+                                                        <span class="badge rounded-pill bg-success">{{ customer_card.status }}</span>
+                                                    {% endif %}
+                                                    </p>
+                                                    <p class="text-muted">
+                                                        {{ customer_card.agency|title }}
+                                                    </p>
+                                                </div>
+
+    
+                                                <div class="border-bottom mt-3 pt-1 pb-1">
+                                                    <p class="text-muted">
+                                                        {% for hotel in customer_card.transferArrivals %} 
+                                                            <i class="fas fa-hotel"></i> {% trans %}Arrival{% endtrans %}: {{ hotel.fromStart|title }} - {{ hotel.toArrival|title }}
+                                                        {% endfor %}
+                                
+                                                        {% for hotel in customer_card.transferInterHotels %} 
+                                                            <br> <i class="fas fa-hotel"></i> {% trans %}Inter Hotel{% endtrans %}: {{ hotel.toArrival|title }}
+                                                        {% endfor %} 
+                                                                                        
+                                                        {% for hotel in customer_card.transferDeparture %} 
+                                                            <br> <i class="fas fa-hotel"></i> {% trans %}Departure{% endtrans %}: {{ hotel.toArrival|title }}
+                                                        {% endfor %} 
+                                                    </p>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="mt-3">
+                                                            <p class="text-muted mb-2">{% trans %}Adults{% endtrans %}</p>
+                                                            <h5 class="font-size-16 mb-0">{{ customer_card.adultsNumber }}</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="mt-3">
+                                                            <p class="text-muted mb-2">{% trans %}Children{% endtrans %}</p>
+                                                            <h5 class="font-size-16 mb-0">{{ customer_card.childrenNumber }}</h5>
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-4">
+                                                        <div class="mt-3">BB</p>
+                                                            <h5 class="font-size-16 mb-0">{{ customer_card.babiesNumber }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                {# START SHOW MORE #}
+                                                <div class="accordion accordion-flush" id="accordionFlush{{ customer_card.id }}">
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{ customer_card.id }}" aria-expanded="false" aria-controls="flush-collapseOne{{ customer_card.id }}">
+                                                           <span class="badge bg-primary"> {% trans %}Show more{% endtrans %}</span>
+                                                        </button>
+                                                        </h2>
+                                                        <div id="flush-collapseOne{{ customer_card.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ customer_card.id }}">
+                                                            <div class="accordion-body">
+                                                                {% for transfer in customer_card.transferArrivals %}
+                                                                    <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
+                                                                        <h6><i class="mdi mdi-airplane-landing"></i> {% trans %}Arrival{% endtrans %}</h6>
+                                                                        <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.date | date('d-m-Y') }}</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.hour | date('h:i')}}</h5>
+                                                                            </div>
+                                                                        </div>            
+                                                                        <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endfor %}
+                                                                {% for transfer in customer_card.transferInterHotels %}
+                                                                    <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
+                                                                        <h6><i class="mdi mdi-airplane-landing"></i> {% trans %}Inter Hotel{% endtrans %}</h6>
+                                                                        <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.date | date('d-m-Y') }}</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.hour | date('h:i')}}</h5>
+                                                                            </div>
+                                                                        </div>            
+                                                                    </div>
+                                                                {% endfor %}
+
+
+                                                                {% for transfer in customer_card.transferDeparture %}
+                                                                    <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
+                                                                        <h6><i class="mdi mdi-airplane-landing"></i> {% trans %}Departure{% endtrans %}</h6>
+                                                                        <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.date | date('d-m-Y') }}</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.hour | date('h:i')}}</h5>
+                                                                            </div>
+                                                                        </div>            
+                                                                        <div class="col-4">
+                                                                            <div class="mt-3">
+                                                                                <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
+                                                                                <h5 class="font-size-16 mb-0">{{ transfer.flightNumber }}</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {# END SHOW MORE #}
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+        </div>
+        <!-- END layout-wrapper -->
+
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <!-- plugins -->
+        <script src="/libs/select2/js/select2.min.js"></script>
+        <script src="/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+        <script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script src="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+        <script src="/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+        <script src="/libs/@chenfengyuan/datepicker/datepicker.min.js"></script>
+
+        <!-- datepicker js -->
+        <script src="/libs/flatpickr/flatpickr.min.js"></script>
+
+        <!-- init js -->
+        <script src="/js/pages/form-advanced.init.js"></script>
+
+        <!-- App js -->
+        <script src="/js/jsPersos/gestionFiltreCustomerCards.js"></script>
+        <script src="/js/app.js"></script>
+
+    </body>
+</html>

@@ -260,15 +260,6 @@ class TeamManagerController extends AbstractController
         }
 
 
-
-/*         dump($attributionClientsByRepAndDate);
-
-
-
-        dump($day);
-        dump($user);
- */
-
         return $this->render('team_manager/attributionMeetings.html.twig', [
             "date" => $date,
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
@@ -281,11 +272,10 @@ class TeamManagerController extends AbstractController
 
 
 
-        // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
+    // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team-manager/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
-    public function stickersParDate(CustomerCardRepository $customerCardRepository,
-                                    MeetingPointRepository $meetingPointRepository, 
+    public function stickersParDate(CustomerCardRepository $customerCardRepository, 
                                     EntityManagerInterface $manager, 
                                     AgencyRepository $agencyRepository,
                                     Request $request,
@@ -329,12 +319,6 @@ class TeamManagerController extends AbstractController
             "meetings" => $meetings,
             "agencies" => $agencies,
             "formAgencySend" => $formAgencySend
-
-
-   
-/*             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
-            "meetingPoints" => $meetingPoints, 
-            "user" => $user */
         ]);
 
 
