@@ -194,6 +194,7 @@
 								{% endif %}
 						</div>
 					</div>
+
 			<div class="break">	
 				{% set i = 1 %} 
 				{% set page = 1 %} 
@@ -253,11 +254,7 @@
 					
 				%}
 
-				
-
 				{% for meetingInfos in meetings %}
-
-				{{dump(meetings)}}
 
 					{% set currentLanguage = meetingInfos.agency.language %}
 						

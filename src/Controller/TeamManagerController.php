@@ -313,14 +313,12 @@ class TeamManagerController extends AbstractController
             $formAgencySend = true;
         }
 
-
         return $this->render('team_manager/stickers.html.twig', [
             "date" => $date,
             "meetings" => $meetings,
             "agencies" => $agencies,
             "formAgencySend" => $formAgencySend
         ]);
-
 
     }
 

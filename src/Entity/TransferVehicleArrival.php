@@ -42,7 +42,7 @@ class TransferVehicleArrival
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $reservationNumber = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], inversedBy: 'transferVehicleArrival')]
     private ?CustomerCard $customerCard = null;
 
     public function getId(): ?int
