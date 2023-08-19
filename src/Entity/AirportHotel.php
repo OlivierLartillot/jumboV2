@@ -33,12 +33,16 @@ class AirportHotel
     #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: TransferDeparture::class)]
     private Collection $transferDepartures;
 
+    #[ORM\ManyToMany(targetEntity: PrintingOptions::class, mappedBy: 'Airport')]
+    private Collection $printingOptions;
+
     public function __construct()
     {
         $this->transfersArrival = new ArrayCollection();
         $this->transferArrivals = new ArrayCollection();
         $this->transferInterHotels = new ArrayCollection();
         $this->transferDepartures = new ArrayCollection();
+        $this->printingOptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,6 +169,32 @@ class AirportHotel
         return $this->name;
     }
 
+    /**
+     * @return Collection<int, PrintingOptions>
+     */
+    public function getPrintingOptions(): Collection
+    {
+        return $this->printingOptions;
+    }
 
-    
+    public function addPrintingOption(PrintingOptions $printingOption): self
+    {
+        if (!$this->printingOptions->contains($printingOption)) {
+            $this->printingOptions->add($printingOption);
+            $printingOption->addAirport($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrintingOption(PrintingOptions $printingOption): self
+    {
+        if ($this->printingOptions->removeElement($printingOption)) {
+            $printingOption->removeAirport($this);
+        }
+
+        return $this;
+    }
+
+
 }
