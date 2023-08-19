@@ -150,8 +150,8 @@
 													<h2>Agencies</h2>
 													{% for agency in agencies|sort((a,b)=>a.name <=> b.name )%}
 														<div class="form-check">
-															<input class="form-check-input" type="checkbox" id="{{agency.id}}" name="agence_{{agency.id}}" {{ agency.isActive ? "checked" : "" }} />
-															<label class="form-check-label" for="{{agency.id}}">{{agency.name|title}}</label>
+															<input class="form-check-input" type="checkbox" id="agency_{{agency.id}}" name="agence_{{agency.id}}" {{ agency.isActive ? "checked" : "" }} />
+															<label class="form-check-label" for="agency_{{agency.id}}">{{agency.name|title}}</label>
 														</div>
 													{% endfor %}
 												</div>
@@ -160,12 +160,12 @@
 													
 													{% for airport in airports|sort((a,b)=>a.name <=> b.name )%}
 														<div class="form-check">
-															<input class="form-check-input" type="checkbox" id="{{airport.id}}" name="airport_{{airport.id}}" 
+															<input class="form-check-input" type="checkbox" id="airport_{{airport.id}}" name="airport_{{airport.id}}" 
 																{% for currentAirport in printingOptionsUser.airport %} 
 																	{{ currentAirport.id == airport.id ? "checked" : "" }}
 																{% endfor %} 
 															/>
-															<label class="form-check-label" for="{{airport.id}}">{{airport.name|title}}</label>
+															<label class="form-check-label" for="airport_{{airport.id}}">{{airport.name|title}}</label>
 														</div>
 													{% endfor %}
 												</div>
