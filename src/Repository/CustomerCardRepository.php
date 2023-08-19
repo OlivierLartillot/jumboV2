@@ -134,8 +134,11 @@ class CustomerCardRepository extends ServiceEntityRepository
             $query = $query->leftJoin('App\Entity\TransferArrival', 'ta', 'WITH', 'c.id = ta.customerCard');
         }
 
-        // $suery where customercard.transferArrival.fromStart == 1
-        $query = $query->andWhere('ta.fromStart = :aeroport')->setParameter('aeroport', 9);
+        // $query équivalent de in array   
+        $query = $query->andWhere($query->expr()->in('ta.fromStart', ':airport'))->setParameter('airport', $airports);
+        
+        
+        
         $query = $query->andWhere('c.meetingAt >= :date_start')->andWhere('c.meetingAt <= :date_end')->andWhere('c.meetingPoint is not null');
 
         if ($needIsActivate) {

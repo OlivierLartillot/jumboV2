@@ -297,17 +297,22 @@ class TeamManagerController extends AbstractController
         $formAgencySend = false;
         $user = $this->getUser();
 
-        // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $customerCardRepository->findByMeetingDate($date, true);
-
-        $agencies = $agencyRepository->findAll();
-        $airports = $airportHotelRepository->findBy([ 'isAirport' => true]);
         
-
+        $agencies = $agencyRepository->findAll();
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        
         // regarder si une fiche Printing Options existe pour cet utilisateur
         $printingOptionsUser = $printingOptionsRepository->findOneBy(["user" => $user]); 
         $printingOptionsUserExist = true;
+        
+        $choosenAirports = [];
+        foreach ($printingOptionsUser->getAirport() as $airport) {
+            $choosenAirports[] = $airport;
+        }
 
+
+        // récupérer les cutomerCard correspondant à la meeting date
+        $meetings = $customerCardRepository->findByMeetingDate($date, true, $choosenAirports);
 
 /*         $meetingsToPrint = [];
 
