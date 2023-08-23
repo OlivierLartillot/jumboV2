@@ -27,9 +27,13 @@ class Agency
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $language = null;
 
+    #[ORM\ManyToMany(targetEntity: PrintingOptions::class, mappedBy: 'Agencies')]
+    private Collection $printingOptions;
+
     public function __construct()
     {
         $this->customerCards = new ArrayCollection();
+        $this->printingOptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,6 +108,33 @@ class Agency
     public function setLanguage(?string $language): self
     {
         $this->language = $language;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PrintingOptions>
+     */
+    public function getPrintingOptions(): Collection
+    {
+        return $this->printingOptions;
+    }
+
+    public function addPrintingOption(PrintingOptions $printingOption): self
+    {
+        if (!$this->printingOptions->contains($printingOption)) {
+            $this->printingOptions->add($printingOption);
+            $printingOption->addAgency($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrintingOption(PrintingOptions $printingOption): self
+    {
+        if ($this->printingOptions->removeElement($printingOption)) {
+            $printingOption->removeAgency($this);
+        }
 
         return $this;
     }

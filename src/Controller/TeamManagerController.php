@@ -306,15 +306,19 @@ class TeamManagerController extends AbstractController
         $printingOptionsUserExist = true;
         
         $choosenAirports = [];
+        $choosenAgencies = [];
         if ($printingOptionsUser != null) {
             foreach ($printingOptionsUser->getAirport() as $airport) {
                 $choosenAirports[] = $airport;
+            }
+            foreach ($printingOptionsUser->getAgencies() as $agency) {
+                $choosenAgencies[] = $agency;
             }
         }
 
 
         // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $customerCardRepository->findByMeetingDate($date, true, $choosenAirports);
+        $meetings = $customerCardRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
 
 
         $checkFormAgencies = $request->request->get("form_check_agencies");
@@ -324,12 +328,7 @@ class TeamManagerController extends AbstractController
                 $data = $request->request->get("agence_". $agency->getId());
                 
                 $test = ($data == "on") ? true : false;
-                if ($agency->getIsActive() != $test) {
-                    $agency->setIsActive($test);
-                    $manager->flush($agency);
-                } 
-            
-              
+
                 // si non, la créer
                 
                 if ($printingOptionsUser == null) {
@@ -338,6 +337,14 @@ class TeamManagerController extends AbstractController
                     $printingOptionsUserExist = false;
 
                 } 
+
+                    if($test) {
+                        $printingOptionsUser->addAgency($agency);
+                    } else {
+                        $printingOptionsUser->removeAgency($agency);
+                    }
+            
+              
 
                 
                 foreach ($airports as $airport) { 
