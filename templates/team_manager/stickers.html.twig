@@ -183,19 +183,19 @@
 						<div class="card">
 								<div class="text-center">
 									<div class="card-body">
-										<h5 class="card-title">{% trans %}Choose the meeting date{% endtrans %}</h5>
+										<h5 class="card-title">{% trans %}Print form{% endtrans %}</h5>
 										<div class="row justify-content-center">
 											<div class="col-md-3">
 											<form action="{{ path('app_admin_stickers_par_date') }}" method="GET" class="form-control">
 												<div class="my-3">
-													<label for="date">Date</label>
+													<label for="date">Meeting Date</label>
 													<input class="form-select" id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
 												</div>
 												<div class="my-3">
 													<label for="labelNumber">Print from</label>
 													<select class="form-select" id="labelNumber" aria-label="Print from" name="labelNumber">
 														{% for i in 1..10 %}
-															<option value="{{i}}" {{ (app.request.get('labelNumber') == i) ? "selected" : "" }}>{% trans %} Label {% endtrans %}{{i}}</option>
+															<option value="{{i}}" {{ (app.request.get('labelNumber') == i) ? "selected" : "" }}>{% trans %}Label{% endtrans %} {{i}}</option>
 														{% endfor %}
 													</select>
 												</div>
