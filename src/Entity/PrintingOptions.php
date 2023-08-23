@@ -22,11 +22,15 @@ class PrintingOptions
     #[ORM\ManyToMany(targetEntity: AirportHotel::class, inversedBy: 'printingOptions')]
     private Collection $Airport;
 
+    #[ORM\ManyToMany(targetEntity: Agency::class, inversedBy: 'printingOptions')]
+    private Collection $Agencies;
+
 
 
     public function __construct()
     {
         $this->Airport = new ArrayCollection();
+        $this->Agencies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,6 +70,30 @@ class PrintingOptions
     public function removeAirport(AirportHotel $airport): self
     {
         $this->Airport->removeElement($airport);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Agency>
+     */
+    public function getAgencies(): Collection
+    {
+        return $this->Agencies;
+    }
+
+    public function addAgency(Agency $agency): self
+    {
+        if (!$this->Agencies->contains($agency)) {
+            $this->Agencies->add($agency);
+        }
+
+        return $this;
+    }
+
+    public function removeAgency(Agency $agency): self
+    {
+        $this->Agencies->removeElement($agency);
 
         return $this;
     }
