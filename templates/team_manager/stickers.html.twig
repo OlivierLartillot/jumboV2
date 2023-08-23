@@ -186,7 +186,12 @@
 										<h5 class="card-title">{% trans %}Choose the meeting date{% endtrans %}</h5>
 										<p>
 										<form action="{{ path('app_admin_stickers_par_date') }}" method="GET">
-											<input name="date" type="date" value="{{date | date('Y-m-d') }}">
+											<input class="form-select"  name="date" type="date" value="{{date | date('Y-m-d') }}">
+											<select class="form-select" aria-label="Print from" name="labelNumber">
+												<option value="1" selected>1</option>
+												<option value="2" {{ (app.request.get('labelNumber') == 2) ? "selected" : "" }}>2</option>
+												<option value="3">3</option>
+											</select>
 											<input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
 										</form>
 										</p>
@@ -269,6 +274,8 @@
 					}
 					
 				%}
+				
+				{% set labelNumber = app.request.get('labelNumber') %}
 
 				{% for meetingInfos in meetings %}
 
@@ -279,9 +286,17 @@
 						<div class="labels-container {{ pagesSuivantes }}">
 					{% endif %} 
 
+						{% if labelNumber > 1 %}
+						{% set labelNumber = labelNumber - 1 %}
+							{% for j in 1..labelNumber %}
+								<div class="label d-flex flex-column justify-content-between"></div>
+								{% set i = i + 1 %}
+							{% endfor %}
+						{% endif %}
+						{% set labelNumber = 0 %}
+
 						<div class="label d-flex flex-column justify-content-between">
 							
-
 							{% if meetingInfos.staff %}
 
 							<div class="qrcode">

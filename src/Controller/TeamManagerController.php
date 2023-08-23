@@ -314,22 +314,6 @@ class TeamManagerController extends AbstractController
         // récupérer les cutomerCard correspondant à la meeting date
         $meetings = $customerCardRepository->findByMeetingDate($date, true, $choosenAirports);
 
-/*         $meetingsToPrint = [];
-
-        foreach ($meetings as $meeting) {
-   
-            foreach($meeting->getTransferArrivals() as $airport) {
-                foreach ($printingOptionsUser->getAirport() as $userAirportChoice) {
-                    if ($airport->getFromStart() == $userAirportChoice) {
-                        $meetingsToPrint[] = $meeting;
-                    }
-                }
-            }           
-        }
-
-        dd($meetingsToPrint); */
-
-
 
         $checkFormAgencies = $request->request->get("form_check_agencies");
         if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
