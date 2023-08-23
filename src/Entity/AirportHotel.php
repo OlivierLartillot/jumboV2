@@ -21,9 +21,6 @@ class AirportHotel
     #[ORM\Column]
     private ?bool $isAirport = null;
 
-    #[ORM\OneToMany(mappedBy: 'toArrival', targetEntity: Transfer::class)]
-    private Collection $transfersArrival;
-
     #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: TransferArrival::class)]
     private Collection $transferArrivals;
 
@@ -38,7 +35,6 @@ class AirportHotel
 
     public function __construct()
     {
-        $this->transfersArrival = new ArrayCollection();
         $this->transferArrivals = new ArrayCollection();
         $this->transferInterHotels = new ArrayCollection();
         $this->transferDepartures = new ArrayCollection();

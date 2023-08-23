@@ -2,14 +2,8 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: 'Rep Briefings Attributions details'|trans}) }}
 
-        <!-- Loader -->
-        <div id="preloader">
-            <div id="status">
-                <div class="spinner">
-                    <i class="uil-shutter-alt spin-icon"></i>
-                </div>
-            </div>
-        </div>
+	<!-- Loader -->
+    {{ include('modules/loaderPerso.html.twig') }}
 
 
     <h1 class="text-center">{{ user }} {% trans %}le{% endtrans %} {{date | date('d m Y') }}</h1>

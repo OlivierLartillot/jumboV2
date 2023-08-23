@@ -21,14 +21,10 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'All', title: 'Clients Cards'|trans}) }}
 
 
-        <!-- Loader -->
-        <div id="preloader">
-            <div id="status">
-                <div class="spinner">
-                    <i class="uil-shutter-alt spin-icon"></i>
-                </div>
-            </div>
-        </div>
+	<!-- Loader -->
+    {{ include('modules/loaderPerso.html.twig') }}
+
+    
         <div class="row">
 
             <form method="GET">

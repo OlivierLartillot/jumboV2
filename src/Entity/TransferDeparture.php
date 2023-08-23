@@ -27,11 +27,11 @@ class TransferDeparture
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferDeparture')]
+    #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $fromStart = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferDeparture')]
+    #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 

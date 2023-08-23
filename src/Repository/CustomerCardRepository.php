@@ -153,7 +153,7 @@ class CustomerCardRepository extends ServiceEntityRepository
 
         return $query;
 
-        return $this->createQueryBuilder('c')
+/*         return $this->createQueryBuilder('c')
             ->leftJoin('App\Entity\Agency', 'agency', 'WITH', 'c.agency = agency.id')
             ->andWhere('c.meetingAt >= :date_start')
             ->andWhere('c.meetingAt <= :date_end')
@@ -164,7 +164,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->setParameter('agencyIsActive', true)
             ->getQuery()
             ->getResult()
-        ;
+        ; */
     }
 
     /**

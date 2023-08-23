@@ -2,14 +2,8 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
 
-        <!-- Loader -->
-        <div id="preloader">
-            <div id="status">
-                <div class="spinner">
-                    <i class="uil-shutter-alt spin-icon"></i>
-                </div>
-            </div>
-        </div>
+	<!-- Loader -->
+    {{ include('modules/loaderPerso.html.twig') }}
 
         <div class="row mb-3">    
             <form action={{ path('app_admin_team_manager_replist') }} method="GET">
