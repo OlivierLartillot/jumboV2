@@ -306,8 +306,10 @@ class TeamManagerController extends AbstractController
         $printingOptionsUserExist = true;
         
         $choosenAirports = [];
-        foreach ($printingOptionsUser->getAirport() as $airport) {
-            $choosenAirports[] = $airport;
+        if ($printingOptionsUser != null) {
+            foreach ($printingOptionsUser->getAirport() as $airport) {
+                $choosenAirports[] = $airport;
+            }
         }
 
 
