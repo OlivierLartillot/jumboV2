@@ -121,7 +121,7 @@ class CustomerCardRepository extends ServiceEntityRepository
      * @return CustomerCard[] Returns an array of CustomerCard objects by meeting date (day) and 
      * si l on a besoin de checker si l agence est activée (ex dans les étiquettes)
      */
-    public function findByMeetingDate($dateTimeImmutable, $needIsActivate = false): array
+    public function findByMeetingDate($dateTimeImmutable, $needIsActivate = false, $airports = []): array
     {
 
 
@@ -131,8 +131,14 @@ class CustomerCardRepository extends ServiceEntityRepository
 
         if ($needIsActivate) {
             $query = $query->leftJoin('App\Entity\Agency', 'agency', 'WITH', 'c.agency = agency.id');
+            $query = $query->leftJoin('App\Entity\TransferArrival', 'ta', 'WITH', 'c.id = ta.customerCard');
         }
 
+        // $query équivalent de in array   
+        $query = $query->andWhere($query->expr()->in('ta.fromStart', ':airport'))->setParameter('airport', $airports);
+        
+        
+        
         $query = $query->andWhere('c.meetingAt >= :date_start')->andWhere('c.meetingAt <= :date_end')->andWhere('c.meetingPoint is not null');
 
         if ($needIsActivate) {

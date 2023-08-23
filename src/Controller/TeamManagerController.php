@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Agency;
+use App\Entity\PrintingOptions;
 use App\Entity\User;
 use App\Form\AgenciesActivationType;
 use App\Form\RepAttributionType;
 use App\Repository\AgencyRepository;
+use App\Repository\AirportHotelRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
+use App\Repository\PrintingOptionsRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
@@ -278,19 +281,39 @@ class TeamManagerController extends AbstractController
     public function stickersParDate(CustomerCardRepository $customerCardRepository, 
                                     EntityManagerInterface $manager, 
                                     AgencyRepository $agencyRepository,
+                                    AirportHotelRepository $airportHotelRepository,
+                                    PrintingOptionsRepository $printingOptionsRepository,
                                     Request $request,
                                     DefineQueryDate $defineQueryDate): Response 
     {
+
+
+
+
 
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:01:00');
         // sert a prévenir l utilisateur que lorsque qu il a changé les agences il faut aussi mettre a jour la date
         $formAgencySend = false;
+        $user = $this->getUser();
+
+        
+        $agencies = $agencyRepository->findAll();
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        
+        // regarder si une fiche Printing Options existe pour cet utilisateur
+        $printingOptionsUser = $printingOptionsRepository->findOneBy(["user" => $user]); 
+        $printingOptionsUserExist = true;
+        
+        $choosenAirports = [];
+        foreach ($printingOptionsUser->getAirport() as $airport) {
+            $choosenAirports[] = $airport;
+        }
+
 
         // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $customerCardRepository->findByMeetingDate($date, true);
+        $meetings = $customerCardRepository->findByMeetingDate($date, true, $choosenAirports);
 
-        $agencies = $agencyRepository->findAll();
 
         $checkFormAgencies = $request->request->get("form_check_agencies");
         if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
@@ -304,6 +327,33 @@ class TeamManagerController extends AbstractController
                     $manager->flush($agency);
                 } 
             
+              
+                // si non, la créer
+                
+                if ($printingOptionsUser == null) {
+                    $printingOptionsUser = new PrintingOptions();
+                    $printingOptionsUser->setUser($user);
+                    $printingOptionsUserExist = false;
+
+                } 
+
+                
+                foreach ($airports as $airport) { 
+                    $data = $request->request->get("airport_". $airport->getId());
+                    $test = ($data == "on") ? true : false;
+                    
+                    // si c est on on rajoute
+                    if($test) {
+                        $printingOptionsUser->addAirport($airport);
+                    } else {
+                        $printingOptionsUser->removeAirport($airport);
+                    }
+                    $manager->persist($printingOptionsUser);
+                    $manager->flush($printingOptionsUser);                   
+                }
+
+
+
     
             }
             $this->addFlash(
@@ -317,7 +367,9 @@ class TeamManagerController extends AbstractController
             "date" => $date,
             "meetings" => $meetings,
             "agencies" => $agencies,
-            "formAgencySend" => $formAgencySend
+            "airports" => $airports,
+            "formAgencySend" => $formAgencySend,
+            "printingOptionsUser" => $printingOptionsUser,
         ]);
 
     }
