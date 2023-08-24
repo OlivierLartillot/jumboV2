@@ -135,7 +135,7 @@
                 </div>
 
             <div class="row ms-5 mt-5">
-                {% trans %}There are{% endtrans %} {{ customer_cards| length }} {% trans %}matching results{% endtrans %}.
+                {% trans %}There are{% endtrans %} {{ count }} {% trans %}matching results{% endtrans %}.
             </div>
 
 
@@ -145,6 +145,10 @@
 
             {# si le nature transfert == 1 alors custommer card = customer cards ou le tranfer > 0 #}
 
+            <div class="d-flex justify-content-center mb-5">
+            {# {% do customer_cards.setPageRange(1) %} #}
+                {{ knp_pagination_render(customer_cards, 'modules/pagination.html.twig') }}
+            </div>
 
             {% for customer_card in customer_cards %}
 
@@ -311,6 +315,12 @@
             </div>
 
             {% endfor %}
+
+            <div class="d-flex justify-content-center">
+            {# {% do customer_cards.setPageRange(1) %} #}
+            {{ knp_pagination_render(customer_cards, 'modules/pagination.html.twig') }}
+            </div>
+
 
         </div>
 
