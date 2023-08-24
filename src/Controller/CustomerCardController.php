@@ -22,11 +22,11 @@ use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 class CustomerCardController extends AbstractController
 {
@@ -36,7 +36,8 @@ class CustomerCardController extends AbstractController
                           StatusRepository $statusRepository, 
                           UserRepository $userRepository,
                           AgencyRepository $agencyRepository,
-                          AirportHotelRepository $airportHotelRepository): Response
+                          AirportHotelRepository $airportHotelRepository, 
+                          PaginatorInterface $paginator): Response
     {
 
             //Listes des informations a afficher dans les tris
@@ -95,14 +96,24 @@ class CustomerCardController extends AbstractController
                 // la requete qui execute la recherche
                 $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
+                $count = count($results);
+                
+
+                $pagination = $paginator->paginate(
+                    $results,
+                    $request->query->getInt('page', 1),
+                    27,
+                );
+
                 //dd($results);
                 // et on envoi la nouvelle page 
                 return $this->render('customer_card/index.html.twig', [
-                    'customer_cards' => $results,
+                    'customer_cards' => $pagination,
+                    'count' => $count,
                     'agencies' => $agencies,
                     'hotels' => $hotels,
                     'statusList' => $statusList,
-                    'reps' => $reps
+                    'reps' => $reps,
                 ]);
                 
                 
