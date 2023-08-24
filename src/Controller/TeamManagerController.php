@@ -292,6 +292,7 @@ class TeamManagerController extends AbstractController
 
 
         $day =  $defineQueryDate->returnDay($request);
+       
         $date = new DateTimeImmutable($day . '00:01:00');
         // sert a prévenir l utilisateur que lorsque qu il a changé les agences il faut aussi mettre a jour la date
         $formAgencySend = false;

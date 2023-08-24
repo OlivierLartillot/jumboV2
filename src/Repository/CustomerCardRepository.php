@@ -138,12 +138,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         $query = $query->andWhere($query->expr()->in('ta.fromStart', ':airport'))->setParameter('airport', $airports);
         $query = $query->andWhere($query->expr()->in('c.agency', ':agency'))->setParameter('agency', $agencies);
 
-        
-        
-        
-        $query = $query->andWhere('c.meetingAt >= :date_start')->andWhere('c.meetingAt <= :date_end')->andWhere('c.meetingPoint is not null');
-
-
+        $query = $query->andWhere('ta.date >= :date_start')->andWhere('ta.date <= :date_end')->andWhere('c.meetingPoint is not null');
 
         $query = $query->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
         ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'));
