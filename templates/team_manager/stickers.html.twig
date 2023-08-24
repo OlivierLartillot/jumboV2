@@ -186,9 +186,6 @@
 								</div>
 						</div>
 
-
-
-
 						<div class="card">
 								<div class="text-center">
 									<div class="card-body">
@@ -198,7 +195,7 @@
 											<form action="{{ path('app_admin_stickers_par_date') }}" method="GET" class="form-control">
 												<div class="my-3">
 													<label for="date">{% trans %}Arrival Date{% endtrans %}</label>
-													<input class="form-select" id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
+													<input class="form-control" id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
 												</div>
 												<div class="my-3">
 													<label for="labelNumber">{% trans %}Print from{% endtrans %}</label>
