@@ -46,7 +46,7 @@
                                 <option value="1" {{ (app.request.query.get('customerPresence') == 1 ) ? 'selected' : '' }}>{% trans %}Presence{% endtrans %}</option>
                                 <option value="2" {{ (app.request.query.get('customerPresence') == 2 ) ? 'selected' : '' }}>{% trans %}Operations{% endtrans %}</option>
                             </select>
-                            <label for="customerPresence">{% trans %}research on{% endtrans %}: </label>
+                            <label for="customerPresence">{% trans %}Research on{% endtrans %} </label>
                         </div>
                     </div>                            
                     {% set now = "now"|date("Y-m-d") %}
@@ -60,12 +60,12 @@
                     <div id="divNatureTransfer" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
                         <div class="form-floating mb-3">
                             <select name="natureTransfer" class="form-select" id="natureTransfer" aria-label="Floating label select example">
-                                <option value="all" selected>Nature Transfer</option>
+                                <option value="all" selected>{% trans %}All Natures Transfers{% endtrans %}</option>
                                 <option value="1" {{ (app.request.query.get('natureTransfer') == 1 ) ? 'selected' : '' }}>{% trans %}Arrival{% endtrans %}</option>
                                 <option value="2" {{ (app.request.query.get('natureTransfer') == 2 ) ? 'selected' : '' }}>{% trans %}Inter Hotel{% endtrans %}</option>
                                 <option value="3" {{ (app.request.query.get('natureTransfer') == 3 ) ? 'selected' : '' }}>{% trans %}Departure{% endtrans %}</option>
                             </select>
-                            <label for="natureTransfer">{% trans %}Works with selects{% endtrans %}</label>
+                            <label for="natureTransfer">{% trans %}Select Nature Transfer{% endtrans %}</label>
                         </div>
                     </div>
                 </div>
@@ -78,25 +78,25 @@
                                     <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
                                 {% endfor %}
                             </select>
-                            <label for="reps">{% trans %}Select a rep{% endtrans %}</label>
+                            <label for="reps">{% trans %}Select a Rep{% endtrans %}</label>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-floating mb-3">
                             <select name="status" class="form-select" id="statusForm" aria-label="Floating label select example">
-                                <option value="all" selected>Status</option>
+                                <option value="all" selected>{% trans %}All Status{% endtrans %}</option>
                                 {% for status in statusList%}
                                     <option value="{{ status.id }}" {{ (app.request.query.get('status') == status.id ) ? 'selected' : '' }}>{{ status.name }}</option>
                                 {% endfor %}
 
                             </select>
-                            <label for="statusForm">Works with selects</label>
+                            <label for="statusForm">{% trans %}Select Status{% endtrans %}</label>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-floating mb-3">
                             <select name="agency" class="form-select" id="agency" aria-label="Floating label select example">
-                                    <option value="all" selected>Agencies</option>
+                                    <option value="all" selected>{% trans %}All Agencies{% endtrans %}</option>
                                     {% for agency in agencies%}
                                         <option value="{{ agency.id }}" {{ (app.request.query.get('agency') == agency.id ) ? 'selected' : '' }}>{{ agency.name|title }}</option>
                                     {% endfor %}
@@ -107,7 +107,7 @@
                     <div class="col-md-2">
                         <div class="form-floating mb-3">
                             <select name="hotel" class="form-select-perso" id="hotel" aria-label="Floating label select example">
-                                    <option value="all" selected>Hotels</option>
+                                    <option value="all" selected>{% trans %}All Hotels{% endtrans %}</option>
                                     {% for hotel in hotels%}
                                         <option value="{{ hotel.id }}" {{ (app.request.query.get('hotel') == hotel.id ) ? 'selected' : '' }}>{{ hotel.name|title }}</option>
                                     {% endfor %}
@@ -135,7 +135,7 @@
                 </div>
 
             <div class="row ms-5 mt-5">
-                {% trans %}There are{% endtrans %}{{ customer_cards| length }} {% trans %}matching results{% endtrans %}.
+                {% trans %}There are{% endtrans %} {{ customer_cards| length }} {% trans %}matching results{% endtrans %}.
             </div>
 
 

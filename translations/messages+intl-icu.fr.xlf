@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="pYYrbZp" resname="Voucher Number">
         <source>Voucher Number</source>
-        <target>Numero de Voucher</target>
+        <target>Numero de bon</target>
       </trans-unit>
       <trans-unit id="yKdZKAW" resname="Adults">
         <source>Adults</source>
@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="SGYkRqi" resname="Voucher">
         <source>Voucher</source>
-        <target>Voucher</target>
+        <target>Bon</target>
       </trans-unit>
       <trans-unit id="Op5PUE_" resname="Edit Briefing Place">
         <source>Edit Briefing Place</source>
@@ -870,7 +870,7 @@
         <target>Choisir Agence(s) à Imprimer</target>
       </trans-unit>
       <trans-unit id="Nwjycce" resname="Choose the meeting date">
-        <source>Choisir Date de Réunion</source>
+        <source>Choose the meeting date</source>
         <target></target>
       </trans-unit>
       <trans-unit id="3w.nmJj" resname="Print">
@@ -920,6 +920,94 @@
       <trans-unit id="Y9zriAC" resname="Phone">
         <source>Phone</source>
         <target>Téléphone</target>
+      </trans-unit>
+      <trans-unit id="nDvfQPS" resname="Client Card">
+        <source>Client Card</source>
+        <target>Fiche Client</target>
+      </trans-unit>
+      <trans-unit id="RZid5J_" resname="Details">
+        <source>Details</source>
+        <target>Détails</target>
+      </trans-unit>
+      <trans-unit id="IYGXaTQ" resname="From">
+        <source>From</source>
+        <target>De</target>
+      </trans-unit>
+      <trans-unit id="9LBu9tP" resname="To">
+        <source>To</source>
+        <target>A</target>
+      </trans-unit>
+      <trans-unit id="8KmbnpF" resname="Transport Company">
+        <source>Transport Company</source>
+        <target>Compagnie de transport</target>
+      </trans-unit>
+      <trans-unit id="xxzozPO" resname="Nature">
+        <source>Nature</source>
+        <target>Nature</target>
+      </trans-unit>
+      <trans-unit id="S84QnNj" resname="Vehicle Type">
+        <source>Vehicle Type</source>
+        <target>Type de véhicule</target>
+      </trans-unit>
+      <trans-unit id="s_jckt8" resname="Pick Up Hour">
+        <source>Pick Up Hour</source>
+        <target>Heure de Pick up</target>
+      </trans-unit>
+      <trans-unit id="DRRmo5_" resname="Flight Hour">
+        <source>Flight Hour</source>
+        <target>Heure de Vol</target>
+      </trans-unit>
+      <trans-unit id="1mk6Qh6" resname="TimeLine">
+        <source>TimeLine</source>
+        <target>Historique</target>
+      </trans-unit>
+      <trans-unit id="BpW1Y6z" resname="with">
+        <source>with</source>
+        <target>avec</target>
+      </trans-unit>
+      <trans-unit id="Zj6hv.." resname="to">
+        <source>to</source>
+        <target>à</target>
+      </trans-unit>
+      <trans-unit id="IPDEcp3" resname="Updated by">
+        <source>Updated by</source>
+        <target>Modifié par</target>
+      </trans-unit>
+      <trans-unit id="NV958p1" resname="Comments">
+        <source>Comments</source>
+        <target>Commentaires</target>
+      </trans-unit>
+      <trans-unit id="aKED7Jc" resname="Rep Assignment">
+        <source>Rep Assignment</source>
+        <target>Assignation Rep</target>
+      </trans-unit>
+      <trans-unit id="Ewd8mpt" resname="Choose the agencies/Airports to print">
+        <source>Choose the agencies/Airports to print</source>
+        <target>Choisissez les Agences/Aéroports à imprimer</target>
+      </trans-unit>
+      <trans-unit id="6SErH1r" resname="Airports">
+        <source>Airports</source>
+        <target>Aéroports</target>
+      </trans-unit>
+      <trans-unit id="DS.667q" resname="Print form">
+        <source>Print form</source>
+        <target>Formulaire d'impression</target>
+      </trans-unit>
+      <trans-unit id="R2VYUbb" resname="Meeting Date">
+        <source>Meeting Date</source>
+        <target>Date du meeting</target>
+      </trans-unit>
+      <trans-unit id="WiUbpBb" resname="Print from">
+        <source>Print from</source>
+        <target>Imprimer à partir de </target>
+      </trans-unit>
+      <trans-unit id="DmY3P0X" resname="Label">
+        <source>Label</source>
+        <target>Etiquette</target>
+      </trans-unit>
+      <trans-unit id="QGEau92" resname="Validate">
+        <source>Validate</source>
+        <target>Valider</target>
       </trans-unit>
     </body>
   </file>
