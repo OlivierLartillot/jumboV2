@@ -148,7 +148,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         $query = $query->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
         ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'));
 
-
+        $query= $query->orderBy('ta.flightNumber', 'ASC');
         $query = $query->getQuery()->getResult();
 
         return $query;
