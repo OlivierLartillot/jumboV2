@@ -135,7 +135,11 @@
                 </div>
 
             <div class="row ms-5 mt-5">
-                {% trans %}There are{% endtrans %} {{ count }} {% trans %}matching results{% endtrans %}.
+                {% if count > 1 %}
+                    {% trans %}There are{% endtrans %} {{ count }} {% trans %}matching results{% endtrans %}.
+                {% else  %}
+                    {% trans %}There is{% endtrans %} {{ count }} {% trans %}matching result{% endtrans %}.
+                {% endif %}
             </div>
 
 
@@ -151,12 +155,6 @@
             </div>
 
             {% for customer_card in customer_cards %}
-
-                    
-                {# {% if  (app.request.query.get('natureTransfer') == 1 ) %} #}
-
-
-
 
             <div class="col-xl-4 col-sm-6">
                 <div class="card">

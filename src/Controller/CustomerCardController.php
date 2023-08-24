@@ -128,23 +128,37 @@ class CustomerCardController extends AbstractController
 
         // quand on arrive sur la page on récupere les mouvements du jour
         $findAllByNow = $customerCardRepository->findByNow();
-
+        $count = count($findAllByNow);
+        $pagination = $paginator->paginate(
+            $findAllByNow,
+            $request->query->getInt('page', 1),
+            27,
+        );
         return $this->render('customer_card/index.html.twig', [
-            'customer_cards' => $findAllByNow,
+            'customer_cards' => $pagination,
             'agencies' => $agencies,
             'hotels' => $hotels,
             'statusList' => $statusList,
-            'reps' => $reps
+            'reps' => $reps,
+            'count' => $count,
         ]);
     }
 
     #[Route('/search', name: 'app_customer_card_search', methods: ['GET', 'POST'])]
-    public function search(Request $request, CustomerCardRepository $customerCardRepository): Response
+    public function search(Request $request, CustomerCardRepository $customerCardRepository, PaginatorInterface $paginator): Response
     {
         $results = $customerCardRepository->search($request->request->get('search'));
+        $count = count($results);
+
+        $pagination = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            27,
+        );
 
         return $this->render('customer_card/search.html.twig', [
-            'customer_cards' => $results
+            'customer_cards' => $pagination,
+            'count' => $count,
         ]); 
         
     }
