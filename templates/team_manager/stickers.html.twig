@@ -198,7 +198,44 @@
 													<input class="form-control" id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
 												</div>
 												<div class="my-3">
-													<label for="labelNumber">{% trans %}Print from{% endtrans %}</label>
+													<label for="labelNumber">{% trans %}Print from{% endtrans %}
+
+
+<!-- Button trigger modal -->
+<button type="button" class="badge bg-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  ?
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Disposition des étiquettes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+    		<img src="{{ asset("images/etiquettes.jpg")}}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{# 
+
+<div class="modal-dialog modal-dialog-centered">
+  
+</div> #}
+														
+														
+													</label>
 													<select class="form-select" id="labelNumber" aria-label="Print from" name="labelNumber">
 														{% for i in 1..10 %}
 															<option value="{{i}}" {{ (app.request.get('labelNumber') == i) ? "selected" : "" }}>{% trans %}Label{% endtrans %} {{i}}</option>
