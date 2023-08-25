@@ -2,9 +2,6 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
 
-	<!-- Loader -->
-    {{ include('modules/loaderPerso.html.twig') }}
-
         <div class="row mb-3">    
             <form action={{ path('app_admin_team_manager_replist') }} method="GET">
                 <input name="date" type="date" value="{{date | date('Y-m-d') }}">
