@@ -89,7 +89,7 @@ class RepController extends AbstractController
         $date = $_GET['date'];
 
         // TODO : recupérer le rep actif
-        $user= $userRepository->find(3);
+        $user= $userRepository->find($this->getUser());
         
         //recupérer tous les  clients de ce rep pour departure a cette date
         $allCustomersDeparture = $transferDepartureRepository->findByUserAndDate($user, $date);
