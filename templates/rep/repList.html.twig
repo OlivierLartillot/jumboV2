@@ -9,11 +9,7 @@
             </form>
         </div>
 
-        {% if countNonAssignedClient > 0 %}
-            <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} {{ (countNonAssignedClient>1) ? "clients do not"|trans : "client does not"|trans }} {% trans %} yet have a meeting time assigned{% endtrans %}.</p>
-        {% else %}
-            <p class="alert alert-success" role="alert">{% trans %}No or more client groups to assign for this date{% endtrans %}.</p>
-        {% endif %}
+
 
         <p class="alert alert-info" role="alert">
             {% trans %}Arrival date{% endtrans %}: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
@@ -22,19 +18,11 @@
 
         <div class="row">
             
-            {% for user in users %}
+           
                 <div class="col-sm-5 mb-3 mb-sm-0">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ user }} </h5>
-
-                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
-                                    {% set rights = true %}
-                                {% elseif  app.user == user %}
-                                    {% set rights = true %}
-                                {% else %}
-                                    {% set rights = false %}
-                                {% endif %}
 
                                 {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
 
@@ -43,13 +31,10 @@
                                 <p>{% trans %}Adults{% endtrans %}: {{ paxTab[user.username]['adults'] }}  / {% trans %}Children{% endtrans %}: {{ paxTab[user.username]['children'] }}  / {% trans %}Babies{% endtrans %}: {{ paxTab[user.username]['babies'] }} </p>
                                 {% endif %}
 
-
-
-
-
-
                                 <hr>
                                 {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                               
+
                                     {% if (regroupement is empty) %}                                                        
                                     {% endif %}
                                     {% if regroupement.staff == user %}
@@ -80,15 +65,11 @@
                                         <hr>
                                     {% endif %}
                                 {% endfor %}
-                                {% if rights %}
-                                    {% if paxCount > 0 %} 
-                                        <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">{% trans %}Update{% endtrans %}</a> 
-                                    {% endif %}
-                                {% endif %}
+                            
                         </div>              
                     </div>
                 </div>
-            {% endfor %}
+          
         </div>
 
 {{ include('partials/footer-regroupement.html.twig') }}

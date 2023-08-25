@@ -64,6 +64,16 @@
                     </a>
                 </li>
                 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_REP" in app.user.roles) ) %} 
+                    <li>
+                        <a href="{{ path('app_admin_rep_replist') }}">
+                            <i class="uil-pen"></i>
+                            <span>{% trans %}My briefings{% endtrans %}</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
                     <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 

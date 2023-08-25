@@ -183,7 +183,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/team_manager/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
+    #[Route('/team-manager/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
     public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, 
                                                 MeetingPointRepository $meetingPointRepository,  
                                                 UserRepository $userRepository,
