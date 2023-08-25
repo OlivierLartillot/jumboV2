@@ -65,26 +65,26 @@
                 </li>
                 
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
-                <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
+                    <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 
-                <li>
-                    <a href="{{ path('app_admin_team_manager') }}">
-                        <i class="uil-pen"></i>
-                        <span>{% trans %}Rep assignment{% endtrans %}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('app_admin_team_manager_replist') }}">
-                        <i class="uil-calendar-alt"></i>
-                        <span>{% trans %}Rep Briefings{% endtrans %}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('app_admin_stickers_par_date') }}">
-                        <i class="uil-print"></i>
-                        <span>{% trans %}Labels printing{% endtrans %}</span>
-                    </a>
-                </li>
+                    <li>
+                        <a href="{{ path('app_admin_team_manager') }}">
+                            <i class="uil-pen"></i>
+                            <span>{% trans %}Rep assignment{% endtrans %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_admin_team_manager_replist') }}">
+                            <i class="uil-calendar-alt"></i>
+                            <span>{% trans %}Rep Briefings{% endtrans %}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_admin_stickers_par_date') }}">
+                            <i class="uil-print"></i>
+                            <span>{% trans %}Labels printing{% endtrans %}</span>
+                        </a>
+                    </li>
                 {% endif %}
 
                 <li>
@@ -93,13 +93,15 @@
                         <span>{% trans %}Pax calculation{% endtrans %}</span>
                     </a>
                 </li>
-
-                <li>
-                    <a href="{{ path('app_customer_card_pax_par_rep', {'id': app.user.id }) }}">
-                        <i class="uil-users-alt"></i>
-                        <span>{% trans %}My pax app.user.id{% endtrans %}</span>
-                    </a>
-                </li>
+                
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_REP" in app.user.roles) ) %} 
+                    <li>
+                        <a href="{{ path('app_customer_card_pax_par_rep', {'id': app.user.id }) }}">
+                            <i class="uil-users-alt"></i>
+                            <span>{% trans %}My pax{% endtrans %}</span>
+                        </a>
+                    </li>
+                {% endif %}
 
 
                 <li class="menu-title">{% trans %}Airport Team{% endtrans %}</li>

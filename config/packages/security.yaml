@@ -37,9 +37,9 @@ security:
         - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
         - { path: ^/team-manager, roles: [ROLE_HULK, ROLE_SUPERMAN] }
         - { path: ^/team-transfer, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
-        - { path: ^/pax, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_REP] }
         - { path: ^/airport, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT] }
         - { path: ^/transportation, roles: [ROLE_HULK, ROLE_SUPERMAN] }
+        - { path: ^/pax, roles: [ROLE_HULK, ROLE_REP] }
 
         
 
