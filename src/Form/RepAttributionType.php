@@ -34,7 +34,7 @@ class RepAttributionType extends AbstractType
             'label' => "Reps",
             'placeholder' => 'Choose a Rep',
             'class' => User::class,
-            'autocomplete' =>true,
+            'autocomplete' =>false,
             'choices' => $repList,
          
         ] )

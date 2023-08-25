@@ -1,13 +1,12 @@
 {{ include('partials/header-reproupement.html.twig') }}
+    
+    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'New User'|trans}) }}
 
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'New User'}) }}
+    <a href="{{ path('app_user_list') }}" class="btn btn-primary waves-effect waves-light"><i class="uil-angle-left me-2"></i>{% trans %}Back to list{% endtrans %}</a>
 
 
-    <a href="{{ path('app_user_list') }}" class="btn btn-primary waves-effect waves-light"><i class="uil-angle-left me-2"></i>back to list</a>
-
-
-    <h1 class="text-center mb-5">Create new User</h1>
+    <h1 class="text-center mb-5">{% trans %}Create new User{% endtrans %}</h1>
 
 
     <div class="row justify-content-center">
@@ -15,5 +14,9 @@
             {{ include('user/_form.html.twig') }}
         </div>
     </div>
-    
+      
+{{ include('partials/footer-regroupement.html.twig') }}
+
+
+
 

@@ -37,7 +37,7 @@
                 <li class="menu-title">{% trans %}Import File{% endtrans %}</li>
                 {% endif %} 
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
                 <li>
                     <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
@@ -87,7 +87,7 @@
                     </li>
                 {% endif %}
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
                     <li>
                         <a href="{{ path('app_customer_card_pax') }}">
                             <i class="uil-users-alt"></i>
@@ -127,7 +127,7 @@
                     </li>
                 {% endif %}
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
                     <li class="menu-title">_______________</li>
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -138,8 +138,10 @@
                             <li><a href="{{ path('app_user_list')}}"><i class="uil-user"></i>{% trans %}Users{% endtrans %}</a></li>
                             <li><a href="{{ path('app_area_index')}}"><i class="uil-location-point"></i>{% trans %}Areas{% endtrans %}</a></li>
                             <li><a href="{{ path('app_meeting_point_index')}}"><i class="uil-map-pin"></i>{% trans %}Briefing Places{% endtrans %}</a></li>
-                            <li><a href="{{ path('app_status_index')}}"><i class="uil-check-square"></i>{% trans %}Client Status{% endtrans %}</a></li>
                             <li><a href="{{ path('app_agency_index')}}"><i class="uil-check-square"></i>{% trans %}Agencies{% endtrans %}</a></li>
+                            {% if ("ROLE_HULK" in app.user.roles) %}
+                                <li><a href="{{ path('app_status_index')}}"><i class="uil-check-square"></i>{% trans %}Client Status{% endtrans %}</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                 {% endif %}

@@ -2,11 +2,17 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'New Area'}) }}
 
-        <h1>Create new Area</h1>
 
-        {{ include('area/_form.html.twig') }}
+    <a href="{{ path('app_area_index') }}" class="btn btn-primary waves-effect waves-light"><i class="uil-angle-left me-2"></i>{% trans %}Back to list{% endtrans %}</a>
 
-        <a href="{{ path('app_area_index') }}">back to list</a>
+    <h1 class="text-center mb-5">{% trans %}Create new Area{% endtrans %}</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            {{ include('area/_form.html.twig') }}
+        </div>
+    </div>
+
             
 {{ include('partials/footer-regroupement.html.twig') }}
 

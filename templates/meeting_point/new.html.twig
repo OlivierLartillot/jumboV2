@@ -2,9 +2,14 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'New Briefing Place'}) }}
 
-    <a class="btn btn-secondary btn-sm my-3" href="{{ path('app_meeting_point_index') }}">back to list</a>
+    <a href="{{ path('app_meeting_point_index') }}" class="btn btn-primary waves-effect waves-light"><i class="uil-angle-left me-2"></i>{% trans %}Back to list{% endtrans %}</a>
 
 
-    {{ include('meeting_point/_form.html.twig') }}
+    <h1 class="text-center mb-5">{% trans %}Create new Briefing Place{% endtrans %}</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            {{ include('meeting_point/_form.html.twig') }}
+        </div>
+    </div>
 
 {{ include('partials/footer-regroupement.html.twig') }}
