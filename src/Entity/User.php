@@ -63,6 +63,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $language = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $deactivate = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -293,6 +296,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLanguage(?string $language): self
     {
         $this->language = $language;
+
+        return $this;
+    }
+
+    public function isDeactivate(): ?bool
+    {
+        return $this->deactivate;
+    }
+
+    public function setDeactivate(?bool $deactivate): self
+    {
+        $this->deactivate = $deactivate;
 
         return $this;
     }

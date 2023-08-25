@@ -33,6 +33,17 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('team-manager/user/disabled-users-list/', name: 'app_user_list_deactivate', methods: ['GET'])]
+    public function listDeactivateUsers(UserRepository $userRepository): Response
+    {
+
+        return $this->render('user/list-disabled-users.html.twig', [
+            'users' => $userRepository->findBy([
+                'deactivate' => true
+            ]),
+        ]);
+    }
+
     #[Route('team-manager/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $hasher): Response
     {

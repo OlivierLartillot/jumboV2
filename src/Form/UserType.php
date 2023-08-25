@@ -54,7 +54,7 @@ class UserType extends AbstractType
             ->add('area', EntityType::class, [
                 'class' => Area::class,
                 'placeholder' => 'Choose your area',
-                'autocomplete' => true,
+                
             ])
         ;
     }
