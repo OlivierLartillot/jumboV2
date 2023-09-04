@@ -287,10 +287,6 @@ class TeamManagerController extends AbstractController
                                     DefineQueryDate $defineQueryDate): Response 
     {
 
-
-
-
-
         $day =  $defineQueryDate->returnDay($request);
        
         $date = new DateTimeImmutable($day . '00:01:00');
@@ -344,10 +340,7 @@ class TeamManagerController extends AbstractController
                     } else {
                         $printingOptionsUser->removeAgency($agency);
                     }
-            
               
-
-                
                 foreach ($airports as $airport) { 
                     $data = $request->request->get("airport_". $airport->getId());
                     $test = ($data == "on") ? true : false;
@@ -361,10 +354,6 @@ class TeamManagerController extends AbstractController
                     $manager->persist($printingOptionsUser);
                     $manager->flush($printingOptionsUser);                   
                 }
-
-
-
-    
             }
             $this->addFlash(
                 'danger',
