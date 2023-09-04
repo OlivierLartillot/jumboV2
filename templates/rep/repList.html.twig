@@ -24,13 +24,13 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ user }} </h5>
 
-                                {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
-
-                                {% if paxCount == 0 %}  <p class="card-text">{% trans %}This rep has no client assigned today.{% endtrans %}</p> 
-                                {% else %}   
-                                <p>{% trans %}Adults{% endtrans %}: {{ paxTab[user.username]['adults'] }}  / {% trans %}Children{% endtrans %}: {{ paxTab[user.username]['children'] }}  / {% trans %}Babies{% endtrans %}: {{ paxTab[user.username]['babies'] }} </p>
+                                {% if  paxTab[user.username] is defined %}
+                                    {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
+                                    {% if paxCount == 0 %}  <p class="card-text">{% trans %}This rep has no client assigned today.{% endtrans %}</p> 
+                                    {% else %}   
+                                    <p>{% trans %}Adults{% endtrans %}: {{ paxTab[user.username]['adults'] }}  / {% trans %}Children{% endtrans %}: {{ paxTab[user.username]['children'] }}  / {% trans %}Babies{% endtrans %}: {{ paxTab[user.username]['babies'] }} </p>
+                                    {% endif %}
                                 {% endif %}
-
                                 <hr>
                                 {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
                                

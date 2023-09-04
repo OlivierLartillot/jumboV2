@@ -85,7 +85,7 @@ class HomeController extends AbstractController
         // 'delete-item' is the same value used in the template to generate the token
         if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
             //TODO: ... do something, like deleting an object
-           // ! redirige vers page erreur token
+           //! redirige vers page erreur token
            //dd('stop erreur token');
         }
 
@@ -96,16 +96,14 @@ class HomeController extends AbstractController
         if ( $error > 0) {
             die("Erreur lors de l'upload du fichier. Code d'erreur : " . $error);
         }
-    
+        
         // Vérifier si le fichier a été correctement téléchargé
         if (!file_exists($fileToUpload)) {
             die("Fichier non trouvé.");
         }
         
-
-
         // Vérifier le type de fichier
-        if (($mimeType != "text/csv") and ($mimeType != "text/plain")) {
+        if ($mimeType != "text/csv") {
             die("l extension du fichier n est pas bonne !");
         }
         
@@ -116,7 +114,7 @@ class HomeController extends AbstractController
             /*  $stream = fopen('csv/servicios.csv', 'r'); */
             $csv = Reader::createFromStream(fopen($fileToUpload, 'r+'));
             //$csv = Reader::createFromPath($_FILES["fileToUpload"]["tmp_name"], 'r');
-            $csv->setDelimiter('|');
+            $csv->setDelimiter(',');
             $csv->setHeaderOffset(0);
             
             
@@ -125,6 +123,19 @@ class HomeController extends AbstractController
             $user = $userRepository->find(1);
             $meetingPoint = $meetingPointRepository->find(1);
         
+            // désactivation des arrivées de ce jour
+            // _____________________________________
+            // TODO:  dans la boucle, enregistrer dans un tableau l'enregistrement courant
+            // enregistrer numéro client et si c est arrivée (true)
+            // (si c est arrivée il faudra tout virer)
+            // TODO: grace a la date, récupérer les enregistrements de se jour et comparer les deux tableaux
+            // virer l'enregistrement correspondant
+            // si il reste des enregistrements, cela veut dire que des dates ont été supprimées !
+            // si c est une arriév désactiver la date pour cette customer card OU virer carrément la customer card
+            $csvRecords = []; 
+            $j = 0;
+
+
 
             // début de l'extraction des données du csv
             // traitement de la première entrée ...
@@ -266,6 +277,7 @@ class HomeController extends AbstractController
                     //$fechaHora = $record['Fecha/Hora Origen'];
                     $fechaHora = explode(" ", $record['Fecha/Hora Origen']);
                     $natureTransfer = 1;
+                    $itsArrived = true;
                     $flightNumber = $record['Nº Vuelo/Transporte Origen'];
                     $dateTime = explode(" ", $record['Fecha/Hora Origen']);
                     // check si cet hotel existe
@@ -293,6 +305,7 @@ class HomeController extends AbstractController
                     //$fechaHora = $record['Fecha/Hora Destino'];
                     $fechaHora = explode(" ", $record['Fecha/Hora Destino']);
                     $natureTransfer = 3;
+                    $itsArrived = false;
                     $flightNumber = $record['Nº Vuelo/Transporte Destino'];
                     $dateTime = explode(" ", $record['Fecha/Hora Destino']);
                     // check si cet hotel existe
@@ -317,6 +330,7 @@ class HomeController extends AbstractController
                     //$fechaHora = $record['Fecha/Hora recogida'];
                     $fechaHora = explode(" ", $record['Fecha/Hora recogida']);
                     $natureTransfer = 2;
+                    $itsArrived = false;
                     $flightNumber = NULL;
                     $dateTime = explode(" ", $record['Fecha/Hora recogida']);
                     // check si cet hotel existe
@@ -384,10 +398,31 @@ class HomeController extends AbstractController
                     $manager->persist($transfer);
                 }
                 
-            }
-            
+
+
+            //remplir le tableau de comparaison
+            $csvRecords[$j]['reservationNumber'] = $reservationNumber ;
+            $csvRecords[$j]['itsArrived'] = $itsArrived ;
+            $j++;
+
+            }// ENDFOREACH
+
+
+            $tableauDesManquants = [];
+            // TODO: remettre apres le flush
+            $date = new DateTimeImmutable('2023-05-10');
+            // récupérer tous les customer cards du jour ARRIVee pour comparaison
+            $customerCardRecorded = $transferArrivalRepository->findBy(['date'=> $date]);
+            // récupérer tous les customer cards du jour interHotel pour comparaison
+            // récupérer tous les customer cards du jour Départ pour comparaison
+
+            dd($customerCardRecorded);
+            // TODO: pour chaque enregistrement correspondant, regarder si is in array sinon rajouter dans le tableau des manquants
+
+
+                //mise a jour du csv
                 $manager->flush();
-                
+
                     // TODO : regarder si un enregistrement a été supprimé
                     $csvArrivees = [];
                     $csvInterHotels = [];
