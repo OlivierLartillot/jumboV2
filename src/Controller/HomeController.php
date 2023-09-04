@@ -102,8 +102,10 @@ class HomeController extends AbstractController
             die("Fichier non trouvé.");
         }
         
+
+
         // Vérifier le type de fichier
-        if ($mimeType != "text/csv") {
+        if (($mimeType != "text/csv") and ($mimeType != "text/plain")) {
             die("l extension du fichier n est pas bonne !");
         }
         
@@ -114,7 +116,7 @@ class HomeController extends AbstractController
             /*  $stream = fopen('csv/servicios.csv', 'r'); */
             $csv = Reader::createFromStream(fopen($fileToUpload, 'r+'));
             //$csv = Reader::createFromPath($_FILES["fileToUpload"]["tmp_name"], 'r');
-            $csv->setDelimiter(',');
+            $csv->setDelimiter('|');
             $csv->setHeaderOffset(0);
             
             
