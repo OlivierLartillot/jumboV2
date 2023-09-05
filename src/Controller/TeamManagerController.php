@@ -397,7 +397,7 @@ class TeamManagerController extends AbstractController
         
         // regarder si une fiche Printing Options existe pour cet utilisateur
         $printingOptionsUser = $printingOptionsRepository->findOneBy(["user" => $user]); 
-        dd($printingOptionsUser);
+        
         $printingOptionsUserExist = true;
         
         $choosenAirports = [];
