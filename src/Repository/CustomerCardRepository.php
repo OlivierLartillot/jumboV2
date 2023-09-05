@@ -130,9 +130,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('c');
 
        
-        $query = $query->leftJoin('App\Entity\TransferArrival', 'ta', 'WITH', 'c.id = ta.customerCard');
-
-        
+        $query = $query->innerJoin('App\Entity\TransferArrival', 'ta', 'WITH', 'c.id = ta.customerCard');
 
         // $query équivalent de in array   
         if ($airports != null) {
