@@ -277,7 +277,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/team-manager/stickers-save',name: 'app_admin_stickers_par_date-SAVE',methods:["POST", "GET"])]
+    #[Route('/team-manager/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
     public function stickersParDate(CustomerCardRepository $customerCardRepository, 
                                     EntityManagerInterface $manager, 
                                     AgencyRepository $agencyRepository,
@@ -375,7 +375,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/team-manager/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
+    #[Route('/team-manager/stickers-test',name: 'app_admin_stickers_par_date_test',methods:["POST", "GET"])]
     public function stickersParDateBis(CustomerCardRepository $customerCardRepository, 
                                         EntityManagerInterface $manager, 
                                         AgencyRepository $agencyRepository,
