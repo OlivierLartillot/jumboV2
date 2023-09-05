@@ -7,95 +7,95 @@
     <body>
       <trans-unit id="Xaj3_8K" resname="Back to list">
         <source>Back to list</source>
-        <target>__Back to list</target>
+        <target>Retour à la liste</target>
       </trans-unit>
       <trans-unit id="hYaCrCA" resname="Create new Area">
         <source>Create new Area</source>
-        <target>__Create new Area</target>
+        <target>Créér une nouvelle Zone</target>
       </trans-unit>
       <trans-unit id="KdcvMW2" resname="Edit Client Card">
         <source>Edit Client Card</source>
-        <target>__Edit Client Card</target>
+        <target>Editer fiche client</target>
       </trans-unit>
       <trans-unit id="hHoaJaG" resname="Research on">
         <source>Research on</source>
-        <target>__Research on</target>
+        <target>Recherche sur</target>
       </trans-unit>
       <trans-unit id="_x2wvOW" resname="All Natures Transfers">
         <source>All Natures Transfers</source>
-        <target>__All Natures Transfers</target>
+        <target>Toutes les Types de Transfert</target>
       </trans-unit>
       <trans-unit id="tKe0FUr" resname="Select Nature Transfer">
         <source>Select Nature Transfer</source>
-        <target>__Select Nature Transfer</target>
+        <target>Sélectionne un Type de Transfert</target>
       </trans-unit>
       <trans-unit id="U2tP9hb" resname="Select a Rep">
         <source>Select a Rep</source>
-        <target>__Select a Rep</target>
+        <target>Sélectionne un Représentant</target>
       </trans-unit>
       <trans-unit id="QxCt1xv" resname="All Status">
         <source>All Status</source>
-        <target>__All Status</target>
+        <target>Tous les Statuts</target>
       </trans-unit>
       <trans-unit id="kXTMMp7" resname="Select Status">
         <source>Select Status</source>
-        <target>__Select Status</target>
+        <target>Sélectionne un Statut</target>
       </trans-unit>
       <trans-unit id="lu5x_F7" resname="All Agencies">
         <source>All Agencies</source>
-        <target>__All Agencies</target>
+        <target>Toutes les agences</target>
       </trans-unit>
       <trans-unit id="dCBp4QX" resname="All Hotels">
         <source>All Hotels</source>
-        <target>__All Hotels</target>
+        <target>Tous les Hôtels</target>
       </trans-unit>
       <trans-unit id="Fi2JqqF" resname="There is">
         <source>There is</source>
-        <target>__There is</target>
+        <target>Il y a</target>
       </trans-unit>
       <trans-unit id="4b3hOIm" resname="matching result">
         <source>matching result</source>
-        <target>__matching result</target>
+        <target>résultats</target>
       </trans-unit>
       <trans-unit id="7S_vaaA" resname="Create new Briefing Place">
         <source>Create new Briefing Place</source>
-        <target>__Create new Briefing Place</target>
+        <target>Créér un nouveau lieu de briefing</target>
       </trans-unit>
       <trans-unit id="NWmH1W4" resname="My briefings">
         <source>My briefings</source>
-        <target>__My briefings</target>
+        <target>Mes Briefings</target>
       </trans-unit>
       <trans-unit id="4QOpCXM" resname="My pax">
         <source>My pax</source>
-        <target>__My pax</target>
+        <target>Mes Pax</target>
       </trans-unit>
       <trans-unit id="m78S3nV" resname="Arrival Date">
         <source>Arrival Date</source>
-        <target>__Arrival Date</target>
+        <target>Date d'arrivée</target>
       </trans-unit>
       <trans-unit id="oRIZZUc" resname="Label layout">
         <source>Label layout</source>
-        <target>__Label layout</target>
+        <target>Disposition des étiquettes</target>
       </trans-unit>
       <trans-unit id="fZ63rLE" resname="Close">
         <source>Close</source>
-        <target>__Close</target>
+        <target>Fermer</target>
       </trans-unit>
       <trans-unit id="Yi6xT7y" resname="Disabled Users list">
         <source>Disabled Users list</source>
-        <target>__Disabled Users list</target>
+        <target>Liste des utilisateurs désactivés</target>
       </trans-unit>
       <trans-unit id="acUjoTs" resname="Disabled users">
         <source>Disabled users</source>
-        <target>__Disabled users</target>
+        <target>Utilisateurs désactivés</target>
       </trans-unit>
       <trans-unit id="MVJ_u5A" resname="New User">
         <source>New User</source>
-        <target>__New User</target>
+        <target>Nouvel utilisateur</target>
       </trans-unit>
       <trans-unit id="g36VwXo" resname="Create new User">
         <source>Create new User</source>
-        <target>__Create new User</target>
+        <target>Créer un utilisateur</target>
       </trans-unit>
     </body>
   </file>

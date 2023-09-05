@@ -373,5 +373,101 @@ class TeamManagerController extends AbstractController
 
     }
 
+    // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
+    // la fiche doit permettre de changer la date du mmeting comme de rep
+    #[Route('/team-manager/stickers-bis',name: 'app_admin_stickers_par_date_bis',methods:["POST", "GET"])]
+    public function stickersParDateBis(CustomerCardRepository $customerCardRepository, 
+                                    EntityManagerInterface $manager, 
+                                    AgencyRepository $agencyRepository,
+                                    AirportHotelRepository $airportHotelRepository,
+                                    PrintingOptionsRepository $printingOptionsRepository,
+                                    Request $request,
+                                    DefineQueryDate $defineQueryDate): Response 
+    {
+
+        $day =  $defineQueryDate->returnDay($request);
+       
+        $date = new DateTimeImmutable($day . '00:01:00');
+        // sert a prévenir l utilisateur que lorsque qu il a changé les agences il faut aussi mettre a jour la date
+        $formAgencySend = false;
+        $user = $this->getUser();
+
+        
+        $agencies = $agencyRepository->findAll();
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        
+        // regarder si une fiche Printing Options existe pour cet utilisateur
+        $printingOptionsUser = $printingOptionsRepository->findOneBy(["user" => $user]); 
+        
+        $choosenAirports = [];
+        $choosenAgencies = [];
+        if ($printingOptionsUser != null) {
+            foreach ($printingOptionsUser->getAirport() as $airport) {
+                $choosenAirports[] = $airport;
+            }
+            foreach ($printingOptionsUser->getAgencies() as $agency) {
+                $choosenAgencies[] = $agency;
+            }
+        }
+
+
+        // récupérer les cutomerCard correspondant à la meeting date
+        $meetings = $customerCardRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
+
+
+        $checkFormAgencies = $request->request->get("form_check_agencies");
+        if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
+            foreach ($agencies as $agency) {
+                 
+                $data = $request->request->get("agence_". $agency->getId());
+                
+                $test = ($data == "on") ? true : false;
+
+                // si non, la créer
+                
+                if ($printingOptionsUser == null) {
+                    $printingOptionsUser = new PrintingOptions();
+                    $printingOptionsUser->setUser($user);
+
+                } 
+
+                    if($test) {
+                        $printingOptionsUser->addAgency($agency);
+                    } else {
+                        $printingOptionsUser->removeAgency($agency);
+                    }
+              
+                foreach ($airports as $airport) { 
+                    $data = $request->request->get("airport_". $airport->getId());
+                    $test = ($data == "on") ? true : false;
+                    
+                    // si c est on on rajoute
+                    if($test) {
+                        $printingOptionsUser->addAirport($airport);
+                    } else {
+                        $printingOptionsUser->removeAirport($airport);
+                    }
+                    $manager->persist($printingOptionsUser);
+                    $manager->flush($printingOptionsUser);                   
+                }
+            }
+            $this->addFlash(
+                'danger',
+                'Warning: To update the labels to be printed, please send back the date selection form'
+            );
+            $formAgencySend = true;
+        }
+
+        return $this->render('team_manager/stickers.html.twig', [
+            "date" => $date,
+            "meetings" => $meetings,
+            "agencies" => $agencies,
+            "airports" => $airports,
+            "formAgencySend" => $formAgencySend,
+            "printingOptionsUser" => $printingOptionsUser,
+        ]);
+
+    }
+
 
 }
