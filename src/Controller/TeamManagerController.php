@@ -414,6 +414,10 @@ class TeamManagerController extends AbstractController
         }
 
 
+        // récupérer les cutomerCard correspondant à la meeting date
+        $meetings = $customerCardRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
+
+
         return $this->render('team_manager/stickers-bis.html.twig');
 
     }
