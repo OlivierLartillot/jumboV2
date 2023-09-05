@@ -409,9 +409,9 @@ class HomeController extends AbstractController
                     $csvDeparts[] = $reservationNumber;
                 }
 
-                dump($csvArrivees);
+/*                 dump($csvArrivees);
                 dump($csvInterHotels);
-                dump($csvDeparts);
+                dump($csvDeparts); */
                  // recupere tous les enregistrements avec doctrine, pour ce ( jour et arrivée ) avec la clé reservationNumber
                  //! ajouter un champ de bdd dans la table transfer (probably_modified)
                  // TODO : etre sur qu il n y a que la meme date dans le fichier !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
