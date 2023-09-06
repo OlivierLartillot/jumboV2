@@ -1363,11 +1363,11 @@
       </trans-unit>
       <trans-unit id="Xy7s5WD" resname="clients do not">
         <source>clients do not</source>
-        <target>__clients do not</target>
+        <target>clientes no tienen</target>
       </trans-unit>
       <trans-unit id="ai3fN46" resname="client does not">
         <source>client does not</source>
-        <target>__client does not</target>
+        <target>cliente no tiene</target>
       </trans-unit>
       <trans-unit id="w8KBmNE" resname="yet have a meeting time assigned">
         <source>yet have a meeting time assigned</source>
@@ -1447,15 +1447,15 @@
       </trans-unit>
       <trans-unit id="Xaj3_8K" resname="Back to list">
         <source>Back to list</source>
-        <target>__Back to list</target>
+        <target>Volver a la lista</target>
       </trans-unit>
       <trans-unit id="hYaCrCA" resname="Create new Area">
         <source>Create new Area</source>
-        <target>__Create new Area</target>
+        <target>Crear nueva zona</target>
       </trans-unit>
       <trans-unit id="KdcvMW2" resname="Edit Client Card">
         <source>Edit Client Card</source>
-        <target>__Edit Client Card</target>
+        <target>Editar ficha cliente</target>
       </trans-unit>
       <trans-unit id="hHoaJaG" resname="Research on">
         <source>Research on</source>
@@ -1491,7 +1491,7 @@
       </trans-unit>
       <trans-unit id="Fi2JqqF" resname="There is">
         <source>There is</source>
-        <target>__There is</target>
+        <target>Hay</target>
       </trans-unit>
       <trans-unit id="4b3hOIm" resname="matching result">
         <source>matching result</source>
@@ -1539,11 +1539,11 @@
       </trans-unit>
       <trans-unit id="BpW1Y6z" resname="with">
         <source>with</source>
-        <target>__con</target>
+        <target>con</target>
       </trans-unit>
       <trans-unit id="Zj6hv.." resname="to">
         <source>to</source>
-        <target>__hasta</target>
+        <target>hasta</target>
       </trans-unit>
       <trans-unit id="IPDEcp3" resname="Updated by">
         <source>Updated by</source>
@@ -1616,6 +1616,22 @@
       <trans-unit id="g36VwXo" resname="Create new User">
         <source>Create new User</source>
         <target>Crear Nuevo Usuario</target>
+      </trans-unit>
+      <trans-unit id="uhGL9.y" resname="English">
+        <source>English</source>
+        <target>Inglés</target>
+      </trans-unit>
+      <trans-unit id="NBEFnLj" resname="Spanish">
+        <source>Spanish</source>
+        <target>Español</target>
+      </trans-unit>
+      <trans-unit id="dFgZn_l" resname="French">
+        <source>French</source>
+        <target>Francés</target>
+      </trans-unit>
+      <trans-unit id=".h2cfbN" resname="Italian">
+        <source>Italian</source>
+        <target>Italiano</target>
       </trans-unit>
     </body>
   </file>

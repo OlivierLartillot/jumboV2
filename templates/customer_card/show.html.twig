@@ -323,13 +323,6 @@
                                             </div><!-- end card-body -->
                                         </div><!-- end card -->
                                     </div><!-- end col-md-4 -->
-
-
-
-
-
-
-                                  
                                 {% endfor %}
 
                             </div>
@@ -644,7 +637,7 @@
                                         <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour }}</p>
                                         {# si c est meeting #}
                                         {% if timeline.name == 'Meeting' %} 
-                                            <p> {% trans %}with{% endtrans %} {{ timeline.staff }} {% trans %}to{% endtrans %} {{ timeline.meetingPoint }}</p>
+                                            <p> {% trans %}with{% endtrans %} {{ timeline.staff }} {% trans %}to{% endtrans %} {{ (timeline.meetingPoint.checkLanguage(app.user.language) != null) ? timeline.meetingPoint.checkLanguage(app.user.language) : timeline.meetingPoint.en }}</p>
                                         {% endif %}
                                         {% if timeline.name == 'Status' %}
                                             <p>{% trans %}Updated by{% endtrans %}: {{ timeline.updatedBy }} </p>

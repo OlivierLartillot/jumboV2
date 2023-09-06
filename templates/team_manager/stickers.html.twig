@@ -314,6 +314,7 @@
 							{% for meetingInfos in meetings %} 
 
 								{% set currentLanguage = meetingInfos.agency.language %}
+								
 									
 								{% if (i == 1) %} 
 									{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
@@ -351,9 +352,21 @@
 											</p>
 										</div>
 										<div class="mb-2">
+										
 											<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
 											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }} {{ meetingInfos.meetingAtTime }} </strong></p>
-											<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: <strong class="crimson">{{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}} </strong></p>
+											<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
+												<strong class="crimson">
+													{% if (meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) %} 
+														{{ meetingInfos.meetingPoint.checkLanguage(currentLanguage) }}
+													{% elseif meetingInfos.meetingPoint.en is defined %} 
+														{{ meetingInfos.meetingPoint.en }} 												
+													{% else %}
+														
+													{% endif %}
+													
+												</strong>
+											</p>
 											<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
 											<p class="line-height-5">Whatsapp:  
 												{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
