@@ -113,6 +113,58 @@
         </div>
     </div>
 
+    <div class="">
+        <div class="card">
+            <div class="card-body">
+                    
+                <div class="table-responsive">
+                    <table class="table table-bordered border-primary mb-0 text-center">
+
+                        <thead class="bg-primary bg-gradient text-light border-end-light">
+                            <tr>
+                                <th>Rep</th>
+                                <th>#</th>
+                                <th>{% trans %}Total pax{% endtrans %}</th>
+                                <th>{% trans %}Total people{% endtrans %}</th>
+                                <th>{% trans %}Adults{% endtrans %}</th>
+                                <th>{% trans %}Children{% endtrans %}</th>
+                                <th>{% trans %}Babies{% endtrans %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for key, detailRep in tabDetailsRep %}
+                                <tr>
+                                    <td ROWSPAN="2">{{reps[key].username}}</td>
+                                    <td>Show</td>
+                                    <td>{{detailRep['sumPaxShow'] }} </td>
+                                    <td>{{detailRep['sumNbrShow']}}</td>
+                                    <td>{{detailRep['nbrAdultsShow']}}</td>
+                                    <td>{{detailRep['nbrChildrenShow']}}</td>
+                                    <td>{{detailRep['nbrBabiesShow']}}</td> 
+                                </tr>
+                                <tr>
+                                    <td>With no Show</td>
+                                    <td>{{detailRep['sumPaxTotal']}}</td>
+                                    <td>{{detailRep['sumNbrTotal']}}</td>
+                                    <td> {{detailRep['nbrTotalAdults']}}</td>
+                                    <td> {{detailRep['nbrTotalChildren']}}</td>
+                                    <td> {{detailRep['nbrTotalbabies']}}</td> 
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
 {# 
                         <div class="row">
 

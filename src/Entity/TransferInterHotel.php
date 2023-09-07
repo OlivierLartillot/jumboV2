@@ -14,8 +14,8 @@ class TransferInterHotel
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $serviceNumber = null;
+    #[ORM\Column(length: 50)]
+    private ?string $serviceNumber = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $dateHour = null;
@@ -49,12 +49,12 @@ class TransferInterHotel
         return $this->id;
     }
 
-    public function getServiceNumber(): ?int
+    public function getServiceNumber(): ?string
     {
         return $this->serviceNumber;
     }
 
-    public function setServiceNumber(int $serviceNumber): self
+    public function setServiceNumber(string $serviceNumber): self
     {
         $this->serviceNumber = $serviceNumber;
 

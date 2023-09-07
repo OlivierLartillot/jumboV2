@@ -13,9 +13,9 @@ class TransferArrival
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $serviceNumber = null;
+    
+    #[ORM\Column(length: 50)]
+    private ?string $serviceNumber = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateHour = null;
@@ -44,17 +44,18 @@ class TransferArrival
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $hour = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getServiceNumber(): ?int
+    public function getServiceNumber(): ?string
     {
         return $this->serviceNumber;
     }
 
-    public function setServiceNumber(int $serviceNumber): self
+    public function setServiceNumber(string $serviceNumber): self
     {
         $this->serviceNumber = $serviceNumber;
 
@@ -156,4 +157,6 @@ class TransferArrival
 
         return $this;
     }
+
+
 }
