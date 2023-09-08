@@ -126,6 +126,20 @@ class HomeController extends AbstractController
             $meetingPoint = $meetingPointRepository->find(1);
         
 
+            // constituer le tableau des imports, enregistre les numéros de services, cela va servir
+            // 1. a voir si plusieurs groupes sont présents sur la même fiche dans ce fichier: utile surtout si on renvoit le fichier et que la carte existe deja mais qu'un groupe se rajoute
+            // 2. a voir à la fin si une entrée a été supprimée 
+
+            $serviceNumbersInCSV = [];
+
+            foreach ($csv as $record) {
+                $serviceNumbersInCSV[] =  $record['Número Servicio'];
+            }
+            $serviceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
+            dd($serviceNumbersInCSV[2451333]); //! remplacer le chiffre par $record['Número Servicio']
+
+
+
             // début de l'extraction des données du csv
             // traitement de la première entrée ...
             foreach ($csv as $record) {
@@ -166,15 +180,24 @@ class HomeController extends AbstractController
 
                 // on essaie de récupérer la fiche client pour savoir si on va create or update (si elle existe)
                 $customerCardResult = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
-                // si l'enregistrement existe déja, on va le mettre a jour
+
+                // si l'enregistrement existe déja, on va Checker
                 if ($customerCardResult) {
+
+                    $numberOfTimeThisCardIsPresent = count($customerCardRepository->findBy(['reservationNumber' => $reservationNumber]));
+                    // Si la carte est présente plusieurs fois
+
+
+
                     $customerCard = $customerCardResult;
                     $agency = $agencyRepository->findOneBy(['name' => $record['Agencia']]);
                     // faut il mettre a jour la date du meeting en cas de changement de la date d arrivée
                     // on peut comparer si la date est la meme que celle de l'objet
                     // on vérifie que la date n'ai pas changée
-                    //définir si c est une arrivée car les meetings se font a l arrivée
+                    // définir si c est une arrivée car les meetings se font a l arrivée
                     if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
+                        // si c'est une arrivée, ajouter la nouvelle customer card
+
                         $fechaHora = $record['Fecha/Hora Origen'];
                         
 
