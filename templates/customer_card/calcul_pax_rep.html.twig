@@ -92,19 +92,19 @@
                         <tbody>
                             <tr>
                                 <td>Show</td>
-                                <td> {{ results['sumPaxShow'] }} </td>
+                                <td>{{ results['sumPaxShow'] }}</td>
                                 <td>{{results['sumNbrShow']}}</td>
                                 <td>{{results['nbrAdultsShow']}}</td>
                                 <td>{{results['nbrChildrenShow']}}</td>
                                 <td>{{results['nbrBabiesShow']}}</td> 
                             </tr>
                             <tr>
-                                <td>With no Show</td>
-                                <td>{{results['sumPaxTotal']}}</td>
-                                <td>{{results['sumNbrTotal']}}</td>
-                                <td> {{results['nbrTotalAdults']}}</td>
-                                <td> {{results['nbrTotalChildren']}}</td>
-                                <td> {{results['nbrTotalbabies']}}</td> 
+                                <td>No Show</td>
+                                <td>{{results['sumPaxTotal'] - results['sumPaxShow']}}</td>
+                                <td>{{results['sumNbrTotal'] - results['sumNbrShow']}}</td>
+                                <td> {{results['nbrTotalAdults'] - results['nbrAdultsShow']}}</td>
+                                <td> {{results['nbrTotalChildren'] - results['nbrChildrenShow']}}</td>
+                                <td> {{results['nbrTotalbabies'] - results['nbrBabiesShow']}}</td> 
                             </tr>
                         </tbody>
                     </table>
@@ -113,6 +113,7 @@
         </div>
     </div>
 
+    {% if tabDetailsRep != null %}
     <div class="">
         <div class="card">
             <div class="card-body">
@@ -144,12 +145,12 @@
                                     <td>{{detailRep['nbrBabiesShow']}}</td> 
                                 </tr>
                                 <tr>
-                                    <td>With no Show</td>
-                                    <td>{{detailRep['sumPaxTotal']}}</td>
-                                    <td>{{detailRep['sumNbrTotal']}}</td>
-                                    <td> {{detailRep['nbrTotalAdults']}}</td>
-                                    <td> {{detailRep['nbrTotalChildren']}}</td>
-                                    <td> {{detailRep['nbrTotalbabies']}}</td> 
+                                    <td>No Show</td>
+                                    <td>{{detailRep['sumPaxTotal'] - detailRep['sumPaxShow']}}</td>
+                                    <td>{{detailRep['sumNbrTotal'] - detailRep['sumNbrShow']}}</td>
+                                    <td> {{detailRep['nbrTotalAdults'] - detailRep['nbrAdultsShow'] }}</td>
+                                    <td> {{detailRep['nbrTotalChildren'] - detailRep['nbrChildrenShow']}}</td>
+                                    <td> {{detailRep['nbrTotalbabies'] - detailRep['nbrBabiesShow'] }}</td> 
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -158,7 +159,7 @@
             </div>
         </div>
     </div>
-
+    {% endif %}
 
 
 

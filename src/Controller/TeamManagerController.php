@@ -55,9 +55,11 @@ class TeamManagerController extends AbstractController
         if ($firstClient != null) {
             //On récupère l'hotel d'arrivé
             $hotels = [];
+
             foreach ($firstClient->getTransferArrivals() as $arrival) {
-                $hotels[] = $arrival->getToArrival();
-            }
+                    $hotels[] = $arrival->getToArrival();
+                }
+
             $agency = $firstClient->getAgency();
             $hotel = $hotels[0];
             $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($meetingDate, $hotel, $agency);

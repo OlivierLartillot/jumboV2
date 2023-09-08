@@ -250,9 +250,8 @@ class CustomerCardController extends AbstractController
                 $i++;
             }
         } 
-        //dd($tabDetails);
-
-
+    
+        if (!isset($tabDetails)) { $tabDetails = [];}
 
         return $this->render('customer_card/calcul_pax_rep.html.twig', [
             'reps' => $reps,
@@ -264,7 +263,6 @@ class CustomerCardController extends AbstractController
     #[Route('/pax/rep/{id}', name: 'app_customer_card_pax_par_rep', methods: ['GET', 'POST'])]
     public function paxParRep(Request $request, User $user, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
-
         
         //! Attention si l id est différent du user courant, pas le droit
         if ($user != $this->getUser()) {
@@ -316,7 +314,7 @@ class CustomerCardController extends AbstractController
         $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
 
         return $this->render('customer_card/calcul_pax_par_rep.html.twig', [
-            'results' =>$results
+            'results' =>$results,
         ]);
     }
 
