@@ -34,7 +34,7 @@ class AreaController extends AbstractController
             return $this->redirectToRoute('app_area_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('area/new.html.twig', [
+        return $this->render('area/new.html.twig', [
             'area' => $area,
             'form' => $form,
         ]);
