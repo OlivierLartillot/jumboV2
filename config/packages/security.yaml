@@ -36,6 +36,7 @@ security:
         - { path: ^/admin, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
         - { path: ^/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
         - { path: ^/team-manager/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
+        - { path: ^/team-manager/traitement_csv, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
         - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
         - { path: ^/team-manager, roles: [ROLE_HULK, ROLE_SUPERMAN] }
         - { path: ^/team-transfer, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }

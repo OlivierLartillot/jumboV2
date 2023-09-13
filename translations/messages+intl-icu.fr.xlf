@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="Op5PUE_" resname="Edit Briefing Place">
         <source>Edit Briefing Place</source>
-        <target>__Editer point de rencontre</target>
+        <target>Editer point de rencontre</target>
       </trans-unit>
       <trans-unit id="ScJmuqq" resname="Search">
         <source>Search</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="11kmUOH" resname="Mark all as read">
         <source>Mark all as read</source>
-        <target>__Mark all as read</target>
+        <target>Tout marquer comme lu</target>
       </trans-unit>
       <trans-unit id="7K_jYNL" resname="Your order is placed">
         <source>Your order is placed</source>
@@ -1008,6 +1008,22 @@
       <trans-unit id="QGEau92" resname="Validate">
         <source>Validate</source>
         <target>Valider</target>
+      </trans-unit>
+      <trans-unit id="uhGL9.y" resname="English">
+        <source>English</source>
+        <target>Anglais</target>
+      </trans-unit>
+      <trans-unit id="NBEFnLj" resname="Spanish">
+        <source>Spanish</source>
+        <target>Espagnol</target>
+      </trans-unit>
+      <trans-unit id="dFgZn_l" resname="French">
+        <source>French</source>
+        <target>Français</target>
+      </trans-unit>
+      <trans-unit id=".h2cfbN" resname="Italian">
+        <source>Italian</source>
+        <target>Italien</target>
       </trans-unit>
     </body>
   </file>

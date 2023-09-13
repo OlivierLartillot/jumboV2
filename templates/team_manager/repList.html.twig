@@ -75,7 +75,7 @@
                                             {% endif %}
                                             </strong>
                                             <br/>
-                                            {% trans %}Meeting at{% endtrans %} <strong>{{ regroupement.getMeetingAtTime }} - {{ regroupement.meetingPoint != null ? regroupement.meetingPoint.name : "" }}</strong>
+                                            {% trans %}Meeting at{% endtrans %} <strong>{{ regroupement.getMeetingAtTime }} - {{ (regroupement.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.meetingPoint.checkLanguage(app.user.language) : regroupement.meetingPoint.en }}</strong>
                                         </p>
                                         <hr>
                                     {% endif %}

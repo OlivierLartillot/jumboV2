@@ -87,7 +87,7 @@
                                                     {% for meetingPoint in meetingPoints %}
 
                                                         {% if  customers.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == customers.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
+                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == customers.meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
                                                         {% else %}
                                                             <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
                                                         {% endif %}

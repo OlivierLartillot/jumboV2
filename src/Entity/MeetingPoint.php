@@ -16,10 +16,19 @@ class MeetingPoint
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $name = null;
+    private ?string $en = null;
 
     #[ORM\OneToMany(mappedBy: 'meetingPoint', targetEntity: CustomerCard::class)]
     private Collection $customerCards;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $es = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $fr = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $it = null;
 
     public function __construct()
     {
@@ -31,14 +40,14 @@ class MeetingPoint
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getEn(): ?string
     {
-        return $this->name;
+        return $this->en;
     }
 
-    public function setName(string $name): self
+    public function setEn(string $en): self
     {
-        $this->name = $name;
+        $this->en = $en;
 
         return $this;
     }
@@ -75,6 +84,51 @@ class MeetingPoint
 
     public function __toString()
     {
-        return $this->name; 
+        return $this->en; 
+    }
+
+    public function getEs(): ?string
+    {
+        return $this->es;
+    }
+
+    public function setEs(?string $es): self
+    {
+        $this->es = $es;
+
+        return $this;
+    }
+
+    public function getFr(): ?string
+    {
+        return $this->fr;
+    }
+
+    public function setFr(?string $fr): self
+    {
+        $this->fr = $fr;
+
+        return $this;
+    }
+
+    public function getIt(): ?string
+    {
+        return $this->it;
+    }
+
+    public function setIt(?string $it): self
+    {
+        $this->it = $it;
+
+        return $this;
+    }
+
+    public function checklanguage($lang) {
+
+        if ($lang == null) {
+            $lang = 'en';
+        }
+
+        return $this->$lang;
     }
 }

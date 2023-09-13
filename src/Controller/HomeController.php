@@ -102,8 +102,10 @@ class HomeController extends AbstractController
             die("Fichier non trouvé.");
         }
         
+
+
         // Vérifier le type de fichier
-        if ($mimeType != "text/csv") {
+        if (($mimeType != "text/csv") and ($mimeType != "text/plain")) {
             die("l extension du fichier n est pas bonne !");
         }
         
@@ -114,7 +116,7 @@ class HomeController extends AbstractController
             /*  $stream = fopen('csv/servicios.csv', 'r'); */
             $csv = Reader::createFromStream(fopen($fileToUpload, 'r+'));
             //$csv = Reader::createFromPath($_FILES["fileToUpload"]["tmp_name"], 'r');
-            $csv->setDelimiter(',');
+            $csv->setDelimiter('|');
             $csv->setHeaderOffset(0);
             
             
@@ -366,7 +368,7 @@ class HomeController extends AbstractController
                 }
                  // sinon on va créer un nouvel objet
                  $transfer->setServiceNumber($record['Número Servicio']);
-                  $transfer->setDateHour($fechaHora); 
+                 $transfer->setDateHour($fechaHora); 
                  $transfer->setDate($fechaHora);
                  $transfer->setHour($fechaHora);
                  $transfer->setFlightNumber($flightNumber);
@@ -407,9 +409,9 @@ class HomeController extends AbstractController
                     $csvDeparts[] = $reservationNumber;
                 }
 
-                dump($csvArrivees);
+/*                 dump($csvArrivees);
                 dump($csvInterHotels);
-                dump($csvDeparts);
+                dump($csvDeparts); */
                  // recupere tous les enregistrements avec doctrine, pour ce ( jour et arrivée ) avec la clé reservationNumber
                  //! ajouter un champ de bdd dans la table transfer (probably_modified)
                  // TODO : etre sur qu il n y a que la meme date dans le fichier !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

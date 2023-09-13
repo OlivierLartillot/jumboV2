@@ -55,9 +55,11 @@ class TeamManagerController extends AbstractController
         if ($firstClient != null) {
             //On récupère l'hotel d'arrivé
             $hotels = [];
+
             foreach ($firstClient->getTransferArrivals() as $arrival) {
-                $hotels[] = $arrival->getToArrival();
-            }
+                    $hotels[] = $arrival->getToArrival();
+                }
+
             $agency = $firstClient->getAgency();
             $hotel = $hotels[0];
             $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($meetingDate, $hotel, $agency);
@@ -287,10 +289,6 @@ class TeamManagerController extends AbstractController
                                     DefineQueryDate $defineQueryDate): Response 
     {
 
-
-
-
-
         $day =  $defineQueryDate->returnDay($request);
        
         $date = new DateTimeImmutable($day . '00:01:00');
@@ -344,10 +342,7 @@ class TeamManagerController extends AbstractController
                     } else {
                         $printingOptionsUser->removeAgency($agency);
                     }
-            
               
-
-                
                 foreach ($airports as $airport) { 
                     $data = $request->request->get("airport_". $airport->getId());
                     $test = ($data == "on") ? true : false;
@@ -361,10 +356,6 @@ class TeamManagerController extends AbstractController
                     $manager->persist($printingOptionsUser);
                     $manager->flush($printingOptionsUser);                   
                 }
-
-
-
-    
             }
             $this->addFlash(
                 'danger',
@@ -381,6 +372,56 @@ class TeamManagerController extends AbstractController
             "formAgencySend" => $formAgencySend,
             "printingOptionsUser" => $printingOptionsUser,
         ]);
+
+    }
+
+    // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
+    // la fiche doit permettre de changer la date du mmeting comme de rep
+    #[Route('/team-manager/stickers-test',name: 'app_admin_stickers_par_date_test',methods:["POST", "GET"])]
+    public function stickersParDateBis(CustomerCardRepository $customerCardRepository, 
+                                        EntityManagerInterface $manager, 
+                                        AgencyRepository $agencyRepository,
+                                        AirportHotelRepository $airportHotelRepository,
+                                        PrintingOptionsRepository $printingOptionsRepository,
+                                        Request $request,
+                                        DefineQueryDate $defineQueryDate): Response 
+    {
+        $day =  $defineQueryDate->returnDay($request);
+
+        $date = new DateTimeImmutable($day . '00:01:00');
+        // sert a prévenir l utilisateur que lorsque qu il a changé les agences il faut aussi mettre a jour la date
+        $formAgencySend = false;
+        $user = $this->getUser();
+
+        
+        $agencies = $agencyRepository->findAll();
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        
+        // regarder si une fiche Printing Options existe pour cet utilisateur
+        $printingOptionsUser = $printingOptionsRepository->findOneBy(["user" => $user]); 
+        
+        $printingOptionsUserExist = true;
+        
+        $choosenAirports = [];
+        $choosenAgencies = [];
+
+        $choosenAirports = [];
+        $choosenAgencies = [];
+        if ($printingOptionsUser != null) {
+            foreach ($printingOptionsUser->getAirport() as $airport) {
+                $choosenAirports[] = $airport;
+            }
+            foreach ($printingOptionsUser->getAgencies() as $agency) {
+                $choosenAgencies[] = $agency;
+            }
+        }
+
+
+        // récupérer les cutomerCard correspondant à la meeting date
+        $meetings = $customerCardRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
+
+
+        return $this->render('team_manager/stickers-bis.html.twig');
 
     }
 

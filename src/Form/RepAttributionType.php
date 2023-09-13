@@ -22,12 +22,13 @@ class RepAttributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $repList = [];
-        $users = $this->userRepository->findAll();
+        $users = $this->userRepository->findBy([], ['username' => 'ASC']);
         foreach ($users as $user) {
             if (in_array('ROLE_REP', $user->getRoles())) {
                 $repList[] = $user;
             }
         }
+   
 
         $builder
         ->add('staff', EntityType::class, [
