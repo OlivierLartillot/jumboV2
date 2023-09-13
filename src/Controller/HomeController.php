@@ -109,8 +109,6 @@ class HomeController extends AbstractController
             die("l extension du fichier n est pas bonne !");
         }
         
-        
-    
             // a faire dans le traitement
             //load the CSV document from a stream
             /*  $stream = fopen('csv/servicios.csv', 'r'); */
@@ -118,7 +116,6 @@ class HomeController extends AbstractController
             //$csv = Reader::createFromPath($_FILES["fileToUpload"]["tmp_name"], 'r');
             $csv->setDelimiter('|');
             $csv->setHeaderOffset(0);
-            
             
             // les entités par défaut
             $status = $statusRepository->find(1);
@@ -133,14 +130,30 @@ class HomeController extends AbstractController
             $serviceNumbersInCSV = [];
 
             foreach ($csv as $record) {
-                $serviceNumbersInCSV[] =  $record['Número Servicio'];
+                $numbers = explode(", ", $record['Localizadores']);
+                $jumboNumber = trim($numbers[0]);
+                $reservationNumber = trim($numbers[1]);
+                $serviceNumbersInCSV[] =  $reservationNumber;
+                // récupère le jour et l heure de l'arrivée 
+                if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
+                    $record['Fecha/Hora Origen'] = trim($record['Fecha/Hora Origen']);
+                    $dateTime = explode(" ", $record['Fecha/Hora Origen']);
+                    $date = new DateTimeImmutable($dateTime[0]);
+                }
             }
+            //$serviceNumbersInCSV[] = 1611603;
+            // return [1611603 => 1 , 1611604 => 2 ]
             $serviceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
-            dd($serviceNumbersInCSV[2451333]); //! remplacer le chiffre par $record['Número Servicio']
 
+                        
+            // dd(gettype($dateTime[0]));
+            // TODO: a supprimer -------------------------------------------------------------------------------------------------
+           /*  $arrivalsThisDay = $transferArrivalRepository->findBy(['date'=> new DateTimeImmutable($dateTime[0])]);
+            dd($arrivalsThisDay); 
+           */
 
-
-            // début de l'extraction des données du csv
+            
+            // début de l'extraction de la LIGNE de données du csv
             // traitement de la première entrée ...
             foreach ($csv as $record) {
     
@@ -165,6 +178,7 @@ class HomeController extends AbstractController
                 ($record['Fecha/Hora recogida'] == "XX9999")){
                     continue;
                 }
+                
                 //dd($csv);
 
                 //! extraction de jumboNumber et reservationNumber car ils se trouvent dans la meme case dans le csv 
@@ -178,6 +192,48 @@ class HomeController extends AbstractController
                 $childrenNumber = trim($numeroPasajeros[3]);
                 $babiesNumber = trim($numeroPasajeros[5]);
 
+
+
+                // ------------------------------------------------------------------------------------------------------------
+                // CSV    
+                    // combien de fois ce n° client est présent dans le csv
+                    $nbReservationNumberInCSV = $serviceNumbersInCSV[$reservationNumber];
+                    // est ce une arrivée inter hotel ou départ dan le csv
+                    if ($record['Nº Vuelo/Transporte Origen'] != NULL) { $natureTransferCSV = 'arrival'; }
+                    else if ($record['Nº Vuelo/Transporte Destino'] != NULL) { $natureTransferCSV = 'interhotel'; }
+                    else { $natureTransferCSV = 'departure'; }
+
+                // BDD
+
+                    // combien de fois ce numéro client est présent dans la bdd arrivée ce jour
+                    if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
+                        $clientNumberArrivalList = $customerCardRepository->findByDateNaturetransferClientnumber($reservationNumber,$record['Fecha/Hora Origen'], $natureTransferCSV);
+                    } 
+                    else if ($record['Nº Vuelo/Transporte Destino'] != NULL) {
+                        $clientNumberInterHotelList = $customerCardRepository->findByDateNaturetransferClientnumber($reservationNumber,$record['Fecha/Hora Destino'], $natureTransferCSV);
+                    }
+                    else {
+                        $clientNumberDepartureList = $customerCardRepository->findByDateNaturetransferClientnumber($reservationNumber,$record['Fecha/Hora recogida'], $natureTransferCSV);
+
+                    }
+                    dump(($clientNumberArrivalList));
+ 
+                    die;
+                    // combien de fois ce numéro client est présent dans la bdd I H ce jour
+                    // combien de fois ce numéro client est présent dans la bdd départ ce jour
+
+
+
+
+
+/* 
+                    1611603 - 1366
+
+
+*/
+
+
+
                 // on essaie de récupérer la fiche client pour savoir si on va create or update (si elle existe)
                 $customerCardResult = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
 
@@ -186,7 +242,7 @@ class HomeController extends AbstractController
 
                     $numberOfTimeThisCardIsPresent = count($customerCardRepository->findBy(['reservationNumber' => $reservationNumber]));
                     // Si la carte est présente plusieurs fois
-
+ 
 
 
                     $customerCard = $customerCardResult;
