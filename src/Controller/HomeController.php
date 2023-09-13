@@ -450,6 +450,7 @@ class HomeController extends AbstractController
                 } else {
                     // si le client dans la bdd existe (> 0) mais qu il ne satisfait pas a 1 == 1 au dessus
                     // on va tout supprimer (arrivée + carte client) 
+                    dd('on est ici');
                     if ($countCLientArrivalBddThisDay > 0) {
                         $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
                         $transferArrival =  $transferArrivalRepository->findOneBy(['customerCard' => $customerCard]);
