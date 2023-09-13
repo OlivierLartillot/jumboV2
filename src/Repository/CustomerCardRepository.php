@@ -63,14 +63,46 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->andWhere('transferArrival.date >= :date_start')
             ->andWhere('transferArrival.date <= :date_end')
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
-            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
+            ->setParameter('date_end', $dateTimeImmutable->format($dateTime . ' 23:59:59'))
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
 
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer and service number
+     * Cette requête sert à des vérifications pendant l import du csv
+     */
+    public function findByDateNaturetransferClientnumber( $reservationNumber, $date, $natureTransfer): array
+    { 
 
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-d-m");
+
+
+        $query = $this->createQueryBuilder('c')
+                ->where('c.reservationNumber = :reservationNumber');
+            if ($natureTransfer == "arrival") {
+                $query = $query->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')->andWhere('transferArrival.date = :date');
+            } 
+            else if ($natureTransfer == 'interhotel') {
+                $query = $query->innerJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')->andWhere('transferInterHotel.date = :date');
+            } else {
+                $query = $query->innerJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')->andWhere('transferDeparture.date = :date');
+            }
+            
+        $query = $query
+            ->setParameter('reservationNumber', $reservationNumber)
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult()
+    ;
+    
+    return $query;
+    
+    
+    }
 
 
 
@@ -150,18 +182,6 @@ class CustomerCardRepository extends ServiceEntityRepository
 
         return $query;
 
-/*         return $this->createQueryBuilder('c')
-            ->leftJoin('App\Entity\Agency', 'agency', 'WITH', 'c.agency = agency.id')
-            ->andWhere('c.meetingAt >= :date_start')
-            ->andWhere('c.meetingAt <= :date_end')
-            ->andWhere('c.meetingPoint is not null')
-            ->andWhere('agency.isActive = :agencyIsActive')
-            ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
-            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
-            ->setParameter('agencyIsActive', true)
-            ->getQuery()
-            ->getResult()
-        ; */
     }
 
     /**
@@ -189,7 +209,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
 
- /**
+    /**
      * @return CustomerCard[] Returns an array of CustomerCard objects by agencies 
      */
     public function agenciesList(): array
