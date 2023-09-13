@@ -319,6 +319,8 @@ class HomeController extends AbstractController
                         
                 // ARRIVEE EN CSV = si bdd et csv == 1 c est une mise à jour simple 
                 if (($nbReservationNumberInCSV == $countCLientArrivalBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
+                
+
                     $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
                     // mettre a jour le customerCard
                 
@@ -342,6 +344,7 @@ class HomeController extends AbstractController
                                 $hour = '00:01';
                                 $meetingAt = new DateTimeImmutable($date->format('Y-d-m') . $hour);
                                 $customerCard->setMeetingAt($meetingAt);
+                                
                             }
                         }
                         
@@ -359,7 +362,7 @@ class HomeController extends AbstractController
                     $customerCard->setStatusUpdatedBy($user);
                     // meetind At, le lendemain de l'arrivée
                 
-                    $customerCard->setReservationCancelled(0);
+                    $customerCard->setReservationCancelled(1);
                     // mettre a jour l'arrival
 
                         // on essaie de récupérer la fiche pour savoir si on va create or update
@@ -374,9 +377,9 @@ class HomeController extends AbstractController
                         }
                             // sinon on va créer un nouvel objet
                             $transfer->setServiceNumber($record['Número Servicio']);
-                            $transfer->setDateHour($fechaHora); 
-                            $transfer->setDate($fechaHora);
-                            $transfer->setHour($fechaHora);
+                            $transfer->setDateHour(new DateTimeImmutable($fechaHora)); 
+                            $transfer->setDate(new DateTimeImmutable($fechaHora));
+                            $transfer->setHour(new DateTimeImmutable($fechaHora));
                             $transfer->setFlightNumber($flightNumber);
                             
                             /*                dd($record['Traslado desde']);
@@ -401,9 +404,9 @@ class HomeController extends AbstractController
                         }
                         // sinon on va créer un nouvel objet
                         $transfer->setServiceNumber($record['Número Servicio']);
-                        $transfer->setDateHour($fechaHora); 
-                        $transfer->setDate($fechaHora);
-                        $transfer->setHour($fechaHora);
+                        $transfer->setDateHour(new DateTimeImmutable($fechaHora)); 
+                        $transfer->setDate(new DateTimeImmutable($fechaHora));
+                        $transfer->setHour(new DateTimeImmutable($fechaHora));
                         $transfer->setFlightNumber($flightNumber);
                         
                         /*                dd($record['Traslado desde']);
@@ -421,6 +424,8 @@ class HomeController extends AbstractController
 
 
                 } else if (($nbReservationNumberInCSV == $countCLientDepartureBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
+                    dd('on est ici');
+
                     $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
                     //mettre a jour le depart
                     $transferResult = $transferDepartureRepository->findOneBy(['customerCard' => $customerCard]);
@@ -431,9 +436,9 @@ class HomeController extends AbstractController
                     }
                     // sinon on va créer un nouvel objet
                     $transfer->setServiceNumber($record['Número Servicio']);
-                    $transfer->setDateHour($fechaHora); 
-                    $transfer->setDate($fechaHora);
-                    $transfer->setHour($fechaHora);
+                    $transfer->setDateHour(new DateTimeImmutable($fechaHora)); 
+                    $transfer->setDate(new DateTimeImmutable($fechaHora));
+                    $transfer->setHour(new DateTimeImmutable($fechaHora));
                     $transfer->setFlightNumber($flightNumber);
                     
                     /*                dd($record['Traslado desde']);
@@ -493,9 +498,9 @@ class HomeController extends AbstractController
                         
                                 // sinon on va créer un nouvel objet
                                 $transfer->setServiceNumber($record['Número Servicio']);
-                                $transfer->setDateHour($fechaHora); 
-                                $transfer->setDate($fechaHora);
-                                $transfer->setHour($fechaHora);
+                                $transfer->setDateHour(new DateTimeImmutable($fechaHora)); 
+                                $transfer->setDate(new DateTimeImmutable($fechaHora));
+                                $transfer->setHour(new DateTimeImmutable($fechaHora));
                                 $transfer->setFlightNumber($flightNumber);
                                 
                                 /*                dd($record['Traslado desde']);
@@ -518,9 +523,9 @@ class HomeController extends AbstractController
                         
                             // sinon on va créer un nouvel objet
                             $transfer->setServiceNumber($record['Número Servicio']);
-                            $transfer->setDateHour($fechaHora); 
-                            $transfer->setDate($fechaHora);
-                            $transfer->setHour($fechaHora);
+                            $transfer->setDateHour(new DateTimeImmutable($fechaHora)); 
+                            $transfer->setDate(new DateTimeImmutable($fechaHora));
+                            $transfer->setHour(new DateTimeImmutable($fechaHora));
                             $transfer->setFlightNumber($flightNumber);
                             
                             /*                dd($record['Traslado desde']);
@@ -543,9 +548,9 @@ class HomeController extends AbstractController
                         
                             // sinon on va créer un nouvel objet
                             $transfer->setServiceNumber($record['Número Servicio']);
-                            $transfer->setDateHour($fechaHora); 
-                            $transfer->setDate($fechaHora);
-                            $transfer->setHour($fechaHora);
+                            $transfer->setDateHour(new DateTimeImmutable($fechaHora)); 
+                            $transfer->setDate(new DateTimeImmutable($fechaHora));
+                            $transfer->setHour(new DateTimeImmutable($fechaHora));
                             $transfer->setFlightNumber($flightNumber);
                             
                             /*                dd($record['Traslado desde']);
@@ -583,11 +588,15 @@ class HomeController extends AbstractController
 
                         // enregistrement du meeting
                         $date = new DateTime($dateTime[0]);
+                        
+                        
                         //! pour coller avec l'ordre de la bdd Y-m-d !!!
                         $date = $date->modify('+1 day'); 
                         $hour = '00:01';
-                        $meetingAt = new DateTimeImmutable($date->format('Y-m-d'. ' ' . $hour));
+                        $meetingAt = new DateTimeImmutable($date->format('Y-d-m'. ' ' . $hour));
                         
+
+
                         $customerCard->setMeetingAt($meetingAt);
 
                         // enregistrement des données dans la card courante
