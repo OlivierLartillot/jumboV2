@@ -315,7 +315,7 @@ class HomeController extends AbstractController
                         
                         $date = new DateTime($dateTime[0]);
                         $dateTime = $date->format('Y-d-m ' .$dateTime[1]);
-                        $fechaHora = new DateTimeImmutable($dateTime); 
+                        $fechaHora = $dateTime; 
                         
                 // ARRIVEE EN CSV = si bdd et csv == 1 c est une mise à jour simple 
                 if (($nbReservationNumberInCSV == $countCLientArrivalBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
@@ -447,7 +447,8 @@ class HomeController extends AbstractController
                         $manager->persist($transfer);
                     }
 
-                } else {
+                } else if (($countCLientArrivalBddThisDay > 0) or ($countCLientInterHotelBddThisDay > 0) or ($countCLientDepartureBddThisDay > 0))  {
+
                     // si le client dans la bdd existe (> 0) mais qu il ne satisfait pas a 1 == 1 au dessus
                     // on va tout supprimer (arrivée + carte client) 
                     dd('on est ici');
@@ -556,24 +557,79 @@ class HomeController extends AbstractController
                             $transfer->setCustomerCard($customerCard);
                             $manager->persist($transfer);
                     }
+                } // sinon créer la carte client et le transfert associé 
+                else {
+                    // creer la carte client
+                    $customerCard = new CustomerCard();
+
+                    // Créer la nouvelle customerCard
+
+                        // transfer est dépendant de si c est une arrivée / interh/ depart
+                        if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
+                            $transfer= new TransferArrival();
+                            $dateTime = explode(" ", $record['Fecha/Hora Origen']);
+                        }
+                        else if ($record['Nº Vuelo/Transporte Destino']) {
+                            $transfer= new TransferDeparture();
+                            $dateTime = explode(" ", $record['Fecha/Hora Destino']);
+
+                        } else {
+                            $transfer= new TransferInterHotel();
+                            $dateTime = explode(" ", $record['Fecha/Hora recogida']);
+
+                        }
 
 
 
+                        // enregistrement du meeting
+                        $date = new DateTime($dateTime[0]);
+                        //! pour coller avec l'ordre de la bdd Y-m-d !!!
+                        $date = $date->modify('+1 day'); 
+                        $hour = '00:01';
+                        $meetingAt = new DateTimeImmutable($date->format('Y-m-d'. ' ' . $hour));
+                        
+                        $customerCard->setMeetingAt($meetingAt);
+
+                        // enregistrement des données dans la card courante
+                        $customerCard->setReservationNumber($reservationNumber);
+                        $customerCard->setJumboNumber($jumboNumber);
+                        $customerCard->setHolder($record['Titular']);
+                        $customerCard->setAgency($agency);
+                        $customerCard->setAdultsNumber($adultsNumber);
+                        $customerCard->setChildrenNumber($childrenNumber);
+                        $customerCard->setBabiesNumber($babiesNumber);
+                        $customerCard->setStatus($status);
+                        $customerCard->setStatusUpdatedAt(new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo')));
+                        $customerCard->setStatusUpdatedBy($user);
+                        // meetind At, le lendemain de l'arrivée
+                    
+                        $customerCard->setReservationCancelled(0);
+
+                        $manager->persist($customerCard);
+
+                    // insérer les informations associées
 
 
 
-
-
-
-
-
-
-
-
+                        // sinon on va créer un nouvel objet
+                        $transfer->setServiceNumber($record['Número Servicio']);
+                        $transfer->setDateHour(new DateTimeImmutable($fechaHora) ); 
+                        $transfer->setDate(new DateTimeImmutable($fechaHora));
+                        $transfer->setHour(new DateTimeImmutable($fechaHora));
+                        $transfer->setFlightNumber($flightNumber);
+                        
+                        /*                dd($record['Traslado desde']);
+                        dd($hotelRepository->findBy(['name' => $record['Traslado desde']])); */
+                        $transfer->setFromStart($desde);
+                        $transfer->setToArrival($hasta);
+                        $transfer->setIsCollective($record['Tipo traslado']);
+        
+                        $transfer->setCustomerCard($customerCard);
+                        $manager->persist($transfer);
 
                 }
 
-
+            }
 
 
                 $manager->flush();
@@ -597,5 +653,4 @@ class HomeController extends AbstractController
 
 
 
-}
 }
