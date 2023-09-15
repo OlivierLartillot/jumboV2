@@ -74,17 +74,17 @@ class CustomerCardRepository extends ServiceEntityRepository
      * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer and service number
      * Cette requête sert à des vérifications pendant l import du csv
      */
-    public function findByDateNaturetransferClientnumber( $reservationNumber, $date, $natureTransfer): array
+    public function findByDateNaturetransferClientnumber($reservationNumber, $date, $natureTransfer): array
     { 
 
         $dateTimeImmutable = new DateTimeImmutable($date);
-        $date = $dateTimeImmutable->format("Y-d-m");
+        $date = $dateTimeImmutable->format("Y-m-d");
 
 
         $query = $this->createQueryBuilder('c')
                 ->where('c.reservationNumber = :reservationNumber');
             if ($natureTransfer == "arrival") {
-                $query = $query->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')->andWhere('transferArrival.date = :date');
+                $query = $query->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')->andWhere('transferArrival.date = :date');
             } 
             else if ($natureTransfer == 'interhotel') {
                 $query = $query->innerJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')->andWhere('transferInterHotel.date = :date');
@@ -103,6 +103,41 @@ class CustomerCardRepository extends ServiceEntityRepository
     
     
     }
+
+
+/**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer
+     * Cette requête sert à regarder toutes les opérations du jour
+     */
+    public function findByDateNaturetransfer($date, $natureTransfer): array
+    { 
+
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-d-m");
+
+
+        $query = $this->createQueryBuilder('c');
+            if ($natureTransfer == "arrival") {
+                $query = $query->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')->andWhere('transferArrival.date = :date');
+            } 
+            else if ($natureTransfer == 'interhotel') {
+                $query = $query->innerJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')->andWhere('transferInterHotel.date = :date');
+            } else {
+                $query = $query->innerJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')->andWhere('transferDeparture.date = :date');
+            }
+            
+        $query = $query
+
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult()
+    ;
+    
+    return $query;
+    
+    
+    }
+
 
 
 
