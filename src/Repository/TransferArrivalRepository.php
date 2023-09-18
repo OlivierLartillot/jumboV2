@@ -91,6 +91,30 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return CustomerCard[] counts number of time arrival exist EXCEPT TODAY
+     * Cette requête sert à des vérifications pendant l import du csv
+     */
+    public function CheckIfArrivalExistAnotherDay($reservationNumber, $date): int
+    { 
+
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-m-d");
+
+     
+
+        return $this->createQueryBuilder('t')
+                ->select('count(t.id)')
+                ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+                ->andWhere('t.date != :date')
+                ->andWhere('customerCard.reservationNumber = :reservationNumber')
+                ->setParameter('reservationNumber', $reservationNumber)
+                ->setParameter('date', $date)
+                ->getQuery()
+                ->getSingleScalarResult()
+        ;
+    }
+
 
 
 //    /**

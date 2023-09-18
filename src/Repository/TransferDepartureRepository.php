@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\TransferDeparture;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -55,6 +56,30 @@ class TransferDepartureRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer and service number
+     * Cette requête sert à des vérifications pendant l import du csv
+     */
+    public function findByDateNaturetransferClientnumber($reservationNumber, $date): array
+    { 
+
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-m-d");
+
+
+        return $this->createQueryBuilder('t')
+                    ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')->andWhere('t.date = :date')
+                    ->andWhere('customerCard.reservationNumber = :reservationNumber')
+                    ->andwhere('t.date = :date')
+                    ->setParameter('reservationNumber', $reservationNumber)
+                    ->setParameter('date', $date)
+                    ->getQuery()
+                    ->getResult()
+        ;
+    }
+
+
 
 //    public function findOneBySomeField($value): ?TransferDeparture
 //    {
