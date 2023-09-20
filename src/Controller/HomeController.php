@@ -37,26 +37,20 @@ class HomeController extends AbstractController
     {
         return $this->render('index.html.twig', [
         ]);
-
     }
 
     #[Route('/team-manager/import', name: 'app_import', methods: ['GET', 'POST'] )]
     public function import(Request $request)
     {
-
         $dragAndDrop = new DragAndDrop();
         $form = $this->createForm(DragAndDropType::class, $dragAndDrop, [
                 'action' => $this->generateUrl('admin_traitement_csv'),
         ] );
        $form->handleRequest($request);
 
-
-
-
         return $this->render('team_manager/import.html.twig', [
             'form' => $form
         ]);
-
     }
 
     #[Route('team-manager/traitement_csv', name: 'admin_traitement_csv')]
@@ -76,7 +70,6 @@ class HomeController extends AbstractController
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
         $mimeType = $fileToUpload->getMimeType();
         $error = $fileToUpload->getError();
-
        
         // récupération du token
         $submittedToken = $request->request->get('token');
@@ -90,7 +83,6 @@ class HomeController extends AbstractController
 
         
         // test des données recues
-        
         // infos sur le csv
         if ( $error > 0) {
             die("Erreur lors de l'upload du fichier. Code d'erreur : " . $error);
@@ -101,8 +93,6 @@ class HomeController extends AbstractController
             die("Fichier non trouvé.");
         }
         
-
-
         // Vérifier le type de fichier
         if (($mimeType != "text/csv") and ($mimeType != "text/plain")) {
             die("l extension du fichier n est pas bonne !");
@@ -184,8 +174,6 @@ class HomeController extends AbstractController
                 $record['Titular'] = trim(strtolower($record['Titular'])); 
                 $record['Agencia'] = trim(strtolower($record['Agencia']));
 
-
-
                 // si l'entréee possède ce numéro elle doit être ignorée
                 if (($record['Nº Vuelo/Transporte Origen'] == "XX9999") or 
                 ($record['Nº Vuelo/Transporte Destino'] == "XX9999") or 
@@ -204,16 +192,14 @@ class HomeController extends AbstractController
                 $childrenNumber = trim($numeroPasajeros[3]);
                 $babiesNumber = trim($numeroPasajeros[5]);
 
-
-
                 // ------------------------------------------------------------------------------------------------------------
                 // CSV    
                     // combien de fois ce n° client est présent dans le csv
                     $nbReservationNumberInCSV = $serviceNumbersInCSV[$reservationNumber];
                     
                 // CSV + BDD
-                    // est ce une arrivée inter hotel ou départ dan le csv
-                    // + recupere nombre de fois présent en bdd arrivée/IH/depart
+                    // est ce une arrivée inter hotel ou départ dan le csv ?
+                    // + recupere le nombre de fois présent en bdd arrivée/IH/depart
                     $clientNumberArrivalList = [];
                     $clientNumberInterHotelList = [];
                     $clientNumberDepartureList = [];
@@ -350,13 +336,13 @@ class HomeController extends AbstractController
                         }
                         
                 
-                       
-                        
-   
+            
+                    
                 // ARRIVEE EN CSV = si bdd et csv == 1 c est une mise à jour simple 
                 if (($nbReservationNumberInCSV == $countCLientArrivalBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
  
-                    $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
+                    $transferArrival = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                    $customerCard = $transferArrival[0]->getCustomerCard();
                         
                     // mettre a jour le customerCard    
                 
@@ -432,7 +418,8 @@ class HomeController extends AbstractController
                     }
 
                 } else if (($nbReservationNumberInCSV == $countCLientInterHotelBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
-                    $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);            
+                    $transferInterHotel = $transferInterHotelRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                    $customerCard = $transferInterHotel[0]->getCustomerCard();          
                                    
                     // mettre a jour l inter hotel
                         $transferResult = $transferInterHotelRepository->findOneBy(['customerCard' => $customerCard]);
@@ -457,7 +444,8 @@ class HomeController extends AbstractController
                         }
                 } else if (($nbReservationNumberInCSV == $countCLientDepartureBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
 
-                    $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
+                    $transferDeparture = $transferDepartureRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                    $customerCard = $transferDeparture[0]->getCustomerCard();
                     //mettre a jour le depart
 
                     $transferResult = $transferDepartureRepository->findOneBy(['customerCard' => $customerCard]);
@@ -488,17 +476,17 @@ class HomeController extends AbstractController
                 // Doublons: si le client dans la bdd existe ce jour (> 0) 
                 else if (($countCLientArrivalBddThisDay > 1) or ($countCLientInterHotelBddThisDay > 1) or ($countCLientDepartureBddThisDay > 1))  {
  
-                    $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);
+                    
                     // on va tout supprimer (arrivée) 
                     if ($countCLientArrivalBddThisDay > 1) {
 
+                        $transferArrival = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                        $customerCard = $transferArrival[0]->getCustomerCard();
                         // on supprime les arrivées supplémentaires déja présentent ce jour
                             $transferArrivals =  $transferArrivalRepository->findBy(['customerCard' => $customerCard, 'date'=> new DateTimeImmutable($dateFormat)]);
                             foreach ($transferArrivals as $transferArrival) {
                                 $transferArrivalRepository->remove($transferArrival, true);
-
                             }
-                        
                                 $customerCard->setMeetingAt($meetingAt);
 
                                 // enregistrement des données dans la card courante
@@ -524,9 +512,11 @@ class HomeController extends AbstractController
                         
                             
                     } else if  ($countCLientInterHotelBddThisDay > 1) { 
-                        
-                      
-                        
+
+                        $transferInterHotel = $transferInterHotelRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                        $customerCard = $transferInterHotel[0]->getCustomerCard();
+
+
                         // on supprime les arrivées supplémentaires déja présentent ce jour
                         $transferInterHotels =  $transferInterHotelRepository->findBy(['customerCard' => $customerCard, 'date'=> new DateTimeImmutable($dateFormat)]);
                         foreach ($transferInterHotels as $transferInterHotel) {
@@ -538,8 +528,10 @@ class HomeController extends AbstractController
                         
 
                     } else if  ($countCLientDepartureBddThisDay > 1) { 
-                       
-                    
+
+                        $transferDeparture = $transferDepartureRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                        $customerCard = $transferDeparture[0]->getCustomerCard();                       
+                        
                         // on supprime les arrivées supplémentaires déja présentent ce jour
                         $transferDepartures =  $transferDepartureRepository->findBy(['customerCard' => $customerCard, 'date'=> new DateTimeImmutable($dateFormat)]);
                         foreach ($transferDepartures as $transferDeparture) {
@@ -568,10 +560,11 @@ class HomeController extends AbstractController
                 }
                 // si la carte existe en 1x en bdd mais plusieurs x dans fichier
                 else if ( 
-                    (($countCLientArrivalBddThisDay == 1 ) or ($countCLientInterHotelBddThisDay == 1 ) or ($countCLientDepartureBddThisDay == 1 )) and ($nbReservationNumberInCSV > 1)){
-                    $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]);   
+                    (($countCLientArrivalBddThisDay == 1 ) or ($countCLientInterHotelBddThisDay == 1 ) or ($countCLientDepartureBddThisDay == 1 )) and ($nbReservationNumberInCSV > 1)){   
 
                     if ($natureTransfer == "arrival") {
+                        $transferArrival = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                        $customerCard = $transferArrival[0]->getCustomerCard();
                         // on supprime les arrivées supplémentaires déja présentent ce jour
                         $transferArrivals =  $transferArrivalRepository->findBy(['customerCard' => $customerCard, 'date'=> new DateTimeImmutable($dateFormat)]);
                         foreach ($transferArrivals as $transferArrival) {
@@ -607,12 +600,16 @@ class HomeController extends AbstractController
                             $manager->persist($customerCard);
                     }
                     else if ($natureTransfer == "interhotel") { 
+                        $transferInterHotel = $transferInterHotelRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                        $customerCard = $transferInterHotel[0]->getCustomerCard();
                         $transferInterHotels =  $transferInterHotelRepository->findBy(['customerCard' => $customerCard, 'date'=> new DateTimeImmutable($dateFormat)]);
                         foreach ($transferInterHotels as $transferInterHotel) {
                             $transferInterHotelRepository->remove($transferInterHotel, true);
 
                         }
                     } else {
+                        $transferDeparture = $transferDepartureRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat);
+                        $customerCard = $transferDeparture[0]->getCustomerCard();
                         $transferDepartures =  $transferDepartureRepository->findBy(['customerCard' => $customerCard, 'date'=> new DateTimeImmutable($dateFormat)]);
                         foreach ($transferDepartures as $transferDeparture) {
                             $transferDepartureRepository->remove($transferDeparture, true);
@@ -640,11 +637,6 @@ class HomeController extends AbstractController
                         // on icrémente pour ne plus supprimer ce customer CArd
                         $incrementDeleteCustomerCard++;
                 }
-
-                
-
-                
-                
 
                 // si la carte existe déja  mais qu'il n'y a pas de transfert ce jour la, ajouter un nouveau transfert
                 else if ($customerCardRepository->findOneBy(['reservationNumber' => $reservationNumber]) != null) {
