@@ -70,19 +70,19 @@ class CustomerCardRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer and service number
-     * Cette requête sert à des vérifications pendant l import du csv
+
+/**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer
+     * Cette requête sert à regarder toutes les opérations du jour
      */
-    public function findByDateNaturetransferClientnumber( $reservationNumber, $date, $natureTransfer): array
+    public function findByDateNaturetransfer($date, $natureTransfer): array
     { 
 
         $dateTimeImmutable = new DateTimeImmutable($date);
         $date = $dateTimeImmutable->format("Y-d-m");
 
 
-        $query = $this->createQueryBuilder('c')
-                ->where('c.reservationNumber = :reservationNumber');
+        $query = $this->createQueryBuilder('c');
             if ($natureTransfer == "arrival") {
                 $query = $query->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')->andWhere('transferArrival.date = :date');
             } 
@@ -93,7 +93,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             }
             
         $query = $query
-            ->setParameter('reservationNumber', $reservationNumber)
+
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult()
@@ -106,6 +106,7 @@ class CustomerCardRepository extends ServiceEntityRepository
 
 
 
+
     /**
      * @return CustomerCard[] Returns a int, countnumber of items
      */
@@ -115,7 +116,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         /* $dateTime = $dateTimeImmutable->format('Y-m-d'); */
 
         return $this->createQueryBuilder('c')
-             ->select('count(c.id)')
+            ->select('count(c.id)')
             ->andWhere('c.staff IS NOT NULL')
             ->andWhere('c.meetingAt = :date')
             ->setParameter('date', $date)
