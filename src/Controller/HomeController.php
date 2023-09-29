@@ -175,15 +175,15 @@ class HomeController extends AbstractController
                 $record['Agencia'] = trim(strtolower($record['Agencia']));
                 $record['Estado'] = trim(strtolower($record['Estado']));
 
-
                 // si l'entréee possède ce numéro elle doit être ignorée
                 if (($record['Nº Vuelo/Transporte Origen'] == "XX9999") or 
                 ($record['Nº Vuelo/Transporte Destino'] == "XX9999") or 
                 ($record['Fecha/Hora recogida'] == "XX9999")){
                     continue;
                 }
+
                 // si l'entréee possède est annulée elle doit être ignorée
-                if (( $record['Estado']  == "CANCELADO") or ($record['Estado']  == "CANCELLED")) { continue; }
+                if (( $record['Estado']  == "cancelado") or ($record['Estado']  == "cancelled")) { continue; }
                 
                 //! extraction de jumboNumber et reservationNumber car ils se trouvent dans la meme case dans le csv 
                 $numbers = explode(", ", $record['Localizadores']);
