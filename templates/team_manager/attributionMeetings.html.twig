@@ -23,7 +23,7 @@
                         {# <table class="table table-striped border shadow"> #}
                             <thead>
                                 <tr>
-                                    <th scope="col">{% trans %}Hotel{% endtrans %}</th>
+                                    <th scope="col">{% trans %}Informations{% endtrans %}</th>
                                     <th scope="col">{% trans %}Time{% endtrans %}</th>
                                     <th scope="col">{% trans %}Rep{% endtrans %}</th>
                                     <th scope="col">{% trans %}Place{% endtrans %}</th>
@@ -65,29 +65,33 @@
                                     {% endfor %} #}
 
 
-                                     {% for customers in customersGrouping %}
+                                     {% for transferArrival in customersGrouping %}
                                         <tr>
                                             <td>
-                                            {% for infosTransfer in customers.transferArrivals %}
-                                                {{ infosTransfer.toArrival}} <br>{{ customers.agency }}
-                                            {% endfor %}
+                                                <b>A:</b> {{ paxTab[transferArrival.id]['adults'] }}, 
+                                                <b>C:</b> {{ paxTab[transferArrival.id]['children'] }}, 
+                                                <b>B:</b> {{ paxTab[transferArrival.id]['babies'] }}<hr>
+                                               {#  {{  dump(infosTransfer) }} #}
+                                                    Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
+                                                    {{ transferArrival.toArrival|title}} 
+                                                <br>{{ transferArrival.customerCard.agency|title }}
                                             </td>
-                                            <td> <input type="time" value="{{ customers.getMeetingAtTime}}" name="hour_{{ customers.id }}"/></td> 
+                                            <td> <input type="time" value="{{ transferArrival.customerCard.getMeetingAtTime}}" name="hour_{{ transferArrival.customerCard.id }}"/></td> 
                                             <td> 
-                                                <select name="staff_{{ customers.id }}">
+                                                <select name="staff_{{ transferArrival.customerCard.id }}">
                                                     {% for user in users %}
                                                         {% if "ROLE_REP" in user.roles %}
-                                                            <option value="{{user.id}}" {{ user.id == customers.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                            <option value="{{user.id}}" {{ user.id == transferArrival.customerCard.staff.id ? "selected" : ""}}  >{{user.username}}</option>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </select>
                                             </td> 
                                             <td>
-                                                <select name="meetingPoint_{{ customers.id }}">
+                                                <select name="meetingPoint_{{ transferArrival.customerCard.id }}">
                                                     {% for meetingPoint in meetingPoints %}
 
-                                                        {% if  customers.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == customers.meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                        {% if  transferArrival.customerCard.meetingPoint is not null %}
+                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == transferArrival.customerCard.meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
                                                         {% else %}
                                                             <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
                                                         {% endif %}

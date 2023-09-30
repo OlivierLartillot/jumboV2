@@ -595,7 +595,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
             ->setParameter('staff', $staff)
-            ->groupBy('c.staff, c.agency ,transferArrival.toArrival')      
+            ->groupBy('c.staff, c.agency ,transferArrival.toArrival', 'transferArrival.flightNumber')      
             ->getQuery()
             ->getResult()
         ;

@@ -68,6 +68,54 @@ class TransferArrivalRepository extends ServiceEntityRepository
         return $requete;
     }
 
+    /**
+     * @return TransferArrival[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des meetings
+     */
+    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
+    {
+
+
+        return $this->createQueryBuilder('t')
+            ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('staff', $staff)
+            ->groupBy('c.staff, c.agency ,t.toArrival', 't.flightNumber')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    /**
+     * @return TransferArrival[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * This return the first customerCard of each groupment
+     * Attribution des meetings
+     */
+    public function meetingRegroupmentPax($date, $staff) :array
+    {
+
+        return $this->createQueryBuilder('t')
+            ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->andWhere('c.meetingAt >= :dateStart')
+            ->andWhere('c.meetingAt <= :dateEnd')
+            ->andWhere('c.staff = :staff')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('staff', $staff)      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+
 
     /**
      * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer and service number

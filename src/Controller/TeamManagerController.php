@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Agency;
 use App\Entity\PrintingOptions;
+use App\Entity\TransferArrival;
 use App\Entity\User;
 use App\Form\AgenciesActivationType;
 use App\Form\RepAttributionType;
@@ -12,6 +13,7 @@ use App\Repository\AirportHotelRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\PrintingOptionsRepository;
+use App\Repository\TransferArrivalRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
@@ -187,6 +189,7 @@ class TeamManagerController extends AbstractController
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team-manager/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
     public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, 
+                                                TransferArrivalRepository $transferArrivalRepository,
                                                 MeetingPointRepository $meetingPointRepository,  
                                                 UserRepository $userRepository,
                                                 EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
@@ -201,7 +204,31 @@ class TeamManagerController extends AbstractController
         $users = $userRepository->findAll();
 
 
-        $customersGrouping = $customerCardRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+        $customersGrouping = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+        $customersGroupingPax=$transferArrivalRepository->meetingRegroupmentPax($date, $user);
+    
+        $paxTab = [];
+        // parcourir le regroupement 
+        foreach ($customersGrouping as $groupment) {
+            //dd($groupment->getId());
+            $paxTab[$groupment->getId()]['adults'] = 0;
+            $paxTab[$groupment->getId()]['children'] = 0;
+            $paxTab[$groupment->getId()]['babies'] = 0;
+            // pour chaque regroupement parcours le grouping pax et si ca correspond rajouter dans le tableau avec la clé du grouping   
+            foreach ($customersGroupingPax as $pax) {
+                //si le pax correspond il faut l'ajouter dans le tableau
+                
+                if(($groupment->getFlightNumber() == $pax->getFlightNumber()) and ($groupment->getToArrival())) {
+                    $paxTab[$groupment->getId()]['adults'] += $pax->getCustomerCard()->getAdultsNumber();
+                    $paxTab[$groupment->getId()]['children'] += $pax->getCustomerCard()->getChildrenNumber();
+                    $paxTab[$groupment->getId()]['babies'] += $pax->getCustomerCard()->getBabiesNumber();
+                
+                }
+
+            }
+            
+        }
+        
 
         if (!empty($_POST) and $request->getMethod() == "POST") { 
 
@@ -271,7 +298,8 @@ class TeamManagerController extends AbstractController
             "meetingPoints" => $meetingPoints, 
             "user" => $user,
             "users" => $users,
-            'customersGrouping' => $customersGrouping
+            'customersGrouping' => $customersGrouping,
+            'paxTab' => $paxTab
         ]);
     }
 
