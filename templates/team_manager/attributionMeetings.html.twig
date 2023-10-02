@@ -64,8 +64,8 @@
                                 
                                     {% endfor %} #}
 
-
-                                     {% for transferArrival in customersGrouping %}
+                                    {% for transferArrival in customersGrouping|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                   
                                         <tr>
                                             <td>
                                                 <b>A:</b> {{ paxTab[transferArrival.id]['adults'] }}, 

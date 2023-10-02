@@ -65,14 +65,14 @@
                                             {% trans %}Agency{% endtrans %}: <strong>{{ regroupement.customerCard.agency|title }}</strong><br/>
                                             Pax:<strong>
                                             {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
-                                            {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id] is defined %}
-                                                A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id] }}, 
+                                            {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
+                                                A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
                                             {% endif %}
-                                            {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id] is defined %}
-                                                N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id] }}, 
+                                            {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
+                                                N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
                                             {% endif %}
-                                            {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id] is defined %}
-                                                B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id] }} 
+                                            {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
+                                                B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }} 
                                             {% endif %}
                                             </strong>
                                             <br/>

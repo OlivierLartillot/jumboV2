@@ -169,19 +169,17 @@ class TeamManagerController extends AbstractController
                    $hotels = [];
                    $hotels[] = $transferArrival->getToArrival();
 
-
-
                    $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', $transferArrival->getflightNumber());
                    $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', $transferArrival->getflightNumber());
                    $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', $transferArrival->getflightNumber());
                    
-                   $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupAdults;
-                   $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupChildren;
-                   $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupBabies;
+                   
+                   $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupAdults;
+                   $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupChildren;
+                   $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupBabies;
                 } 
             }
         }
-
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
             'users' => $users,
