@@ -224,8 +224,8 @@ class TeamManagerController extends AbstractController
             // pour chaque regroupement parcours le grouping pax et si ca correspond rajouter dans le tableau avec la clé du grouping   
             foreach ($customersGroupingPax as $pax) {
                 //si le pax correspond il faut l'ajouter dans le tableau
-                
-                if(($groupment->getFlightNumber() == $pax->getFlightNumber()) and ($groupment->getToArrival())) {
+
+                if(($groupment->getFlightNumber() == $pax->getFlightNumber()) and ($groupment->getToArrival() == $pax->getToArrival())) {
                     $paxTab[$groupment->getId()]['adults'] += $pax->getCustomerCard()->getAdultsNumber();
                     $paxTab[$groupment->getId()]['children'] += $pax->getCustomerCard()->getChildrenNumber();
                     $paxTab[$groupment->getId()]['babies'] += $pax->getCustomerCard()->getBabiesNumber();
