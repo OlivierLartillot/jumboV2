@@ -2,14 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\TransferDeparture;
+use App\Entity\User;
 use App\Repository\CustomerCardRepository;
+use App\Repository\MeetingPointRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RepController extends AbstractController
 {
 
-    #[Route('/rep/replist', name: 'app_admin_rep_replist',methods:["POST", "GET"])]
+    #[Route('/rep/replist', name: 'app_admin_rep_replist',methods:["GET"])]
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
@@ -59,7 +58,6 @@ class RepController extends AbstractController
                         $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupBabies;
                 } 
             }
-        
 
         return $this->render('rep/repList.html.twig', [
             'date' => $date,
@@ -72,6 +70,42 @@ class RepController extends AbstractController
     } 
 
 
+        // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
+    // la fiche doit permettre de changer la date du mmeting comme de rep
+    #[Route('/rep/fiche/{user}/date/details', name: 'app_admin_rep_fiche_par_date_details',methods:["GET"])]
+    public function ficheRepParDateDetails( User $user, 
+                                            CustomerCardRepository $customerCardRepository, 
+                                            MeetingPointRepository $meetingPointRepository,  
+                                            UserRepository $userRepository,
+                                            Request $request,
+                                            DefineQueryDate $defineQueryDate
+                                          ): Response 
+    {
+
+        // si le user de l'url n'est pas le user courant, tu n'as pas les droits
+        if ($user != $this->getUser()) {
+            return throw $this->createAccessDeniedException();
+        }
+
+        $day =  $defineQueryDate->returnDay($request);
+        $date = new DateTimeImmutable($day . '00:01:00');
+
+        // attraper la liste des objets correpsondants au representant et au jour 
+        $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
+        //dd($attributionClientsByRepAndDate );
+
+        $meetingPoints = $meetingPointRepository->findAll();
+        $users = $userRepository->findAll();
+    
+
+        return $this->render('team_manager/attributionMeetingsDetails.html.twig', [
+            "date" => $date,
+            "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
+            "meetingPoints" => $meetingPoints, 
+            "user" => $user,
+            "users" => $users,
+        ]);
+    }
 
 
 

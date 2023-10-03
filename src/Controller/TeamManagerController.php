@@ -308,6 +308,102 @@ class TeamManagerController extends AbstractController
     }
 
 
+    // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
+    // la fiche doit permettre de changer la date du mmeting comme de rep
+    #[Route('/team-manager/fiche/{user}/date/details', name: 'app_admin_team_manager_fiche_par_date_details',methods:["POST", "GET"])]
+    public function ficheRepParDateDetails( User $user, 
+                                            CustomerCardRepository $customerCardRepository, 
+                                            TransferArrivalRepository $transferArrivalRepository,
+                                            MeetingPointRepository $meetingPointRepository,  
+                                            UserRepository $userRepository,
+                                            EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate
+                                          ): Response 
+    {
+
+        $day =  $defineQueryDate->returnDay($request);
+        $date = new DateTimeImmutable($day . '00:01:00');
+
+        // attraper la liste des objets correpsondants au representant et au jour 
+        $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
+//        dd($attributionClientsByRepAndDate );
+
+        $meetingPoints = $meetingPointRepository->findAll();
+        $users = $userRepository->findAll();
+    
+
+
+
+        if (!empty($_POST) and $request->getMethod() == "POST") { 
+
+            // récupérer toutes les personnes avec ce couple ce jour et staff 
+            
+            // pour chacun de ces objets, mettre a jour time, rep et place
+        
+            foreach ($request->request as $key => $currentRequest) {
+                
+                // convertir la clé en tableau
+                $keyTab = explode("_", $key);
+                $transfer = $transferArrivalRepository->findOneBy(['customerCard' => $keyTab[1]]);
+                $firstClient = $customerCardRepository->find($keyTab[1]);
+                $staff = $firstClient->getStaff();
+                $agency = $firstClient->getAgency();
+                $flightNumber = $transfer->getFlightNumber();
+                $hotels = []; 
+
+                foreach ($firstClient->getTransferArrivals() as $arrivals) {
+                    $hotels[] = $arrivals->getToArrival();
+                }
+                $hotel = $hotels[0];
+                //dump('client id: ' . $firstClient->getId() . ' s: ' .$staff . ' a: ' . $agency . ' h: ' . $hotel);
+                // pour chaque personne ce jour et ce staff, cet hotel et cet agence mettre a jour
+                // 1st récupérer la liste de ces personnes
+                $customersListForThisCouple = $customerCardRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber);
+                
+                // 2d mettre a jour
+                // récupérer chaque couple hotel agence pour ce rep a ce jour 
+                // pour chaque résultats  
+
+                foreach ($customersListForThisCouple as $customer ) {
+
+                    // récupérer l'objet correspondant a l id
+                    //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
+                    $currentCustommerCard = $customer;
+
+                    // si c est heure set l objet avec l heure
+                    if ($keyTab[0] == 'hour') {
+                        $dateTimeImmutable = new DateTimeImmutable($day . ' '. $currentRequest);
+                        $currentCustommerCard->setMeetingAt($dateTimeImmutable);
+                    }
+                    // si c est l'endroit convertir l objet avec l endroit 
+                    else if ($keyTab[0] == 'meetingPoint') {
+                        $meetingPoint = $meetingPointRepository->find($currentRequest);
+                        $currentCustommerCard->setMeetingPoint($meetingPoint);
+                    }
+                    // si c est l'endroit convertir l objet avec l endroit 
+                    else if ($keyTab[0] == 'staff') {
+                        $staff = $userRepository->find($currentRequest);
+                        $currentCustommerCard->setStaff($staff);
+                    }
+                }
+
+            }
+           
+
+            
+            $manager->flush();
+            return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));
+        }
+
+
+        return $this->render('team_manager/attributionMeetingsDetails.html.twig', [
+            "date" => $date,
+            "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
+            "meetingPoints" => $meetingPoints, 
+            "user" => $user,
+            "users" => $users,
+        ]);
+    }
+
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep

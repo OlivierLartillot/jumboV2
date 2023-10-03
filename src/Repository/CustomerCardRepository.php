@@ -420,7 +420,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an sum of CustomerCards Adults pax
+     * @return int Returns the sum of CustomerCards Adults pax
      * Attribution des représentants
      */
     public function countPaxAdultsAttribbutionRep($date, $hotel, $agency)
@@ -442,7 +442,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns an sum of CustomerCards children pax
+     * @return int Returns the sum of CustomerCards children pax
      * Attribution des représentants
      */
     public function countPaxChildrenAttribbutionRep($date, $hotel, $agency) 
@@ -464,7 +464,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] Returns the sum of CustomerCards Babies pax
+     * @return int Returns the sum of CustomerCards Babies pax
      * Attribution des représentants
      */
     public function countPaxBabiesAttribbutionRep($date, $hotel, $agency) 
@@ -552,7 +552,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
         /**
-     * @return CustomerCard[] Returns an sum of CustomerCards pax by age and date
+     * @return int
      * nombre de pax attribués pour un rep à ce jour
      */
     public function staffPaxByDateHotelAgenceAge($date, $age, $hotel, $agency)
@@ -657,7 +657,7 @@ class CustomerCardRepository extends ServiceEntityRepository
 
 
     /**
-     *  
+     * @return int the Sum of paxes by regroupment 
      * Attribution des représentants
      */
     public function paxForRegroupementHotelAndAgencies($date, $hotel, $agency, $staff, $age, $flightNumber = null)

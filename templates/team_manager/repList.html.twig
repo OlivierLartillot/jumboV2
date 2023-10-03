@@ -59,8 +59,7 @@
                                             {% set hotel = null %}
 
                                             {% set hotel =  regroupement.toArrival %}
-                       
-                                            
+                                         
                                             {% trans %}Hotel{% endtrans %}: <strong>{{ hotel.name|title }}</strong><br/>
                                             {% trans %}Agency{% endtrans %}: <strong>{{ regroupement.customerCard.agency|title }}</strong><br/>
                                             Pax:<strong>
@@ -85,6 +84,9 @@
                                     {% if paxCount > 0 %} 
                                         <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">{% trans %}Update{% endtrans %}</a> 
                                     {% endif %}
+                                {% endif %}
+                                {% if paxCount > 0 %}
+                                    <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
                                 {% endif %}
                         </div>              
                     </div>

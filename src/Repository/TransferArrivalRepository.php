@@ -118,7 +118,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
 
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by the day, the nature transfer and service number
+     * @return TransferArrival[] Returns an array of TransferArrival objects by the day, the nature transfer and service number
      * Cette requête sert à des vérifications pendant l import du csv
      */
     public function findByDateNaturetransferClientnumber($reservationNumber, $date): array
@@ -140,7 +140,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CustomerCard[] counts number of time arrival exist EXCEPT TODAY
+     * @return TransferArrival[] counts number of time arrival exist EXCEPT TODAY
      * Cette requête sert à des vérifications pendant l import du csv
      */
     public function CheckIfArrivalExistAnotherDay($reservationNumber, $date): int
