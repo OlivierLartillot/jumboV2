@@ -162,6 +162,7 @@ class TeamManagerController extends AbstractController
                $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "babies");
                
                $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+             
                $regroupementsClients[] = $regroupements;
                foreach ($regroupements as $transferArrival) {
 
@@ -180,6 +181,7 @@ class TeamManagerController extends AbstractController
                 } 
             }
         }
+      
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
             'users' => $users,
