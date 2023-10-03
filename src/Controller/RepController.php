@@ -51,19 +51,15 @@ class RepController extends AbstractController
                     $agency = $transferArrival->getCustomerCard()->getAgency();
                     $hotel = $transferArrival->getToArrival();
                     
-                        $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'adults');
-                        $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children');
-                        $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies');
+                        $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'adults', $transferArrival->getflightNumber());
+                        $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children', $transferArrival->getflightNumber());
+                        $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies', $transferArrival->getflightNumber());
                         
-                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getId()] =  $paxRegroupAdults;
-                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getId()] =  $paxRegroupChildren;
-                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getId()] =  $paxRegroupBabies;
+                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupAdults;
+                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupChildren;
+                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupBabies;
                 } 
             }
-
-
-
-        //dd($regroupementsClients);
         
         return $this->render('rep/repList.html.twig', [
             'date' => $date,
