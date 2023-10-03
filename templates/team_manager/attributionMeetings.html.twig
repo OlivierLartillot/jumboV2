@@ -12,8 +12,11 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
+                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
+                                <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
                             </div>
+
+
                         </div>
                     </div>
     
@@ -64,8 +67,8 @@
                                 
                                     {% endfor %} #}
 
-
-                                     {% for transferArrival in customersGrouping %}
+                                    {% for transferArrival in customersGrouping|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                   
                                         <tr>
                                             <td>
                                                 <b>A:</b> {{ paxTab[transferArrival.id]['adults'] }}, 
