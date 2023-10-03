@@ -55,9 +55,9 @@ class RepController extends AbstractController
                         $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children');
                         $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies');
                         
-                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId()] =  $paxRegroupAdults;
-                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId()] =  $paxRegroupChildren;
-                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId()] =  $paxRegroupBabies;
+                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getId()] =  $paxRegroupAdults;
+                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getId()] =  $paxRegroupChildren;
+                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getId()] =  $paxRegroupBabies;
                 } 
             }
 
