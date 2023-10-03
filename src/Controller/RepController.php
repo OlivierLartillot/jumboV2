@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
+use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
@@ -18,7 +19,7 @@ class RepController extends AbstractController
 {
 
     #[Route('/rep/replist', name: 'app_admin_rep_replist',methods:["GET"])]
-    public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository,TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
         $day =  $defineQueryDate->returnDay($request);
@@ -33,8 +34,9 @@ class RepController extends AbstractController
         // nombre de clients sans attributions
         $paxPerHotelAgency = [];
         $paxTab = []; // on va récupérer les pax globaux pour chaque rep
-        $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-
+        //$regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
+        $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+        //dd($regroupementsClients);
         // pour chaque staff on va définir les infos a récupérer
         
             if(in_array('ROLE_REP', $user->getRoles())){  
@@ -45,20 +47,24 @@ class RepController extends AbstractController
                 $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "children");
                 $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "babies");
             
-                foreach ($regroupementsClients as $clients) {
-                    $agency = $clients->getAgency();
-                    $hotels = [];
-                    foreach ($clients->getTransferArrivals() as $hotel) { $hotels[] = $hotel->getToArrival(); }
-                        $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults');
-                        $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children');
-                        $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies');
+                foreach ($regroupementsClients as $transferArrival) {
+                    $agency = $transferArrival->getCustomerCard()->getAgency();
+                    $hotel = $transferArrival->getToArrival();
+                    
+                        $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'adults');
+                        $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children');
+                        $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies');
                         
-                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupAdults;
-                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupChildren;
-                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId()] =  $paxRegroupBabies;
+                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId()] =  $paxRegroupAdults;
+                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId()] =  $paxRegroupChildren;
+                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId()] =  $paxRegroupBabies;
                 } 
             }
 
+
+
+        //dd($regroupementsClients);
+        
         return $this->render('rep/repList.html.twig', [
             'date' => $date,
             'user' => $user,
