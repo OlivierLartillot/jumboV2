@@ -38,30 +38,33 @@
                                 
                                     <tr class="border-x border-info">
                                         <td class="pt-3">
-                                            A: {{ customerCard.adultsNumber }}, 
-                                            C: {{ customerCard.childrenNumber  }}, 
-                                            B: {{ customerCard.babiesNumber  }}<hr>
-                                                <b>{{ customerCard.holder|title }}</b> - {{ customerCard.reservationNumber }}<br>
+                                            {% for transferArrival in customerCard.transferArrivals %}
+                                               <b>{{ transferArrival.toArrival|title}}</b> <br>
+                                            {% endfor %}
+                                             <b>{{ customerCard.getMeetingAtTime}}</b> -
+                                             <b>{{ (customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? customerCard.meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</b>
+                                           
+                                            <hr>
+                
+                                            {{ customerCard.holder|title }} - {{ customerCard.reservationNumber }}<br>
                                                
-                                               <ul>
+                                            <ul>
                                                 {% for transferArrival in customerCard.transferArrivals %}
-                                                <li>
-                                                    <u>{% trans %}Arrival{% endtrans %}:</u> {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} 
-                                                </li>
-                                                <li>
-                                                    {{ transferArrival.toArrival|title}}
-                                                </li>
-                                                <li>
-                                                    {{ transferArrival.customerCard.agency|title }}
-                                                </li>
-                                                  
-
-                                                   
-                                                    {% endfor %}
-                                                </ul>
-                                                {% trans %}Time{% endtrans %} <b>{{ customerCard.getMeetingAtTime}}</b>
-                                                - <b>{{ (customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? customerCard.meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</b>
-                                            </td>
+                                                    <li>
+                                                        <u>{% trans %}Arrival{% endtrans %}:</u> {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} 
+                                                    </li>
+                                                    <li>
+                                                        <u>{% trans %}Agency{% endtrans %}:</u>{{ transferArrival.customerCard.agency|title }}
+                                                    </li>
+                                                    <li>
+                                                        <u>{% trans %}Pax{% endtrans %}:</u>                           
+                                                        A: {{ customerCard.adultsNumber }}, 
+                                                        C: {{ customerCard.childrenNumber  }}, 
+                                                        B: {{ customerCard.babiesNumber  }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
                                         <td> {{ customerCard.getMeetingAtTime}}</td> 
 
                                         <td>

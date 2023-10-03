@@ -35,7 +35,6 @@
                                 {% endif %}
                                 <hr>
                                 {% for regroupement in regroupementsClients|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
-                               
 
                                     {% if (regroupement is not empty) %}                                                        
                                     
@@ -44,9 +43,12 @@
                                                 {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
                                                 {% set hotel =  regroupement.toArrival %}
 
-                                                {% trans %}Hotel{% endtrans %}: <strong>{{ hotel.name|title }}</strong><br/>
-                                                {% trans %}Agency{% endtrans %}: <strong>{{ regroupement.customerCard.agency|title }}</strong><br/>
-                                                Pax:<strong>
+                                                <strong>{{ hotel.name|title }}<br/>
+                                                {{ regroupement.customerCard.getMeetingAtTime }} - {{ (regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) : regroupement.customerCard.meetingPoint.en }}</strong><br/>
+                                
+
+                                                {% trans %}Agency{% endtrans %}: {{ regroupement.customerCard.agency|title }}<br/>
+                                                Pax:
                                                 {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
                                                 {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
                                                     A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
@@ -57,9 +59,8 @@
                                                 {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
                                                     B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }} 
                                                 {% endif %}
-                                                </strong>
+                                               
                                                 <br/>
-                                                {% trans %}Meeting at{% endtrans %} <strong>{{ regroupement.customerCard.getMeetingAtTime }} - {{ (regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) : regroupement.customerCard.meetingPoint.en }}</strong>
                                             </p>
                                             <hr>
                                         {% endif %}
