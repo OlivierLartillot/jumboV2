@@ -482,7 +482,7 @@ class TeamManagerController extends AbstractController
                         $printingOptionsUser->removeAirport($airport);
                     }
                     $manager->persist($printingOptionsUser);
-                    $manager->flush($printingOptionsUser);                   
+                    $manager->flush();                   
                 }
             }
             $this->addFlash(
