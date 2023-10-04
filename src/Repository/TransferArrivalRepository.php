@@ -69,13 +69,13 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return TransferArrival[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
-     * This return the first customerCard of each groupment
+     * @return TransferArrival[] Returns an array of customersCards at this 
+     * - choosen date by staff, 
+     * - grouped by staff, agency and arrival hotel
      * Attribution des meetings
      */
     public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
     {
-
 
         return $this->createQueryBuilder('t')
             ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
@@ -93,7 +93,8 @@ class TransferArrivalRepository extends ServiceEntityRepository
 
 
     /**
-     * @return TransferArrival[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
+     * @return TransferArrival[] Returns an array of TransferArrival at this 
+     * - choosen date by staff, 
      * This return the first customerCard of each groupment
      * Attribution des meetings
      */

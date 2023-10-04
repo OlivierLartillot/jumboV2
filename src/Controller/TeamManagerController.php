@@ -207,34 +207,43 @@ class TeamManagerController extends AbstractController
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:01:00');
 
-        // attraper la liste des objets correpsondants au representant et au jour 
-        $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
+        //dd($day);06/09
+        // attraper la liste des objets correpsondants au representant et au jour du meeting
+        //$attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
 
-
-        $customersGrouping = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
-        $customersGroupingPax=$transferArrivalRepository->meetingRegroupmentPax($date, $user);
-    
+        // on a un seul user dans cette page
+        // Ne sert pas pour les pax car c'est groupé, on ne peut pas ajouté
+        $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+        //$customersGroupingPax = $transferArrivalRepository->meetingRegroupmentPax($date, $user);
         $paxTab = [];
-        // parcourir le regroupement 
-        foreach ($customersGrouping as $groupment) {
-            //dd($groupment->getId());
-            $paxTab[$groupment->getId()]['adults'] = 0;
-            $paxTab[$groupment->getId()]['children'] = 0;
-            $paxTab[$groupment->getId()]['babies'] = 0;
-            // pour chaque regroupement parcours le grouping pax et si ca correspond rajouter dans le tableau avec la clé du grouping   
-            foreach ($customersGroupingPax as $pax) {
-                //si le pax correspond il faut l'ajouter dans le tableau
+        foreach ($regroupements as $transferArrival) {
 
-                if(($groupment->getFlightNumber() == $pax->getFlightNumber()) and ($groupment->getToArrival() == $pax->getToArrival())) {
-                    $paxTab[$groupment->getId()]['adults'] += $pax->getCustomerCard()->getAdultsNumber();
-                    $paxTab[$groupment->getId()]['children'] += $pax->getCustomerCard()->getChildrenNumber();
-                    $paxTab[$groupment->getId()]['babies'] += $pax->getCustomerCard()->getBabiesNumber();
-                
-                }
-            } 
+            $agency = $transferArrival->getCustomerCard()->getAgency();
+            $hotels = [];
+            $hotels[] = $transferArrival->getToArrival();
+
+            $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', $transferArrival->getflightNumber());
+            $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', $transferArrival->getflightNumber());
+            $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', $transferArrival->getflightNumber());
+            
+            
+            $paxPerHotelAgency['adults'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupAdults;
+            $paxPerHotelAgency['children'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupChildren;
+            $paxPerHotelAgency['babies'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupBabies;
         }
+
+        // calcul les pax de chaque regroupement
+        foreach ($paxPerHotelAgency as $key => $itemAge) {
+            $paxTab[$key] = 0;
+            foreach ($itemAge as $age) {
+                $paxTab[$key] += $age;
+            }
+        }
+        // calcul du pax total
+        $countPax = $paxTab['adults'] + ($paxTab['children']*0.5);
+
 
         if (!empty($_POST) and $request->getMethod() == "POST") { 
 
@@ -297,15 +306,16 @@ class TeamManagerController extends AbstractController
             return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));
         }
 
-
         return $this->render('team_manager/attributionMeetings.html.twig', [
             "date" => $date,
-            "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
+            //"attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
             "user" => $user,
             "users" => $users,
-            'customersGrouping' => $customersGrouping,
-            'paxTab' => $paxTab
+            "paxPerHotelAgency" => $paxPerHotelAgency,
+            'regroupements' => $regroupements,
+            'paxTab' => $paxTab,
+            'countPax' => $countPax
         ]);
     }
 
@@ -327,13 +337,10 @@ class TeamManagerController extends AbstractController
 
         // attraper la liste des objets correpsondants au representant et au jour 
         $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
-//        dd($attributionClientsByRepAndDate );
 
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
     
-
-
 
         if (!empty($_POST) and $request->getMethod() == "POST") { 
 
@@ -396,6 +403,16 @@ class TeamManagerController extends AbstractController
             return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));
         }
 
+        $paxTab = [];
+        $paxTab['adults'] = 0;
+        $paxTab['children'] = 0;
+        $paxTab['babies'] = 0;
+        foreach ($attributionClientsByRepAndDate as $client) {
+            $paxTab['adults'] += $client->getAdultsNumber();
+            $paxTab['children'] += $client->getChildrenNumber();
+            $paxTab['babies'] += $client->getBabiesNumber();
+        }
+        $countPax = $paxTab['adults'] + ($paxTab['children']*0.5);
 
         return $this->render('team_manager/attributionMeetingsDetails.html.twig', [
             "date" => $date,
@@ -403,6 +420,9 @@ class TeamManagerController extends AbstractController
             "meetingPoints" => $meetingPoints, 
             "user" => $user,
             "users" => $users,
+            "paxTab" => $paxTab,
+            'countPax' => $countPax
+
         ]);
     }
 

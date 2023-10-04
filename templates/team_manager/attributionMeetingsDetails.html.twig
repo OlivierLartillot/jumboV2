@@ -14,7 +14,7 @@
                             <div class="mb-3">
                                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
                                     <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
-                                    <a href="{{ path('app_admin_team_manager_fiche_par_date',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Attribution{% endtrans %}</a>
+                                    <a href="{{ path('app_admin_team_manager_fiche_par_date',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Update{% endtrans %}</a>
                                 {% else %}
                                     <a href="{{ path('app_admin_rep_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}My briefings{% endtrans %}</a>
                                 {% endif %}
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                     </div>
-    
+                    <i>{% trans %}*Number total of pax{% endtrans %}: {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}, {% trans %}Children{% endtrans %}:{{paxTab['children']}} ,{% trans %}Babies{% endtrans %}:{{paxTab['babies']}} = {{ countPax}} pax</i> 
                     <div class="table-responsive mb-4">
                         <table class="table table-centered table-striped table-nowrap border shadow mb-0">
                             {# <table class="table table-striped border shadow"> #}
@@ -42,7 +42,7 @@
                                                <b>{{ transferArrival.toArrival|title}}</b> <br>
                                             {% endfor %}
                                              <b>{{ customerCard.getMeetingAtTime}}</b> -
-                                             <b>{{ (customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? customerCard.meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</b>
+                                             <b>{{ (customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? customerCard.meetingPoint.checkLanguage(app.user.language) : customerCard.meetingPoint.en }}</b>
                                            
                                             <hr>
                 
@@ -69,7 +69,12 @@
 
                                         <td>
                                                 
-                                            {{ (customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? customerCard.meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}
+
+                                            {% if  customerCard.meetingPoint is not null %}
+                                                {{ (customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? customerCard.meetingPoint.checkLanguage(app.user.language) : customerCard.meetingPoint.en }}
+                                            {% else %}
+                                               {{ customerCard.meetingPoint.name}}
+                                            {% endif %}
                                             
                                         </td> 
                                     </tr>
