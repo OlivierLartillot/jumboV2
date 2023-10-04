@@ -123,8 +123,6 @@ class RepController extends AbstractController
     }
 
 
-
-
     #[Route('/rep/salidas', name: 'app_rep')]
     public function index(UserRepository $userRepository, TransferDepartureRepository $transferDepartureRepository): Response
     {
