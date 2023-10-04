@@ -34,38 +34,40 @@
                                     {% endif %}
                                 {% endif %}
                                 <hr>
-                                {% for regroupement in regroupementsClients|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                {% if regroupementsClients|length > 0  %}
+                                    {% for regroupement in regroupementsClients|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
 
-                                    {% if (regroupement is not empty) %}                                                        
+                                        {% if (regroupement is not empty) %}                                                        
+                                        
+                                            {% if regroupement.customerCard.staff == user %}
+                                                <p class="card-text {{ (regroupement.customerCard.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
+                                                    {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
+                                                    {% set hotel =  regroupement.toArrival %}
+
+                                                    <strong>{{ hotel.name|title }}<br/>
+                                                    {{ regroupement.customerCard.getMeetingAtTime }} - {{ (regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) : regroupement.customerCard.meetingPoint.en }}</strong><br/>
                                     
-                                        {% if regroupement.customerCard.staff == user %}
-                                            <p class="card-text {{ (regroupement.customerCard.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
-                                                {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
-                                                {% set hotel =  regroupement.toArrival %}
 
-                                                <strong>{{ hotel.name|title }}<br/>
-                                                {{ regroupement.customerCard.getMeetingAtTime }} - {{ (regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) : regroupement.customerCard.meetingPoint.en }}</strong><br/>
-                                
-
-                                                {% trans %}Agency{% endtrans %}: {{ regroupement.customerCard.agency|title }}<br/>
-                                                Pax:
-                                                {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
-                                                {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
-                                                    A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
-                                                {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
-                                                    N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
-                                                {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
-                                                    B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }} 
-                                                {% endif %}
-                                               
-                                                <br/>
-                                            </p>
-                                            <hr>
+                                                    {% trans %}Agency{% endtrans %}: {{ regroupement.customerCard.agency|title }}<br/>
+                                                    Pax:
+                                                    {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
+                                                    {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
+                                                        A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
+                                                    {% endif %}
+                                                    {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
+                                                        N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
+                                                    {% endif %}
+                                                    {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
+                                                        B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }} 
+                                                    {% endif %}
+                                                
+                                                    <br/>
+                                                </p>
+                                                <hr>
+                                            {% endif %}
                                         {% endif %}
-                                    {% endif %}
-                                {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
                                 {% if paxCount > 0 %}
                                 <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
                             {% endif %}
