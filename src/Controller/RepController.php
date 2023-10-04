@@ -109,6 +109,7 @@ class RepController extends AbstractController
             $paxTab['babies'] += $client->getBabiesNumber();
         }
 
+        // Compte le nombre Total de Pax
         $countPax = $paxTab['adults'] + ($paxTab['children']*0.5);
 
         return $this->render('team_manager/attributionMeetingsDetails.html.twig', [
