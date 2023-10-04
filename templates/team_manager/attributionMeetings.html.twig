@@ -20,6 +20,8 @@
                         </div>
                     </div>
     
+                    <i>{% trans %}*Number total of pax{% endtrans %}: {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}, {% trans %}Children{% endtrans %}:{{paxTab['children']}} ,{% trans %}Babies{% endtrans %}:{{paxTab['babies']}} = {{ countPax}} pax</i>  
+
                     <div class="table-responsive mb-4">
                         <form action="" method="POST">
                         <table class="table table-centered table-striped table-nowrap mb-0">
@@ -33,47 +35,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-{#                                     {% for client in attributionClientsByRepAndDate %}
+
+                                    {% for transferArrival in regroupements|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                        {% set agency = transferArrival.customerCard.agency.id %}
+                                        {% set hotel = transferArrival.toArrival.id %}
+                                        {% set flightNumber = transferArrival.flightNumber %}
+
                                         <tr>
                                             <td>
-                                            {% for infosTransfer in client.transferArrivals %}
-                                                {{ infosTransfer.toArrival}}
-                                            {% endfor %}
-                                            </td>
-                                            <td>{{ client.holder }}</td> 
-                                            <td> <input type="time" value="{{ client.getMeetingAtTime}}" name="hour_{{ client.id }}"/></td> 
-                                            <td> 
-                                                <select name="staff_{{ client.id }}">
-                                                    {% for user in users %}
-                                                        {% if "ROLE_REP" in user.roles %}
-                                                            <option value="{{user.id}}" {{ user.id == client.staff.id ? "selected" : ""}}  >{{user.username}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                            <td>
-                                                <select name="meetingPoint_{{ client.id }}">
-                                                    {% for meetingPoint in meetingPoints %}
-
-                                                        {% if  client.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == client.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
-                                                        {% else %}
-                                                            <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                        </tr>
-                                
-                                    {% endfor %} #}
-
-                                    {% for transferArrival in customersGrouping|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
-                                   
-                                        <tr>
-                                            <td>
-                                                <b>A:</b> {{ paxTab[transferArrival.id]['adults'] }}, 
-                                                <b>C:</b> {{ paxTab[transferArrival.id]['children'] }}, 
-                                                <b>B:</b> {{ paxTab[transferArrival.id]['babies'] }}<hr>
+                                                <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~flightNumber] }}, 
+                                                <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~flightNumber] }}, 
+                                                <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~flightNumber] }}<hr>
                                                {#  {{  dump(infosTransfer) }} #}
                                                     Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
                                                     {{ transferArrival.toArrival|title}} 
