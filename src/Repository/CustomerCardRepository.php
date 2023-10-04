@@ -500,7 +500,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->andWhere('c.staff is not null')
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
-            ->groupBy('c.staff, c.agency ,transferArrival.toArrival')      
+            ->groupBy('c.staff', 'c.agency' ,'transferArrival.toArrival')      
             ->getQuery()
             ->getResult()
         ;
@@ -522,9 +522,6 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-
-
 
     /**
      *
@@ -595,7 +592,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
             ->setParameter('staff', $staff)
-            ->groupBy('c.staff, c.agency ,transferArrival.toArrival', 'transferArrival.flightNumber')      
+            ->groupBy('c.staff', 'c.agency' ,'transferArrival.toArrival', 'transferArrival.flightNumber')      
             ->getQuery()
             ->getResult()
         ;
@@ -698,7 +695,7 @@ class CustomerCardRepository extends ServiceEntityRepository
 
     // PAX CALCULATION
     /**
-     * @return sum(pax) -  of CustomerCard[] pax -   Returns the sum of pax per age (adults, children, babies)
+     * @return int (pax) -  of CustomerCard[] pax -   Returns the sum of pax per age (adults, children, babies)
      */
     public function numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, $age, $status = null)
     {

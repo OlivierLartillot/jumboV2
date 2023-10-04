@@ -61,14 +61,14 @@ class RepController extends AbstractController
                 } 
             }
         
-/*         return $this->render('rep/repList.html.twig', [
+        return $this->render('rep/repList.html.twig', [
             'date' => $date,
             'user' => $user,
             'regroupementsClients' => $regroupementsClients,   
             'paxTab' => $paxTab,
             'paxPerHotelAgency' => $paxPerHotelAgency
-        ]); */
-        return $this->render('rep/repList.html.twig');
+        ]);
+       
     } 
 
 
