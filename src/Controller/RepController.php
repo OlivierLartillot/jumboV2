@@ -35,7 +35,7 @@ class RepController extends AbstractController
         $paxPerHotelAgency = [];
         $paxTab = []; // on va récupérer les pax globaux pour chaque rep
         //$regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-        $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+  /*       $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user); */
         //dd($regroupementsClients);
         // pour chaque staff on va définir les infos a récupérer
         
