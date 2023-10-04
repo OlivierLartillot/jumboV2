@@ -98,7 +98,18 @@ class RepController extends AbstractController
 
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
-    
+        
+        $paxTab = [];
+        $paxTab['adults'] = 0;
+        $paxTab['children']= 0;
+        $paxTab['babies']= 0;
+        foreach ($attributionClientsByRepAndDate as $client) {
+            $paxTab['adults'] += $client->getAdultsNumber();
+            $paxTab['children'] += $client->getChildrenNumber();
+            $paxTab['babies'] += $client->getBabiesNumber();
+        }
+
+        $countPax = $paxTab['adults'] + ($paxTab['children']*0.5);
 
         return $this->render('team_manager/attributionMeetingsDetails.html.twig', [
             "date" => $date,
@@ -106,6 +117,8 @@ class RepController extends AbstractController
             "meetingPoints" => $meetingPoints, 
             "user" => $user,
             "users" => $users,
+            "paxTab" => $paxTab,
+            "countPax" => $countPax
         ]);
     }
 
