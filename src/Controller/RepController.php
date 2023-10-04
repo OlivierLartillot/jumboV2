@@ -22,7 +22,7 @@ class RepController extends AbstractController
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository,TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
-/*         $day =  $defineQueryDate->returnDay($request);
+        $day =  $defineQueryDate->returnDay($request);
 
         // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
@@ -39,7 +39,7 @@ class RepController extends AbstractController
         //dd($regroupementsClients);
         // pour chaque staff on va définir les infos a récupérer
         
-            if(in_array('ROLE_REP', $user->getRoles())){  
+/*             if(in_array('ROLE_REP', $user->getRoles())){  
                
 
                 // pour la recherche date == meetingDate on récupere les pax de date -1 pour avoir les arrivées
