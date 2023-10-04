@@ -35,11 +35,11 @@ class RepController extends AbstractController
         $paxPerHotelAgency = [];
         $paxTab = []; // on va récupérer les pax globaux pour chaque rep
         //$regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-  /*       $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user); */
+        $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
         //dd($regroupementsClients);
         // pour chaque staff on va définir les infos a récupérer
         
-/*             if(in_array('ROLE_REP', $user->getRoles())){  
+            if(in_array('ROLE_REP', $user->getRoles())){  
                
 
                 // pour la recherche date == meetingDate on récupere les pax de date -1 pour avoir les arrivées
@@ -59,7 +59,7 @@ class RepController extends AbstractController
                         $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupChildren;
                         $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupBabies;
                 } 
-            } */
+            }
         
 /*         return $this->render('rep/repList.html.twig', [
             'date' => $date,
