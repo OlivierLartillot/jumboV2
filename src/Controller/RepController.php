@@ -22,7 +22,7 @@ class RepController extends AbstractController
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository,TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
-        $day =  $defineQueryDate->returnDay($request);
+/*         $day =  $defineQueryDate->returnDay($request);
 
         // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
@@ -59,16 +59,16 @@ class RepController extends AbstractController
                         $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupChildren;
                         $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupBabies;
                 } 
-            }
+            } */
         
-        return $this->render('rep/repList.html.twig', [
+/*         return $this->render('rep/repList.html.twig', [
             'date' => $date,
             'user' => $user,
             'regroupementsClients' => $regroupementsClients,   
             'paxTab' => $paxTab,
             'paxPerHotelAgency' => $paxPerHotelAgency
-        ]);
-
+        ]); */
+        return $this->render('rep/repList.html.twig');
     } 
 
 
