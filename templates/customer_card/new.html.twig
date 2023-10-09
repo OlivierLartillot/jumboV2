@@ -16,36 +16,54 @@
                 {{ form_widget(form) }}
 
                 <div class="mb-3">
-                    <label class="form-label" for="test">Test</label>
-                    <input id="test" class="form-control" name="test" type="text"> 
+                    <label class="form-label" for="serviceNumber">{% trans %}Service Number{% endtrans %}</label>
+                    <input type="text" id="serviceNumber" class="form-control" name="serviceNumber" type="text"> 
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="serviceNumber">Service Number</label>
-                    <input id="serviceNumber" class="form-control" name="serviceNumber" type="text"> 
+                    <label class="form-label" for="dateHour">{% trans %}DateHour{% endtrans %}</label>
+                    <input type="datetime-local" id="dateHour" class="form-control" name="dateHour" type="text"> 
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label" for="dateHour">DateHour</label>
-                    <input id="dateHour" class="form-control" name="dateHour" type="text"> 
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="flightNumber">flightNumber</label>
+                    <label class="form-label" for="flightNumber">{% trans %}Flight Number{% endtrans %}</label>
                     <input id="flightNumber" class="form-control" name="flightNumber" type="text"> 
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="date">date</label>
-                    <input id="date" class="form-control" name="date" type="text"> 
+                    <label class="form-label" for="date">{% trans %}Date{% endtrans %}</label>
+                    <input type="date" id="date" class="form-control" name="date" type="text"> 
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="hour">hour</label>
-                    <input id="hour" class="form-control" name="hour" type="text"> 
+                    <label class="form-label" for="hour">{% trans %}Hour{% endtrans %}</label>
+                    <input type="time" id="hour" class="form-control" name="hour" type="text"> 
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="fromStart">fromStart</label>
-                    <input id="fromStart" class="form-control" name="fromStart" type="text"> 
+                    <label class="form-label required" for="fromStart">{% trans %}From Start{% endtrans %}</label>
+                    <select id="fromStart" name="fromStart" class="form-select">
+                        {% for airport in airports %}
+                            <option value="{{ airport.id}}">{{ airport }}</option>
+                        {% endfor %}
+                    </select>        
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="toArrival">toArrival</label>
-                    <input id="toArrival" class="form-control" name="toArrival" type="text"> 
+                    <label class="form-label required" for="toArrival">{% trans %}From Start{% endtrans %}</label>
+                    <select id="toArrival" name="toArrival" class="form-select">
+                        {% for hotel in hotels %}
+                            <option value="{{ hotel.id}}">{{ hotel }}</option>
+                        {% endfor %}
+                    </select>        
+                </div>
+                <div class="mb-3">
+                    <fieldset>
+                        <legend>Is the transport collective ?</legend>
+                        <div class="form-check">
+
+                            <input type="radio" id="collective" name="isCollective" value="1" checked />
+                            <label for="collective">Collective</label>
+                            <input type="radio" id="notCollective" name="isCollective" value="0" />
+                            <label for="notCollective">Not Collective</label>
+                
+                        </div>   
+                    </fieldset>     
                 </div>
 
                 {# ->add('serviceNumber')

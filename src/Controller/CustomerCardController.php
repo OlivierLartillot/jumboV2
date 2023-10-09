@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
 use App\Entity\StatusHistory;
+use App\Entity\TransferArrival;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
@@ -469,17 +470,38 @@ class CustomerCardController extends AbstractController
 
 
     #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CustomerCardRepository $customerCardRepository): Response
+    public function new(Request $request, 
+                        CustomerCardRepository $customerCardRepository,
+                        AirportHotelRepository $airportHotelRepository
+                        ): Response
     {
+
+
+
         $customerCard = new CustomerCard();
         $form = $this->createForm(CustomerCardNewType::class, $customerCard);
         $form->handleRequest($request);
 
+        // récupérer les airports
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        // récupérer les hotels
+        $hotels = $airportHotelRepository->findBy(['isAirport' => false]);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $customerCard->setStatusUpdatedBy($this->getUser());
 
+            $airport = $airportHotelRepository->find($request->request->get('fromStart'));
+            $hotel = $airportHotelRepository->find($request->request->get('toArrival'));
 
-            dd($request->request->get('test'));
+            $arrival = new TransferArrival();
+            $arrival->setServiceNumber($request->request->get('serviceNumber'));
+            $arrival->setFlightNumber($request->request->get('flightNumber'));
+            $arrival->setIsCollective($request->request->get('isCollective'));
+            $arrival->setDate(new DateTimeImmutable($request->request->get('date')));
+            $arrival->setHour(new DateTimeImmutable($request->request->get('hour')));
+            $arrival->setDateHour(new DateTimeImmutable($request->request->get('dateHour')));
+            $arrival->setFromStart($airport);
+            $arrival->setToArrival($hotel);
 
             $customerCardRepository->save($customerCard, true);
 
@@ -489,6 +511,8 @@ class CustomerCardController extends AbstractController
         return $this->render('customer_card/new.html.twig', [
             'customer_card' => $customerCard,
             'form' => $form,
+            'airports' => $airports,
+            'hotels' => $hotels,
         ]);
     }
 
