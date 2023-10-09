@@ -1,11 +1,80 @@
-<!DOCTYPE html>
+{{ include('partials/header-reproupement.html.twig') }}
 
-<title>New CustomerCard</title>
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'New Customer Card'|trans}) }}
+    
+        <a href="{{ path('app_customer_card_index') }}" class="btn btn-secondary">back to list</a>
+        <div class="row justify-content-center">
 
-{% block body %}
-    <h1>Create new CustomerCard</h1>
+{#             <div class="col-lg-3">
+                {{ include('customer_card/_form.html.twig') }}
+            </div>
 
-    {{ include('customer_card/_form.html.twig') }}
+        </div> #}
 
-    <a href="{{ path('app_customer_card_index') }}">back to list</a>
-{% endblock %}
+        <div class="col-lg-3">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+
+                <div class="mb-3">
+                    <label class="form-label" for="test">Test</label>
+                    <input id="test" class="form-control" name="test" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="serviceNumber">Service Number</label>
+                    <input id="serviceNumber" class="form-control" name="serviceNumber" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="dateHour">DateHour</label>
+                    <input id="dateHour" class="form-control" name="dateHour" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="flightNumber">flightNumber</label>
+                    <input id="flightNumber" class="form-control" name="flightNumber" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="date">date</label>
+                    <input id="date" class="form-control" name="date" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="hour">hour</label>
+                    <input id="hour" class="form-control" name="hour" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="fromStart">fromStart</label>
+                    <input id="fromStart" class="form-control" name="fromStart" type="text"> 
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="toArrival">toArrival</label>
+                    <input id="toArrival" class="form-control" name="toArrival" type="text"> 
+                </div>
+
+                {# ->add('serviceNumber')
+                ->add('dateHour')
+                ->add('flightNumber')
+                ->add('isCollective')
+                ->add('date')
+                ->add('hour')
+                ->add('customerCard')
+                ->add('fromStart')
+                ->add('toArrival') #}
+                
+
+                <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+
+
+            {{ form_end(form) }}
+
+
+
+
+
+
+            </form>
+
+
+        </div>
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+

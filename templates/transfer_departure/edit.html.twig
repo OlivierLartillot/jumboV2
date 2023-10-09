@@ -1,0 +1,11 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'Edit Transfer Arrival'|trans}) }}
+
+        {{ include('transfer_departure/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a href="{{ path('app_transfer_departure_index') }}">back to list</a>
+
+        {{ include('transfer_departure/_delete_form.html.twig') }}
+
+{{ include('partials/footer-regroupement.html.twig') }}

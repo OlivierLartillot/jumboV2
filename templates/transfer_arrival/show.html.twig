@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<title>TransferArrival</title>
+
+{% block body %}
+    <h1>TransferArrival</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ transfer_arrival.id }}</td>
+            </tr>
+            <tr>
+                <th>ServiceNumber</th>
+                <td>{{ transfer_arrival.serviceNumber }}</td>
+            </tr>
+            <tr>
+                <th>DateHour</th>
+                <td>{{ transfer_arrival.dateHour ? transfer_arrival.dateHour|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FlightNumber</th>
+                <td>{{ transfer_arrival.flightNumber }}</td>
+            </tr>
+            <tr>
+                <th>IsCollective</th>
+                <td>{{ transfer_arrival.isCollective ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ transfer_arrival.date ? transfer_arrival.date|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Hour</th>
+                <td>{{ transfer_arrival.hour ? transfer_arrival.hour|date('H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_arrival_index') }}">back to list</a>
+
+    <a href="{{ path('app_transfer_arrival_edit', {'id': transfer_arrival.id}) }}">edit</a>
+
+    {{ include('transfer_arrival/_delete_form.html.twig') }}
+{% endblock %}

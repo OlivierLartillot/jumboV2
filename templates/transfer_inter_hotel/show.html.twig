@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<title>TransferInterHotel</title>
+
+{% block body %}
+    <h1>TransferInterHotel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ transfer_inter_hotel.id }}</td>
+            </tr>
+            <tr>
+                <th>ServiceNumber</th>
+                <td>{{ transfer_inter_hotel.serviceNumber }}</td>
+            </tr>
+            <tr>
+                <th>DateHour</th>
+                <td>{{ transfer_inter_hotel.dateHour ? transfer_inter_hotel.dateHour|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FlightNumber</th>
+                <td>{{ transfer_inter_hotel.flightNumber }}</td>
+            </tr>
+            <tr>
+                <th>IsCollective</th>
+                <td>{{ transfer_inter_hotel.isCollective ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ transfer_inter_hotel.date ? transfer_inter_hotel.date|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Hour</th>
+                <td>{{ transfer_inter_hotel.hour ? transfer_inter_hotel.hour|date('H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_inter_hotel_index') }}">back to list</a>
+
+    <a href="{{ path('app_transfer_inter_hotel_edit', {'id': transfer_inter_hotel.id}) }}">edit</a>
+
+    {{ include('transfer_inter_hotel/_delete_form.html.twig') }}
+{% endblock %}

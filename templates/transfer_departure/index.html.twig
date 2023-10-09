@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<title>TransferDeparture index</title>
+
+{% block body %}
+    <h1>TransferDeparture index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ServiceNumber</th>
+                <th>DateHour</th>
+                <th>FlightNumber</th>
+                <th>IsCollective</th>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transfer_departure in transfer_departures %}
+            <tr>
+                <td>{{ transfer_departure.id }}</td>
+                <td>{{ transfer_departure.serviceNumber }}</td>
+                <td>{{ transfer_departure.dateHour ? transfer_departure.dateHour|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ transfer_departure.flightNumber }}</td>
+                <td>{{ transfer_departure.isCollective ? 'Yes' : 'No' }}</td>
+                <td>{{ transfer_departure.date ? transfer_departure.date|date('Y-m-d') : '' }}</td>
+                <td>{{ transfer_departure.hour ? transfer_departure.hour|date('H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_transfer_departure_show', {'id': transfer_departure.id}) }}">show</a>
+                    <a href="{{ path('app_transfer_departure_edit', {'id': transfer_departure.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_departure_new') }}">Create new</a>
+{% endblock %}

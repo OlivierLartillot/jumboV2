@@ -63,6 +63,15 @@
                         <span>{% trans %}Clients Cards{% endtrans %}</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ path('app_customer_card_new') }}">
+                        <i class="fas fa-id-card"></i>
+                        <span>{% trans %}New Client{% endtrans %}</span>
+                    </a>
+                </li>
+                        
+                    
+                
                 
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_REP" in app.user.roles) ) %} 
                     <li>

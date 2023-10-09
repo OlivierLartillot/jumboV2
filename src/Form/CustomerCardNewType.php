@@ -6,17 +6,19 @@ use App\Entity\CustomerCard;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CustomerCardType extends AbstractType
+class CustomerCardNewType extends AbstractType
 {
     private $userRepository;
+    private $security;
 
-
-    public function __construct(UserRepository  $userRepository){
+    public function __construct(UserRepository  $userRepository, Security $security){
         $this->userRepository = $userRepository;
+        $this->security = $security;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -29,14 +31,12 @@ class CustomerCardType extends AbstractType
                 $repList[] = $user;
             }
         }
-
+        $currentUser = $this->security->getUser();
 
         $builder
             ->add('reservationNumber', null, [
-                'disabled' => true,
             ] )
             ->add('jumboNumber', null, [
-                'disabled' => true,
             ])
             ->add('holder', null, [
                 'label' => 'Full Name',
@@ -56,14 +56,9 @@ class CustomerCardType extends AbstractType
             ])
             ->add('reservationCancelled')
             ->add('status')
-            ->add('meetingPoint')
-            ->add('staff', EntityType::class, [
-                'label' => "Reps",
-                'placeholder' => 'Choose a Rep',
-                'class' => User::class,
-                'choices' => $repList,
-                
-            ] )
+            ->add('meetingPoint', null, [
+                'required' => true
+            ])
         ;
     }
 

@@ -8,6 +8,7 @@ use App\Entity\StatusHistory;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
+use App\Form\CustomerCardNewType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
 use App\Repository\CommentRepository;
@@ -27,6 +28,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerCardController extends AbstractController
 {
@@ -466,14 +468,19 @@ class CustomerCardController extends AbstractController
     }
 
 
-    #[Route('/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
+    #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CustomerCardRepository $customerCardRepository): Response
     {
         $customerCard = new CustomerCard();
-        $form = $this->createForm(CustomerCardType::class, $customerCard);
+        $form = $this->createForm(CustomerCardNewType::class, $customerCard);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $customerCard->setStatusUpdatedBy($this->getUser());
+
+
+            dd($request->request->get('test'));
+
             $customerCardRepository->save($customerCard, true);
 
             return $this->redirectToRoute('app_customer_card_index', [], Response::HTTP_SEE_OTHER);
@@ -667,15 +674,46 @@ class CustomerCardController extends AbstractController
                 , Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('customer_card/edit.html.twig', [
+        return $this->render('customer_card/edit.html.twig', [
             'customer_card' => $customerCard,
             'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_customer_card_delete', methods: ['POST'])]
-    public function delete(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository): Response
+    public function delete(Request $request, 
+                            CustomerCard $customerCard, CustomerCardRepository $customerCardRepository, 
+                            TransferArrivalRepository $transferArrivalRepository,
+                            TranslatorInterface $translator): Response
     {
+
+
+        
+        if ($customerCard->getTransferInterHotels()->count() > 0) {
+            // vous ne pouvez pas supprimer car ce client a des interHotels. Supprimer les départs avant 
+            $this->addFlash(
+                'warning',
+                'You can\'t delete this client card because there is an interHotel associated. Please remove the inter hotel first'
+            );
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
+        }
+        if ($customerCard->getTransferDeparture()->count() > 0) {
+            // vous ne pouvez pas supprimer car ce client a des departs. Supprimer les départs avant 
+            $this->addFlash(
+                'warning',
+                'You can\'t delete this client card because there is a deperture associated. Please remove the departure first'
+            );
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        if ($customerCard->getTransferArrivals()->count() > 0) {
+            // récupérer les arrivées et les supprimer 1 a 1
+            foreach ($customerCard->getTransferArrivals() as $transfer) {
+               $currentTransferArrival = $transferArrivalRepository->find($transfer);
+               $transferArrivalRepository->remove($currentTransferArrival, true);
+            } 
+        }
+
         if ($this->isCsrfTokenValid('delete'.$customerCard->getId(), $request->request->get('_token'))) {
             $customerCardRepository->remove($customerCard, true);
         }

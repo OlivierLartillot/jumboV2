@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New TransferInterHotel</title>
+
+{% block body %}
+    <h1>Create new TransferInterHotel</h1>
+
+    {{ include('transfer_inter_hotel/_form.html.twig') }}
+
+    <a href="{{ path('app_transfer_inter_hotel_index') }}">back to list</a>
+{% endblock %}
