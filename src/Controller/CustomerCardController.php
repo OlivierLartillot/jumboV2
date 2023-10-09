@@ -530,7 +530,6 @@ class CustomerCardController extends AbstractController
     {
 
 
-
         $user = $this->getUser();
         $comments = $commentRepository->findby(['customerCard' => $customerCard]);
 

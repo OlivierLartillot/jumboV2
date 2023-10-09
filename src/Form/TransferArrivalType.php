@@ -11,16 +11,15 @@ class TransferArrivalType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
+        $builder            
+            ->add('customerCard')
             ->add('serviceNumber')
-            ->add('dateHour')
             ->add('flightNumber')
-            ->add('isCollective')
             ->add('date')
             ->add('hour')
-            ->add('customerCard')
             ->add('fromStart')
             ->add('toArrival')
+            ->add('isCollective')
         ;
     }
 

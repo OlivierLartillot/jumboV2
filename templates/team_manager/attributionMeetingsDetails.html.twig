@@ -46,7 +46,7 @@
                                            
                                             <hr>
                 
-                                            {{ customerCard.holder|title }} - {{ customerCard.reservationNumber }}<br>
+                                            <a href="{{ path('app_customer_card_show', { 'id':customerCard.id  })   }}   "> {{ customerCard.holder|title }} - {{ customerCard.reservationNumber }}</a><br>
                                                
                                             <ul>
                                                 {% for transferArrival in customerCard.transferArrivals %}

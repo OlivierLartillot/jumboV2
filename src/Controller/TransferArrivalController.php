@@ -56,11 +56,13 @@ class TransferArrivalController extends AbstractController
         $form = $this->createForm(TransferArrivalType::class, $transferArrival);
         $form->handleRequest($request);
 
+        $customerCard = $transferArrival->getCustomerCard()->getId();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
 
-            return $this->redirectToRoute('app_transfer_arrival_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('transfer_arrival/edit.html.twig', [
