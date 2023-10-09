@@ -3,9 +3,7 @@
 namespace App\Form;
 
 use App\Entity\CustomerCard;
-use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,13 +49,14 @@ class CustomerCardNewType extends AbstractType
             ->add('babiesNumber', null, [
                 'label' => 'Babies quantity',
             ])
-            ->add('meetingAt', null, [
-                'widget' => 'single_text',
+            ->add('status', null, [
+                'attr' => ['hidden' => true], 
+                'label' => false
             ])
-            ->add('reservationCancelled')
-            ->add('status')
             ->add('meetingPoint', null, [
-                'required' => true
+                'required' => true,
+                'attr' => ['hidden' => true], 
+                'label' => false
             ])
         ;
     }

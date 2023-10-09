@@ -5,23 +5,15 @@
         <a href="{{ path('app_customer_card_index') }}" class="btn btn-secondary">back to list</a>
         <div class="row justify-content-center">
 
-{#             <div class="col-lg-3">
-                {{ include('customer_card/_form.html.twig') }}
-            </div>
-
-        </div> #}
-
         <div class="col-lg-3">
+            <h3>Client informations</h3>
             {{ form_start(form) }}
                 {{ form_widget(form) }}
-
+                <hr>
+                <h3>Arrival</h3>
                 <div class="mb-3">
                     <label class="form-label" for="serviceNumber">{% trans %}Service Number{% endtrans %}</label>
                     <input type="text" id="serviceNumber" class="form-control" name="serviceNumber" type="text"> 
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="dateHour">{% trans %}DateHour{% endtrans %}</label>
-                    <input type="datetime-local" id="dateHour" class="form-control" name="dateHour" type="text"> 
                 </div>
 
                 <div class="mb-3">
@@ -29,11 +21,11 @@
                     <input id="flightNumber" class="form-control" name="flightNumber" type="text"> 
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="date">{% trans %}Date{% endtrans %}</label>
+                    <label class="form-label" for="date">{% trans %}Arrival Date{% endtrans %}</label>
                     <input type="date" id="date" class="form-control" name="date" type="text"> 
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="hour">{% trans %}Hour{% endtrans %}</label>
+                    <label class="form-label" for="hour">{% trans %}Arrival Hour{% endtrans %}</label>
                     <input type="time" id="hour" class="form-control" name="hour" type="text"> 
                 </div>
                 <div class="mb-3">
@@ -45,7 +37,7 @@
                     </select>        
                 </div>
                 <div class="mb-3">
-                    <label class="form-label required" for="toArrival">{% trans %}From Start{% endtrans %}</label>
+                    <label class="form-label required" for="toArrival">{% trans %}To Arrival{% endtrans %}</label>
                     <select id="toArrival" name="toArrival" class="form-select">
                         {% for hotel in hotels %}
                             <option value="{{ hotel.id}}">{{ hotel }}</option>
@@ -65,18 +57,7 @@
                         </div>   
                     </fieldset>     
                 </div>
-
-                {# ->add('serviceNumber')
-                ->add('dateHour')
-                ->add('flightNumber')
-                ->add('isCollective')
-                ->add('date')
-                ->add('hour')
-                ->add('customerCard')
-                ->add('fromStart')
-                ->add('toArrival') #}
                 
-
                 <button class="btn btn-success">{{ button_label|default('Save') }}</button>
 
 

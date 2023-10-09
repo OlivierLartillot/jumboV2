@@ -472,7 +472,8 @@ class CustomerCardController extends AbstractController
     #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
     public function new(Request $request, 
                         CustomerCardRepository $customerCardRepository,
-                        AirportHotelRepository $airportHotelRepository
+                        AirportHotelRepository $airportHotelRepository,
+                        TransferArrivalRepository $transferArrivalRepository
                         ): Response
     {
 
@@ -490,6 +491,12 @@ class CustomerCardController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $customerCard->setStatusUpdatedBy($this->getUser());
 
+            // mettre a jour le meeting grace a l'arrivée
+            $meetingDate = new DateTimeImmutable($request->request->get('date'));
+            $meetingDateFormat = new DateTimeImmutable($meetingDate->format('Y-m-d 00:01'));
+            $meetingDateHour = $meetingDateFormat->modify('+1 day');
+            $customerCard->setMeetingAt( $meetingDateHour);  
+
             $airport = $airportHotelRepository->find($request->request->get('fromStart'));
             $hotel = $airportHotelRepository->find($request->request->get('toArrival'));
 
@@ -502,9 +509,10 @@ class CustomerCardController extends AbstractController
             $arrival->setDateHour(new DateTimeImmutable($request->request->get('dateHour')));
             $arrival->setFromStart($airport);
             $arrival->setToArrival($hotel);
+            $arrival->setCustomerCard($customerCard);
 
             $customerCardRepository->save($customerCard, true);
-
+            $transferArrivalRepository->save($arrival, true);
             return $this->redirectToRoute('app_customer_card_index', [], Response::HTTP_SEE_OTHER);
         }
 
