@@ -89,11 +89,13 @@ class TransferDepartureController extends AbstractController
     #[Route('/{id}', name: 'app_transfer_departure_delete', methods: ['POST'])]
     public function delete(Request $request, TransferDeparture $transferDeparture, EntityManagerInterface $entityManager): Response
     {
+
+        $customerCard = $transferDeparture->getCustomerCard();
         if ($this->isCsrfTokenValid('delete'.$transferDeparture->getId(), $request->request->get('_token'))) {
             $entityManager->remove($transferDeparture);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_transfer_departure_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
     }
 }

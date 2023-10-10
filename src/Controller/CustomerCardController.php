@@ -733,7 +733,7 @@ class CustomerCardController extends AbstractController
             // vous ne pouvez pas supprimer car ce client a des departs. Supprimer les départs avant 
             $this->addFlash(
                 'warning',
-                'You can\'t delete this client card because there is a deperture associated. Please remove the departure first'
+                'You can\'t delete this client card because there is a departure associated. Please remove the departure first'
             );
             return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
         }
