@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CustomerCardRepository;
+use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -102,6 +103,7 @@ class CustomerCard
         $this->transferInterHotels = new ArrayCollection(); 
         $this->transferDepartures = new ArrayCollection();
         $this->transferVehicleInterHotels = new ArrayCollection(); 
+        $this->statusUpdatedAt = new DateTime("now");
     }
 
     public function getId(): ?int
@@ -109,7 +111,6 @@ class CustomerCard
         return $this->id;
     }
 
-    
     public function getReservationNumber(): ?string
     {
         return $this->reservationNumber;
@@ -230,12 +231,12 @@ class CustomerCard
         return $this;
     }
     
-    public function getMeetingAt(): ?\DateTimeImmutable
+    public function getMeetingAt(): ?DateTimeImmutable
     {
         return $this->meetingAt;
     }
     
-    public function setMeetingAt(\DateTimeImmutable $meetingAt): self
+    public function setMeetingAt(DateTimeImmutable $meetingAt): self
     {
         $this->meetingAt = $meetingAt;
         

@@ -1,11 +1,80 @@
-<!DOCTYPE html>
+{{ include('partials/header-reproupement.html.twig') }}
 
-<title>New CustomerCard</title>
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'New Customer Card'|trans}) }}
+    
+        <a href="{{ path('app_customer_card_index') }}" class="btn btn-secondary">back to list</a>
+        <div class="row justify-content-center">
 
-{% block body %}
-    <h1>Create new CustomerCard</h1>
+            <div class="col-lg-3">
+                <h3>Client informations</h3>
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <hr>
+                    <h3>Arrival</h3>
+                    <div class="mb-3">
+                        <label class="form-label" for="serviceNumber">{% trans %}Service Number{% endtrans %}</label>
+                        <input type="text" id="serviceNumber" class="form-control" name="serviceNumber" type="text"> 
+                    </div>
 
-    {{ include('customer_card/_form.html.twig') }}
+                    <div class="mb-3">
+                        <label class="form-label" for="flightNumber">{% trans %}Flight Number{% endtrans %}</label>
+                        <input id="flightNumber" class="form-control" name="flightNumber" type="text"> 
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="date">{% trans %}Arrival Date{% endtrans %}</label>
+                        <input type="date" id="date" class="form-control" name="date" type="text"> 
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="hour">{% trans %}Arrival Hour{% endtrans %}</label>
+                        <input type="time" id="hour" class="form-control" name="hour" type="text"> 
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required" for="fromStart">{% trans %}From Start{% endtrans %}</label>
+                        <select id="fromStart" name="fromStart" class="form-select">
+                            {% for airport in airports %}
+                                <option value="{{ airport.id}}">{{ airport }}</option>
+                            {% endfor %}
+                        </select>        
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required" for="toArrival">{% trans %}To Arrival{% endtrans %}</label>
+                        <select id="toArrival" name="toArrival" class="form-select">
+                            {% for hotel in hotels %}
+                                <option value="{{ hotel.id}}">{{ hotel }}</option>
+                            {% endfor %}
+                        </select>        
+                    </div>
+                    <div class="mb-3">
+                        <fieldset>
+                            <legend>Is the transport collective ?</legend>
+                            <div class="form-check">
 
-    <a href="{{ path('app_customer_card_index') }}">back to list</a>
-{% endblock %}
+                                <input type="radio" id="collective" name="isCollective" value="1" checked />
+                                <label for="collective">Collective</label>
+                                <input type="radio" id="notCollective" name="isCollective" value="0" />
+                                <label for="notCollective">Not Collective</label>
+                    
+                            </div>   
+                        </fieldset>     
+                    </div>
+                    
+                    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+
+
+                {{ form_end(form) }}
+
+
+
+
+
+
+                </form>
+
+
+            </div>
+        </div>
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+

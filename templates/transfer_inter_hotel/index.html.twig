@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<title>TransferInterHotel index</title>
+
+{% block body %}
+    <h1>TransferInterHotel index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ServiceNumber</th>
+                <th>DateHour</th>
+                <th>FlightNumber</th>
+                <th>IsCollective</th>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transfer_inter_hotel in transfer_inter_hotels %}
+            <tr>
+                <td>{{ transfer_inter_hotel.id }}</td>
+                <td>{{ transfer_inter_hotel.serviceNumber }}</td>
+                <td>{{ transfer_inter_hotel.dateHour ? transfer_inter_hotel.dateHour|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ transfer_inter_hotel.flightNumber }}</td>
+                <td>{{ transfer_inter_hotel.isCollective ? 'Yes' : 'No' }}</td>
+                <td>{{ transfer_inter_hotel.date ? transfer_inter_hotel.date|date('Y-m-d') : '' }}</td>
+                <td>{{ transfer_inter_hotel.hour ? transfer_inter_hotel.hour|date('H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_transfer_inter_hotel_show', {'id': transfer_inter_hotel.id}) }}">show</a>
+                    <a href="{{ path('app_transfer_inter_hotel_edit', {'id': transfer_inter_hotel.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_inter_hotel_new') }}">Create new</a>
+{% endblock %}

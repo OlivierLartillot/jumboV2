@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<title>TransferArrival index</title>
+
+{% block body %}
+    <h1>TransferArrival index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ServiceNumber</th>
+                <th>DateHour</th>
+                <th>FlightNumber</th>
+                <th>IsCollective</th>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transfer_arrival in transfer_arrivals %}
+            <tr>
+                <td>{{ transfer_arrival.id }}</td>
+                <td>{{ transfer_arrival.serviceNumber }}</td>
+                <td>{{ transfer_arrival.dateHour ? transfer_arrival.dateHour|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ transfer_arrival.flightNumber }}</td>
+                <td>{{ transfer_arrival.isCollective ? 'Yes' : 'No' }}</td>
+                <td>{{ transfer_arrival.date ? transfer_arrival.date|date('Y-m-d') : '' }}</td>
+                <td>{{ transfer_arrival.hour ? transfer_arrival.hour|date('H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_transfer_arrival_show', {'id': transfer_arrival.id}) }}">show</a>
+                    <a href="{{ path('app_transfer_arrival_edit', {'id': transfer_arrival.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
