@@ -2,25 +2,39 @@
 
 namespace App\Form;
 
+use App\Entity\AirportHotel;
 use App\Entity\TransferInterHotel;
+use App\Repository\AirportHotelRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TransferInterHotelType extends AbstractType
 {
+
+    public function __construct(private AirportHotelRepository $airportHotelRepository) 
+    {
+        $this->airportHotelRepository = $airportHotelRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $hotels = $this->airportHotelRepository->findBy(['isAirport' => false]);
+
         $builder
             ->add('serviceNumber')
-            ->add('dateHour')
-            ->add('flightNumber')
-            ->add('isCollective')
             ->add('date')
             ->add('hour')
-            ->add('customerCard')
-            ->add('fromStart')
-            ->add('toArrival')
+            ->add('fromStart', EntityType::class, [
+                'class' => AirportHotel::class,
+                'choices' => $hotels
+            ])
+            ->add('toArrival', EntityType::class, [
+                'class' => AirportHotel::class,
+                'choices' => $hotels
+            ])
+            ->add('isCollective')
         ;
     }
 

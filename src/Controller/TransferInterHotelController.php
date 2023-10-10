@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\CustomerCard;
 use App\Entity\TransferInterHotel;
 use App\Form\TransferInterHotelType;
 use App\Repository\TransferInterHotelRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,18 +24,28 @@ class TransferInterHotelController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_transfer_inter_hotel_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{id}', name: 'app_transfer_inter_hotel_new', methods: ['GET', 'POST'])]
+    public function new(CustomerCard $customerCard, Request $request, EntityManagerInterface $entityManager): Response
     {
         $transferInterHotel = new TransferInterHotel();
         $form = $this->createForm(TransferInterHotelType::class, $transferInterHotel);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $date =$transferInterHotel->getDate()->format('Y-m-d');
+            $hour = $transferInterHotel->getHour()->format('H:i');
+
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+
+            $transferInterHotel->setDateHour($dateHour);
+            $transferInterHotel->setCustomerCard($customerCard);
+
             $entityManager->persist($transferInterHotel);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_transfer_inter_hotel_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('transfer_inter_hotel/new.html.twig', [
@@ -57,9 +69,18 @@ class TransferInterHotelController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $date =$transferInterHotel->getDate()->format('Y-m-d');
+            $hour = $transferInterHotel->getHour()->format('H:i');
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+
+            $transferInterHotel->setDateHour($dateHour);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_transfer_inter_hotel_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', [
+                'id' => $transferInterHotel->getCustomerCard()->getId()
+                ], 
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('transfer_inter_hotel/edit.html.twig', [
@@ -71,11 +92,12 @@ class TransferInterHotelController extends AbstractController
     #[Route('/{id}', name: 'app_transfer_inter_hotel_delete', methods: ['POST'])]
     public function delete(Request $request, TransferInterHotel $transferInterHotel, EntityManagerInterface $entityManager): Response
     {
+        $customerCard = $transferInterHotel->getCustomerCard();
         if ($this->isCsrfTokenValid('delete'.$transferInterHotel->getId(), $request->request->get('_token'))) {
             $entityManager->remove($transferInterHotel);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_transfer_inter_hotel_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
     }
 }

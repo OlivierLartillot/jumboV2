@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\CustomerCard;
 use App\Entity\TransferDeparture;
 use App\Form\TransferDepartureType;
 use App\Repository\TransferDepartureRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,18 +24,28 @@ class TransferDepartureController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_transfer_departure_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{id}', name: 'app_transfer_departure_new', methods: ['GET', 'POST'])]
+    public function new(CustomerCard $customerCard, Request $request, EntityManagerInterface $entityManager): Response
     {
         $transferDeparture = new TransferDeparture();
         $form = $this->createForm(TransferDepartureType::class, $transferDeparture);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $date =$transferDeparture->getDate()->format('Y-m-d');
+            $hour = $transferDeparture->getHour()->format('H:i');
+
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+
+            $transferDeparture->setDateHour($dateHour);
+            $transferDeparture->setCustomerCard($customerCard);
+
+
             $entityManager->persist($transferDeparture);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_transfer_departure_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('transfer_departure/new.html.twig', [
@@ -57,9 +69,15 @@ class TransferDepartureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $date =$transferDeparture->getDate()->format('Y-m-d');
+            $hour = $transferDeparture->getHour()->format('H:i');
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+            $transferDeparture->setDateHour($dateHour);
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_transfer_departure_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $transferDeparture->getCustomerCard()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('transfer_departure/edit.html.twig', [

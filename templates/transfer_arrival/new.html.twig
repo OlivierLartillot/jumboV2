@@ -1,11 +1,26 @@
-<!DOCTYPE html>
+{{ include('partials/header-reproupement.html.twig') }}
 
-<title>New TransferArrival</title>
 
-{% block body %}
-    <h1>Create new TransferArrival</h1>
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'Add Transfer Arrival'|trans}) }}
+        <a href="{{ app.request.server.get('HTTP_REFERER') }}" <a class="btn btn-secondary btn-sm my-3">back to client</a>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                <h3 class="mb-3">{% trans %}Add Arrival{% endtrans %}</h3>
+                                {{ include('transfer_arrival/_form.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>                                        
 
-    {{ include('transfer_arrival/_form.html.twig') }}
+{{ include('partials/footer-regroupement.html.twig') }}
 
-    <a href="{{ path('app_transfer_arrival_index') }}">back to list</a>
-{% endblock %}
+
+
+
+

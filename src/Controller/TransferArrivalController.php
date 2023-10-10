@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CustomerCard;
 use App\Entity\TransferArrival;
 use App\Form\TransferArrivalType;
 use App\Repository\TransferArrivalRepository;
@@ -22,18 +23,22 @@ class TransferArrivalController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_transfer_arrival_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{id}', name: 'app_transfer_arrival_new', methods: ['GET', 'POST'])]
+    public function new(CustomerCard $customerCard, Request $request, EntityManagerInterface $entityManager): Response
     {
+        
         $transferArrival = new TransferArrival();
         $form = $this->createForm(TransferArrivalType::class, $transferArrival);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $transferArrival->setCustomerCard($customerCard);
             $entityManager->persist($transferArrival);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_transfer_arrival_index', [], Response::HTTP_SEE_OTHER);
+
+            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('transfer_arrival/new.html.twig', [
@@ -74,11 +79,14 @@ class TransferArrivalController extends AbstractController
     #[Route('/{id}', name: 'app_transfer_arrival_delete', methods: ['POST'])]
     public function delete(Request $request, TransferArrival $transferArrival, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$transferArrival->getId(), $request->request->get('_token'))) {
+
+        $customerCard = $transferArrival->getCustomerCard();
+
+        if ($this->isCsrfTokenValid('delete' . $transferArrival->getId(), $request->request->get('_token'))) {
             $entityManager->remove($transferArrival);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_transfer_arrival_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
     }
 }

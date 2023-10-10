@@ -11,25 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomerCardNewType extends AbstractType
 {
-    private $userRepository;
-    private $security;
-
-    public function __construct(UserRepository  $userRepository, Security $security){
-        $this->userRepository = $userRepository;
-        $this->security = $security;
-    }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
-        $repList = [];
-        $users = $this->userRepository->findAll();
-        foreach ($users as $user) {
-            if (in_array('ROLE_REP', $user->getRoles())) {
-                $repList[] = $user;
-            }
-        }
-        $currentUser = $this->security->getUser();
 
         $builder
             ->add('reservationNumber', null, [

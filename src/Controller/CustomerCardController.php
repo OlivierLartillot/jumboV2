@@ -690,7 +690,8 @@ class CustomerCardController extends AbstractController
 
             $customerCardRepository->save($customerCard, true);
 
-            return $this->redirectToRoute('app_customer_card_index', [
+            return $this->redirectToRoute('app_customer_card_show', [
+                'id' => $customerCard->getId(),
                 'customerPresence'=> $customerPresence,
                 'dateStart'=> $dateStart,
                 'dateEnd'=> $dateEnd,
