@@ -34,11 +34,11 @@ security:
     access_control:
         - { path: ^/team-manager/status, roles: [ROLE_HULK] }
         - { path: ^/admin, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
-        - { path: ^/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
-        - { path: ^/team-manager/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
-        - { path: ^/team-manager/traitement_csv, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
+        - { path: ^/team-transfer/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
+        - { path: ^/team-manager/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
+        - { path: ^/team-manager/traitement_csv, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
         - { path: ^/customer/card/new, roles: [ROLE_HULK, ROLE_SUPERMAN] }
-        #- { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT, ROLE_IMPORT] }
+        - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT, ROLE_IMPORT] }
         - { path: ^/team-manager/briefings, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_BRIEFING] }
         - { path: ^/team-manager, roles: [ROLE_HULK, ROLE_SUPERMAN] }
         - { path: ^/team-transfer, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
