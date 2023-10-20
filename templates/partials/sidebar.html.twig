@@ -33,11 +33,11 @@
 
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
                 <li class="menu-title">{% trans %}Import File{% endtrans %}</li>
                 {% endif %} 
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
                 <li>
                     <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
@@ -46,7 +46,7 @@
                 </li>
                 {% endif %}
                 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
                 <li>
                     <a href="{{ path('app_transfer_import') }}">
                         <i class="uil-import"></i>
@@ -63,12 +63,15 @@
                         <span>{% trans %}Clients Cards{% endtrans %}</span>
                     </a>
                 </li>
+
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
                 <li>
                     <a href="{{ path('app_customer_card_new') }}">
                         <i class="fas fa-id-card"></i>
                         <span>{% trans %}New Client{% endtrans %}</span>
                     </a>
                 </li>
+                {% endif %}
                         
                 
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_REP" in app.user.roles) ) %} 
@@ -81,7 +84,7 @@
                 {% endif %}
 
                 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles)) %} 
                     <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 
                     <li>

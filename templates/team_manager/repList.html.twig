@@ -28,7 +28,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ user }} </h5>
 
-                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
+                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or  ("ROLE_BRIEFING" in app.user.roles)) %}
                                     {% set rights = true %}
                                 {% elseif  app.user == user %}
                                     {% set rights = true %}

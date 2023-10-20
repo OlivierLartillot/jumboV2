@@ -42,10 +42,12 @@ class UserType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'Etes-vous ?',
                 'choices' => [
-                    'Admin' => 'ROLE_ADMIN',
+                    'Admin' => 'ROLE_SUPERMAN',
                     'Rep' => 'ROLE_REP',
-                    'Aeroport' => 'ROLE_AIRPORT',
-                    'Opérations' => 'ROLE_OPERATIONS'
+                    'Airport' => 'ROLE_AIRPORT',
+                    'Operations' => 'ROLE_OPERATIONS',
+                    'Import' => 'ROLE_IMPORT',
+                    'Briefings' => 'ROLE_BRIEFING',
                 ],
                 'multiple' => true,
                 'expanded' => true

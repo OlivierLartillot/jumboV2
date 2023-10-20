@@ -12,7 +12,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
+                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles)) %}
                                     <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
                                     <a href="{{ path('app_admin_team_manager_fiche_par_date',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Update{% endtrans %}</a>
                                 {% else %}

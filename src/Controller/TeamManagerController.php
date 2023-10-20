@@ -28,7 +28,7 @@ class TeamManagerController extends AbstractController
 {
     
     // route qui affiche tous les rep a attribuer en fonction de la date
-    #[Route('/team-manager/attribution', name: 'app_admin_team_manager',methods:["POST", "GET"])]
+    #[Route('/team-manager/briefings/attribution', name: 'app_admin_team_manager',methods:["POST", "GET"])]
     public function index(Request $request, CustomerCardRepository $customerCardRepository,  DefineQueryDate $defineQueryDate): Response
     {
 
@@ -129,7 +129,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la liste des rep - client en fonction de la date
     // la liste doit comporter le nombre de client par rep 
-    #[Route('/team-manager/replist', name: 'app_admin_team_manager_replist',methods:["POST", "GET"])]
+    #[Route('/team-manager/briefings/replist', name: 'app_admin_team_manager_replist',methods:["POST", "GET"])]
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
@@ -196,7 +196,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/team-manager/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
+    #[Route('/team-manager/briefings/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
     public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, 
                                                 TransferArrivalRepository $transferArrivalRepository,
                                                 MeetingPointRepository $meetingPointRepository,  
@@ -322,7 +322,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/team-manager/fiche/{user}/date/details', name: 'app_admin_team_manager_fiche_par_date_details',methods:["POST", "GET"])]
+    #[Route('/team-manager/briefings/fiche/{user}/date/details', name: 'app_admin_team_manager_fiche_par_date_details',methods:["POST", "GET"])]
     public function ficheRepParDateDetails( User $user, 
                                             CustomerCardRepository $customerCardRepository, 
                                             TransferArrivalRepository $transferArrivalRepository,
@@ -429,7 +429,7 @@ class TeamManagerController extends AbstractController
 
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/team-manager/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
+    #[Route('/team-manager/briefings/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
     public function stickersParDate(CustomerCardRepository $customerCardRepository, 
                                     EntityManagerInterface $manager, 
                                     AgencyRepository $agencyRepository,
