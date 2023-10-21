@@ -53,6 +53,7 @@ class CustomerCardType extends AbstractType
             ])
             ->add('meetingAt', null, [
                 'widget' => 'single_text',
+                'required' => true,
             ])
             ->add('reservationCancelled')
             ->add('status')
@@ -62,6 +63,8 @@ class CustomerCardType extends AbstractType
                 'placeholder' => 'Choose a Rep',
                 'class' => User::class,
                 'choices' => $repList,
+                'required' => false,
+
                 
             ] )
         ;

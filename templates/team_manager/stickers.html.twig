@@ -249,7 +249,17 @@
 									{% endif %}
 							</div>
 						</div>
-
+						<div class="notImpressed row justify-content-center">
+							{% for meetingInfos in meetings %} 
+								{% if meetingInfos.meetingAt is null %} 
+									<div class="text-center text-white border border-dark col-lg-3 rounded bg-danger py-3">
+										{% trans %}Reservation number{% endtrans %}: {{ meetingInfos.reservationNumber}}<br>
+										{% trans %}Meeting date is missing{% endtrans %}<br>
+										<a class="btn btn-primary btn-sm mt-3" href="{{ path('app_customer_card_show', {'id' : meetingInfos.id})}}">{% trans %}Go to Client Card{% endtrans %}</a>
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
 						<div class="break">	
 							{% set i = 1 %} 
 							{% set page = 1 %} 
@@ -314,8 +324,7 @@
 							{% for meetingInfos in meetings %} 
 
 								{% set currentLanguage = meetingInfos.agency.language %}
-								
-									
+		
 								{% if (i == 1) %} 
 									{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
 									<div class="labels-container {{ pagesSuivantes }}">
@@ -354,7 +363,7 @@
 										<div class="mb-2">
 										
 											<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
-											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }} {{ meetingInfos.meetingAtTime }} </strong></p>
+											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }}{% if meetingInfos.meetingAt is null %}   {% else %} {{ meetingInfos.meetingAtTime }} {% endif %}</strong></p>
 											<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
 												<strong class="crimson">
 													{% if (meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) %} 
