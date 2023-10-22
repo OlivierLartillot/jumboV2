@@ -29,7 +29,7 @@
 
                             {% for error in errorDetails %} 
                             <p>
-                                {{ error }}
+                                {{ error|raw }}
                             </p>
 
                             {% endfor %}
