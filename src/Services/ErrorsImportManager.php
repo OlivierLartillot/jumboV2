@@ -19,6 +19,12 @@ class ErrorsImportManager {
         $this->errors[]= $error;
         return $this->errors;
     }
+    
+    public function removeErrors(): array
+    {
+        $this->errors = [];
+        return $this->errors;
+    }
 
     /**
      * Retourne 'ok' ou fait grandir le tableau des erreurs

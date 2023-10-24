@@ -7,8 +7,6 @@ use App\Entity\AirportHotel;
 use App\Entity\CustomerCard;
 use App\Entity\DragAndDrop;
 use App\Entity\TransferArrival;
-use App\Entity\TransferDeparture;
-use App\Entity\TransferInterHotel;
 use App\Form\DragAndDropType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
@@ -16,8 +14,6 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
-use App\Repository\TransferDepartureRepository;
-use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use App\Services\ErrorsImportManager;
 use DateTime;
@@ -45,12 +41,14 @@ class HomeController extends AbstractController
     {
         $dragAndDrop = new DragAndDrop();
         $form = $this->createForm(DragAndDropType::class, $dragAndDrop, [
-                'action' => $this->generateUrl('admin_traitement_csv'),
-        ] );
-       $form->handleRequest($request);
-
+            'action' => $this->generateUrl('admin_traitement_csv'),
+            ] );
+            $form->handleRequest($request);
+        
+        $row = ($request->get('row')) ? $request->get('row'): false ;
         return $this->render('team_manager/import.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'row' => $row
         ]);
     }
 
@@ -77,23 +75,23 @@ class HomeController extends AbstractController
         $errorDetails = [];
         // 'delete-item' is the same value used in the template to generate the token
         if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
-           $errorDetails[] = 'Erreur de token, veuillez rafraichir la page et recommencer';
+           $errorDetails[] = 'Code import 1 - Token error, please refresh the page and start again.';
         }
 
         // test des données recues
         // infos sur le csv
         if ( $error > 0) {
-            $errorDetails[] = 'Erreur lors de l`\'upload du fichier. Code d\'erreur : "' . $error;
+            $errorDetails[] = 'Code import 2 - Error uploading the file. Error code :' . $error;
         }
     
         // Vérifier si le fichier a été correctement téléchargé
         if (!file_exists($fileToUpload)) {
-            $errorDetails[] = "Fichier non trouvé.";
+            $errorDetails[] = "Code import 3 - File not found.";
         }
         
         // Vérifier le type de fichier
         if (($mimeType != "text/csv") and ($mimeType != "text/plain")) {
-            $errorDetails[] = "l extension du fichier n est pas bonne !";
+            $errorDetails[] = "Code import 4 - The file extension is not correct !";
         }
         
         if (count($errorDetails) > 0) {
@@ -124,17 +122,23 @@ class HomeController extends AbstractController
             $serviceNumbersInCSV = [];
 
 
+
+            //**************************************************************************//
+            //**************** DEBUT PREMIER TESTS ET GESTION ERREURS  ****************//
+            
             $row = 0;
+            // bloquer a une seule date possible par import
+            $daysTab = []; // le tableau qui va enregistrer les dates
             foreach ($csv as $record) {
                 $row++;
-                    if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
+                if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
                     $numbers = explode(", ", $record['Localizadores']);
                     // si il manque un des deux on sort et annonce l'erreur !
                     if ( (!isset($numbers[0])) or (!isset($numbers[1])) ) {
                         if ($record['Titular'] != null){
-                            $errorsImportManager->addErrors('Warning near row '.$row.' <br>Error in your csv file on the <b>"location" cell</b>. <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                            $errorsImportManager->addErrors('Code import 10 - Warning near row '.$row.' <br>Error in your csv file on the <b>"location" cell</b>. <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
                         } else {
-                            $errorsImportManager->addErrors('Warning near row '.$row.' <br>Error in your csv file on a <b>"location" cell</b>. <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                            $errorsImportManager->addErrors('Code import 11 - Warning near row '.$row.' <br>Error in your csv file on a <b>"location" cell</b>. <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
                         }
 
                         return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
@@ -146,39 +150,107 @@ class HomeController extends AbstractController
                     if ($record['Fecha/Hora Origen']  != NULL ) { 
                         $record['Fecha/Hora Origen'] = trim($record['Fecha/Hora Origen']);
                         $dateTime = explode(" ", $record['Fecha/Hora Origen']);
+
+                         // Gestion des erreurs 
                         if ( (!isset($dateTime[0])) or (!isset($dateTime[1])) ) {
                             if ($record['Titular'] != null){
-                                $errorsImportManager->addErrors('Warning near row '.$row.' <br>Error in your csv file on the "Fecha/Hora Origen" cell: <b>Wrong date formatting</b> <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                                $errorsImportManager->addErrors('Code import 12 - Warning near row '.$row.' <br>Error in your csv file on the "Fecha/Hora Origen" cell: <b>Wrong date formatting</b> <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
                             } else {
-                                $errorsImportManager->addErrors('Warning near row '.$row.' <br>Error in your csv file on a "Fecha/Hora Origen" cell: <b>Wrong date formatting</b> <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                                $errorsImportManager->addErrors('Code import 13 - Warning near row '.$row.' <br>Error in your csv file on a "Fecha/Hora Origen" cell: <b>Wrong date formatting</b> <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
                             }
                             return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                         }    
                     } // fecha origen null !! error 
                     else {
                         if ($record['Titular'] != null){
-                            $errorsImportManager->addErrors('Warning near row '.$row.' <br>Error in your csv file on the "Fecha/Hora Origen" cell: <b>Can not be null</b>. <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                            $errorsImportManager->addErrors('Code import 14 - Warning near row '.$row.' <br>Error in your csv file on the "Fecha/Hora Origen" cell: <b>Can not be null</b>. <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
                         } else {
-                            $errorsImportManager->addErrors('Warning near row '.$row.' <br>Error in your csv file on a "Fecha/Hora Origen" cell: <b>Can not be null</b>. <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                            $errorsImportManager->addErrors('Code import 15 - Warning near row '.$row.' <br>Error in your csv file on a "Fecha/Hora Origen" cell: <b>Can not be null</b>. <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
                         }
                         return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                     }
+                    // si il n'y a pas d'erreur
                     $date = explode("/", $dateTime[0]);
                     $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
                     $dateTime = new DateTimeImmutable($dateFormat . ' ' .$dateTime[1]);
+
+                    // enregsitrement des dates (on utilise la row pour différencier les clés plutot que d initialiser un $i)
+                    if (!in_array ($dateFormat, $daysTab)) {
+                        $daysTab[]= $dateFormat;
+                        $errorsImportManager->addErrors('Code import 16 - There are several arrival dates in this csv file. Make sure all arrival dates are on the same day! <br>
+                                                        Flight number:'.  $record['Nº Vuelo/Transporte Origen'].' <br>
+                                                        Row: '.$row.'<br>
+                                                        Date: '. $date[1] . '-' . $date[0] .'-'. $date[2]
+                                                        );
+                    }
+                }
+
+                $numeroPasajeros = explode(" ", $record['Número pasajeros']);
+                // si la case 0 est nulle == la cellule dans csv est nulle
+                if ($numeroPasajeros[0] == null) {
+                    $errorsImportManager->removeErrors();
+                    $errorsImportManager->addErrors('Code import <b>18.bis</b>: There is a formatting error on the number of passengers. <br>
+                    Row: '.$row.'<br>
+                    Number of passengers: <b> is NULL </b> must be in the format: <b>A: 2 N: 1 B: 1</b>'); 
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                }
+                // si le formattage est mauvais le [5] == au nombre de Bébé(derniere entrée de la cellule) sera absent !
+                if (!isset($numeroPasajeros[5])) {
+                    $errorsImportManager->removeErrors();
+                    $errorsImportManager->addErrors('Code import 18: There is a formatting error on the number of passengers. <br>
+                                                    Row: '.$row.'<br>
+                                                    Number of passengers: <b>'. $record['Número pasajeros']. '</b> must be in the format: <b>A: 2 N: 1 B: 1</b>'); 
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                }
+                
+                if ( ($record['Traslado desde'] == null) or ($record['Traslado hasta'] == null)) {
+                    $errorsImportManager->removeErrors();
+                    $airportTest = ($record['Traslado desde'] == null) ? 'must contain data but is equal to NULL' : $record['Traslado desde'];
+                    $hotelTest = ($record['Traslado hasta'] == null) ? 'must contain data but is equal to NULL' : $record['Traslado hasta'];
+                    $errorsImportManager->addErrors('Code import 19: There is a formatting error on Airport or Hotel. Both cells must contain data while one is null.<br>
+                                                    Row: '.$row.'<br>
+                                                    Airport: '. $airportTest .'<br>
+                                                    Hotel: '. $hotelTest); 
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+
+                }
+
+
+                
+            }
+
+            if (count($daysTab) > 1) {
+                return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+            } else {
+                // on supprime parceque sinon on va afficher dans les erreurs 'there are several arrival ... alors qu il n y en a qu une
+                $errorsImportManager->removeErrors();
+            }
+            // si il n y a qu'une date on regarde qu'elle ne soit pas plus de 15 jours par rapport a aujourd'hui
+            // aujourd'hui plus 15 jours 
+            $now = new DateTimeImmutable('now');
+            $maxDay = 15;
+            $interval = $now->diff($dateTime);
+            if ($interval->format("%a") > $maxDay) {
+                if ($now<$dateTime) {
+                    $errorsImportManager->addErrors('Code import 17 - You cannot import a date older than 15 days.<br>  Date in csv file: '. $date[1] . '-' . $date[0] .'-'. $date[2]);
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                 }
             }
+
+            //**************** FIN PREMIER TESTS ET GESTION DES ERREURS ****************//
+            //**************************************************************************//
             
+
+
             //$serviceNumbersInCSV[] = 1611603;
             // return [1611603 => 1 , 1611604 => 2 ]
             $serviceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
-
-            // 
             $incrementDeleteCustomerCard = 0;
 
-            
-            // début de l'extraction de la LIGNE de données du csv
-            // traitement de la première entrée ...
+            //***********************************************************************************************************************//
+            //********************************* début de l'extraction de la LIGNE de données du csv *********************************//
+
+            // traitement de la première entrée, puis de la deuxième etc ...
             $row = 0;
             foreach ($csv as $record) {
                 $row++;    
@@ -206,7 +278,7 @@ class HomeController extends AbstractController
                     continue;
                 }
                 // si l'entréee est annulée elle doit être ignorée (deja en tolower)
-                if (( $record['Estado']  == "cancelado") or ($record['Estado']  == "cancelled")) { 
+                if (( $record['Estado']  == "cancelado") or ($record['Estado']  == "canceled")) { 
                     continue;
                 }
                 //************************************************************************//
@@ -642,6 +714,6 @@ class HomeController extends AbstractController
                     }
                 }            
         
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('app_import', ['row'=> $row]);
     }
 }
