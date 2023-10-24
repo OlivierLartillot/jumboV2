@@ -252,8 +252,7 @@ class HomeController extends AbstractController
 
             // traitement de la première entrée, puis de la deuxième etc ...
             $row = 0;
-            foreach ($csv as $record) {
-                $row++;    
+            foreach ($csv as $record) {   
                 $record['Número Servicio'] = trim($record['Número Servicio']);
                 $record['Traslado desde'] = trim(strtolower($record['Traslado desde']));
                 $record['Traslado hasta'] = trim(strtolower($record['Traslado hasta']));
@@ -284,7 +283,7 @@ class HomeController extends AbstractController
                 //************************************************************************//
                 //************************* FIN ENTREES IGNOREES *************************//
                 
-                
+                $row++; 
                 //*************************** DEBUT EXTRACTION**** ***********************************************************//
                 //************************************************************************************************************//
                 //! extraction de jumboNumber et reservationNumber car ils se trouvent dans la meme case dans le csv 
