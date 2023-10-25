@@ -283,7 +283,7 @@ class HomeController extends AbstractController
                 //************************************************************************//
                 //************************* FIN ENTREES IGNOREES *************************//
                 
-                $row++; 
+
                 //*************************** DEBUT EXTRACTION**** ***********************************************************//
                 //************************************************************************************************************//
                 //! extraction de jumboNumber et reservationNumber car ils se trouvent dans la meme case dans le csv 
@@ -298,8 +298,8 @@ class HomeController extends AbstractController
                 $babiesNumber = trim($numeroPasajeros[5]);
 
 
-                //************************************************************************//
                 //***************** MISE A JOUR AGENCE, AIRPORT ET HOTEL *****************//
+                //************************************************************************//
 
                     // si l'hotel ou l aéroport n existe pas, on le MAJ
                     // pour savoir si c est un aéroport ou si c est un hotel ca depend de la nature du transfer
@@ -383,6 +383,8 @@ class HomeController extends AbstractController
                             // y a t il une arrivée pour ce client et combien ?
                             $numberTotalClientArrivalInBdd = (count($transferArrivalRepository->findBy(['customerCard'=> $clientCards])));
                             $clientArrivalExist = ($numberTotalClientArrivalInBdd > 0) ? true : false;
+                        } else {
+                            $numberTotalClientArrivalInBdd = 0;
                         }
                         // Combien de fois le client existe dans l'arrivée ce jour ! (transfer Arrival)
                         $clientNumberArrivalList = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber,$dateFormat);               
@@ -665,6 +667,7 @@ class HomeController extends AbstractController
 
                 }
 
+                $row++; 
             }
 
 
@@ -713,6 +716,6 @@ class HomeController extends AbstractController
                     }
                 }            
         
-        return $this->redirectToRoute('app_import', ['row'=> $row]);
+                return $this->redirectToRoute('app_import', ['row'=> $row]);
     }
 }
