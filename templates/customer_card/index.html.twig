@@ -149,7 +149,7 @@
                 {{ knp_pagination_render(customer_cards, 'modules/pagination.html.twig') }}
             </div>
 
-            {% for customer_card in customer_cards %}
+            {% for customer_card in customer_cards|sort((a, b) => a.holder <=> b.holder)%}
 
             <div class="col-xl-4 col-sm-6">
                 <div class="card">

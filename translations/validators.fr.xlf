@@ -405,6 +405,30 @@
         <source>The value of the netmask should be between {{ min }} and {{ max }}.</source>
         <target>La valeur du masque de réseau doit être comprise entre {{ min }} et {{ max }}.</target>
       </trans-unit>
+      <trans-unit id="O5pay9e" resname="The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.">
+        <source>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</source>
+        <target>Le nom du fichier est trop long. Il doit contenir au maximum {{ filename_max_length }} caractère.|Le nom de fichier est trop long. Il doit contenir au maximum {{ filename_max_length }} caractères.</target>
+      </trans-unit>
+      <trans-unit id="f_lviDt" resname="The password strength is too low. Please use a stronger password.">
+        <source>The password strength is too low. Please use a stronger password.</source>
+        <target>La force du mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort.</target>
+      </trans-unit>
+      <trans-unit id="xfCh6.k" resname="This value contains characters that are not allowed by the current restriction-level.">
+        <source>This value contains characters that are not allowed by the current restriction-level.</source>
+        <target>Cette valeur contient des caractères qui ne sont pas autorisés par le niveau de restriction actuel.</target>
+      </trans-unit>
+      <trans-unit id="x15dlan" resname="Using invisible characters is not allowed.">
+        <source>Using invisible characters is not allowed.</source>
+        <target>Utiliser des caractères invisibles n'est pas autorisé.</target>
+      </trans-unit>
+      <trans-unit id="2NiS4YC" resname="Mixing numbers from different scripts is not allowed.">
+        <source>Mixing numbers from different scripts is not allowed.</source>
+        <target>Mélanger des chiffres provenant de différents scripts n'est pas autorisé.</target>
+      </trans-unit>
+      <trans-unit id="W8N1HuG" resname="Using hidden overlay characters is not allowed.">
+        <source>Using hidden overlay characters is not allowed.</source>
+        <target>Utiliser des caractères de superposition cachés n'est pas autorisé.</target>
+      </trans-unit>
       <trans-unit id=".SEaaBa" resname="This form should not contain extra fields.">
         <source>This form should not contain extra fields.</source>
         <target>Ce formulaire ne doit pas contenir de champs supplémentaires.</target>
@@ -536,30 +560,6 @@
       <trans-unit id="PU.w6nC" resname="Please enter a valid week.">
         <source>Please enter a valid week.</source>
         <target>Veuillez entrer une semaine valide.</target>
-      </trans-unit>
-      <trans-unit id="O5pay9e" resname="The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.">
-        <source>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</source>
-        <target>Le nom du fichier est trop long. Il doit contenir au maximum {{ filename_max_length }} caractère.|Le nom de fichier est trop long. Il doit contenir au maximum {{ filename_max_length }} caractères.</target>
-      </trans-unit>
-      <trans-unit id="f_lviDt" resname="The password strength is too low. Please use a stronger password.">
-        <source>The password strength is too low. Please use a stronger password.</source>
-        <target>La force du mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort.</target>
-      </trans-unit>
-      <trans-unit id="xfCh6.k" resname="This value contains characters that are not allowed by the current restriction-level.">
-        <source>This value contains characters that are not allowed by the current restriction-level.</source>
-        <target>Cette valeur contient des caractères qui ne sont pas autorisés par le niveau de restriction actuel.</target>
-      </trans-unit>
-      <trans-unit id="x15dlan" resname="Using invisible characters is not allowed.">
-        <source>Using invisible characters is not allowed.</source>
-        <target>Utiliser des caractères invisibles n'est pas autorisé.</target>
-      </trans-unit>
-      <trans-unit id="2NiS4YC" resname="Mixing numbers from different scripts is not allowed.">
-        <source>Mixing numbers from different scripts is not allowed.</source>
-        <target>Mélanger des chiffres provenant de différents scripts n'est pas autorisé.</target>
-      </trans-unit>
-      <trans-unit id="W8N1HuG" resname="Using hidden overlay characters is not allowed.">
-        <source>Using hidden overlay characters is not allowed.</source>
-        <target>Utiliser des caractères de superposition cachés n'est pas autorisé.</target>
       </trans-unit>
       <trans-unit id="Td7A4JK" resname="There is already an account with this username">
         <source>There is already an account with this username</source>

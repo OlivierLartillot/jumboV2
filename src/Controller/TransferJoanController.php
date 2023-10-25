@@ -241,9 +241,9 @@ class TransferJoanController extends AbstractController
         return $this->render('transfer/import.html.twig', [
             'errorClients' => $errorClients
         ]);
-        return $this->redirectToRoute('app_transfer_import', [
+/*         return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients
-        ]);
+        ]); */
     }
 
     #[Route('/new', name: 'app_transfer_joan_new', methods: ['GET', 'POST'])]
