@@ -92,7 +92,7 @@
                         <h4 class="mb-1 mt-1">{% trans %}Dates with unassigned reps{% endtrans %}</h4>
                             <ul>
                             {% if daterestantes is not null %}
-                                {% for result in daterestantes %}
+                                {% for result in daterestantes|sort((a, b) => a.date <=> b.date) %}
                                     <li>{{ result.date| date('d-m-Y') }}</li>
                                 {% endfor %}
                             {% endif %}

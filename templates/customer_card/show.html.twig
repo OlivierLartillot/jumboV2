@@ -145,7 +145,7 @@
                                 <h3>{% trans %}Arrival{% endtrans %}  #{{transfer.id}}</h3>
                                 <div class="col-lg-10">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
-                                        <a href="{{ path('app_transfer_arrival_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >Edit arrival #{{ transfer.id}}</a>
+                                        <a href="{{ path('app_transfer_arrival_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >{% trans %}Edit arrival{% endtrans %} #{{ transfer.id}}</a>
                                     {% endif %}
                                 </div>
                                 <div class="col-lg-4">
@@ -349,7 +349,7 @@
                                     <h3>{% trans %}Inter Hotel{% endtrans %}  #{{transfer.id}}</h3>
                                     <div class="col-lg-10">
                                         {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
-                                            <a href="{{ path('app_transfer_inter_hotel_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >Edit Inter Hotel #{{ transfer.id}}</a>
+                                            <a href="{{ path('app_transfer_inter_hotel_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >{% trans %}Edit Inter Hotel{% endtrans %} #{{ transfer.id}}</a>
                                         {% endif %}
                                     </div>
                                     <div class="col-lg-6">
@@ -476,7 +476,7 @@
                                 <h3>{% trans %}Departure{% endtrans %}  #{{transfer.id}}</h3>
                                 <div class="col-lg-10">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
-                                        <a href="{{ path('app_transfer_departure_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >Edit departure #{{ transfer.id}}</a>
+                                        <a href="{{ path('app_transfer_departure_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >{% trans %}Edit departure{% endtrans %} #{{ transfer.id}}</a>
                                     {% endif %}
                                 </div>
                                 <div class="row">
