@@ -23,7 +23,6 @@ class TransferInterHotelType extends AbstractType
         $hotels = $this->airportHotelRepository->findBy(['isAirport' => false]);
 
         $builder
-            ->add('serviceNumber')
             ->add('date')
             ->add('hour')
             ->add('fromStart', EntityType::class, [
@@ -34,7 +33,6 @@ class TransferInterHotelType extends AbstractType
                 'class' => AirportHotel::class,
                 'choices' => $hotels
             ])
-            ->add('isCollective')
         ;
     }
 

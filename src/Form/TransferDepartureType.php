@@ -22,7 +22,6 @@ class TransferDepartureType extends AbstractType
         $hotels = $this->airportHotelRepository->findBy(['isAirport' => false]);
         $airports = $this->airportHotelRepository->findBy(['isAirport' => true]);
         $builder
-            ->add('serviceNumber')
             ->add('flightNumber')
             ->add('date')
             ->add('hour')
@@ -34,7 +33,6 @@ class TransferDepartureType extends AbstractType
                 'class' => AirportHotel::class,
                 'choices' => $airports
             ])
-            ->add('isCollective')
         ;
     }
 

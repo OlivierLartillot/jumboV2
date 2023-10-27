@@ -14,9 +14,6 @@ class TransferInterHotel
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $serviceNumber = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $dateHour = null;
 
@@ -35,30 +32,18 @@ class TransferInterHotel
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
-    #[ORM\Column]
-    private ?bool $isCollective = null;
-
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $hour = null;
 
+    #[ORM\OneToOne(inversedBy: 'transferInterHotel', cascade: ['persist', 'remove'])]
+    private ?TransferVehicleInterHotel $transferVehicleInterHotel = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getServiceNumber(): ?string
-    {
-        return $this->serviceNumber;
-    }
-
-    public function setServiceNumber(string $serviceNumber): self
-    {
-        $this->serviceNumber = $serviceNumber;
-
-        return $this;
     }
 
     public function getDateHour(): ?\DateTimeImmutable
@@ -121,18 +106,6 @@ class TransferInterHotel
         return $this;
     }
 
-    public function isIsCollective(): ?bool
-    {
-        return $this->isCollective;
-    }
-
-    public function setIsCollective(bool $isCollective): self
-    {
-        $this->isCollective = $isCollective;
-
-        return $this;
-    }
-
     public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
@@ -153,6 +126,18 @@ class TransferInterHotel
     public function setHour(\DateTimeImmutable $hour): self
     {
         $this->hour = $hour;
+
+        return $this;
+    }
+
+    public function getTransferVehicleInterHotel(): ?TransferVehicleInterHotel
+    {
+        return $this->transferVehicleInterHotel;
+    }
+
+    public function setTransferVehicleInterHotel(?TransferVehicleInterHotel $transferVehicleInterHotel): static
+    {
+        $this->transferVehicleInterHotel = $transferVehicleInterHotel;
 
         return $this;
     }

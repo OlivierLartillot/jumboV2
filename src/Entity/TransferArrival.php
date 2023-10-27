@@ -35,14 +35,14 @@ class TransferArrival
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
-    #[ORM\Column]
-    private ?bool $isCollective = null;
-
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $hour = null;
+
+    #[ORM\OneToOne(mappedBy: 'transferArrival', cascade: ['persist', 'remove'])]
+    private ?TransferVehicleArrival $transferVehicleArrival = null;
 
 
     public function getId(): ?int
@@ -122,18 +122,6 @@ class TransferArrival
         return $this;
     }
 
-    public function isIsCollective(): ?bool
-    {
-        return $this->isCollective;
-    }
-
-    public function setIsCollective(bool $isCollective): self
-    {
-        $this->isCollective = $isCollective;
-
-        return $this;
-    }
-
     public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
@@ -154,6 +142,28 @@ class TransferArrival
     public function setHour(\DateTimeImmutable $hour): self
     {
         $this->hour = $hour;
+
+        return $this;
+    }
+
+    public function getTransferVehicleArrival(): ?TransferVehicleArrival
+    {
+        return $this->transferVehicleArrival;
+    }
+
+    public function setTransferVehicleArrival(?TransferVehicleArrival $transferVehicleArrival): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($transferVehicleArrival === null && $this->transferVehicleArrival !== null) {
+            $this->transferVehicleArrival->setTransferArrival(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($transferVehicleArrival !== null && $transferVehicleArrival->getTransferArrival() !== $this) {
+            $transferVehicleArrival->setTransferArrival($this);
+        }
+
+        $this->transferVehicleArrival = $transferVehicleArrival;
 
         return $this;
     }

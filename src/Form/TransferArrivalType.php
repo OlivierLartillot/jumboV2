@@ -23,7 +23,6 @@ class TransferArrivalType extends AbstractType
             ->add('hour')
             ->add('fromStart')
             ->add('toArrival')
-            ->add('isCollective')
         ;
     }
 

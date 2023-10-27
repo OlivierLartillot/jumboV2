@@ -29,21 +29,18 @@ class TransferVehicleArrival
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $pickUp = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $transportCompany = null;
-
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $voucherNumber = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $area = null;
 
+ 
+    #[ORM\ManyToOne(inversedBy: 'transferVehicleArrivals')]
+    private ?TransportCompany $transportCompany = null;
 
-    #[ORM\Column(length: 30, nullable: true)]
-    private ?string $reservationNumber = null;
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'], inversedBy: 'transferVehicleArrival')]
-    private ?CustomerCard $customerCard = null;
+    #[ORM\OneToOne(inversedBy: 'transferVehicleArrival', cascade: ['persist', 'remove'])]
+    private ?TransferArrival $transferArrival = null;
 
     public function getId(): ?int
     {
@@ -110,18 +107,6 @@ class TransferVehicleArrival
         return $this;
     }
 
-    public function getTransportCompany(): ?string
-    {
-        return $this->transportCompany;
-    }
-
-    public function setTransportCompany(?string $transportCompany): self
-    {
-        $this->transportCompany = $transportCompany;
-
-        return $this;
-    }
-
     public function getVoucherNumber(): ?string
     {
         return $this->voucherNumber;
@@ -146,31 +131,30 @@ class TransferVehicleArrival
         return $this;
     }
 
-    
-    public function getReservationNumber(): ?string
-    {
-        return $this->reservationNumber;
-    }
-
-    public function setReservationNumber(?string $reservationNumber): self
-    {
-        $this->reservationNumber = $reservationNumber;
-
-        return $this;
-    }
-    
     public function getTypeTransfer() {
         return 'vehicleArrival';
     }
 
-    public function getCustomerCard(): ?CustomerCard
+    public function getTransportCompany(): ?TransportCompany
     {
-        return $this->customerCard;
+        return $this->transportCompany;
     }
 
-    public function setCustomerCard(?CustomerCard $customerCard): self
+    public function setTransportCompany(?TransportCompany $transportCompany): static
     {
-        $this->customerCard = $customerCard;
+        $this->transportCompany = $transportCompany;
+
+        return $this;
+    }
+
+    public function getTransferArrival(): ?TransferArrival
+    {
+        return $this->transferArrival;
+    }
+
+    public function setTransferArrival(?TransferArrival $transferArrival): static
+    {
+        $this->transferArrival = $transferArrival;
 
         return $this;
     }

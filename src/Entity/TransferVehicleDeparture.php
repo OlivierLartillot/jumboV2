@@ -23,14 +23,8 @@ class TransferVehicleDeparture
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $vehicleType = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date = null;
-
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $pickUp = null;
-
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $transportCompany = null;
 
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $voucherNumber = null;
@@ -38,12 +32,11 @@ class TransferVehicleDeparture
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $area = null;
 
-    #[ORM\Column(length: 30, nullable: true)]
-    private ?string $reservationNumber = null;
+    #[ORM\ManyToOne(inversedBy: 'transferVehicleDepartures')]
+    private ?TransportCompany $transportCompany = null;
 
-    #[ORM\OneToOne(inversedBy: 'transferVehicleDeparture', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?CustomerCard $customerCard = null;
+    #[ORM\OneToOne(mappedBy: 'transferVehicleDeparture', cascade: ['persist', 'remove'])]
+    private ?TransferDeparture $transferDeparture = null;
 
 
     public function getId(): ?int
@@ -87,18 +80,6 @@ class TransferVehicleDeparture
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeImmutable $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }    
-
     public function getPickUp(): ?string
     {
         return $this->pickUp;
@@ -107,18 +88,6 @@ class TransferVehicleDeparture
     public function setPickUp(?string $pickUp): self
     {
         $this->pickUp = $pickUp;
-
-        return $this;
-    }
-
-    public function getTransportCompany(): ?string
-    {
-        return $this->transportCompany;
-    }
-
-    public function setTransportCompany(?string $transportCompany): self
-    {
-        $this->transportCompany = $transportCompany;
 
         return $this;
     }
@@ -147,31 +116,40 @@ class TransferVehicleDeparture
         return $this;
     }
 
-
-    public function getReservationNumber(): ?string
-    {
-        return $this->reservationNumber;
-    }
-
-    public function setReservationNumber(?string $reservationNumber): self
-    {
-        $this->reservationNumber = $reservationNumber;
-
-        return $this;
-    }
-
     public function getTypeTransfer() {
         return 'vehicleDeparture';
     }
 
-    public function getCustomerCard(): ?CustomerCard
+    public function getTransportCompany(): ?TransportCompany
     {
-        return $this->customerCard;
+        return $this->transportCompany;
     }
 
-    public function setCustomerCard(CustomerCard $customerCard): self
+    public function setTransportCompany(?TransportCompany $transportCompany): static
     {
-        $this->customerCard = $customerCard;
+        $this->transportCompany = $transportCompany;
+
+        return $this;
+    }
+
+    public function getTransferDeparture(): ?TransferDeparture
+    {
+        return $this->transferDeparture;
+    }
+
+    public function setTransferDeparture(?TransferDeparture $transferDeparture): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($transferDeparture === null && $this->transferDeparture !== null) {
+            $this->transferDeparture->setTransferVehicleDeparture(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($transferDeparture !== null && $transferDeparture->getTransferVehicleDeparture() !== $this) {
+            $transferDeparture->setTransferVehicleDeparture($this);
+        }
+
+        $this->transferDeparture = $transferDeparture;
 
         return $this;
     }

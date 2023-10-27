@@ -52,7 +52,7 @@ class CustomerCard
     private ?MeetingPoint $meetingPoint = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $meetingAt = null;
+    private ?DateTimeImmutable $meetingAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $reservationCancelled = null;
@@ -84,16 +84,6 @@ class CustomerCard
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferDeparture::class)]
     private Collection $transferDepartures;
 
-    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferVehicleInterHotel::class)]
-    private Collection $transferVehicleInterHotels;
-
-    #[ORM\OneToOne(mappedBy: 'customerCard', cascade: ['persist', 'remove'])]
-    private ?TransferVehicleDeparture $transferVehicleDeparture = null;
-
-    #[ORM\OneToOne(mappedBy: 'customerCard', cascade: ['persist', 'remove'])]
-    private ?TransferVehicleArrival $transferVehicleArrival = null;
-
-
     public function __construct()
     {
         $this->customerReports = new ArrayCollection();
@@ -102,7 +92,6 @@ class CustomerCard
         $this->comments = new ArrayCollection();
         $this->transferInterHotels = new ArrayCollection(); 
         $this->transferDepartures = new ArrayCollection();
-        $this->transferVehicleInterHotels = new ArrayCollection(); 
         $this->statusUpdatedAt = new DateTime("now");
     }
 
@@ -504,69 +493,4 @@ class CustomerCard
 
         return $this;
     }
-
-    public function getTransferVehicleArrival(): ?TransferVehicleArrival
-    {
-        return $this->transferVehicleArrival;
-    }
-
-    public function setTransferVehicleArrival(TransferVehicleArrival $transferVehicleArrival): self
-    {
-        // set the owning side of the relation if necessary
-        if ($transferVehicleArrival->getCustomerCard() !== $this) {
-            $transferVehicleArrival->setCustomerCard($this);
-        }
-
-        $this->transferVehicleArrival = $transferVehicleArrival;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TransferVehicleInterHotel>
-     */
-    public function getTransferVehicleInterHotels(): Collection
-    {
-        return $this->transferVehicleInterHotels;
-    }
-
-    public function addTransferVehicleInterHotel(TransferVehicleInterHotel $transferVehicleInterHotel): self
-    {
-        if (!$this->transferVehicleInterHotels->contains($transferVehicleInterHotel)) {
-            $this->transferVehicleInterHotels->add($transferVehicleInterHotel);
-            $transferVehicleInterHotel->setCustomerCard($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransferVehicleInterHotel(TransferVehicleInterHotel $transferVehicleInterHotel): self
-    {
-        if ($this->transferVehicleInterHotels->removeElement($transferVehicleInterHotel)) {
-            // set the owning side to null (unless already changed)
-            if ($transferVehicleInterHotel->getCustomerCard() === $this) {
-                $transferVehicleInterHotel->setCustomerCard(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getTransferVehicleDeparture(): ?TransferVehicleDeparture
-    {
-        return $this->transferVehicleDeparture;
-    }
-
-    public function setTransferVehicleDeparture(TransferVehicleDeparture $transferVehicleDeparture): self
-    {
-        // set the owning side of the relation if necessary
-        if ($transferVehicleDeparture->getCustomerCard() !== $this) {
-            $transferVehicleDeparture->setCustomerCard($this);
-        }
-
-        $this->transferVehicleDeparture = $transferVehicleDeparture;
-
-        return $this;
-    }
-
 }
