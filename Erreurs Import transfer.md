@@ -55,6 +55,7 @@ Solution: Check if your file extension is .csv
 
 <b>Warning near row { row number }</b> 
 
+### Problèmes avec le numéro jumbo / numéro de client 
 - Code import 10 - Error in your csv file on the <b>"location" cell</b>. The client is { client }, Flight number: { flight number }<br>
 Why: The "localizadores" does not respect the defined format.<br>
 Solution: The "localizadores" cell must be in this format: "jumbo number, reservation number" (the two values must be separated by a comma) 
@@ -98,11 +99,3 @@ Solution: Make sure all “Número pasajeros” have the format  "A: 2 N: 1 B: 1
 - Code import 19 - There is a formatting error on Airport or Hotel. Both cells must contain data while one is null. <br>
 Why: Both cells must contain data while one is null.
 Solution: Make sure all ”Traslado desde” and ”Traslado hasta” cells contain data. 
-
-
-
-
-- Code import 30 -In cell B3 should be written: LLEGADAS, INTERHOTEL or SAlIDAS
-Why: Cell B3 determines the type of processing performed in this file. If the cell is empty or something else is marked, it will return an error
-Solution: write LLEGADAS, INTERHOTEL or SAlIDAS in B3
-

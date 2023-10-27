@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="5UDND5o" resname="Edit Agency">
         <source>Edit Agency</source>
-        <target>__Editer Agence</target>
+        <target>Editer Agence</target>
       </trans-unit>
       <trans-unit id="U0M9PNE" resname="back to list">
         <source>back to list</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="5DUEPHi" resname="*For attendance, you must select the period and leave &quot;Nature Transfer&quot; on all">
         <source>*For attendance, you must select the period and leave "Nature Transfer" on all</source>
-        <target>__*For attendance, you must select the period and leave "Nature Transfer" on all</target>
+        <target>*Pour participer, vous devez sélectionner la période et laisser "Nature Transfer" sur tous</target>
       </trans-unit>
       <trans-unit id="1rPoyCj" resname="Presence">
         <source>Presence</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="Z7aWRoY" resname="Dashboard">
         <source>Dashboard</source>
-        <target>__Dashboard</target>
+        <target>Tableau de bord</target>
       </trans-unit>
       <trans-unit id="a_AqydR" resname="UI Elements">
         <source>UI Elements</source>
@@ -379,7 +379,7 @@
       </trans-unit>
       <trans-unit id="lpzL089" resname="Email">
         <source>Email</source>
-        <target>__Email</target>
+        <target>Email</target>
       </trans-unit>
       <trans-unit id="lINeovz" resname="Inbox">
         <source>Inbox</source>
@@ -387,7 +387,7 @@
       </trans-unit>
       <trans-unit id="ET3e20c" resname="Read Email">
         <source>Read Email</source>
-        <target>__Read Email</target>
+        <target>Lire Email</target>
       </trans-unit>
       <trans-unit id="qOW3RsA" resname="Ecommerce">
         <source>Ecommerce</source>
@@ -395,11 +395,11 @@
       </trans-unit>
       <trans-unit id="TtyL_vx" resname="Products">
         <source>Products</source>
-        <target>__Products</target>
+        <target>Produits</target>
       </trans-unit>
       <trans-unit id="iqLw5_o" resname="Product Detail">
         <source>Product Detail</source>
-        <target>__Product Detail</target>
+        <target>Detail produit</target>
       </trans-unit>
       <trans-unit id="t_is3VI" resname="Orders">
         <source>Orders</source>
@@ -811,7 +811,7 @@
       </trans-unit>
       <trans-unit id="kaf6wAn" resname="They are still">
         <source>They are still</source>
-        <target>Ils ont déja</target>
+        <target>Il reste encore</target>
       </trans-unit>
       <trans-unit id="CgorB7X" resname="client(s) to assign">
         <source>client(s) to assign</source>
@@ -1024,6 +1024,118 @@
       <trans-unit id=".h2cfbN" resname="Italian">
         <source>Italian</source>
         <target>Italien</target>
+      </trans-unit>
+      <trans-unit id="fiB6caF" resname="New Customer Card">
+        <source>New Customer Card</source>
+        <target>Nouveau Client</target>
+      </trans-unit>
+      <trans-unit id="6bMDmJQ" resname="Service Number">
+        <source>Service Number</source>
+        <target>Numéro de service</target>
+      </trans-unit>
+      <trans-unit id="fwdi9nr" resname="Arrival Hour">
+        <source>Arrival Hour</source>
+        <target>Heure d'arrivée</target>
+      </trans-unit>
+      <trans-unit id="qKhdOXE" resname="From Start">
+        <source>From Start</source>
+        <target>De</target>
+      </trans-unit>
+      <trans-unit id="6yqcPaF" resname="To Arrival">
+        <source>To Arrival</source>
+        <target>A</target>
+      </trans-unit>
+      <trans-unit id="VAyJaIr" resname="Add Inter Hotel">
+        <source>Add Inter Hotel</source>
+        <target>Ajouter un Inter Hotel</target>
+      </trans-unit>
+      <trans-unit id="xEfa8ME" resname="Add Departure">
+        <source>Add Departure</source>
+        <target>Ajouter un départ</target>
+      </trans-unit>
+      <trans-unit id="AXdcnaP" resname="New Client">
+        <source>New Client</source>
+        <target>Ajouter Client</target>
+      </trans-unit>
+      <trans-unit id="Mh0zqUq" resname="*Number total of pax">
+        <source>*Number total of pax</source>
+        <target>*Nombre total de Pax</target>
+      </trans-unit>
+      <trans-unit id="QSvguc1" resname="Informations">
+        <source>Informations</source>
+        <target>Informations</target>
+      </trans-unit>
+      <trans-unit id="9oL5L9w" resname="Pax">
+        <source>Pax</source>
+        <target>Pax</target>
+      </trans-unit>
+      <trans-unit id="OK5mfsv" resname="Reservation number">
+        <source>Reservation number</source>
+        <target>Numéro de réservation</target>
+      </trans-unit>
+      <trans-unit id="7K3srmq" resname="Meeting date is missing">
+        <source>Meeting date is missing</source>
+        <target>La date du meeting est manquante</target>
+      </trans-unit>
+      <trans-unit id="Dyu7mLd" resname="Go to Client Card">
+        <source>Go to Client Card</source>
+        <target>Allez vers la fiche Client</target>
+      </trans-unit>
+      <trans-unit id="mSz5G44" resname="Edit Transfer Arrival">
+        <source>Edit Transfer Arrival</source>
+        <target>Editer le transfert Arrivée</target>
+      </trans-unit>
+      <trans-unit id="K9szkqk" resname="Edit Arrival">
+        <source>Edit Arrival</source>
+        <target>Editer l'arrivée</target>
+      </trans-unit>
+      <trans-unit id="T9O4qLT" resname="Add Transfer Arrival">
+        <source>Add Transfer Arrival</source>
+        <target>Ajouter un transfert "Arrivée"</target>
+      </trans-unit>
+      <trans-unit id="1EDx9wT" resname="Add Arrival">
+        <source>Add Arrival</source>
+        <target>Ajouter Arrivée</target>
+      </trans-unit>
+      <trans-unit id="NimWdAR" resname="Edit Transfer Departure">
+        <source>Edit Transfer Departure</source>
+        <target>Editer un transfert "Départ"</target>
+      </trans-unit>
+      <trans-unit id="YQ5eryB" resname="Edit Departure">
+        <source>Edit Departure</source>
+        <target>Editer Départ</target>
+      </trans-unit>
+      <trans-unit id="IYJs0Oh" resname="Add Transfer Departure">
+        <source>Add Transfer Departure</source>
+        <target>Ajouter un transfert "Départ"</target>
+      </trans-unit>
+      <trans-unit id="GYc9Zh6" resname="Edit Transfer InterHotel">
+        <source>Edit Transfer InterHotel</source>
+        <target>Editer un Transfert Inter Hotel</target>
+      </trans-unit>
+      <trans-unit id="5.4mX2H" resname="Edit InterHotel">
+        <source>Edit InterHotel</source>
+        <target>Editer InterHotel</target>
+      </trans-unit>
+      <trans-unit id="Pv6L1b8" resname="Add Transfer interHotel">
+        <source>Add Transfer interHotel</source>
+        <target>Ajouter un  transfert "Inter Hotel"</target>
+      </trans-unit>
+      <trans-unit id="JeMN.SS" resname="Edit arrival">
+        <source>Edit arrival</source>
+        <target>Editer arrivée</target>
+      </trans-unit>
+      <trans-unit id="yeUxBq8" resname="Edit Inter Hotel">
+        <source>Edit Inter Hotel</source>
+        <target>Editer Inter Hotel</target>
+      </trans-unit>
+      <trans-unit id="XBOfv0V" resname="Edit departure">
+        <source>Edit departure</source>
+        <target>Editer départ</target>
+      </trans-unit>
+      <trans-unit id="kYdqMCm" resname="Back to client">
+        <source>Back to client</source>
+        <target>Retour fiche client</target>
       </trans-unit>
     </body>
   </file>
