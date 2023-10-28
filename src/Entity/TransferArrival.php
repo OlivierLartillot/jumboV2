@@ -44,6 +44,32 @@ class TransferArrival
     #[ORM\OneToOne(mappedBy: 'transferArrival', cascade: ['persist', 'remove'])]
     private ?TransferVehicleArrival $transferVehicleArrival = null;
 
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $adultsNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $childrenNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $babiesNumber = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?MeetingPoint $meetingPoint = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $meetingAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?User $staff = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?Status $status = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?User $statusUpdatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $statusUpdatedAt = null;
 
     public function getId(): ?int
     {
@@ -164,6 +190,114 @@ class TransferArrival
         }
 
         $this->transferVehicleArrival = $transferVehicleArrival;
+
+        return $this;
+    }
+
+    public function getAdultsNumber(): ?int
+    {
+        return $this->adultsNumber;
+    }
+
+    public function setAdultsNumber(?int $adultsNumber): static
+    {
+        $this->adultsNumber = $adultsNumber;
+
+        return $this;
+    }
+
+    public function getChildrenNumber(): ?int
+    {
+        return $this->childrenNumber;
+    }
+
+    public function setChildrenNumber(?int $childrenNumber): static
+    {
+        $this->childrenNumber = $childrenNumber;
+
+        return $this;
+    }
+
+    public function getBabiesNumber(): ?int
+    {
+        return $this->babiesNumber;
+    }
+
+    public function setBabiesNumber(?int $babiesNumber): static
+    {
+        $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+
+    public function getMeetingPoint(): ?MeetingPoint
+    {
+        return $this->meetingPoint;
+    }
+
+    public function setMeetingPoint(?MeetingPoint $meetingPoint): static
+    {
+        $this->meetingPoint = $meetingPoint;
+
+        return $this;
+    }
+
+    public function getMeetingAt(): ?\DateTimeImmutable
+    {
+        return $this->meetingAt;
+    }
+
+    public function setMeetingAt(?\DateTimeImmutable $meetingAt): static
+    {
+        $this->meetingAt = $meetingAt;
+
+        return $this;
+    }
+
+    public function getStaff(): ?User
+    {
+        return $this->staff;
+    }
+
+    public function setStaff(?User $staff): static
+    {
+        $this->staff = $staff;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatusUpdatedBy(): ?User
+    {
+        return $this->statusUpdatedBy;
+    }
+
+    public function setStatusUpdatedBy(?User $statusUpdatedBy): static
+    {
+        $this->statusUpdatedBy = $statusUpdatedBy;
+
+        return $this;
+    }
+
+    public function getStatusUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->statusUpdatedAt;
+    }
+
+    public function setStatusUpdatedAt(?\DateTimeImmutable $statusUpdatedAt): static
+    {
+        $this->statusUpdatedAt = $statusUpdatedAt;
 
         return $this;
     }

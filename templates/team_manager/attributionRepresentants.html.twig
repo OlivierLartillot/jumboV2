@@ -16,16 +16,10 @@
                                     {% if notClient is not defined %} 
                                         <div class="mt-3 ">
                                             <div class="mb-3">
-                                                Arrival date: 
-                                                    <b>{% for arrival in firstClient.transferArrivals  %}
-                                                            {{ arrival.date| date('d-m-Y')}}
-                                                    {% endfor %}
-                                                    </b><br>
+                                                {% trans %}Arrival date{% endtrans %}: 
+                                                    <b>{{ firstClient.date| date('d-m-Y')}}</b><br>
                                                 {% trans %}Briefing date{% endtrans %}: 
-                                                <b>{% for arrival in firstClient.transferArrivals  %}
-                                                        {{ arrival.date|date_modify("+1 day")| date('d-m-Y')}}
-                                                    {% endfor %}
-                                                </b><br>
+                                                    <b>{{ firstClient.date|date_modify("+1 day")| date('d-m-Y')}}</b><br>
                                             </div>
                                         </div>
                                     {% endif %}
@@ -45,23 +39,15 @@
                                     <p class="alert alert-danger mt-3" role="alert">{% trans %}They are still{% endtrans %} {{ countNonAttributedClients }} {% trans %}client(s) to assign{% endtrans %} </p>
 
                                     <div class="mb-3">
-                                        Arrival date: 
-                                            <b>{% for arrival in firstClient.transferArrivals  %}
-                                                    {{ arrival.date| date('d-m-Y')}}
-                                               {% endfor %}
-                                            </b><br>
+                                        {% trans %}Arrival date{% endtrans %}: 
+                                                <b>{{ firstClient.date| date('d-m-Y')}}</b><br>
                                         {% trans %}Briefing date{% endtrans %}: 
-                                        <b>{% for arrival in firstClient.transferArrivals  %}
-                                                {{ arrival.date|date_modify("+1 day")| date('d-m-Y')}}
-                                            {% endfor %}
-                                        </b><br>
+                                        <b>{{ firstClient.date|date_modify("+1 day")| date('d-m-Y')}}</b><br>
                                         <hr>
                                         <P><u>{% trans %}Next group of clients{% endtrans %}:</u></P>
-                                        {% trans %}Agency{% endtrans %}: <strong>{{ firstClient.agency }}</strong> <br>
+                                        {% trans %}Agency{% endtrans %}: <strong>{{ firstClient.customerCard.agency }}</strong> <br>
                                         {% trans %}Hotel{% endtrans %}:
-                                        {% for infosTransfer in firstClient.transferArrivals %}
-                                            <strong>{{ infosTransfer.toArrival}}</strong><br/>
-                                        {% endfor %}
+                                            <strong>{{ firstClient.toArrival}}</strong><br/>
                                         <p>
                                             Pax: <b>{% trans %}Adults{% endtrans %}: {{ paxAdults }}, {% trans %}Children{% endtrans %}:  {{ paxChildren }}, {% trans %}Babies{% endtrans %}: {{ paxBabies }}</b>
                                         </p>

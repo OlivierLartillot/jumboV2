@@ -29,7 +29,11 @@ class TeamManagerController extends AbstractController
     
     // route qui affiche tous les rep a attribuer en fonction de la date
     #[Route('/team-manager/briefings/attribution', name: 'app_admin_team_manager',methods:["POST", "GET"])]
-    public function index(Request $request, CustomerCardRepository $customerCardRepository,  DefineQueryDate $defineQueryDate): Response
+    public function index(Request $request, 
+                        CustomerCardRepository $customerCardRepository,  
+                        DefineQueryDate $defineQueryDate,
+                        TransferArrivalRepository $transferArrivalRepository
+                        ): Response
     {
 
 
@@ -39,32 +43,39 @@ class TeamManagerController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
         $meetingDate = $date->modify('+1 day');
 
-        // Récupérer tous les customerCards qui n'ont pas de staff id et qui colle avec la date
-        $firstClient = $customerCardRepository->findOneBy(
+        // Récupérer tous les transferArrival qui n'ont pas de staff id et qui colle avec la date
+            $firstClient = $transferArrivalRepository->findOneBy(
             [
                 'staff' => NULL,
                 'meetingAt' => $meetingDate
             ]);
-        $countNonAttributedClients = count($customerCardRepository->findBy(
+            $countNonAttributedClients = count($transferArrivalRepository->findBy(
+                [
+                    'staff' => NULL,
+                    'meetingAt' => $meetingDate
+                ]
+            ));
+
+        // Récupérer tous les customerCards qui n'ont pas de staff id et qui colle avec la date
+/*         $firstClient = $customerCardRepository->findOneBy(
+            [
+                'staff' => NULL,
+                'meetingAt' => $meetingDate
+            ]); */
+/*         $countNonAttributedClients = count($customerCardRepository->findBy(
             [
                 'staff' => NULL,
                 'meetingAt' => $meetingDate
             ]
-        ));
+        )); */
 
         $daterestantes = $customerCardRepository->datesForCustomersWithoutRep();
-
         // si il y a encore des clients (firstclient)
         if ($firstClient != null) {
             //On récupère l'hotel d'arrivé
-            $hotels = [];
-
-            foreach ($firstClient->getTransferArrivals() as $arrival) {
-                    $hotels[] = $arrival->getToArrival();
-                }
-
-            $agency = $firstClient->getAgency();
-            $hotel = $hotels[0];
+            
+            $hotel = $firstClient->getToArrival();
+            $agency = $firstClient->getCustomerCard()->getAgency();
             $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($meetingDate, $hotel, $agency);
             $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($meetingDate, $hotel, $agency);
             $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($meetingDate, $hotel, $agency);
@@ -84,21 +95,25 @@ class TeamManagerController extends AbstractController
                 //Attribuer le représentant a toutes les personnes sans représentants avec la date 00:01 et qui ont le meme couple hotels-agence
                 $staff = $firstClient->getStaff();
                 
+                // récupérer tous les arrivées qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
+                $arrivalsWithoutRep = $transferArrivalRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency);
+                
                 // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
-                $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency);
+          /*       $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency); */
                 
                 
                 // pour chacun de ces objets, leur attribuer le staff correpondant
-                foreach ($customersWithoutRep as $customer) {
-                    $customer->setStaff($staff);
+                foreach ($arrivalsWithoutRep as $transferArrival) {
+                    $transferArrival->setStaff($staff);
                 }
                 
-                $customerCardRepository->save($customer, true);   
+                $transferArrivalRepository->save($transferArrival, true);   
                             
                 return $this->redirect($this->generateUrl('app_admin_team_manager'));
 
             }
-            
+
+          
             return $this->render('team_manager/attributionRepresentants.html.twig', [
                 'firstClient' => $firstClient,
                 'form' => $form,

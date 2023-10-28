@@ -43,7 +43,7 @@ class CustomerCardController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
 
-            //Listes des informations a afficher dans les tris
+        //Listes des informations a afficher dans les tris
         $agencies = $agencyRepository->findAllAsc();
         $hotels = $airportHotelRepository->findAllAsc();
    
@@ -94,7 +94,6 @@ class CustomerCardController extends AbstractController
                 $search = $request->query->get('search');
                     
                 $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
-
 
                 // la requete qui execute la recherche
                 $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
@@ -542,6 +541,17 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['name'] = 'Arrival';
             $tableauTimeline[$i]['date'] = $arrival->getDate();
             $tableauTimeline[$i]['hour'] = $arrival->getHour()->format('H:i');
+            
+            $tableauTimeline[$i]['name'] = 'Meeting';
+            $tableauTimeline[$i]['date'] = $arrival->getMeetingAt();
+            $tableauTimeline[$i]['hour'] = $arrival->getMeetingAt()->format('H:i');
+            $tableauTimeline[$i]['staff'] = $arrival->getStaff();
+            $tableauTimeline[$i]['meetingPoint'] = $arrival->getMeetingPoint();
+            $i++;            
+            
+            
+            
+            
             $i++;
         }
 
@@ -557,14 +567,14 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
             $i++;
         }
-        if ($customerCard->getMeetingAt()) {
+/*         if ($customerCard->getMeetingAt()) {
             $tableauTimeline[$i]['name'] = 'Meeting';
             $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt();
             $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
             $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
             $tableauTimeline[$i]['meetingPoint'] = $customerCard->getMeetingPoint();
             $i++;
-        }
+        } */
 
 
 

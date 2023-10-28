@@ -115,6 +115,32 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
 
+    // team Manager
+
+    /**
+     * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findByForAttribbutionRep($date, $hotel, $agency): array
+    {
+
+
+        return $this->createQueryBuilder('t')
+            ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+            ->andWhere('t.staff is null')
+            ->andWhere('t.meetingAt >= :dateStart')
+            ->andWhere('t.meetingAt <= :dateEnd')
+            ->andWhere('t.toArrival = :hotel')
+            ->andWhere('customerCard.agency = :agency')
+            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('hotel', $hotel)
+            ->setParameter('agency', $agency)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
 
 

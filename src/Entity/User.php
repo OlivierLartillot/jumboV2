@@ -55,9 +55,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Comment::class)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'staff', targetEntity: CustomerCard::class)]
-    private Collection $customerCards;
-
     #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: StatusHistory::class)]
     private Collection $statusHistories;
 
@@ -67,11 +64,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $deactivate = null;
 
+    #[ORM\OneToMany(mappedBy: 'staff', targetEntity: TransferArrival::class)]
+    private Collection $transferArrivals;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->customerCards = new ArrayCollection();
         $this->statusHistories = new ArrayCollection();
+        $this->transferArrivals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -224,36 +224,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, CustomerCard>
-     */
-    public function getCustomerCards(): Collection
-    {
-        return $this->customerCards;
-    }
-
-    public function addCustomerCard(CustomerCard $customerCard): self
-    {
-        if (!$this->customerCards->contains($customerCard)) {
-            $this->customerCards->add($customerCard);
-            $customerCard->setStaff($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCustomerCard(CustomerCard $customerCard): self
-    {
-        if ($this->customerCards->removeElement($customerCard)) {
-            // set the owning side to null (unless already changed)
-            if ($customerCard->getStaff() === $this) {
-                $customerCard->setStaff(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function __toString()
     {
         return $this->getUserIdentifier();
@@ -309,6 +279,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDeactivate(?bool $deactivate): self
     {
         $this->deactivate = $deactivate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransferArrival>
+     */
+    public function getTransferArrivals(): Collection
+    {
+        return $this->transferArrivals;
+    }
+
+    public function addTransferArrival(TransferArrival $transferArrival): static
+    {
+        if (!$this->transferArrivals->contains($transferArrival)) {
+            $this->transferArrivals->add($transferArrival);
+            $transferArrival->setStaff($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferArrival(TransferArrival $transferArrival): static
+    {
+        if ($this->transferArrivals->removeElement($transferArrival)) {
+            // set the owning side to null (unless already changed)
+            if ($transferArrival->getStaff() === $this) {
+                $transferArrival->setStaff(null);
+            }
+        }
 
         return $this;
     }
