@@ -36,7 +36,7 @@
                             </thead>
                             <tbody>
 
-                                    {% for transferArrival in regroupements|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                    {% for transferArrival in regroupements|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
                                         {% set agency = transferArrival.customerCard.agency.id %}
                                         {% set hotel = transferArrival.toArrival.id %}
                                         {% set flightNumber = transferArrival.flightNumber %}
@@ -51,22 +51,21 @@
                                                     {{ transferArrival.toArrival|title}} 
                                                 <br>{{ transferArrival.customerCard.agency|title }}
                                             </td>
-                                            <td> <input type="time" value="{{ transferArrival.customerCard.getMeetingAtTime}}" name="hour_{{ transferArrival.customerCard.id }}"/></td> 
+                                            <td> <input type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/></td> 
                                             <td> 
-                                                <select name="staff_{{ transferArrival.customerCard.id }}">
+                                                <select name="staff_{{ transferArrival.id }}" title="Rep">
                                                     {% for user in users %}
                                                         {% if "ROLE_REP" in user.roles %}
-                                                            <option value="{{user.id}}" {{ user.id == transferArrival.customerCard.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                            <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </select>
                                             </td> 
                                             <td>
-                                                <select name="meetingPoint_{{ transferArrival.customerCard.id }}">
+                                                <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point">
                                                     {% for meetingPoint in meetingPoints %}
-
-                                                        {% if  transferArrival.customerCard.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == transferArrival.customerCard.meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                        {% if meetingPoint is not null %}
+                                                            <option value="{{ meetingPoint.id}} " {{ transferArrival.meetingPoint.id == meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
                                                         {% else %}
                                                             <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
                                                         {% endif %}

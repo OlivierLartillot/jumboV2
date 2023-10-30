@@ -47,9 +47,9 @@
 
                                 {% for regroupement in regroupementsClients %}
                                     {% if (regroupement is not empty) %}     
-                                        {% for transferArrival in regroupement|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}                                                   
-                                            {% if transferArrival.customerCard.staff == user %}
-                                                <p class="card-text {{ (transferArrival.customerCard.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
+                                        {% for transferArrival in regroupement|sort((a, b) => a.meetingAt <=> b.meetingAt) %}                                                   
+                                            {% if transferArrival.staff == user %}
+                                                <p class="card-text {{ (transferArrival.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
                                                     {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
                                                     {% set hotel = null %}
 
@@ -70,7 +70,7 @@
                                                     {% endif %}
                                                     </strong>
                                                     <br/>
-                                                    {% trans %}Meeting at{% endtrans %} <strong>{{ transferArrival.customerCard.getMeetingAtTime }} - {{ (transferArrival.customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.customerCard.meetingPoint.checkLanguage(app.user.language) : transferArrival.customerCard.meetingPoint.en }}</strong>
+                                                    {% trans %}Meeting at{% endtrans %} <strong>{{ transferArrival.getMeetingAtTime }} - {{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}</strong>
                                                 </p>
                                                 <hr>
                                             {% endif %}

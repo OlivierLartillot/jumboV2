@@ -253,6 +253,13 @@ class TransferArrival
 
         return $this;
     }
+    public function getMeetingAtDate() {
+        return $this->meetingAt->format('d-m-Y');
+    }
+
+    public function getMeetingAtTime() {
+        return $this->meetingAt->format('H:i');
+    }
 
     public function getStaff(): ?User
     {

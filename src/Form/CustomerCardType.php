@@ -42,31 +42,7 @@ class CustomerCardType extends AbstractType
                 'label' => 'Full Name',
             ])
             ->add('agency')
-            ->add('adultsNumber', null, [
-                'label' => 'Adults quantity',
-            ])
-            ->add('childrenNumber', null, [
-                'label' => 'Children quantity',
-            ])
-            ->add('babiesNumber', null, [
-                'label' => 'Babies quantity',
-            ])
-            ->add('meetingAt', null, [
-                'widget' => 'single_text',
-                'required' => true,
-            ])
             ->add('reservationCancelled')
-            ->add('status')
-            ->add('meetingPoint')
-            ->add('staff', EntityType::class, [
-                'label' => "Reps",
-                'placeholder' => 'Choose a Rep',
-                'class' => User::class,
-                'choices' => $repList,
-                'required' => false,
-
-                
-            ] )
         ;
     }
 

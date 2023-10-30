@@ -10,10 +10,12 @@ use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
 use App\Form\CustomerCardNewType;
+use App\Form\TransferArrivalNewType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
 use App\Repository\CommentRepository;
 use App\Repository\CustomerCardRepository;
+use App\Repository\MeetingPointRepository;
 use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
@@ -471,55 +473,56 @@ class CustomerCardController extends AbstractController
     #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
     public function new(Request $request, 
                         CustomerCardRepository $customerCardRepository,
-                        AirportHotelRepository $airportHotelRepository,
-                        TransferArrivalRepository $transferArrivalRepository
+                        AgencyRepository $agencyRepository,
+                        TransferArrivalRepository $transferArrivalRepository,
+                        MeetingPointRepository $meetingPointRepository,
+                        StatusRepository $statusRepository
                         ): Response
     {
 
 
 
-        $customerCard = new CustomerCard();
-        $form = $this->createForm(CustomerCardNewType::class, $customerCard);
+        $transferArrival = new TransferArrival();
+        $form = $this->createForm(TransferArrivalNewType::class, $transferArrival);
         $form->handleRequest($request);
 
-        // récupérer les airports
-        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
-        // récupérer les hotels
-        $hotels = $airportHotelRepository->findBy(['isAirport' => false]);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $customerCard->setStatusUpdatedBy($this->getUser());
 
-            // mettre a jour le meeting grace a l'arrivée
-            $meetingDate = new DateTimeImmutable($request->request->get('date'));
+            $post = $_POST['transfer_arrival_new'];
+   
+            $transferArrival->setStatusUpdatedBy($this->getUser());
+            $transferArrival->setStatusUpdatedAt(new DateTimeImmutable('now', new DateTimeZone('America/Santo_Domingo')));
+            //récupère le premier élément de meeting
+            $firstMeetingPoint = $meetingPointRepository->findOneBy([]);
+            $firstStatus = $statusRepository->findOneBy([]);    
+            $transferArrival->setMeetingPoint($firstMeetingPoint);
+            $transferArrival->setStatus($firstStatus);
+
+
+            // mettre a jour le meeting grace a l'arrivée;
+            $meetingDate = new DateTimeImmutable($post['date']);
             $meetingDateFormat = new DateTimeImmutable($meetingDate->format('Y-m-d 00:01'));
             $meetingDateHour = $meetingDateFormat->modify('+1 day');
-            $customerCard->setMeetingAt( $meetingDateHour);  
+            $transferArrival->setMeetingAt( $meetingDateHour);  
 
-            $airport = $airportHotelRepository->find($request->request->get('fromStart'));
-            $hotel = $airportHotelRepository->find($request->request->get('toArrival'));
+ 
+            $customerCard = new CustomerCard();
+            $customerCard->setHolder($post['fullName']);
+            $customerCard->setReservationNumber($post['reservationNumber']);
+            $customerCard->setJumboNumber($post['jumboNumber']);
+            $agencyObject = $agencyRepository->find($post['agency']);
+            $customerCard->setAgency($agencyObject);
 
-            $arrival = new TransferArrival();
-            $arrival->setServiceNumber($request->request->get('serviceNumber'));
-            $arrival->setFlightNumber($request->request->get('flightNumber'));
-            $arrival->setIsCollective($request->request->get('isCollective'));
-            $arrival->setDate(new DateTimeImmutable($request->request->get('date')));
-            $arrival->setHour(new DateTimeImmutable($request->request->get('hour')));
-            $arrival->setDateHour(new DateTimeImmutable($request->request->get('dateHour')));
-            $arrival->setFromStart($airport);
-            $arrival->setToArrival($hotel);
-            $arrival->setCustomerCard($customerCard);
+            $transferArrival->setCustomerCard($customerCard);
 
-            $customerCardRepository->save($customerCard, true);
-            $transferArrivalRepository->save($arrival, true);
+            $customerCardRepository->save($customerCard, false);
+            $transferArrivalRepository->save($transferArrival, true);
             return $this->redirectToRoute('app_customer_card_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer_card/new.html.twig', [
-            'customer_card' => $customerCard,
+            'customer_card' => $transferArrival,
             'form' => $form,
-            'airports' => $airports,
-            'hotels' => $hotels,
         ]);
     }
 
@@ -675,28 +678,12 @@ class CustomerCardController extends AbstractController
             return throw $this->createAccessDeniedException();
         }
 
-        // trouve le status
-        $oldStatus = $customerCard->getStatus();
 
         $form = $this->createForm(CustomerCardType::class, $customerCard);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // si le status à changé on met à jour le status updatedBy
-            $newStatus = $customerCard->getStatus();
-            if ($oldStatus->getName() != $newStatus->getName()) {
-                $dateNowDominican = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo')); 
-                $customerCard->setStatusUpdatedBy($user);
-                $customerCard->setStatusUpdatedAt($dateNowDominican);
-
-                $statusHistory = new StatusHistory();
-                $statusHistory->setStatus($newStatus);
-                $statusHistory->setCustomerCard($customerCard);
-                $statusHistory->setUpdatedBy($user);
-                $statusHistory->setCreatedAt($dateNowDominican);
-                $statusHistoryRepository->save($statusHistory, false);
-            }
 
             $customerCardRepository->save($customerCard, true);
 

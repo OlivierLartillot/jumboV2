@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Agency;
+use App\Entity\AirportHotel;
 use App\Entity\CustomerCard;
+use App\Repository\AgencyRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
@@ -11,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomerCardNewType extends AbstractType
 {
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
