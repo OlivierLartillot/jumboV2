@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="uVlThXo" resname="Minible">
         <source>Minible</source>
-        <target>Minible</target>
+        <target>TO-ADMIN</target>
       </trans-unit>
       <trans-unit id="DDMQpke" resname="Welcome Back">
         <source>Welcome Back</source>
@@ -1635,43 +1635,43 @@
       </trans-unit>
       <trans-unit id="fiB6caF" resname="New Customer Card">
         <source>New Customer Card</source>
-        <target>__New Customer Card</target>
+        <target>Agregar Nueva Ficha Cliente</target>
       </trans-unit>
       <trans-unit id="6bMDmJQ" resname="Service Number">
         <source>Service Number</source>
-        <target>__Service Number</target>
+        <target>Numero de Servicio</target>
       </trans-unit>
       <trans-unit id="fwdi9nr" resname="Arrival Hour">
         <source>Arrival Hour</source>
-        <target>__Arrival Hour</target>
+        <target>Hora Llegada</target>
       </trans-unit>
       <trans-unit id="qKhdOXE" resname="From Start">
         <source>From Start</source>
-        <target>__From Start</target>
+        <target>Desde</target>
       </trans-unit>
       <trans-unit id="6yqcPaF" resname="To Arrival">
         <source>To Arrival</source>
-        <target>__To Arrival</target>
+        <target>A</target>
       </trans-unit>
       <trans-unit id="VAyJaIr" resname="Add Inter Hotel">
         <source>Add Inter Hotel</source>
-        <target>__Add Inter Hotel</target>
+        <target>Agregar Inter Hotel</target>
       </trans-unit>
       <trans-unit id="xEfa8ME" resname="Add Departure">
         <source>Add Departure</source>
-        <target>__Add Departure</target>
+        <target>Agregar Salida</target>
       </trans-unit>
       <trans-unit id="AXdcnaP" resname="New Client">
         <source>New Client</source>
-        <target>__New Client</target>
+        <target>Nuevo Cliente</target>
       </trans-unit>
       <trans-unit id="Mh0zqUq" resname="*Number total of pax">
         <source>*Number total of pax</source>
-        <target>__*Number total of pax</target>
+        <target>*Quantidad total pax</target>
       </trans-unit>
       <trans-unit id="QSvguc1" resname="Informations">
         <source>Informations</source>
-        <target>__Informations</target>
+        <target>_Informaciones</target>
       </trans-unit>
       <trans-unit id="9oL5L9w" resname="Pax">
         <source>Pax</source>
@@ -1679,71 +1679,71 @@
       </trans-unit>
       <trans-unit id="OK5mfsv" resname="Reservation number">
         <source>Reservation number</source>
-        <target>__Reservation number</target>
+        <target>Numero de Reserva</target>
       </trans-unit>
       <trans-unit id="7K3srmq" resname="Meeting date is missing">
         <source>Meeting date is missing</source>
-        <target>__Meeting date is missing</target>
+        <target>Falta Fecha Briefing</target>
       </trans-unit>
       <trans-unit id="Dyu7mLd" resname="Go to Client Card">
         <source>Go to Client Card</source>
-        <target>__Go to Client Card</target>
+        <target>Ir a Ficha Cliente</target>
       </trans-unit>
       <trans-unit id="mSz5G44" resname="Edit Transfer Arrival">
         <source>Edit Transfer Arrival</source>
-        <target>__Edit Transfer Arrival</target>
+        <target>Editar Transfer Llegada</target>
       </trans-unit>
       <trans-unit id="K9szkqk" resname="Edit Arrival">
         <source>Edit Arrival</source>
-        <target>__Edit Arrival</target>
+        <target>Editar Llegada</target>
       </trans-unit>
       <trans-unit id="T9O4qLT" resname="Add Transfer Arrival">
         <source>Add Transfer Arrival</source>
-        <target>__Add Transfer Arrival</target>
+        <target>Agregar Transfer Llegada</target>
       </trans-unit>
       <trans-unit id="1EDx9wT" resname="Add Arrival">
         <source>Add Arrival</source>
-        <target>__Add Arrival</target>
+        <target>Agregar Llegada</target>
       </trans-unit>
       <trans-unit id="NimWdAR" resname="Edit Transfer Departure">
         <source>Edit Transfer Departure</source>
-        <target>__Edit Transfer Departure</target>
+        <target>Editar Transfer Salida</target>
       </trans-unit>
       <trans-unit id="YQ5eryB" resname="Edit Departure">
         <source>Edit Departure</source>
-        <target>__Edit Departure</target>
+        <target>Editar Departure</target>
       </trans-unit>
       <trans-unit id="IYJs0Oh" resname="Add Transfer Departure">
         <source>Add Transfer Departure</source>
-        <target>__Add Transfer Departure</target>
+        <target>Editar Transfer Salida</target>
       </trans-unit>
       <trans-unit id="GYc9Zh6" resname="Edit Transfer InterHotel">
         <source>Edit Transfer InterHotel</source>
-        <target>__Edit Transfer InterHotel</target>
+        <target>Editar Transfer InterHotel</target>
       </trans-unit>
       <trans-unit id="5.4mX2H" resname="Edit InterHotel">
         <source>Edit InterHotel</source>
-        <target>__Edit InterHotel</target>
+        <target>Editar InterHotel</target>
       </trans-unit>
       <trans-unit id="Pv6L1b8" resname="Add Transfer interHotel">
         <source>Add Transfer interHotel</source>
-        <target>__Add Transfer interHotel</target>
+        <target>Agregar Transfer interHotel</target>
       </trans-unit>
       <trans-unit id="JeMN.SS" resname="Edit arrival">
         <source>Edit arrival</source>
-        <target>__Edit arrival</target>
+        <target>Editar LLegada</target>
       </trans-unit>
       <trans-unit id="yeUxBq8" resname="Edit Inter Hotel">
         <source>Edit Inter Hotel</source>
-        <target>__Edit Inter Hotel</target>
+        <target>Editar Inter Hotel</target>
       </trans-unit>
       <trans-unit id="XBOfv0V" resname="Edit departure">
         <source>Edit departure</source>
-        <target>__Edit departure</target>
+        <target>Editar Salida</target>
       </trans-unit>
       <trans-unit id="kYdqMCm" resname="Back to client">
         <source>Back to client</source>
-        <target>__Back to client</target>
+        <target>Volver a clientes</target>
       </trans-unit>
     </body>
   </file>
