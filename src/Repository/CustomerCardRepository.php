@@ -112,17 +112,18 @@ class CustomerCardRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('c')
             ->select('c')
-            ->leftJoin('App\Entity\TransferJoan', 'transferJoan', 'WITH', 'c.id = transferJoan.customerCard')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferVehicleArrival', 'TransferVehicleArrival', 'WITH', 'transferArrival.id = TransferVehicleArrival.transferArrival')
             ->andWhere('c.reservationNumber LIKE :reservationNumber 
                         OR c.holder LIKE :holder
                         OR c.jumboNumber LIKE :jumboNumber
-                        OR transferJoan.voucherNumber LIKE :voucherNumber
+                        OR TransferVehicleArrival.voucherNumber LIKE :voucherNumber
                         ')
             ->setParameter('reservationNumber', '%'.$input.'%')
             ->setParameter('holder', '%'.$input.'%')
             ->setParameter('jumboNumber', '%'.$input.'%')
             ->setParameter('voucherNumber', '%'.$input.'%')
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('c.holder', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -256,8 +257,8 @@ class CustomerCardRepository extends ServiceEntityRepository
         }
          
 
-        if ($rep != "all") { $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep );}
-        if ($status != "all") { $requete = $requete->andWhere('c.status = :status')->setParameter('status', $status );}
+        if ($rep != "all") { $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );}
+        if ($status != "all") { $requete = $requete->andWhere('transferArrival.status = :status')->setParameter('status', $status );}
 
 
         // recup de l agence
@@ -416,31 +417,15 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
             ->andWhere('c.meetingAt >= :dateStart')
             ->andWhere('c.meetingAt <= :dateEnd')
-            ->andWhere('c.staff is not null')
+            ->andWhere('transferArrival.staff is not null')
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
-            ->groupBy('c.staff', 'c.agency' ,'transferArrival.toArrival')      
+            ->groupBy('transferArrival.staff', 'c.agency' ,'transferArrival.toArrival')      
             ->getQuery()
             ->getResult()
         ;
     }
 
-    /**
-     * @return CustomerCard[] Returns an array of each date for customers without rep 
-     * Attribution des représentants
-     */
-    public function datesForCustomersWithoutRep() :array
-    {
-
-        return $this->createQueryBuilder('c')
-            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
-            ->select('transferArrival.date')
-            ->where('transferArrival.staff is null')
-            ->groupBy('transferArrival.date')      
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 
         /**
      * @return int
@@ -469,28 +454,6 @@ class CustomerCardRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
-     * This return the first customerCard of each groupment
-     * Attribution des meetings
-     */
-    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
-    {
-
-
-        return $this->createQueryBuilder('c')
-            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
-            ->andWhere('c.meetingAt >= :dateStart')
-            ->andWhere('c.meetingAt <= :dateEnd')
-            ->andWhere('c.staff = :staff')
-            ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
-            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
-            ->setParameter('staff', $staff)
-            ->groupBy('c.staff', 'c.agency' ,'transferArrival.toArrival', 'transferArrival.flightNumber')      
-            ->getQuery()
-            ->getResult()
-        ;
-    } 
 
     /**
      * @return CustomerCard[] Returns an array of customersCards at this choosen date by staff, grouped by staff, agency and arrival hotel
@@ -502,9 +465,9 @@ class CustomerCardRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('c')
             ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
-            ->andWhere('c.meetingAt >= :dateStart')
-            ->andWhere('c.meetingAt <= :dateEnd')
-            ->andWhere('c.staff = :staff')
+            ->andWhere('transferArrival.meetingAt >= :dateStart')
+            ->andWhere('transferArrival.meetingAt <= :dateEnd')
+            ->andWhere('transferArrival.staff = :staff')
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
             ->setParameter('staff', $staff) 
@@ -522,17 +485,19 @@ class CustomerCardRepository extends ServiceEntityRepository
   
         $requete = $this->createQueryBuilder('c');
 
-        if ($age == "adults") { $requete = $requete->select('sum(c.adultsNumber)');} 
-        elseif ($age == "children") { $requete = $requete->select('sum(c.childrenNumber)');} 
-        else { $requete = $requete->select('sum(c.babiesNumber)') ;} 
-
+        
         $requete = $requete->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard');
-        $requete = $requete->innerJoin('App\Entity\Status', 'status', 'WITH', 'c.status = status.id')
-            ->andWhere('transferArrival.date >= :date_start')
-            ->andWhere('transferArrival.date <= :date_end');
+        $requete = $requete->innerJoin('App\Entity\Status', 'status', 'WITH', 'transferArrival.status = status.id');
+        
+        if ($age == "adults") { $requete = $requete->select('sum(transferArrival.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(transferArrival.childrenNumber)');} 
+        else { $requete = $requete->select('sum(transferArrival.babiesNumber)') ;} 
 
+        $requete = $requete->andWhere('transferArrival.date >= :date_start')
+        ->andWhere('transferArrival.date <= :date_end');
+        
         if ($rep != 'all') {
-            $requete = $requete->andWhere('c.staff = :rep')->setParameter('rep', $rep);
+            $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep);
         }
 
         if ($status == 'No Show') {

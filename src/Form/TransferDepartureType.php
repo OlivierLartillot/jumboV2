@@ -22,17 +22,28 @@ class TransferDepartureType extends AbstractType
         $hotels = $this->airportHotelRepository->findBy(['isAirport' => false]);
         $airports = $this->airportHotelRepository->findBy(['isAirport' => true]);
         $builder
-            ->add('flightNumber')
-            ->add('date')
-            ->add('hour')
+
             ->add('fromStart', EntityType::class, [
                 'class' => AirportHotel::class,
-                'choices' => $hotels
-            ])
+                'choices' => $hotels,
+                ])
             ->add('toArrival', EntityType::class, [
                 'class' => AirportHotel::class,
                 'choices' => $airports
-            ])
+                ])
+            ->add('adultsNumber')
+            ->add('childrenNumber')
+            ->add('babiesNumber')
+            ->add('transportCompany')
+            ->add('flightNumber')
+            ->add('date')
+            ->add('hour')
+            ->add('pickUp')
+            ->add('vehicleNumber')
+            ->add('vehicleType')
+            ->add('isCollective')
+            ->add('voucherNumber')
+            ->add('area')
         ;
     }
 

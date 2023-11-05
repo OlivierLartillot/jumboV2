@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TransferDepartureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,12 +15,6 @@ class TransferDeparture
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dateHour = null;
-
-    #[ORM\Column(length: 10, nullable: true)]
-    private ?string $flightNumber = null;
 
     #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
     #[ORM\JoinColumn(nullable: false)]
@@ -32,30 +28,49 @@ class TransferDeparture
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
+    #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private TransportCompany $transportCompany;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $flightNumber = null;
+
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $hour = null;
 
-    #[ORM\OneToOne(inversedBy: 'transferDeparture', cascade: ['persist', 'remove'])]
-    private ?TransferVehicleDeparture $transferVehicleDeparture = null;
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $pickUp = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $vehicleNumber = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $vehicleType = null;
+
+    #[ORM\Column]
+    private ?bool $isCollective = null;
+
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $voucherNumber = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $area = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $adultsNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $childrenNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $babiesNumber = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDateHour(): ?\DateTimeImmutable
-    {
-        return $this->dateHour;
-    }
-
-    public function setDateHour(\DateTimeImmutable $dateHour): self
-    {
-        $this->dateHour = $dateHour;
-
-        return $this;
     }
 
     public function getFlightNumber(): ?string
@@ -130,16 +145,129 @@ class TransferDeparture
         return $this;
     }
 
-    public function getTransferVehicleDeparture(): ?TransferVehicleDeparture
+    public function isIsCollective(): ?bool
     {
-        return $this->transferVehicleDeparture;
+        return $this->isCollective;
     }
 
-    public function setTransferVehicleDeparture(?TransferVehicleDeparture $transferVehicleDeparture): static
+    public function setIsCollective(bool $isCollective): self
     {
-        $this->transferVehicleDeparture = $transferVehicleDeparture;
+        $this->isCollective = $isCollective;
 
         return $this;
     }
+
+    public function getVehicleNumber(): ?int
+    {
+        return $this->vehicleNumber;
+    }
+
+    public function setVehicleNumber(?int $vehicleNumber): self
+    {
+        $this->vehicleNumber = $vehicleNumber;
+
+        return $this;
+    }
+
+    public function getVehicleType(): ?string
+    {
+        return $this->vehicleType;
+    }
+
+    public function setVehicleType(?string $vehicleType): self
+    {
+        $this->vehicleType = $vehicleType;
+
+        return $this;
+    }
+
+    public function getPickUp(): ?\DateTimeImmutable
+    {
+        return $this->pickUp;
+    }
+
+    public function setPickUp(\DateTimeImmutable $pickUp): self
+    {
+        $this->pickUp = $pickUp;
+
+        return $this;
+    }
+
+    public function getVoucherNumber(): ?string
+    {
+        return $this->voucherNumber;
+    }
+
+    public function setVoucherNumber(?string $voucherNumber): self
+    {
+        $this->voucherNumber = $voucherNumber;
+
+        return $this;
+    }
+
+    public function getArea(): ?string
+    {
+        return $this->area;
+    }
+
+    public function setArea(?string $area): self
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    public function getTypeTransfer() {
+        return 'vehicleDeparture';
+    }
+
+    public function getTransportCompany(): ?TransportCompany
+    {
+        return $this->transportCompany;
+    }
+
+    public function setTransportCompany(?TransportCompany $transportCompany): static
+    {
+        $this->transportCompany = $transportCompany;
+
+        return $this;
+    }
+
+    public function getAdultsNumber(): ?int
+    {
+        return $this->adultsNumber;
+    }
+
+    public function setAdultsNumber(?int $adultsNumber): static
+    {
+        $this->adultsNumber = $adultsNumber;
+
+        return $this;
+    }
+
+    public function getChildrenNumber(): ?int
+    {
+        return $this->childrenNumber;
+    }
+
+    public function setChildrenNumber(?int $childrenNumber): static
+    {
+        $this->childrenNumber = $childrenNumber;
+
+        return $this;
+    }
+
+    public function getBabiesNumber(): ?int
+    {
+        return $this->babiesNumber;
+    }
+
+    public function setBabiesNumber(?int $babiesNumber): static
+    {
+        $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+
 }
 

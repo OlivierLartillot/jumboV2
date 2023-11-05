@@ -14,12 +14,6 @@ class TransferInterHotel
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dateHour = null;
-
-    #[ORM\Column(length: 10, nullable: true)]
-    private ?string $flightNumber = null;
-
     #[ORM\ManyToOne(inversedBy: 'transferInterHotels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
@@ -36,38 +30,39 @@ class TransferInterHotel
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $hour = null;
+    private ?\DateTimeImmutable $pickUp = null;
 
-    #[ORM\OneToOne(inversedBy: 'transferInterHotel', cascade: ['persist', 'remove'])]
-    private ?TransferVehicleInterHotel $transferVehicleInterHotel = null;
+    #[ORM\Column]
+    private ?bool $isCollective = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $vehicleNumber = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $vehicleType = null;
+
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $voucherNumber = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $area = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferInterHotels')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TransportCompany $transportCompany = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $adultsNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $childrenNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $babiesNumber = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDateHour(): ?\DateTimeImmutable
-    {
-        return $this->dateHour;
-    }
-
-    public function setDateHour(\DateTimeImmutable $dateHour): self
-    {
-        $this->dateHour = $dateHour;
-
-        return $this;
-    }
-
-    public function getFlightNumber(): ?string
-    {
-        return $this->flightNumber;
-    }
-
-    public function setFlightNumber(?string $flightNumber): self
-    {
-        $this->flightNumber = $flightNumber;
-
-        return $this;
     }
 
     public function getCustomerCard(): ?CustomerCard
@@ -118,27 +113,128 @@ class TransferInterHotel
         return $this;
     }
 
-    public function getHour(): ?\DateTimeImmutable
+    public function isIsCollective(): ?bool
     {
-        return $this->hour;
+        return $this->isCollective;
     }
 
-    public function setHour(\DateTimeImmutable $hour): self
+    public function setIsCollective(bool $isCollective): self
     {
-        $this->hour = $hour;
+        $this->isCollective = $isCollective;
 
         return $this;
     }
 
-    public function getTransferVehicleInterHotel(): ?TransferVehicleInterHotel
+    public function getVehicleNumber(): ?int
     {
-        return $this->transferVehicleInterHotel;
+        return $this->vehicleNumber;
     }
 
-    public function setTransferVehicleInterHotel(?TransferVehicleInterHotel $transferVehicleInterHotel): static
+    public function setVehicleNumber(?int $vehicleNumber): self
     {
-        $this->transferVehicleInterHotel = $transferVehicleInterHotel;
+        $this->vehicleNumber = $vehicleNumber;
 
         return $this;
     }
+
+    public function getVehicleType(): ?string
+    {
+        return $this->vehicleType;
+    }
+
+    public function setVehicleType(?string $vehicleType): self
+    {
+        $this->vehicleType = $vehicleType;
+
+        return $this;
+    }
+
+    public function getPickUp(): ?\DateTimeImmutable
+    {
+        return $this->pickUp;
+    }
+
+    public function setPickUp(\DateTimeImmutable $pickUp): self
+    {
+        $this->pickUp = $pickUp;
+
+        return $this;
+    }
+    
+    public function getVoucherNumber(): ?string
+    {
+        return $this->voucherNumber;
+    }
+
+    public function setVoucherNumber(?string $voucherNumber): self
+    {
+        $this->voucherNumber = $voucherNumber;
+
+        return $this;
+    }
+
+    public function getArea(): ?string
+    {
+        return $this->area;
+    }
+
+    public function setArea(?string $area): self
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    public function getTypeTransfer() {
+        return 'vehicleInterHotel';
+    }
+
+    public function getTransportCompany(): ?TransportCompany
+    {
+        return $this->transportCompany;
+    }
+
+    public function setTransportCompany(?TransportCompany $transportCompany): static
+    {
+        $this->transportCompany = $transportCompany;
+
+        return $this;
+    }
+
+    public function getAdultsNumber(): ?int
+    {
+        return $this->adultsNumber;
+    }
+
+    public function setAdultsNumber(?int $adultsNumber): static
+    {
+        $this->adultsNumber = $adultsNumber;
+
+        return $this;
+    }
+
+    public function getChildrenNumber(): ?int
+    {
+        return $this->childrenNumber;
+    }
+
+    public function setChildrenNumber(?int $childrenNumber): static
+    {
+        $this->childrenNumber = $childrenNumber;
+
+        return $this;
+    }
+
+    public function getBabiesNumber(): ?int
+    {
+        return $this->babiesNumber;
+    }
+
+    public function setBabiesNumber(?int $babiesNumber): static
+    {
+        $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+  
 }

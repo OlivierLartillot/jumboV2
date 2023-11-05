@@ -43,9 +43,9 @@
 
                                         <tr>
                                             <td>
-                                                <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~flightNumber] }}, 
-                                                <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~flightNumber] }}, 
-                                                <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~flightNumber] }}<hr>
+                                                <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}<hr>
                                                {#  {{  dump(infosTransfer) }} #}
                                                     Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
                                                     {{ transferArrival.toArrival|title}} 
@@ -62,10 +62,10 @@
                                                 </select>
                                             </td> 
                                             <td>
-                                                <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point">
+                                                <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
                                                     {% for meetingPoint in meetingPoints %}
-                                                        {% if meetingPoint is not null %}
-                                                            <option value="{{ meetingPoint.id}} " {{ transferArrival.meetingPoint.id == meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                        {% if (meetingPoint is not null)  %}
+                                                            <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
                                                         {% else %}
                                                             <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
                                                         {% endif %}
@@ -115,7 +115,7 @@
     #}
                             </tbody>
                         </table>
-                    </div>
+               
 
                         <input type="submit" value="{% trans %}Submit{% endtrans %}">
                     </form>

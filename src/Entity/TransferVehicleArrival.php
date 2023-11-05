@@ -20,14 +20,11 @@ class TransferVehicleArrival
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $vehicleNumber = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $vehicleType = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
-
-    #[ORM\Column(length: 6, nullable: true)]
-    private ?string $pickUp = null;
 
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $voucherNumber = null;
@@ -35,12 +32,20 @@ class TransferVehicleArrival
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $area = null;
 
- 
     #[ORM\ManyToOne(inversedBy: 'transferVehicleArrivals')]
     private ?TransportCompany $transportCompany = null;
 
     #[ORM\OneToOne(inversedBy: 'transferVehicleArrival', cascade: ['persist', 'remove'])]
     private ?TransferArrival $transferArrival = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $adultsNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $childrenNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $babiesNumber = null;
 
     public function getId(): ?int
     {
@@ -91,18 +96,6 @@ class TransferVehicleArrival
     public function setDate(\DateTimeImmutable $date): self
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getPickUp(): ?string
-    {
-        return $this->pickUp;
-    }
-
-    public function setPickUp(?string $pickUp): self
-    {
-        $this->pickUp = $pickUp;
 
         return $this;
     }
@@ -159,6 +152,40 @@ class TransferVehicleArrival
         return $this;
     }
 
+    public function getAdultsNumber(): ?int
+    {
+        return $this->adultsNumber;
+    }
 
+    public function setAdultsNumber(?int $adultsNumber): static
+    {
+        $this->adultsNumber = $adultsNumber;
+
+        return $this;
+    }
+
+    public function getChildrenNumber(): ?int
+    {
+        return $this->childrenNumber;
+    }
+
+    public function setChildrenNumber(?int $childrenNumber): static
+    {
+        $this->childrenNumber = $childrenNumber;
+
+        return $this;
+    }
+
+    public function getBabiesNumber(): ?int
+    {
+        return $this->babiesNumber;
+    }
+
+    public function setBabiesNumber(?int $babiesNumber): static
+    {
+        $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
 
 }

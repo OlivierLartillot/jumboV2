@@ -4,12 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
-use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
-use App\Form\CustomerCardNewType;
 use App\Form\TransferArrivalNewType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
@@ -21,7 +19,7 @@ use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferVehicleArrivalRepository;
 use App\Repository\TransferVehicleDepartureRepository;
-use App\Repository\TransferVehicleInterHotelRepository;
+
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -561,7 +559,7 @@ class CustomerCardController extends AbstractController
         foreach ($customerCard->getTransferInterHotels() as $interHotel) {
             $tableauTimeline[$i]['name'] = 'Inter Hotel';
             $tableauTimeline[$i]['date'] = $interHotel->getDate();
-            $tableauTimeline[$i]['hour'] = $interHotel->getHour()->format('H:i');
+            $tableauTimeline[$i]['hour'] = $interHotel->getPickUp()->format('H:i');
             $i++;
         }
         foreach ($customerCard->getTransferDeparture() as $departure) {

@@ -21,22 +21,29 @@ class TransportCompany
     #[ORM\OneToMany(mappedBy: 'transportCompany', targetEntity: TransferVehicleArrival::class)]
     private Collection $transferVehicleArrivals;
 
-    #[ORM\OneToMany(mappedBy: 'transportCompany', targetEntity: TransferVehicleInterHotel::class)]
-    private Collection $transferVehicleInterHotels;
+    #[ORM\OneToMany(mappedBy: 'transportCompany', targetEntity: TransferInterHotel::class)]
+    private Collection $transferInterHotels;
 
-    #[ORM\OneToMany(mappedBy: 'transportCompany', targetEntity: TransferVehicleDeparture::class)]
-    private Collection $transferVehicleDepartures;
+
+    #[ORM\OneToMany(mappedBy: 'transportCompany', targetEntity: TransferDeparture::class)]
+    private Collection $transferDepartures;
+
 
     public function __construct()
     {
         $this->transferVehicleArrivals = new ArrayCollection();
-        $this->transferVehicleInterHotels = new ArrayCollection();
-        $this->transferVehicleDepartures = new ArrayCollection();
+        $this->transferInterHotels = new ArrayCollection();
+        $this->transferDepartures = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function __toString(): string
+    {
+        return (string) ucfirst($this->name);
     }
 
     public function getName(): ?string
@@ -82,59 +89,50 @@ class TransportCompany
     }
 
     /**
-     * @return Collection<int, TransferVehicleInterHotel>
+     * @return Collection<int, TransferInterHotel>
      */
-    public function getTransferVehicleInterHotels(): Collection
+    public function getTransferInterHotels(): Collection
     {
-        return $this->transferVehicleInterHotels;
+        return $this->transferInterHotels;
     }
 
-    public function addTransferVehicleInterHotel(TransferVehicleInterHotel $transferVehicleInterHotel): static
+    public function addTransferInterHotel(TransferInterHotel $transferInterHotel): static
     {
-        if (!$this->transferVehicleInterHotels->contains($transferVehicleInterHotel)) {
-            $this->transferVehicleInterHotels->add($transferVehicleInterHotel);
-            $transferVehicleInterHotel->setTransportCompany($this);
+        if (!$this->transferInterHotels->contains($transferInterHotel)) {
+            $this->transferInterHotels->add($transferInterHotel);
+            $transferInterHotel->setTransportCompany($this);
         }
 
         return $this;
     }
 
-    public function removeTransferVehicleInterHotel(TransferVehicleInterHotel $transferVehicleInterHotel): static
+    public function removeTransferInterHotel(TransferInterHotel $transferInterHotel): static
     {
-        if ($this->transferVehicleInterHotels->removeElement($transferVehicleInterHotel)) {
+        if ($this->transferInterHotels->removeElement($transferInterHotel)) {
             // set the owning side to null (unless already changed)
-            if ($transferVehicleInterHotel->getTransportCompany() === $this) {
-                $transferVehicleInterHotel->setTransportCompany(null);
+            if ($transferInterHotel->getTransportCompany() === $this) {
+                $transferInterHotel->setTransportCompany(null);
             }
         }
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, TransferVehicleDeparture>
-     */
-    public function getTransferVehicleDepartures(): Collection
+    public function addTransferDeparture(TransferDeparture $transferDeparture): static
     {
-        return $this->transferVehicleDepartures;
-    }
-
-    public function addTransferVehicleDeparture(TransferVehicleDeparture $transferVehicleDeparture): static
-    {
-        if (!$this->transferVehicleDepartures->contains($transferVehicleDeparture)) {
-            $this->transferVehicleDepartures->add($transferVehicleDeparture);
-            $transferVehicleDeparture->setTransportCompany($this);
+        if (!$this->transferDepartures->contains($transferDeparture)) {
+            $this->transferDepartures->add($transferDeparture);
+            $transferDeparture->setTransportCompany($this);
         }
 
         return $this;
     }
 
-    public function removeTransferVehicleDeparture(TransferVehicleDeparture $transferVehicleDeparture): static
+    public function removeTransferDeparture(TransferDeparture $transferDeparture): static
     {
-        if ($this->transferVehicleDepartures->removeElement($transferVehicleDeparture)) {
+        if ($this->transferDepartures->removeElement($transferDeparture)) {
             // set the owning side to null (unless already changed)
-            if ($transferVehicleDeparture->getTransportCompany() === $this) {
-                $transferVehicleDeparture->setTransportCompany(null);
+            if ($transferDeparture->getTransportCompany() === $this) {
+                $transferDeparture->setTransportCompany(null);
             }
         }
 

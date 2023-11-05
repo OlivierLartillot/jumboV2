@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Agency;
 use App\Entity\CustomerCard;
 use App\Entity\User;
+use App\Repository\AgencyRepository;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -12,23 +14,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomerCardType extends AbstractType
 {
-    private $userRepository;
+    private $agencyRepository;
 
 
-    public function __construct(UserRepository  $userRepository){
-        $this->userRepository = $userRepository;
+    public function __construct(AgencyRepository  $agencyRepository){
+        $this->agencyRepository = $agencyRepository;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $repList = [];
-        $users = $this->userRepository->findAll();
-        foreach ($users as $user) {
-            if (in_array('ROLE_REP', $user->getRoles())) {
-                $repList[] = $user;
-            }
-        }
+        $agencies = $this->agencyRepository->findBy([], ["name" => "ASC"]);
 
 
         $builder
@@ -41,7 +37,10 @@ class CustomerCardType extends AbstractType
             ->add('holder', null, [
                 'label' => 'Full Name',
             ])
-            ->add('agency')
+            ->add('agency', EntityType::class, [
+                'class' => Agency::class,
+                'choices'=> $agencies,
+                ])
             ->add('reservationCancelled')
         ;
     }

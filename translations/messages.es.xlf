@@ -1675,7 +1675,7 @@
       </trans-unit>
       <trans-unit id="9oL5L9w" resname="Pax">
         <source>Pax</source>
-        <target>__Pax</target>
+        <target>Pax</target>
       </trans-unit>
       <trans-unit id="OK5mfsv" resname="Reservation number">
         <source>Reservation number</source>

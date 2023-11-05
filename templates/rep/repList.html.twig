@@ -34,30 +34,30 @@
                                     {% endif %}
                                 {% endif %}
                                 <hr>
-                                {% for regroupement in regroupementsClients|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
 
                                     {% if (regroupement is not empty) %}                                                        
                                     
-                                        {% if regroupement.customerCard.staff == user %}
-                                            <p class="card-text {{ (regroupement.customerCard.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
+                                        {% if regroupement.staff == user %}
+                                            <p class="card-text {{ (regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
                                                 {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
                                                 {% set hotel =  regroupement.toArrival %}
 
                                                 <strong>{{ hotel.name|title }}<br/>
-                                                {{ regroupement.customerCard.getMeetingAtTime }} - {{ (regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.customerCard.meetingPoint.checkLanguage(app.user.language) : regroupement.customerCard.meetingPoint.en }}</strong><br/>
+                                                {{ regroupement.getMeetingAtTime }} - {{ (regroupement.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.meetingPoint.checkLanguage(app.user.language) : regroupement.meetingPoint.en }}</strong><br/>
                                 
 
                                                 {% trans %}Agency{% endtrans %}: {{ regroupement.customerCard.agency|title }}<br/>
                                                 Pax:
                                                 {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
-                                                {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
-                                                    A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
+                                                {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                    A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
                                                 {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
-                                                    N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }}, 
+                                                {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                    N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
                                                 {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] is defined %}
-                                                    B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.flightNumber] }} 
+                                                {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                    B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
                                                 {% endif %}
                                                
                                                 <br/>

@@ -43,21 +43,21 @@ class RepController extends AbstractController
                
 
                 // pour la recherche date == meetingDate on récupere les pax de date -1 pour avoir les arrivées
-                $paxTab[$user->getUsername()]['adults'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "adults");
-                $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "children");
-                $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "babies");
+                $paxTab[$user->getUsername()]['adults'] = $transferArrivalRepository->staffPaxByDate($user, $date, "adults");
+                $paxTab[$user->getUsername()]['children'] = $transferArrivalRepository->staffPaxByDate($user, $date, "children");
+                $paxTab[$user->getUsername()]['babies'] = $transferArrivalRepository->staffPaxByDate($user, $date, "babies");
             
                 foreach ($regroupementsClients as $transferArrival) {
                     $agency = $transferArrival->getCustomerCard()->getAgency();
                     $hotel = $transferArrival->getToArrival();
                     
-                        $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'adults', $transferArrival->getflightNumber());
-                        $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children', $transferArrival->getflightNumber());
-                        $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies', $transferArrival->getflightNumber());
-                        
-                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupAdults;
-                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupChildren;
-                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getflightNumber()] =  $paxRegroupBabies;
+                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+
+                        $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
+                        $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;
+                        $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupBabies;
                 } 
             }
         
@@ -76,7 +76,7 @@ class RepController extends AbstractController
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/rep/fiche/{user}/date/details', name: 'app_admin_rep_fiche_par_date_details',methods:["GET"])]
     public function ficheRepParDateDetails( User $user, 
-                                            CustomerCardRepository $customerCardRepository, 
+                                            TransferArrivalRepository $transferArrivalRepository, 
                                             MeetingPointRepository $meetingPointRepository,  
                                             UserRepository $userRepository,
                                             Request $request,
@@ -93,7 +93,7 @@ class RepController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
 
         // attraper la liste des objets correpsondants au representant et au jour 
-        $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
+        $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date);
         //dd($attributionClientsByRepAndDate );
 
         $meetingPoints = $meetingPointRepository->findAll();

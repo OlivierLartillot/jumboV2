@@ -3,11 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Agency;
-use App\Entity\AirportHotel;
 use App\Entity\CustomerCard;
 use App\Repository\AgencyRepository;
-use App\Repository\UserRepository;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,8 +13,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CustomerCardNewType extends AbstractType
 {
 
+    public function __construct(private AgencyRepository $agencyRepository) 
+    {
+        $this->$agencyRepository = $agencyRepository;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        $agencies = $this->agencyRepository->findBy([], ['name'=> 'ASC']);
+
 
         $builder
             ->add('reservationNumber', null, [
@@ -26,7 +31,10 @@ class CustomerCardNewType extends AbstractType
             ->add('holder', null, [
                 'label' => 'Full Name',
             ])
-            ->add('agency')
+            ->add('agency', EntityType::class, [
+                'class' => Agency::class,
+                'choices'=> $agencies,
+                ])
             ->add('adultsNumber', null, [
                 'label' => 'Adults quantity',
             ])

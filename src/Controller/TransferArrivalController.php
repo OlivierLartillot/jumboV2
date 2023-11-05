@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\CustomerCard;
 use App\Entity\TransferArrival;
-use App\Form\TransferArrivalNewType;
 use App\Form\TransferArrivalType;
 use App\Repository\TransferArrivalRepository;
 use Doctrine\ORM\EntityManagerInterface;

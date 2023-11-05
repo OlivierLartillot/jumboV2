@@ -9,19 +9,17 @@ use App\Entity\TransferInterHotel;
 use App\Entity\TransferJoan;
 use App\Entity\TransferVehicleArrival;
 use App\Entity\TransferVehicleDeparture;
-use App\Entity\TransferVehicleInterHotel;
-use App\Form\DragAndDropType;
+use App\Entity\TransportCompany;
 use App\Form\TransferJoanType;
+use App\Repository\AirportHotelRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
 use App\Repository\TransferJoanRepository;
 use App\Repository\TransferVehicleArrivalRepository;
-use App\Repository\TransferVehicleDepartureRepository;
-use App\Repository\TransferVehicleInterHotelRepository;
+use App\Repository\TransportCompanyRepository;
 use App\Services\ErrorsImportManager;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,10 +44,13 @@ class TransferJoanController extends AbstractController
     public function index(Request $request, 
                           EntityManagerInterface $manager,
                           CustomerCardRepository $customerCardRepository,
+                          TransferArrivalRepository $transferArrivalRepository,
                           TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
-                          TransferVehicleInterHotelRepository $transferVehicleInterHotelRepository,
-                          TransferVehicleDepartureRepository $transferVehicleDepartureRepository,
-                          ErrorsImportManager $errorsImportManager
+                          TransferInterHotelRepository $transferInterHotelRepository,
+                          TransferDepartureRepository $transferDepartureRepository,
+                          TransportCompanyRepository $transportCompanyRepository, 
+                          ErrorsImportManager $errorsImportManager,
+                          AirportHotelRepository $AirportHotelRepository,
                           ): Response
     {
 
@@ -98,17 +99,14 @@ class TransferJoanController extends AbstractController
         $natureTransfer = strtolower($rows[2][1]);  
         
         if ($natureTransfer == 'llegadas') { 
-            $natureTransferRepository = $transferVehicleArrivalRepository;
-            $natureTransferObject = new TransferVehicleArrival();
+            $natureTransferRepository = $transferArrivalRepository;
+            $natureTransferVehicleObject = new TransferVehicleArrival();
         }
         else if ($natureTransfer == 'interhotel') { 
-            $natureTransferRepository = $transferVehicleInterHotelRepository;
-            $natureTransferObject = new TransferVehicleInterHotel();
-        
+            $natureTransferRepository = $transferInterHotelRepository;
         }
         else if ($natureTransfer == 'salidas') { 
-            $natureTransferRepository = $transferVehicleDepartureRepository;
-            $natureTransferObject = new TransferVehicleDeparture();
+            $natureTransferRepository = $transferDepartureRepository;
         } else {
             $errorsImportManager->addErrors('Code import 30 - In cell B3 should be written: LLEGADAS, INTERHOTEL or SAlIDAS');
             return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorDetails]);
@@ -182,8 +180,27 @@ class TransferJoanController extends AbstractController
                     $errorsImportManager->addErrors('Code import 34 - the nature of the transfer declared in B3 is not the same as in/out.'); 
                     return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                 }
+
+                //check si la compagnie existe sinon il faut la rajouter en bdd
+                $suplidor = trim(strtolower($row[16])); 
+                if ($suplidor != null) {
+                    $suplidor=str_replace("\n"," ",$suplidor);
+                    $suplidor=str_replace("\r"," ",$suplidor);
+                    // on regarde si elle existe
+                    $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
+                    // sinon, ajouter le transportCompany en bdd
+                    if (!$transportCompany) {
+                        $transportCompany = new TransportCompany();
+                        $transportCompany->setName($suplidor);
+                        $manager->persist($transportCompany);
+                        $manager->flush();
+                    }
+
+                }
+
             }
         }
+
 
         $i = 0;
         $errorClients = [];
@@ -201,41 +218,60 @@ class TransferJoanController extends AbstractController
                 break;
             }
             else {
+
                 $reservaId= trim($row[0]); 
-                $agencia = $row[1]; 
-                $nombre = $row[2]; 
-                $vuelo = $row[3]; 
+                $agencia = trim(strtolower($row[1])); 
+                $nombre = trim(strtolower($row[2])); 
+                $vuelo = trim(strtolower($row[3])); 
                 $dia_vuelo = $row[4]; 
                 $hora_v = $row[5]; 
-                $desde = $row[6]; 
-                $hasta = $row[7]; 
-                $tipo_trf = $row[8]; 
-                $tipo_trf = ($tipo_trf == "Colectivo") ? true : false ; 
-                $ad = $row[9]; 
-                $ni = $row[10]; 
-                $bb = $row[11]; 
-                $in_out = $row[12]; 
-                $n_veh = $row[13]; 
-                $t_veh = $row[14]; 
-                $pickup = $row[15]; 
-                $suplidor = $row[16]; 
-                $bono = $row[17]; 
-                $zonas = $row[18];
+                $desde = trim(strtolower($row[6])); 
+                $hasta = trim(strtolower($row[7])); 
+                $tipo_trf = trim(strtolower($row[8])); 
+                $tipo_trf = ($tipo_trf == "colectivo") ? true : false ; 
+                $ad = trim($row[9]); 
+                $ni = trim($row[10]); 
+                $bb = trim($row[11]); 
+                $in_out = trim(strtolower($row[12])); 
+                $n_veh = trim($row[13]); 
+                $t_veh = trim(strtolower($row[14]));     
+                $pickup = trim($row[15]); 
+                $suplidor = trim(strtolower($row[16])); 
+                $bono = trim(strtolower($row[17])); 
+                $zonas = trim(strtolower($row[18]));
                
 
+                
                 $date= explode("/", $dia_vuelo);
                 $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
                 $dia_vuelo = new DateTimeImmutable($dateFormat);
+                
+                if ($hora_v != "") {
+                    $hour = explode(':', $hora_v);
+                    $dateTimeFormat = $hour[0] .':'. $hour[1];
+                    $hour = new DateTimeImmutable($dateTimeFormat);
+                }
+                
+                if ($pickup != "") {
+                    $pickup = explode(':', $pickup);
+                    $dateTimeFormat = $pickup[0] .':'. $pickup[1];
+                    $pickup = new DateTimeImmutable($dateTimeFormat);
+                }
+                
             }
             if ($agencia != null) {
                 $agencia=str_replace("\n"," ",$agencia);
                 $agencia=str_replace("\r"," ",$agencia);
             }
+            if ($nombre != null) {
+                $nombre=str_replace("\n"," ",$nombre);
+                $nombre=str_replace("\r"," ",$nombre);
+            }
             if ($zonas != null) {
                 $zonas=str_replace("\n"," ",$zonas);
                 $zonas=str_replace("\r"," ",$zonas);
             }
-
+            
             if ($desde != null) {
                 $desde=str_replace("\n"," ",$desde);
                 $desde=str_replace("\r"," ",$desde);
@@ -244,56 +280,144 @@ class TransferJoanController extends AbstractController
                 $hasta=str_replace("\n"," ",$hasta);
                 $hasta=str_replace("\r"," ",$hasta);
             }
+            if ($in_out != null) {
+                $in_out=str_replace("\n"," ",$in_out);
+                $in_out=str_replace("\r"," ",$in_out);
+            }
+            if ($suplidor != null) {
+                $suplidor=str_replace("\n"," ",$suplidor);
+                $suplidor=str_replace("\r"," ",$suplidor);
+            }
             
             // Normalement ce numéro de reservation existe dans le customer card
-            $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservaId]);
-            //dd($customerCard);
+            $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservaId, 'holder' => $nombre]);
+            $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
+    
+            
+            
+            /*******************  TODO: ************************************ */
 
             if ($customerCard) {
-                // on regarde si le nature transfert existe 
-                $natureTransferExiste = $natureTransferRepository->findOneBy(['customerCard' => $customerCard]); 
-                if ($natureTransfer == 'llegadas') { 
-                    $natureTransferObject = new TransferVehicleArrival();
-                } else if ($natureTransfer == 'interhotel') { 
-                    $natureTransferObject = new TransferVehicleInterHotel();
-                } else if ($natureTransfer == 'salidas') { 
-                    $natureTransferObject = new TransferVehicleDeparture();
-                }
+
+                // transferArrival ou transferIH ou transferDeparture
+                // $natureTransferVehicleObjectExiste ?
+                if ($natureTransfer == 'llegadas') {
+                    $transferArrivalExiste =  $natureTransferRepository->findOneBy(['customerCard'=> $customerCard]);
+                    // si le transfertArrival n existe pas je ne peux pas mettre a jour les données de vehicleArrival
+                    if (!$transferArrivalExiste) {
+                        $errorClients[] = 'La fiche client existe bien mais il n\'y a pas d\'arrivée/interHOtel ou Depart pour cette fiche client !';
+                    } 
+                     // si le transfertArrival existe, je peux mettre a jour les données de vehicleArrival
+                    else {
+                        $natureTransferVehicleObjectExiste =  $transferArrivalExiste->getTransferVehicleArrival();
+                        // si 1 vehicleArrival existe ou pas 
+                        $transferVehicleArrival  = ($natureTransferVehicleObjectExiste) ? $natureTransferVehicleObjectExiste : new TransferVehicleArrival;
+                        
+                        $transferVehicleArrival->setTransferArrival($transferArrivalExiste);
+                        
+                        $transferVehicleArrival->setIsCollective($tipo_trf);
+                        $transferVehicleArrival->setVehicleNumber($n_veh);
+                        $transferVehicleArrival->setVehicleType($t_veh);
+                        $transferVehicleArrival->setDate($dia_vuelo);
+                        $transferVehicleArrival->setVoucherNumber($bono);
+                        $transferVehicleArrival->setArea($zonas);
+                        $transferVehicleArrival->setTransportCompany($transportCompany);
+                        $transferVehicleArrival->setAdultsNumber($ad);
+                        $transferVehicleArrival->setChildrenNumber($ni);
+                        $transferVehicleArrival->setBabiesNumber($bb);  
+
+                        if (!$natureTransferVehicleObjectExiste) { 
+                            $manager->persist($transferVehicleArrival);
+                        }
+
+                    }
+                } 
+                else if ($natureTransfer == 'interhotel')  {
+
+                    $transferInterHotelExiste =  $natureTransferRepository->findOneBy(['customerCard'=> $customerCard]);
+            
+                    // il faut créer le transferInterHotel
+                    $transferInterHotel = (!$transferInterHotelExiste) ? new TransferInterHotel :  $transferInterHotelExiste ;
+                    
+                    $transferInterHotel->setCustomerCard($customerCard);
+                    
+                    $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
+                    $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
+                    $transferInterHotel->setFromStart($from);
+                    $transferInterHotel->setToArrival($to);
+                    $transferInterHotel->setTransportCompany($transportCompany);
+                    $transferInterHotel->setDate($dia_vuelo);
+                    $transferInterHotel->setPickUp($pickup);
+                    $transferInterHotel->setVehicleNumber($n_veh);
+                    $transferInterHotel->setVehicleType($t_veh);
+                    $transferInterHotel->setIsCollective($tipo_trf);
+                    $transferInterHotel->setVoucherNumber($bono);
+                    $transferInterHotel->setArea($zonas);
+                    $transferInterHotel->setAdultsNumber($ad);
+                    $transferInterHotel->setChildrenNumber($ni);
+                    $transferInterHotel->setBabiesNumber($bb);                    
+                    
+                    if (!$transferInterHotelExiste) { 
+                        $manager->persist($transferInterHotel);
+                    }
+
+                    } 
+                // transfer departure
+                else {
+                    $transferDepartureExiste =  $natureTransferRepository->findOneBy(['customerCard'=> $customerCard]);
+                    // il faut créer le transferInterHotel
+                    if (!$transferDepartureExiste) { 
+                        $transferDeparture = new TransferDeparture;
+                    } else {
+                        $transferDeparture = $transferDepartureExiste;
+                    }
+
+                    $transferDeparture->setCustomerCard($customerCard);
+                    $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
+                    $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
+                    $transferDeparture->setFromStart($from);
+                    $transferDeparture->setToArrival($to);
+                    $transferDeparture->setTransportCompany($transportCompany);
+                    $transferDeparture->setFlightNumber($vuelo);
+                    $transferDeparture->setDate($dia_vuelo);
+                    $transferDeparture->setHour($hour);
+                    $transferDeparture->setPickUp($pickup);
+                    $transferDeparture->setVehicleNumber($n_veh);
+                    $transferDeparture->setVehicleType($t_veh);
+                    $transferDeparture->setIsCollective($tipo_trf);
+                    $transferDeparture->setVoucherNumber($bono);
+                    $transferDeparture->setArea($zonas);
+                    $transferDeparture->setAdultsNumber($ad);
+                    $transferDeparture->setChildrenNumber($ni);
+                    $transferDeparture->setBabiesNumber($bb);
+
+                    if (!$transferDepartureExiste) { 
+                        $manager->persist($transferDeparture);
+                    }
+                    
+            }                
+                // on met a jour le natureTransfer
+                // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
+
+/*                 $natureTransferVehicleObject->setDate($dia_vuelo);
+                ($natureTransfer == 'llegadas') ? $natureTransferVehicleObject->setPickUp($hora_v) : $natureTransferVehicleObject->setPickUp($pickup);
+                $natureTransferVehicleObject->setVoucherNumber($bono);
+                $natureTransferVehicleObject->setArea($zonas);
+
                 
-                if ($natureTransferExiste) {
-                    // on met a jour le natureTransfer
-                    // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
-                    $natureTransferExiste->setCustomerCard($customerCard);
-                    $natureTransferExiste->setIsCollective($tipo_trf);
-                    $natureTransferExiste->setVehicleNumber($n_veh);
-                    $natureTransferExiste->setVehicleType($t_veh);
-                    $natureTransferExiste->setDate($dia_vuelo);
-                    
-                    ($natureTransfer == 'llegadas') ? $natureTransferExiste->setPickUp($hora_v) : $natureTransferExiste->setPickUp($pickup);
-                    
-                    $natureTransferExiste->setTransportCompany($suplidor);
-                    $natureTransferExiste->setVoucherNumber($bono);
-                    $natureTransferExiste->setArea($zonas);
+                
+               
+                
+                $natureTransferVehicleObject->setTransportCompany($transportCompany);
 
-                    //dd('ce nature transfert existe déja');
-                } else {                  
-                    // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
-                    $natureTransferObject->setCustomerCard($customerCard);
-                    $natureTransferObject->setIsCollective($tipo_trf);
-                    $natureTransferObject->setVehicleNumber($n_veh);
-                    $natureTransferObject->setVehicleType($t_veh);
-                    $natureTransferObject->setDate($dia_vuelo);
-                    ($natureTransfer == 'llegadas') ? $natureTransferObject->setPickUp($hora_v) : $natureTransferObject->setPickUp($pickup);
-                    $natureTransferObject->setTransportCompany($suplidor);
-                    $natureTransferObject->setVoucherNumber($bono);
-                    $natureTransferObject->setArea($zonas);
+                if (!$natureTransferVehicleObjectExiste) {
+                    $manager->persist($natureTransferVehicleObject);
+                }  */
 
-                    $manager->persist($natureTransferObject);
-                }
             } 
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
-                $errorClients[] = $reservaId;
+                $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
             }
         }
         
