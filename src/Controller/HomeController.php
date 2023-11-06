@@ -639,7 +639,7 @@ class HomeController extends AbstractController
                     $ClientNumbersInCsv[] = $key;
                 }   
 
-               if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
+                if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
                 
                     // recherche toute les arrivées de ce jour
                     $arrivals = $transferArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);

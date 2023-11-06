@@ -493,10 +493,64 @@ class TransferJoanController extends AbstractController
             }
         }
          
-    
-        
         $manager->flush();
         
+
+        //****************************** Recherche des  Arrivéées de ce jour qui ne sont plus présentes dans le CSV ******************************//
+        //****************************************************************************************************************************************//
+        $ClientNumbersInCsv = [];
+        foreach ($serviceNumbersInCSV as $key => $value){
+            $ClientNumbersInCsv[] = $key;
+        }   
+       
+            if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
+            
+                // recherche toute les arrivées de ce jour
+                $arrivals = $transferArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
+
+                $clientNumberArrivalsInBdd = [];
+                foreach ($arrivals as $arrival) { 
+                    $clientNumberArrivalsInBdd[] = $arrival->getCustomerCard()->getReservationNumber();
+                }
+
+
+                // !!! nom présent ... mais en cas de doublons qui passerait à un dans le csv, cela ne fonctionne pas en bdd !
+                // raison: le numéro de client est quand meme présent dans le csv donc impossible comme ca de savoir qu il y a un en moins
+                // dans le csv car le numéro existe encore (1x au lieu de 2 mais ca existe ...)
+                $nonPresentsDansLeNouveauCSV = array_diff($clientNumberArrivalsInBdd, $ClientNumbersInCsv);
+
+                //dd($nonPresentsDansLeNouveauCSV);
+                
+                /* TODO *******/
+                // re -checker si il existe une entrée pour le transferVehicle / transferInterHotel / transferDeparture
+                
+                // sinon on peut supprimer
+                foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
+
+                    $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $toDelete]);
+
+                    // arrivée
+                    $arrivalsDayInBdd = $transferArrivalRepository->findBy(['customerCard' => $customerCard, 'date' => new DateTimeImmutable($dateFormat)]);
+                    //dd($arrivalsDayInBdd);
+                    foreach ($arrivalsDayInBdd as $arrival) {   
+                            $transferVehicleArrivalRepository->remove($arrival->getTransferVehicleArrival(), true);
+                    }
+                    
+
+                    // on checkera les customers cartes orphelines dans la page d'accueil
+                    $numberArrivals = count($customerCard->getTransferArrivals());
+
+                    $totalTransfersRestant = $numberArrivals;
+                    
+                    if ($totalTransfersRestant == 0) {
+                        $customerCardRepository->remove($customerCard, true);
+                    }
+                }
+            } 
+
+
+
+
         return $this->render('transfer/import.html.twig', [
             'errorClients' => $errorClients
         ]);
