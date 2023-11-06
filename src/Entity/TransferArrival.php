@@ -17,8 +17,8 @@ class TransferArrival
     #[ORM\Column(length: 50)]
     private ?string $serviceNumber = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $dateHour = null;
+/*     #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateHour = null; */
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $flightNumber = null;
