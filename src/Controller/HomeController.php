@@ -371,6 +371,7 @@ class HomeController extends AbstractController
                 // CSV    
                     // combien de fois ce n° client est présent dans le csv
                     $nbReservationNumberInCSV = $serviceNumbersInCSV[$reservationNumber];
+                  
 
                 // BDD
                     // ce numéro client est il déja présent dans la bdd
@@ -415,7 +416,7 @@ class HomeController extends AbstractController
                 if (($nbReservationNumberInCSV == $countCLientArrivalBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
                     $transferArrivals = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat,  $record['Titular']);
                     $customerCard = $transferArrivals[0]->getCustomerCard();
-                        
+                        dd('ici');
                     // mettre a jour le customerCard    
                     $customerCard->setReservationNumber($reservationNumber);
                     $customerCard->setJumboNumber($jumboNumber);

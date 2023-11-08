@@ -35,7 +35,7 @@ class TransferVehicleArrival
     #[ORM\ManyToOne(inversedBy: 'transferVehicleArrivals')]
     private ?TransportCompany $transportCompany = null;
 
-    #[ORM\OneToOne(inversedBy: 'transferVehicleArrival', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'transferVehicleArrival', cascade: ['persist'])]
     private ?TransferArrival $transferArrival = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]

@@ -126,6 +126,7 @@ class TransferJoanController extends AbstractController
         $dates = [];
         $inOuts = [];
         $serviceNumbersInCSV = [];
+        $reservationNumberFlightNumberIncsv = [];
 
         foreach ($rows as $row) {
             // les lignes à ignorer
@@ -204,9 +205,12 @@ class TransferJoanController extends AbstractController
 
                 $reservationNumber = trim($row[0]);
                 $serviceNumbersInCSV[] = $reservationNumber;
+                $vuelo = trim(strtolower($row[3])); 
+                $reservationNumberFlightNumberIncsv[] = $reservationNumber .'-'. $vuelo ;
             }
         }
         $countEachServiceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
+        $countEachreservationNumberFlightNumberIncsv = array_count_values ($reservationNumberFlightNumberIncsv);
 
         $i = 0;
         $errorClients = [];
@@ -308,10 +312,7 @@ class TransferJoanController extends AbstractController
                 
                 // si dans la bdd ce n est pas présent, il faut ajouter 
                 // (si l arrivée n existe pas ce jour il faut le signaler !! on ne créé pas une nouvelle arrivée !!!)
-                if (!$transfersExistent) {
-                
-                                           
-                    
+                if (!$transfersExistent) {       
                     // l'arrivée (transferArrival doit etre uniquement créé par ivan ou son fichier)
                     // par conséquent si y a une fiche client mais pas d'arrivée ce jour, on ne peut pas l'importer
                     if ($natureTransfer == "llegadas") {
@@ -405,27 +406,24 @@ class TransferJoanController extends AbstractController
                     }
                     else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
                         
-                        //dd($transfersExistent);
                         // si c est une arrivée = del transferVehicle   
                         if ($natureTransfer == "llegadas") {                            
                             // si dans le csv c'est présent plusieurs fois on supprime tous dans la bdd 
                             
                             // rechercher l'arrivée par le flight number
                             $transfersaMaj =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
-
                             // si le transferMaj est reconnu (== a 1) on met a jour
                             if (count($transfersaMaj) == 1) {
-
+                                
                                 // si transfer vehicleArrival existe on maj sinon crée
                                 $newTransferVehicleArrival = ($transfersaMaj[0]->getTransferVehicleArrival() == null) ? new TransferVehicleArrival(): $transfersaMaj[0]->getTransferVehicleArrival();
-                                
-
                                 $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
                                 $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
                                 $transfersaMaj[0]->setFromStart($from);
                                 $transfersaMaj[0]->setToArrival($to);
 
                                 if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
+
                                     $newTransferVehicleArrival->setTransferArrival($transfersaMaj[0]);
                                 }
 
@@ -439,7 +437,7 @@ class TransferJoanController extends AbstractController
                                 $newTransferVehicleArrival->setAdultsNumber($ad);
                                 $newTransferVehicleArrival->setChildrenNumber($ni);
                                 $newTransferVehicleArrival->setBabiesNumber($bb);
-                                
+                            
                                 if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
                                     $manager->persist($newTransferVehicleArrival);
                                 }
@@ -452,6 +450,7 @@ class TransferJoanController extends AbstractController
                         }
                         // sinon del transfer
                         else {
+    
                             foreach ($transfersExistent as $transfer) {
                                 $manager->remove($transfer);
                                 $manager->flush();
@@ -492,60 +491,98 @@ class TransferJoanController extends AbstractController
                 $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
             }
         }
-         
+
         $manager->flush();
         
 
         //****************************** Recherche des  Arrivéées de ce jour qui ne sont plus présentes dans le CSV ******************************//
         //****************************************************************************************************************************************//
-        $ClientNumbersInCsv = [];
-        foreach ($serviceNumbersInCSV as $key => $value){
-            $ClientNumbersInCsv[] = $key;
-        }   
-       
+        
+        
             if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
             
-                // recherche toute les arrivées de ce jour
-                $arrivals = $transferArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
+                if ($natureTransfer == "llegadas") {
+                    // construit un tableau pour chaque arrivée de ce jour
+                    $clientNumberArrivalsInBdd = [];    
+                    // recherche toute les arrivées de ce jour
+                    $arrivalVehicles = $transferVehicleArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
+                    // les arrivées de ce jour dans un tableau avec 182232-cm802 (reservationNumber, flightNumber)
+                    foreach ($arrivalVehicles as $arrivalVehicle) { 
+                        $clientNumberArrivalsInBdd[] = $arrivalVehicle->getTransferArrival()->getCustomerCard()->getReservationNumber() .'-'.  strtolower($arrivalVehicle->getTransferArrival()->getFlightNumber());
+                    }
+                    // on regarde si il y a des diff ( des numéros qui étaient en bdd mais plus dans le csv)
+                    $nonPresentsDansLeNouveauCSV = array_diff($clientNumberArrivalsInBdd, $reservationNumberFlightNumberIncsv);
+                    
+                    // sinon on peut supprimer
+                    foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
 
-                $clientNumberArrivalsInBdd = [];
-                foreach ($arrivals as $arrival) { 
-                    $clientNumberArrivalsInBdd[] = $arrival->getCustomerCard()->getReservationNumber();
-                }
+                        $dataToDelete = explode('-',$toDelete);
 
+                        $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
+                        $flightNumber = $dataToDelete[1];   
 
-                // !!! nom présent ... mais en cas de doublons qui passerait à un dans le csv, cela ne fonctionne pas en bdd !
-                // raison: le numéro de client est quand meme présent dans le csv donc impossible comme ca de savoir qu il y a un en moins
-                // dans le csv car le numéro existe encore (1x au lieu de 2 mais ca existe ...)
-                $nonPresentsDansLeNouveauCSV = array_diff($clientNumberArrivalsInBdd, $ClientNumbersInCsv);
-
-                //dd($nonPresentsDansLeNouveauCSV);
-                
-                /* TODO *******/
-                // re -checker si il existe une entrée pour le transferVehicle / transferInterHotel / transferDeparture
-                
-                // sinon on peut supprimer
-                foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
-
-                    $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $toDelete]);
-
-                    // arrivée
-                    $arrivalsDayInBdd = $transferArrivalRepository->findBy(['customerCard' => $customerCard, 'date' => new DateTimeImmutable($dateFormat)]);
-                    //dd($arrivalsDayInBdd);
-                    foreach ($arrivalsDayInBdd as $arrival) {   
+                        // on re-récupère les arrivées  avec le numéro de vol qui correspond !!!
+                        $arrivalsDayInBdd = $transferArrivalRepository->findBy(['customerCard' => $customerCard, 
+                                                                                'date' => new DateTimeImmutable($dateFormat),
+                                                                                'flightNumber'=> $flightNumber  ,                   
+                                                                                ]);
+                        // on supprimer les transferts vehicule arrivée
+                        foreach ($arrivalsDayInBdd as $arrival) {   
                             $transferVehicleArrivalRepository->remove($arrival->getTransferVehicleArrival(), true);
-                    }
+                        }
                     
-
-                    // on checkera les customers cartes orphelines dans la page d'accueil
-                    $numberArrivals = count($customerCard->getTransferArrivals());
-
-                    $totalTransfersRestant = $numberArrivals;
                     
-                    if ($totalTransfersRestant == 0) {
-                        $customerCardRepository->remove($customerCard, true);
                     }
                 }
+                else if ($natureTransfer == "interhotel") {
+                    $clientNumberTransfersInBdd = []; 
+                    $interHotels = $transferInterHotelRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
+                    foreach ($interHotels as $interHotel) { 
+                        $clientNumberTransfersInBdd[] = $interHotel->getCustomerCard()->getReservationNumber() .'-inthtl';
+                    }
+                    $nonPresentsDansLeNouveauCSV = array_diff($clientNumberTransfersInBdd, $reservationNumberFlightNumberIncsv);
+                    // sinon on peut supprimer
+                    foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
+
+                        $dataToDelete = explode('-',$toDelete);
+
+                        $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
+ 
+
+                        // arrivée 
+                        $interHotelsDayInBdd = $transferInterHotelRepository->findBy(['customerCard' => $customerCard, 
+                                                                                'date' => new DateTimeImmutable($dateFormat),                
+                                                                                ]);
+                        foreach ($interHotelsDayInBdd as $interHotel) {   
+                            $transferInterHotelRepository->remove($interHotel, true);
+                        }
+                    }
+                }
+                // sinon c est depart
+                else {
+                    $clientNumberTransfersInBdd = []; 
+                    $departures = $transferDepartureRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
+                    foreach ($departures as $departure) { 
+                        $clientNumberTransfersInBdd[] = $departure->getCustomerCard()->getReservationNumber() .'-'.  strtolower($departure->getFlightNumber());
+                    }
+                    $nonPresentsDansLeNouveauCSV = array_diff($clientNumberTransfersInBdd, $reservationNumberFlightNumberIncsv);
+                    // sinon on peut supprimer
+                    foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
+
+                        $dataToDelete = explode('-',$toDelete);
+                        $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
+                        $flightNumber = $dataToDelete[1];   
+ 
+                        // arrivée 
+                        $departureDayInBdd = $transferDepartureRepository->findBy(['customerCard' => $customerCard, 
+                                                                                    'date' => new DateTimeImmutable($dateFormat),
+                                                                                    'flightNumber'=> $flightNumber  ,                   
+                                                                                ]);
+                        foreach ($departureDayInBdd as $departure) {   
+                            $transferDepartureRepository->remove($departure, true);
+                        }
+                    }
+                }                
             } 
 
 
