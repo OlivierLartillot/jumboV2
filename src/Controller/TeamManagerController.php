@@ -146,7 +146,7 @@ class TeamManagerController extends AbstractController
         $paxTab = []; // on va récupérer les paw globaux pour chaque rep
         $paxPerHotelAgency = []; // on va récupérer les pax pour chaque rep et par agence et hotels 
        // $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-       $regroupementsClients =[];/*
+       $regroupementsClients =[];
        // pour chaque staff on va définir les infos a récupérer
        foreach($repUsers as $user) {
            if(in_array('ROLE_REP', $user->getRoles())){  
@@ -156,8 +156,8 @@ class TeamManagerController extends AbstractController
                $paxTab[$user->getUsername()]['adults'] = $transferArrivalRepository->staffPaxByDate($user, $date, "adults");
                $paxTab[$user->getUsername()]['children'] = $transferArrivalRepository->staffPaxByDate($user, $date, "children");
                $paxTab[$user->getUsername()]['babies'] = $transferArrivalRepository->staffPaxByDate($user, $date, "babies");
-               
-        
+           }
+        /*
                $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
           
                $regroupementsClients[] = $regroupements;
