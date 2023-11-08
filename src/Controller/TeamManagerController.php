@@ -157,9 +157,9 @@ class TeamManagerController extends AbstractController
                $paxTab[$user->getUsername()]['children'] = $transferArrivalRepository->staffPaxByDate($user, $date, "children");
                $paxTab[$user->getUsername()]['babies'] = $transferArrivalRepository->staffPaxByDate($user, $date, "babies");
            }}
-        /*
+       
                $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
-          
+          /* 
                $regroupementsClients[] = $regroupements;
                foreach ($regroupements as $transferArrival) {
 
