@@ -107,7 +107,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
         else { $requete = $requete->select('sum(t.babiesNumber)') ;}
 
      $requete = $requete
-            ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.staff = :staff')
             ->andWhere('t.meetingAt = :meetingAt')
             ->andWhere('t.meetingPoint = :meetingPoint')
