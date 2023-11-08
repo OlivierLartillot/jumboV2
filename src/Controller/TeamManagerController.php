@@ -133,7 +133,7 @@ class TeamManagerController extends AbstractController
         $day = $defineQueryDate->returnDay($request);
 
 
-/*          // on fixe la date que l'on va utiliser dans le filtre
+          // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
 
@@ -146,7 +146,7 @@ class TeamManagerController extends AbstractController
         $paxTab = []; // on va récupérer les paw globaux pour chaque rep
         $paxPerHotelAgency = []; // on va récupérer les pax pour chaque rep et par agence et hotels 
        // $regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-       $regroupementsClients =[];
+       $regroupementsClients =[];/*
        // pour chaque staff on va définir les infos a récupérer
        foreach($repUsers as $user) {
            if(in_array('ROLE_REP', $user->getRoles())){  
