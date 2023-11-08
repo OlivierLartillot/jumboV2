@@ -1,0 +1,100 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
+
+        <div class="row mb-3">    
+            <form action={{ path('app_admin_team_manager_replist') }} method="GET">
+                <input name="date" type="date" value="{{date | date('Y-m-d') }}">
+                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+            </form>
+        </div>
+
+        {% if countNonAssignedClient > 0 %}
+            <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} {{ (countNonAssignedClient>1) ? "clients do not"|trans : "client does not"|trans }} {% trans %} yet have a meeting time assigned{% endtrans %}.</p>
+        {% else %}
+            <p class="alert alert-success" role="alert">{% trans %}No or more client groups to assign for this date{% endtrans %}.</p>
+        {% endif %}
+
+        <p class="alert alert-info" role="alert">
+            {% trans %}Arrival date{% endtrans %}: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
+            {% trans %}Briefing date{% endtrans %}: <b>{{ date| date('d-m-Y')}}</b>
+        </p>
+
+        <div class="row">
+            
+            {% for user in users|sort((a, b) => a.username <=> b.username)  %}
+                <div class="col-sm-5 mb-3 mb-sm-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ user }} </h5>
+
+                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or  ("ROLE_BRIEFING" in app.user.roles)) %}
+                                    {% set rights = true %}
+                                {% elseif  app.user == user %}
+                                    {% set rights = true %}
+                                {% else %}
+                                    {% set rights = false %}
+                                {% endif %}
+
+                                {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
+                                
+                                {% if paxCount == 0 %}  <p class="card-text">{% trans %}This rep has no client assigned today.{% endtrans %}</p> 
+                                {% else %}   
+                                <p>{% trans %}Adults{% endtrans %}: {{ paxTab[user.username]['adults'] }}  / {% trans %}Children{% endtrans %}: {{ paxTab[user.username]['children'] }}  / {% trans %}Babies{% endtrans %}: {{ paxTab[user.username]['babies'] }} </p>
+                                {% endif %}
+
+                                <hr>
+                    
+                                {% for regroupement in regroupementsClients %}
+                                    {% if (regroupement is not empty) %}     
+                                        {% for transferArrival in regroupement|sort((a, b) => a.meetingAt <=> b.meetingAt) %}                                                   
+                                            {% if transferArrival.staff == user %}
+                                                <p class="card-text {{ (transferArrival.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
+                                                    {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
+                                                    {% set hotel = null %}
+
+                                                    {% set hotel =  transferArrival.toArrival %}
+                                                
+                                                    {% trans %}Hotel{% endtrans %}: <strong>{{ hotel.name|title }}</strong><br/>
+                                                    {% trans %}Agency{% endtrans %}: <strong>{{ transferArrival.customerCard.agency|title }}</strong><br/>
+                                                    Pax:<strong>
+                                                    {# Récupération des infos de pax pour chaque "transferArrival et adultes/enfants/bébés #}
+                                                    {% if paxPerHotelAgency[user.username~'_adults'][transferArrival.customerCard.agency.id~'_'~hotel.id~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] is defined %}
+                                                        A: {{ paxPerHotelAgency[user.username~'_adults'][transferArrival.customerCard.agency.id~'_'~hotel.id~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                    {% endif %}
+                                                    {% if paxPerHotelAgency[user.username~'_children'][transferArrival.customerCard.agency.id~'_'~hotel.id~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] is defined %}
+                                                        N: {{ paxPerHotelAgency[user.username~'_children'][transferArrival.customerCard.agency.id~'_'~hotel.id~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                    {% endif %}
+                                                    {% if paxPerHotelAgency[user.username~'_babies'][transferArrival.customerCard.agency.id~'_'~hotel.id~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] is defined %}
+                                                        B: {{ paxPerHotelAgency[user.username~'_babies'][transferArrival.customerCard.agency.id~'_'~hotel.id~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }} 
+                                                    {% endif %}
+                                                    </strong>
+                                                    <br/>
+                                                    {% trans %}Meeting at{% endtrans %} 
+                                                        <strong>{{ transferArrival.getMeetingAtTime }} - 
+                                                            {% if transferArrival.meetingPoint != null %}
+                                                            {{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}
+                                                            {% endif %}
+                                                        </strong>
+                                                </p>
+                                                <hr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if rights %}
+                                    {% if paxCount > 0 %} 
+                                        <a href="{{ path('app_admin_team_manager_fiche_par_date', {user: user.id })}}" class="btn btn-primary">{% trans %}Update{% endtrans %}</a> 
+                                    {% endif %}
+                                {% endif %}
+                                {% if paxCount > 0 %}
+                                    <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
+                                {% endif %}
+                        </div>              
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+{{ include('partials/footer-regroupement.html.twig') }}
+

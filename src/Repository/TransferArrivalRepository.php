@@ -109,14 +109,10 @@ class TransferArrivalRepository extends ServiceEntityRepository
      $requete = $requete
             ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.staff = :staff')
-/*             ->andWhere('t.meetingAt >= :dateStart')
-            ->andWhere('t.meetingAt <= :dateEnd') */
             ->andWhere('t.meetingAt = :meetingAt')
             ->andWhere('t.meetingPoint = :meetingPoint')
             ->andWhere('t.toArrival = :hotel')
             ->andWhere('c.agency = :agency')
-/*             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
-            ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59')) */
             ->setParameter('meetingAt', $meetingAt) 
             ->setParameter('meetingPoint', $meetingPoint) 
             ->setParameter('hotel', $hotel)
@@ -126,9 +122,8 @@ class TransferArrivalRepository extends ServiceEntityRepository
             if ($flightNumber != null) {
                 $requete = $requete
                 ->andWhere('t.flightNumber = :flightNumber')
-                ->setParameter('flightNumber', $flightNumber)     ;
+                ->setParameter('flightNumber', $flightNumber);
             }
-    
             $requete = $requete
             ->getQuery()
             ->getSingleScalarResult()
@@ -284,9 +279,6 @@ class TransferArrivalRepository extends ServiceEntityRepository
      */
     public function countNumberNonAttributedMeetingsByDate($date): int
     {
-
-        /* $dateTime = $dateTimeImmutable->format('Y-m-d'); */
-
 
         return $this->createQueryBuilder('t')
             ->select('count(t.id)')

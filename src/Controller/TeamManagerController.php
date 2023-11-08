@@ -122,24 +122,20 @@ class TeamManagerController extends AbstractController
                 'daterestantes' =>  $daterestantes
             ]); 
         } 
-
-
     }
 
     // route qui affiche la liste des rep - client en fonction de la date
     // la liste doit comporter le nombre de client par rep 
     #[Route('/team-manager/briefings/replist', name: 'app_admin_team_manager_replist',methods:["POST", "GET"])]
-    public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function repList(UserRepository $userRepository, TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
         $day = $defineQueryDate->returnDay($request);
 
-        // on fixe la date que l'on va utiliser dans le filtre
+         // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
 
-    
-        
         // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
         $repUsers = $userRepository->findAll();
 
@@ -170,6 +166,7 @@ class TeamManagerController extends AbstractController
                    $hotels = [];
                    $hotels[] = $transferArrival->getToArrival();
 
+                   //dd($transferArrival->getMeetingAt());
                    $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint() );
                    $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
                    $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint()); 
@@ -180,13 +177,12 @@ class TeamManagerController extends AbstractController
                 
                 } 
             }
-        }
+        } 
 
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
             'users' => $users,
             'regroupementsClients' => $regroupementsClients,
-            /* 'clientsListByRepAndDate' => $clientsListByRepAndDate,  */
             'countNonAssignedClient' => $countNonAssignedClient,
             'paxTab' => $paxTab,
             'paxPerHotelAgency' => $paxPerHotelAgency
