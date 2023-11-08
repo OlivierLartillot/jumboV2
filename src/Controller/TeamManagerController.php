@@ -133,7 +133,7 @@ class TeamManagerController extends AbstractController
         $day = $defineQueryDate->returnDay($request);
 
 
-         // on fixe la date que l'on va utiliser dans le filtre
+/*          // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
 
@@ -178,15 +178,15 @@ class TeamManagerController extends AbstractController
                 
                 } 
             }
-        } 
+        }  */
 
         return $this->render('team_manager/repList.html.twig', [
-            'date' => $date,
+/*             'date' => $date,
             'users' => $users,
             'regroupementsClients' => $regroupementsClients,
             'countNonAssignedClient' => $countNonAssignedClient,
             'paxTab' => $paxTab,
-            'paxPerHotelAgency' => $paxPerHotelAgency
+            'paxPerHotelAgency' => $paxPerHotelAgency */
         ]);
 
     } 
