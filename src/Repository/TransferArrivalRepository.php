@@ -97,7 +97,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return int the Sum of paxes by regroupment 
      * Attribution des représentants
      */
-    public function paxForRegroupementHotelAndAgencies($date, $hotel, $agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
+    public function paxForRegroupementHotelAndAgencies($hotel, $agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
     {
 
         $requete = $this->createQueryBuilder('t');
