@@ -16,7 +16,11 @@ class DefineQueryDate {
             
         $queryDate = $request->query->get('date');
         
-    
+        if (!preg_match('/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/', $queryDate)) { 
+            $queryDate = null;
+            $session->set('date', null);
+        }
+
         // quand on arrive, pas de query et pas de session
         if (($queryDate == NULL) and ($session->get('date') == null)) {
             $date = new DateTime('now');
@@ -27,11 +31,13 @@ class DefineQueryDate {
         }
         // si on choisi une date 
         else if ($queryDate != null) {
-            $session->set('date', $queryDate);
-            $dateEnSession = $session->get('date');
-            $date = $dateEnSession;
-            $date = new DateTimeImmutable($date);
-            $day = $date->format('Y-m-d');
+    
+               $session->set('date', $queryDate);
+               $dateEnSession = $session->get('date');
+               $date = $dateEnSession;
+               $date = new DateTimeImmutable($date);
+               $day = $date->format('Y-m-d');
+        
         }
         else if (($queryDate == NULL) and ($session->get('date') != null)) {
             $dateEnSession = $session->get('date');

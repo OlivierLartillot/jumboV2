@@ -132,6 +132,7 @@ class TeamManagerController extends AbstractController
         // utilisation du service qui définit si on utilise la query ou la session
         $day = $defineQueryDate->returnDay($request);
 
+
          // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
