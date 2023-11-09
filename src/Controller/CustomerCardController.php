@@ -294,7 +294,10 @@ class CustomerCardController extends AbstractController
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
+            $dateStart = $dateStart->format('Y-m-d');
             $dateEnd = new DateTimeImmutable('now');
+            $dateEnd = $dateEnd->format('Y-m-d');
+
         }
         //pax adults de tel date à tel date
         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
@@ -324,18 +327,16 @@ class CustomerCardController extends AbstractController
 
     #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
     public function transportationManagement(Request $request, 
-                                             TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
-                                             TransferVehicleInterHotelRepository $transferVehicleInterHotelRepository,
-                                             TransferVehicleDepartureRepository $transferVehicleDepartureRepository
-    
-        , CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+                                             TransferVehicleArrivalRepository $transferVehicleArrivalRepository, 
+                                             CustomerCardRepository $customerCardRepository, 
+                                             UserRepository $userRepository): Response
     {
 
         // TODO refaire les compagnies a partir du repos vehicleArrival
 
         $transportCompaniesArr = $transferVehicleArrivalRepository->transportCompanyList();
-        $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
-        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyList();
+/*         $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
+        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyLis t();*/
 
         $transportCompanies = [];
         foreach ($transportCompaniesArr as $company) {
