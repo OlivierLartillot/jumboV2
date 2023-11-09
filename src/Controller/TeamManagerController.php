@@ -181,12 +181,12 @@ class TeamManagerController extends AbstractController
         }  
 
         return $this->render('team_manager/repList.html.twig', [
-/*             'date' => $date,
+            'date' => $date,
             'users' => $users,
             'regroupementsClients' => $regroupementsClients,
             'countNonAssignedClient' => $countNonAssignedClient,
             'paxTab' => $paxTab,
-            'paxPerHotelAgency' => $paxPerHotelAgency */
+            'paxPerHotelAgency' => $paxPerHotelAgency
         ]);
 
     } 
