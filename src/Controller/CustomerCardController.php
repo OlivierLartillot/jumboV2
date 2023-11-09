@@ -203,7 +203,7 @@ class CustomerCardController extends AbstractController
             $rep="all";
         }
 
-        /* //pax adults de tel date à tel date
+         //pax adults de tel date à tel date
         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
         $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children");
@@ -223,7 +223,7 @@ class CustomerCardController extends AbstractController
         $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
         $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
         $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
-
+        /*
         if ($rep == "all") {
             $tabDetails = [];
             $i = 0;
