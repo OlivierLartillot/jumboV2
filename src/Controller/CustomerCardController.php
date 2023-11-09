@@ -230,13 +230,15 @@ class CustomerCardController extends AbstractController
             
             $noShow = $statusRepository->findOneBy(["name"=> "No Show"]);
 
+
             foreach ($reps as $repUser) {
              
+                
+                
                 $tabDetails[$i]['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults");
                 $tabDetails[$i]['nbrTotalAdults'] = intval($tabDetails[$i]['nbrTotalAdults']);
                 $tabDetails[$i]['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children");
                 $tabDetails[$i]['nbrTotalChildren'] = intval($tabDetails[$i]['nbrTotalChildren']);
-                
                 $tabDetails[$i]['paxTotalChildren'] = $tabDetails[$i]['nbrTotalChildren'] * 0.5;
                 $tabDetails[$i]['nbrTotalbabies'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies");
                 $tabDetails[$i]['nbrTotalbabies'] = intval($tabDetails[$i]['nbrTotalbabies']);
@@ -246,12 +248,12 @@ class CustomerCardController extends AbstractController
 
 
                 // pax adults sans no show
-                $tabDetails[$i]['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults", $noShow);
+                $tabDetails[$i]['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults");
                 $tabDetails[$i]['nbrAdultsShow'] = intval($tabDetails[$i]['nbrAdultsShow']);
-                $tabDetails[$i]['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children", $noShow);
+                $tabDetails[$i]['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children");
                 $tabDetails[$i]['nbrChildrenShow'] = intval($tabDetails[$i]['nbrChildrenShow']);
                 $tabDetails[$i]['paxChildrenShow'] = $tabDetails[$i]['nbrChildrenShow'] * 0.5;
-                $tabDetails[$i]['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies", $noShow);
+                $tabDetails[$i]['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies");
                 $tabDetails[$i]['nbrBabiesShow'] = intval($tabDetails[$i]['nbrBabiesShow']);
 
                 $tabDetails[$i]['sumNbrShow'] = $tabDetails[$i]['nbrAdultsShow'] + $tabDetails[$i]['nbrChildrenShow'] + $tabDetails[$i]['nbrBabiesShow'];
