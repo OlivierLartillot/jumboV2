@@ -223,7 +223,7 @@ class CustomerCardController extends AbstractController
         $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
         $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
         $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
-        /*
+        
         if ($rep == "all") {
             $tabDetails = [];
             $i = 0;
@@ -241,19 +241,20 @@ class CustomerCardController extends AbstractController
                 $tabDetails[$i]['sumNbrTotal'] = $tabDetails[$i]['nbrTotalAdults'] + $tabDetails[$i]['nbrTotalChildren'] + $tabDetails[$i]['nbrTotalbabies'];
                 $tabDetails[$i]['sumPaxTotal'] = $tabDetails[$i]['nbrTotalAdults'] + $tabDetails[$i]['paxTotalChildren'];
                 // pax adults sans no show
-                $tabDetails[$i]['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults", 'No Show');
+/*                 $tabDetails[$i]['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults", 'No Show');
                 $tabDetails[$i]['nbrAdultsShow'] = intval($tabDetails[$i]['nbrAdultsShow']);
                 $tabDetails[$i]['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children", 'No Show');
                 $tabDetails[$i]['nbrChildrenShow'] = intval($tabDetails[$i]['nbrChildrenShow']);
                 $tabDetails[$i]['paxChildrenShow'] = $tabDetails[$i]['nbrChildrenShow'] * 0.5;
                 $tabDetails[$i]['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies", 'No Show');
                 $tabDetails[$i]['nbrBabiesShow'] = intval($tabDetails[$i]['nbrBabiesShow']);
+
                 $tabDetails[$i]['sumNbrShow'] = $tabDetails[$i]['nbrAdultsShow'] + $tabDetails[$i]['nbrChildrenShow'] + $tabDetails[$i]['nbrBabiesShow'];
-                $tabDetails[$i]['sumPaxShow'] = $tabDetails[$i]['nbrAdultsShow'] + $tabDetails[$i]['paxChildrenShow'];
+                $tabDetails[$i]['sumPaxShow'] = $tabDetails[$i]['nbrAdultsShow'] + $tabDetails[$i]['paxChildrenShow']; */
 
                 $i++;
             }
-        }  */
+        } 
     
         if (!isset($tabDetails)) { $tabDetails = [];}
 
