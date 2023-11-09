@@ -160,10 +160,10 @@ class TeamManagerController extends AbstractController
        
                $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
            
-               $hotels = [];
                $regroupementsClients[] = $regroupements;
                foreach ($regroupements as $transferArrival) {
-
+                   
+                   $hotels = [];
                    $agency = $transferArrival->getCustomerCard()->getAgency();
                    $hotels[] = $transferArrival->getToArrival();
 
