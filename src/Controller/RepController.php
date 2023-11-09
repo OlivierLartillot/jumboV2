@@ -51,9 +51,9 @@ class RepController extends AbstractController
                     $agency = $transferArrival->getCustomerCard()->getAgency();
                     $hotel = $transferArrival->getToArrival();
                     
-                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotel,$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotel,$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotel,$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotel,$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
 
                         $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
                         $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;
