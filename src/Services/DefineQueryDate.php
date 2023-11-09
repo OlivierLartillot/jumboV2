@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefineQueryDate { 
 
-
-
     public function returnDay(Request $request) 
     {
         $session = $request->getSession();

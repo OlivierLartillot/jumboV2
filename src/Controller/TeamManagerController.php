@@ -229,9 +229,9 @@ class TeamManagerController extends AbstractController
             $paxPerHotelAgency['children'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupChildren;
             $paxPerHotelAgency['babies'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupBabies; */
             
-            $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint() );
-            $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-            $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint()); 
+            $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint() );
+            $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+            $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint()); 
        
             $paxPerHotelAgency['adults'][$agency->getId() . '_'.$hotels[0]->getId() . '_'.$transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
             $paxPerHotelAgency['children'][$agency->getId() . '_'.$hotels[0]->getId() . '_'.$transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;
