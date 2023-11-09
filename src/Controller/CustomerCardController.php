@@ -168,7 +168,7 @@ class CustomerCardController extends AbstractController
     #[Route('team-manager/pax', name: 'app_customer_card_pax', methods: ['GET'])]
     public function pax(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
-        
+     
         $users = $userRepository->findBy([],['username' => 'ASC']);
         $reps = [];
         foreach ($users as $user) {
@@ -197,8 +197,10 @@ class CustomerCardController extends AbstractController
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-                $dateEnd = new DateTimeImmutable('now');
-                $rep="all";
+            $dateStart = $dateStart->format('Y-m-d');
+            $dateEnd = new DateTimeImmutable('now');
+            $dateEnd = $dateEnd->format('Y-m-d');
+            $rep="all";
         }
 
         //pax adults de tel date à tel date

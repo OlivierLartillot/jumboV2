@@ -493,8 +493,9 @@ class CustomerCardRepository extends ServiceEntityRepository
         elseif ($age == "children") { $requete = $requete->select('sum(transferArrival.childrenNumber)');} 
         else { $requete = $requete->select('sum(transferArrival.babiesNumber)') ;} 
 
-        $requete = $requete->andWhere('transferArrival.date >= :date_start')
-        ->andWhere('transferArrival.date <= :date_end');
+        $requete = $requete
+            ->andWhere('transferArrival.date >= :date_start')
+            ->andWhere('transferArrival.date <= :date_end');
         
         if ($rep != 'all') {
             $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep);
@@ -504,8 +505,9 @@ class CustomerCardRepository extends ServiceEntityRepository
             $requete = $requete->andWhere('status.name != :status')->setParameter('status', $status);
         }
 
-        $requete = $requete->setParameter('date_start', $dateStart)
-            ->setParameter('date_end',   $dateEnd)
+        $requete = $requete
+            ->setParameter('date_start', $dateStart)
+            ->setParameter('date_end', $dateEnd)
             ->getQuery()
             ->getSingleScalarResult();
 
