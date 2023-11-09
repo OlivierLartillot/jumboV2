@@ -203,7 +203,7 @@ class CustomerCardController extends AbstractController
             $rep="all";
         }
 
-        //pax adults de tel date à tel date
+        /* //pax adults de tel date à tel date
         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
         $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children");
@@ -253,14 +253,14 @@ class CustomerCardController extends AbstractController
 
                 $i++;
             }
-        } 
+        }  */
     
         if (!isset($tabDetails)) { $tabDetails = [];}
 
         return $this->render('customer_card/calcul_pax_rep.html.twig', [
-            'reps' => $reps,
+           /*  'reps' => $reps,
             'results' => $results,
-            'tabDetailsRep' => $tabDetails
+            'tabDetailsRep' => $tabDetails */
         ]); 
     }
 
