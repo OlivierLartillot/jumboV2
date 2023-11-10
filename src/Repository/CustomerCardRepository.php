@@ -483,13 +483,13 @@ class CustomerCardRepository extends ServiceEntityRepository
     public function numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, $age, $status = null)
     {
   
-        
-
         $requete = $this->createQueryBuilder('c');
 
-        
         $requete = $requete->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard');
-        $requete = $requete->innerJoin('App\Entity\Status', 'status', 'WITH', 'transferArrival.status = status.id');
+
+        if ($status != null)  { 
+            $requete = $requete->innerJoin('App\Entity\Status', 'status', 'WITH', 'transferArrival.status = status.id');
+        }        
         
         if ($age == "adults") { $requete = $requete->select('sum(transferArrival.adultsNumber)');} 
         elseif ($age == "children") { $requete = $requete->select('sum(transferArrival.childrenNumber)');} 

@@ -233,8 +233,6 @@ class CustomerCardController extends AbstractController
             
             foreach ($reps as $repUser) {
              
-                
-                
                 $tabDetails[$i]['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults");
                 $tabDetails[$i]['nbrTotalAdults'] = intval($tabDetails[$i]['nbrTotalAdults']);
                 $tabDetails[$i]['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children");
@@ -266,14 +264,14 @@ class CustomerCardController extends AbstractController
         if (!isset($tabDetails)) { $tabDetails = [];}
 
         return $this->render('customer_card/calcul_pax_rep.html.twig', [
-           /*  'reps' => $reps,
+            'reps' => $reps,
             'results' => $results,
-            'tabDetailsRep' => $tabDetails */
+            'tabDetailsRep' => $tabDetails
         ]); 
     }
 
     #[Route('/pax/rep/{id}', name: 'app_customer_card_pax_par_rep', methods: ['GET', 'POST'])]
-    public function paxParRep(Request $request, User $user, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
+    public function paxParRep(Request $request, User $user, CustomerCardRepository $customerCardRepository, StatusRepository $statusRepository): Response
     { 
         
         //! Attention si l id est différent du user courant, pas le droit
@@ -305,8 +303,10 @@ class CustomerCardController extends AbstractController
             $dateStart = $dateStart->format('Y-m-d');
             $dateEnd = new DateTimeImmutable('now');
             $dateEnd = $dateEnd->format('Y-m-d');
-
         }
+
+        $noShow = $statusRepository->findOneBy(["name"=> "No Show"]);
+
         //pax adults de tel date à tel date
         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
@@ -318,12 +318,12 @@ class CustomerCardController extends AbstractController
         $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
         $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
         // pax adults sans no show
-        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", 'No Show');
+        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", $noShow);
         $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
-        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children", 'No Show');
+        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children", $noShow);
         $results['nbrChildrenShow'] = intval($results['nbrChildrenShow']);
         $results['paxChildrenShow'] = $results['nbrChildrenShow'] * 0.5;
-        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies", 'No Show');
+        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies", $noShow);
         $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
         $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
         $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
