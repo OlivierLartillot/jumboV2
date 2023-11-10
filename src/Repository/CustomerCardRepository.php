@@ -483,6 +483,8 @@ class CustomerCardRepository extends ServiceEntityRepository
     public function numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, $age, $status = null)
     {
   
+        
+
         $requete = $this->createQueryBuilder('c');
 
         
@@ -501,8 +503,10 @@ class CustomerCardRepository extends ServiceEntityRepository
             $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep);
         }
 
-        if ($status == 'No Show') {
-            $requete = $requete->andWhere('status.name != :status')->setParameter('status', $status);
+        if ($status != null)  {
+            if ($status->getName() == 'No Show') {
+                $requete = $requete->andWhere('status != :status')->setParameter('status', $status);
+            }
         }
 
         $requete = $requete
@@ -510,7 +514,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->setParameter('date_end', $dateEnd)
             ->getQuery()
             ->getSingleScalarResult();
-
+       
         return $requete;
     }
 
