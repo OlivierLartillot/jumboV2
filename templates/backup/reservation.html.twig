@@ -1,0 +1,61 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Reservations backup', title: 'Reservations backup'|trans}) }}
+
+   
+
+        <div class="row mb-3">    
+            <form action={{ path('app_backup_reservation') }} method="GET">
+                <label for="date">Choose a creation date</label><br>
+                <input id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
+                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+            </form>
+        </div>
+
+        <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {% if (transferArrivals|length == 0) %} 
+                                There are no arrivals created on {{date|date('d/m/Y') }}
+                            {% else %}  
+                                <a href="">Delete All</a>
+                                <table class="table table-bordered border-primary mb-0 text-center">
+
+                                    <thead class="bg-primary bg-gradient text-light border-end-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>{% trans %}Client{% endtrans %}</th>
+                                            <th>{% trans %}Airport{% endtrans %}</th>
+                                            <th>{% trans %}Hotel{% endtrans %}</th>
+                                            <th>{% trans %}Flight Number{% endtrans %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% set i = 1 %}
+                                        {% for transferArrival in transferArrivals %}
+                                        <tr>
+                                            <td>{{ i }}</td>
+                                            <td>{{ transferArrival.customerCard.holder }}</td>
+                                            <td>{{ transferArrival.fromStart }}</td>
+                                            <td>{{ transferArrival.toArrival }}</td>
+                                            <td>{{ transferArrival.flightNumber|upper }}</td>
+                                        </tr>         
+                                        {% set i = 1 %}          
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            {% endif %}
+
+
+
+                        </div>
+                    </div>
+                </div>
+           
+        </div>
+      
+
+
+{{ include('partials/footer-regroupement.html.twig') }}

@@ -43,6 +43,21 @@ class TransferArrivalRepository extends ServiceEntityRepository
     /**
      * @return TransferArrival[] Returns an array of TransferArrival objects
      */
+    public function findAllByCreatedAt($date): array
+    {
+
+        return $this->createQueryBuilder('t')
+                    ->where('t.createdAt >= :dateStart')
+                    ->andWhere('t.createdAt <= :dateEnd')
+                    ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+                    ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    /**
+     * @return TransferArrival[] Returns an array of TransferArrival objects
+     */
     public function findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber): array
     {
             
@@ -160,7 +175,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
     {
 
         $requete = $this->createQueryBuilder('t')
-            ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.meetingAt >= :dateStart')
             ->andWhere('t.meetingAt <= :dateEnd')
             ->andWhere('t.toArrival = :hotel')

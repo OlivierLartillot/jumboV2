@@ -68,6 +68,9 @@ class TransferDeparture
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $babiesNumber = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -265,6 +268,18 @@ class TransferDeparture
     public function setBabiesNumber(?int $babiesNumber): static
     {
         $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

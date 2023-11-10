@@ -71,6 +71,14 @@ class TransferArrival
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $statusUpdatedAt = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+
+    public function __construct(){
+        $this->createdAt = new \DateTimeImmutable('now');
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -84,18 +92,6 @@ class TransferArrival
     public function setServiceNumber(string $serviceNumber): self
     {
         $this->serviceNumber = $serviceNumber;
-
-        return $this;
-    }
-
-    public function getDateHour(): ?\DateTimeImmutable
-    {
-        return $this->dateHour;
-    }
-
-    public function setDateHour(\DateTimeImmutable $dateHour): self
-    {
-        $this->dateHour = $dateHour;
 
         return $this;
     }
@@ -305,6 +301,18 @@ class TransferArrival
     public function setStatusUpdatedAt(?\DateTimeImmutable $statusUpdatedAt): static
     {
         $this->statusUpdatedAt = $statusUpdatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -258,7 +258,6 @@ class TeamManagerController extends AbstractController
             
             // pour chacun de ces objets, mettre a jour time, rep et place
             
-            $testCustomersId = [];
             foreach ($request->request as $key => $currentRequest) {
                 
                 // convertir la clé en tableau
@@ -268,7 +267,7 @@ class TeamManagerController extends AbstractController
                 $firstClient =  $transfer->getCustomerCard();
                 $staff = $transfer->getStaff();
                 $agency = $firstClient->getAgency();
-                $flightNumber = $transfer->getFlightNumber();
+
                 $hotels = []; 
 
                 foreach ($firstClient->getTransferArrivals() as $arrivals) {
