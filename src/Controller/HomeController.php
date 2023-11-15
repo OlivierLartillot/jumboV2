@@ -416,7 +416,6 @@ class HomeController extends AbstractController
                 if (($nbReservationNumberInCSV == $countCLientArrivalBddThisDay) AND ($nbReservationNumberInCSV == 1)) {
                     $transferArrivals = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber, $dateFormat,  $record['Titular']);
                     $customerCard = $transferArrivals[0]->getCustomerCard();
-                        dd('ici');
                     // mettre a jour le customerCard    
                     $customerCard->setReservationNumber($reservationNumber);
                     $customerCard->setJumboNumber($jumboNumber);
@@ -432,7 +431,7 @@ class HomeController extends AbstractController
                     $dateTimeBDD = new DateTime($dateTransfer . '' . $heureTransfer);
                     
                 
-                    /* if ( ($fechaHora != $transfer->getDateHour()->format('m/d/Y'. ' H:i')) ){  */
+                    
                     if ( ($dateTime != $dateTimeBDD) ){ 
                         // mettre ajour le briefing
                         if ($record['Fecha/Hora Origen']) {
@@ -447,7 +446,6 @@ class HomeController extends AbstractController
                     $transferArrivals[0]->setFromStart($desde);
                     $transferArrivals[0]->setToArrival($hasta);
                     $transferArrivals[0]->setServiceNumber($record['Número Servicio']);
-                    $transferArrivals[0]->setDateHour($dateTime); 
                     $transferArrivals[0]->setFlightNumber($flightNumber);
                     $transferArrivals[0]->setDate($dateTime);
                     $transferArrivals[0]->setHour($dateTime);
@@ -495,7 +493,6 @@ class HomeController extends AbstractController
                     $transferArrival->setStatusUpdatedBy($user);
                     $transferArrival->setMeetingAt($meetingAt);
                     $transferArrival->setServiceNumber($record['Número Servicio']);
-                    $transferArrival->setDateHour($dateTime); 
                     $transferArrival->setDate($dateTime);
                     $transferArrival->setHour($dateTime);
                     $transferArrival->setFlightNumber($flightNumber);
@@ -528,7 +525,6 @@ class HomeController extends AbstractController
                                 // Création de l'arrival
                                 $transferArrival = new TransferArrival();                
                                 $transferArrival->setServiceNumber($record['Número Servicio']);
-                                $transferArrival->setDateHour($dateTime); 
                                 $transferArrival->setDate($dateTime);
                                 $transferArrival->setHour($dateTime);
                                 $transferArrival->setFlightNumber($flightNumber);
@@ -580,7 +576,6 @@ class HomeController extends AbstractController
                             $transferArrival->setStatusUpdatedAt(new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo')));
                             $transferArrival->setStatusUpdatedBy($user);                     
                             $transferArrival->setServiceNumber($record['Número Servicio']);
-                            $transferArrival->setDateHour($dateTime); 
                             $transferArrival->setDate($dateTime);
                             $transferArrival->setHour($dateTime);
                             $transferArrival->setFlightNumber($flightNumber);
@@ -608,7 +603,6 @@ class HomeController extends AbstractController
                     // insérer les informations associées
                     // sinon on va créer un nouvel objet
                     $transferArrival->setServiceNumber($record['Número Servicio']);
-                    $transferArrival->setDateHour($dateTime); 
                     $transferArrival->setDate($dateTime);
                     $transferArrival->setHour($dateTime);
                     $transferArrival->setFlightNumber($flightNumber);
