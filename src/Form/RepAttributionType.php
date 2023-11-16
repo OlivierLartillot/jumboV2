@@ -42,6 +42,7 @@ class RepAttributionType extends AbstractType
             'class' => User::class,
             'autocomplete' =>false,
             'choices' => $repList,
+            'data' => $repList[0]
          
         ] )
         ->add('validate', SubmitType::class, [
