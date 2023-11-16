@@ -22,10 +22,16 @@ class RepAttributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $repList = [];
+        // trouve le skip pour le mettre en premier
+        $skip =  $this->userRepository->findOneBy(['username' => 'skip']);
+        $repList[] = $skip; 
         $users = $this->userRepository->findBy([], ['username' => 'ASC']);
         foreach ($users as $user) {
             if (in_array('ROLE_REP', $user->getRoles())) {
-                $repList[] = $user;
+                // mais si $user = skip tu le sautes !!!
+                if ($user->getUsername() != 'skip' ) { 
+                    $repList[] = $user;
+                }
             }
         }
    
@@ -33,7 +39,6 @@ class RepAttributionType extends AbstractType
         $builder
         ->add('staff', EntityType::class, [
             'label' => "Reps",
-            'placeholder' => 'Choose a Rep',
             'class' => User::class,
             'autocomplete' =>false,
             'choices' => $repList,

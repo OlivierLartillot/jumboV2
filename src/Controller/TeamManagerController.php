@@ -28,7 +28,8 @@ class TeamManagerController extends AbstractController
     public function index(Request $request, 
                         CustomerCardRepository $customerCardRepository,  
                         DefineQueryDate $defineQueryDate,
-                        TransferArrivalRepository $transferArrivalRepository
+                        TransferArrivalRepository $transferArrivalRepository,
+                        UserRepository $userRepository
                         ): Response
     {
 
@@ -53,6 +54,12 @@ class TeamManagerController extends AbstractController
             ));
 
         $daterestantes = $transferArrivalRepository->datesForCustomersWithoutRep();
+
+        // le représentant "skip" si ivan ne veut pas attribuer des gens tout de suite
+        $skipUsername = 'skip';
+        $rep = $userRepository->findBy(['username' => $skipUsername]);
+        $datesWithSkippedClients = $transferArrivalRepository->findDatesWithSkippedClients($rep);
+        
         // si il y a encore des clients (firstclient)
         if ($firstClient != null) {
             //On récupère l'hotel d'arrivé
@@ -83,8 +90,7 @@ class TeamManagerController extends AbstractController
                 $arrivalsWithoutRep = $transferArrivalRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency);
                 
                 // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
-          /*       $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency); */
-                
+                /* $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency); */
                 
                 // pour chacun de ces objets, leur attribuer le staff correpondant
                 foreach ($arrivalsWithoutRep as $transferArrival) {
@@ -107,7 +113,8 @@ class TeamManagerController extends AbstractController
                 'paxAdults' => $paxAdults,
                 'paxChildren' => $paxChildren,
                 'paxBabies' => $paxBabies,
-                'daterestantes' => $daterestantes
+                'daterestantes' => $daterestantes,
+                'skipDates' => $datesWithSkippedClients
             ]);
         }  
 
@@ -119,7 +126,8 @@ class TeamManagerController extends AbstractController
                 'paxAdults' => $paxAdults,
                 'paxChildren' => $paxChildren,
                 'paxBabies' => $paxBabies,
-                'daterestantes' =>  $daterestantes
+                'daterestantes' =>  $daterestantes,
+                'skipDates' => $datesWithSkippedClients
             ]); 
         } 
     }

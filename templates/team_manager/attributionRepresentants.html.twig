@@ -71,8 +71,8 @@
     </div>
 
     <div class="row">
-        <div class="col">
-             <div class="card">
+        <div class="col-12 col-md-6">
+            <div class="card">
                 <div class="card-body">
                     <div>
                         <h4 class="mb-1 mt-1">{% trans %}Dates with unassigned reps{% endtrans %}</h4>
@@ -86,6 +86,24 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <h4 class="mb-1 mt-1">{% trans %}Skipped Clients{% endtrans %}</h4>
+                            <p>Go to rep briefing to assign skipped clients</p>
+                            <ul>
+                            {% if skipDates is not null %}
+                                {% for result in skipDates|sort((a, b) => a.date <=> b.date) %}
+                                    <li><a href="replist?date={{result.date|date_modify("+1 day")|date('Y-m-d') }}">{{ result.date|date_modify("+1 day")|date('d-m-Y') }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            </ul>
+                    </div>
+                </div>
+            </div>
+         
         </div>
     </div>
 

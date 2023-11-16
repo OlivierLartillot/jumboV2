@@ -65,6 +65,7 @@ class BackupController extends AbstractController
 
             $transferArrivals = $transferArrivalRepository->findAllByCreatedAt($date);
 
+
             $isClientinterHotelAssociated = false;
             $isClientDepartureAssociated = false;
             foreach ($transferArrivals as $transfer) {

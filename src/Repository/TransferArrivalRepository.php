@@ -374,6 +374,22 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return TransferArrival[] Returns an array of TransferArrival objects by the day, the nature transfer and service number
+     * Cette requête sert à des vérifications pendant l import du csv
+     */
+    public function findDatesWithSkippedClients($rep): array
+    { 
+        return $this->createQueryBuilder('t')
+            ->select('t.date')
+            ->where('t.staff = :rep')
+            ->setParameter('rep', $rep)
+            ->groupBy('t.date')      
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @return TransferArrival[] counts number of time arrival exist EXCEPT TODAY
      * Cette requête sert à des vérifications pendant l import du csv
      */
