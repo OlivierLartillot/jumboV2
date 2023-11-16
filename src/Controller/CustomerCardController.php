@@ -173,7 +173,9 @@ class CustomerCardController extends AbstractController
         $reps = [];
         foreach ($users as $user) {
             if (in_array("ROLE_REP", $user->getRoles() )) {
-                $reps[] = $user;
+                if ($user->getUsername() != 'skip') {
+                    $reps[] = $user;
+                }
             }
         }
         // on va ranger les résultats dans un tableau pour les transmettre a la vue en une fois
