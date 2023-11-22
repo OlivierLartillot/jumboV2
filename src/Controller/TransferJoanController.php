@@ -57,6 +57,11 @@ class TransferJoanController extends AbstractController
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
         $mimeType = $fileToUpload->getMimeType();
         $error = $fileToUpload->getError();
+
+        $ecrituresDeLlegada = ['llegada', 'llegadas'];
+        $ecrituresDeInterHotel = ['interhotel', 'interhotels' ,'inter-hotel' ,'inters-hotel','inter-hotels','inters-hotels', 'inter hotel', 'inters hotel', 'inter hotels', 'inters hotels'];
+        $ecrituresDeSalidas = ['salida', 'salidas'];
+
  
         // récupération du token
         $submittedToken = $request->request->get('token');
@@ -98,21 +103,31 @@ class TransferJoanController extends AbstractController
         // LLEGADAS - INTERHOTEL - SALIDAS -> llegadas - interhotel - salidas
         $natureTransfer = strtolower($rows[2][1]);  
         
-        if ($natureTransfer == 'llegadas') { 
+        if (in_array($natureTransfer,$ecrituresDeLlegada)) { 
             $natureTransferRepository = $transferArrivalRepository;
             $newTransfer = new TransferArrival ;
             $newTransferVehicleArrival = new TransferVehicleArrival();
         }
-        else if ($natureTransfer == 'interhotel') { 
+        else if (in_array($natureTransfer,$ecrituresDeInterHotel)) { 
             $natureTransferRepository = $transferInterHotelRepository;
             $newTransfer = new TransferInterHotel();
         }
-        else if ($natureTransfer == 'salidas') { 
+        else if (in_array($natureTransfer,$ecrituresDeSalidas)) { 
             $natureTransferRepository = $transferDepartureRepository;
             $newTransfer = new TransferDeparture();
         } else {
-            $errorsImportManager->addErrors('Code import 30 - In cell B3 should be written: LLEGADAS, INTERHOTEL or SAlIDAS');
-            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorDetails]);
+            $listeLlegada = '';
+            $listeInterHotel = '';
+            $listesalidas = '';
+            foreach ($ecrituresDeLlegada as $ecriture) { $listeLlegada .= '- ' . $ecriture . ' '; }
+            foreach ($ecrituresDeInterHotel as $ecriture) { $listeInterHotel .= '- ' . $ecriture . ' '; }
+            foreach ($ecrituresDeSalidas as $ecriture) { $listesalidas .= '- ' . $ecriture . ' '; }
+
+            $errorsImportManager->addErrors('Code import 30 - In cell B3 should be written:');
+            $errorsImportManager->addErrors('<b>Arrival:</b> ' . $listeLlegada);
+            $errorsImportManager->addErrors('<b>InterHotel:</b> ' .$listeInterHotel);
+            $errorsImportManager->addErrors('<b>Departure:</b>  ' . $listesalidas);
+            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' =>  $errorsImportManager->getErrors()]);
         }
         
         if (strtolower($rows[8][0]) != 'num reserva') {
@@ -164,20 +179,33 @@ class TransferJoanController extends AbstractController
                         return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                     }
                 }
+                // liste des écritures valables
+                $liste = '';
                 // check si le in/out est == a B3
-                if ($natureTransfer == 'llegadas') {
-                    if (strtolower($row[12]) != 'llegada') {
+                if (in_array($natureTransfer,$ecrituresDeLlegada)) {
+                    if (!in_array(strtolower($row[12]),$ecrituresDeLlegada))  {
                         $natureTransferError = true;
+                        
+                        foreach ($ecrituresDeLlegada as $ecriture) { $liste .= '- ' . $ecriture . ' '; }
+                        $errorsImportManager->addErrors('Code import 30 - In column M (in/out) should be written: ' . $liste);
+                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                     }
                 } 
-                else if ($natureTransfer == 'interhotel') {
-                    if (strtolower($row[12]) != 'interhotel') {
+                else if (in_array($natureTransfer,$ecrituresDeInterHotel)) {
+                    if ( !in_array(strtolower($row[12]), $ecrituresDeInterHotel) )
+                    {
                         $natureTransferError = true;
+                        foreach ($ecrituresDeInterHotel as $ecriture) { $liste .= '- ' . $ecriture . ' '; }
+                        $errorsImportManager->addErrors('Code import 30 - In column M (in/out) should be written: ' . $liste);
+                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                     }
                 }
                 else {
-                    if (strtolower($row[12]) != 'salida') {
+                    if (!in_array(strtolower($row[12]),$ecrituresDeSalidas)) {
                         $natureTransferError = true;
+                        foreach ($ecrituresDeSalidas as $ecriture) { $liste .= '- ' . $ecriture . ' '; }
+                        $errorsImportManager->addErrors('Code import 30 - In column M (in/out) should be written: ' . $liste);
+                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                     }
                 }
                 //sinon renvoie l'erreur
@@ -315,7 +343,7 @@ class TransferJoanController extends AbstractController
                 if (!$transfersExistent) {       
                     // l'arrivée (transferArrival doit etre uniquement créé par ivan ou son fichier)
                     // par conséquent si y a une fiche client mais pas d'arrivée ce jour, on ne peut pas l'importer
-                    if ($natureTransfer == "llegadas") {
+                    if (in_array($natureTransfer,$ecrituresDeLlegada)) {
                         $errorClients[] = 'You cannot create an arrival transfer if there is no arrival on this day. ' . ucfirst($nombre) . ', reservation number ' . $reservaId.'  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival.';
                     } else {
     
@@ -336,7 +364,7 @@ class TransferJoanController extends AbstractController
                         $newTransfer->setChildrenNumber($ni);
                         $newTransfer->setBabiesNumber($bb);                    
                         
-                        if ($natureTransfer == "salidas") {
+                        if (in_array($natureTransfer,$ecrituresDeSalidas)) {
                             $newTransfer->setFlightNumber($vuelo);
                             $newTransfer->setHour($hour);
                         }
@@ -353,7 +381,7 @@ class TransferJoanController extends AbstractController
                     if ( ($countEachServiceNumbersInCSV[$reservaId] == 1) and (count($transfersExistent) == 1) ) {
                         
                         // si c est une arrivée 
-                        if ($natureTransfer == "llegadas") {
+                        if (in_array($natureTransfer,$ecrituresDeLlegada)) {
                             // il y a un vehicule pour une arrivée et 1 SEUL PRESENT EN BDD 
                             // si le transfer vehicle existe MAJ sinon NEW
                             $transferVehicleArrivalexiste = $transfersExistent[0]->getTransferVehicleArrival();
@@ -398,7 +426,7 @@ class TransferJoanController extends AbstractController
                             $transfersExistent[0]->setChildrenNumber($ni);
                             $transfersExistent[0]->setBabiesNumber($bb);                    
                             
-                            if ($natureTransfer == "salidas") {
+                            if (in_array($natureTransfer,$ecrituresDeSalidas)) {
                                 $transfersExistent[0]->setFlightNumber($vuelo);
                                 $transfersExistent[0]->setHour($hour);
                             }
@@ -407,7 +435,7 @@ class TransferJoanController extends AbstractController
                     else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
                         
                         // si c est une arrivée = del transferVehicle   
-                        if ($natureTransfer == "llegadas") {                            
+                        if (in_array($natureTransfer,$ecrituresDeLlegada)) {                            
                             // si dans le csv c'est présent plusieurs fois on supprime tous dans la bdd 
                             
                             // rechercher l'arrivée par le flight number
@@ -474,7 +502,7 @@ class TransferJoanController extends AbstractController
                             $newTransfer->setChildrenNumber($ni);
                             $newTransfer->setBabiesNumber($bb);                    
                             
-                            if ($natureTransfer == "salidas") {
+                            if (in_array($natureTransfer,$ecrituresDeSalidas)) {
                                 $newTransfer->setFlightNumber($vuelo);
                                 $newTransfer->setHour($hour);
                             }
@@ -499,7 +527,7 @@ class TransferJoanController extends AbstractController
         //****************************************************************************************************************************************//
             if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
             
-                if ($natureTransfer == "llegadas") {
+                if (in_array($natureTransfer,$ecrituresDeLlegada)) {
                     // construit un tableau pour chaque arrivée de ce jour
                     $clientNumberArrivalsInBdd = [];    
                     // recherche toute les arrivées de ce jour
@@ -532,7 +560,7 @@ class TransferJoanController extends AbstractController
                     
                     }
                 }
-                else if ($natureTransfer == "interhotel") {
+                else if (in_array($natureTransfer,$ecrituresDeInterHotel)) {
                     $clientNumberTransfersInBdd = []; 
                     $interHotels = $transferInterHotelRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
                     foreach ($interHotels as $interHotel) { 

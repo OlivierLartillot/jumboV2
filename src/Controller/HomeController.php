@@ -248,8 +248,6 @@ class HomeController extends AbstractController
             //**************** FIN PREMIER TESTS ET GESTION DES ERREURS ****************//
             //**************************************************************************//
             
-
-
             //$serviceNumbersInCSV[] = 1611603;
             // return [1611603 => 1 , 1611604 => 2 ]
             $serviceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
