@@ -24,7 +24,9 @@ class RepAttributionType extends AbstractType
         $repList = [];
         // trouve le skip pour le mettre en premier
         $skip =  $this->userRepository->findOneBy(['username' => 'skip']);
-        $repList[] = $skip; 
+        if ($skip != null) {
+            $repList[] = $skip; 
+        }
         $users = $this->userRepository->findBy([], ['username' => 'ASC']);
         foreach ($users as $user) {
             if (in_array('ROLE_REP', $user->getRoles())) {

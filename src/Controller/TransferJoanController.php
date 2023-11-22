@@ -253,9 +253,9 @@ class TransferJoanController extends AbstractController
 
                 
                 $date= explode("/", $dia_vuelo);
-                $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
+                $dateFormat = $date[2] . '-' . $date[0] .'-'. $date[1];
                 $dia_vuelo = new DateTimeImmutable($dateFormat);
-                
+        
                 if ($hora_v != "") {
                     $hour = explode(':', $hora_v);
                     $dateTimeFormat = $hour[0] .':'. $hour[1];
