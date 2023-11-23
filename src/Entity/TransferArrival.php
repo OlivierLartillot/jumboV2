@@ -17,8 +17,8 @@ class TransferArrival
     #[ORM\Column(length: 50)]
     private ?string $serviceNumber = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $dateHour = null;
+/*     #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateHour = null; */
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $flightNumber = null;
@@ -35,16 +35,50 @@ class TransferArrival
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
-    #[ORM\Column]
-    private ?bool $isCollective = null;
-
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $hour = null;
 
+    #[ORM\OneToOne(mappedBy: 'transferArrival', cascade: ['persist', 'remove'])]
+    private ?TransferVehicleArrival $transferVehicleArrival = null;
 
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $adultsNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $childrenNumber = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $babiesNumber = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?MeetingPoint $meetingPoint = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $meetingAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?User $staff = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?Status $status = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    private ?User $statusUpdatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $statusUpdatedAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+
+    public function __construct(){
+        $this->createdAt = new \DateTimeImmutable('now');
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -58,18 +92,6 @@ class TransferArrival
     public function setServiceNumber(string $serviceNumber): self
     {
         $this->serviceNumber = $serviceNumber;
-
-        return $this;
-    }
-
-    public function getDateHour(): ?\DateTimeImmutable
-    {
-        return $this->dateHour;
-    }
-
-    public function setDateHour(\DateTimeImmutable $dateHour): self
-    {
-        $this->dateHour = $dateHour;
 
         return $this;
     }
@@ -122,18 +144,6 @@ class TransferArrival
         return $this;
     }
 
-    public function isIsCollective(): ?bool
-    {
-        return $this->isCollective;
-    }
-
-    public function setIsCollective(bool $isCollective): self
-    {
-        $this->isCollective = $isCollective;
-
-        return $this;
-    }
-
     public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
@@ -154,6 +164,155 @@ class TransferArrival
     public function setHour(\DateTimeImmutable $hour): self
     {
         $this->hour = $hour;
+
+        return $this;
+    }
+
+    public function getTransferVehicleArrival(): ?TransferVehicleArrival
+    {
+        return $this->transferVehicleArrival;
+    }
+
+    public function setTransferVehicleArrival(?TransferVehicleArrival $transferVehicleArrival): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($transferVehicleArrival === null && $this->transferVehicleArrival !== null) {
+            $this->transferVehicleArrival->setTransferArrival(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($transferVehicleArrival !== null && $transferVehicleArrival->getTransferArrival() !== $this) {
+            $transferVehicleArrival->setTransferArrival($this);
+        }
+
+        $this->transferVehicleArrival = $transferVehicleArrival;
+
+        return $this;
+    }
+
+    public function getAdultsNumber(): ?int
+    {
+        return $this->adultsNumber;
+    }
+
+    public function setAdultsNumber(?int $adultsNumber): static
+    {
+        $this->adultsNumber = $adultsNumber;
+
+        return $this;
+    }
+
+    public function getChildrenNumber(): ?int
+    {
+        return $this->childrenNumber;
+    }
+
+    public function setChildrenNumber(?int $childrenNumber): static
+    {
+        $this->childrenNumber = $childrenNumber;
+
+        return $this;
+    }
+
+    public function getBabiesNumber(): ?int
+    {
+        return $this->babiesNumber;
+    }
+
+    public function setBabiesNumber(?int $babiesNumber): static
+    {
+        $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+
+    public function getMeetingPoint(): ?MeetingPoint
+    {
+        return $this->meetingPoint;
+    }
+
+    public function setMeetingPoint(?MeetingPoint $meetingPoint): static
+    {
+        $this->meetingPoint = $meetingPoint;
+
+        return $this;
+    }
+
+    public function getMeetingAt(): ?\DateTimeImmutable
+    {
+        return $this->meetingAt;
+    }
+
+    public function setMeetingAt(?\DateTimeImmutable $meetingAt): static
+    {
+        $this->meetingAt = $meetingAt;
+
+        return $this;
+    }
+    public function getMeetingAtDate() {
+        return $this->meetingAt->format('d-m-Y');
+    }
+
+    public function getMeetingAtTime() {
+        return $this->meetingAt->format('H:i');
+    }
+
+    public function getStaff(): ?User
+    {
+        return $this->staff;
+    }
+
+    public function setStaff(?User $staff): static
+    {
+        $this->staff = $staff;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatusUpdatedBy(): ?User
+    {
+        return $this->statusUpdatedBy;
+    }
+
+    public function setStatusUpdatedBy(?User $statusUpdatedBy): static
+    {
+        $this->statusUpdatedBy = $statusUpdatedBy;
+
+        return $this;
+    }
+
+    public function getStatusUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->statusUpdatedAt;
+    }
+
+    public function setStatusUpdatedAt(?\DateTimeImmutable $statusUpdatedAt): static
+    {
+        $this->statusUpdatedAt = $statusUpdatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

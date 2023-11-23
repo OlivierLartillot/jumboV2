@@ -16,7 +16,6 @@
                                 <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
                             </div>
 
-
                         </div>
                     </div>
     
@@ -36,37 +35,36 @@
                             </thead>
                             <tbody>
 
-                                    {% for transferArrival in regroupements|sort((a, b) => a.customerCard.meetingAt <=> b.customerCard.meetingAt) %}
+                                    {% for transferArrival in regroupements|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
                                         {% set agency = transferArrival.customerCard.agency.id %}
                                         {% set hotel = transferArrival.toArrival.id %}
                                         {% set flightNumber = transferArrival.flightNumber %}
 
                                         <tr>
                                             <td>
-                                                <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~flightNumber] }}, 
-                                                <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~flightNumber] }}, 
-                                                <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~flightNumber] }}<hr>
+                                                <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}<hr>
                                                {#  {{  dump(infosTransfer) }} #}
                                                     Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
                                                     {{ transferArrival.toArrival|title}} 
                                                 <br>{{ transferArrival.customerCard.agency|title }}
                                             </td>
-                                            <td> <input type="time" value="{{ transferArrival.customerCard.getMeetingAtTime}}" name="hour_{{ transferArrival.customerCard.id }}"/></td> 
+                                            <td> <input type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/></td> 
                                             <td> 
-                                                <select name="staff_{{ transferArrival.customerCard.id }}">
+                                                <select name="staff_{{ transferArrival.id }}" title="Rep">
                                                     {% for user in users %}
                                                         {% if "ROLE_REP" in user.roles %}
-                                                            <option value="{{user.id}}" {{ user.id == transferArrival.customerCard.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                            <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </select>
                                             </td> 
                                             <td>
-                                                <select name="meetingPoint_{{ transferArrival.customerCard.id }}">
+                                                <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
                                                     {% for meetingPoint in meetingPoints %}
-
-                                                        {% if  transferArrival.customerCard.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == transferArrival.customerCard.meetingPoint.id ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                        {% if (meetingPoint is not null)  %}
+                                                            <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
                                                         {% else %}
                                                             <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
                                                         {% endif %}
@@ -116,7 +114,7 @@
     #}
                             </tbody>
                         </table>
-                    </div>
+               
 
                         <input type="submit" value="{% trans %}Submit{% endtrans %}">
                     </form>

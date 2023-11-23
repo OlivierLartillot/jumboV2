@@ -839,15 +839,15 @@
       </trans-unit>
       <trans-unit id="Xy7s5WD" resname="clients do not">
         <source>clients do not</source>
-        <target>le client n'ont pas</target>
+        <target>clients n'ont pas</target>
       </trans-unit>
       <trans-unit id="ai3fN46" resname="client does not">
         <source>client does not</source>
-        <target>le client n'a pas</target>
+        <target>client n'a pas</target>
       </trans-unit>
       <trans-unit id="w8KBmNE" resname="yet have a meeting time assigned">
         <source>yet have a meeting time assigned</source>
-        <target>Heure de réunion déjà assignée</target>
+        <target>d'heure de réunion assignée</target>
       </trans-unit>
       <trans-unit id="9Y.W1ZG" resname="No or more client groups to assign for this date">
         <source>No or more client groups to assign for this date</source>
