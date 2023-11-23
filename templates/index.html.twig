@@ -1,4 +1,4 @@
-{{ include('partials/header-reproupement.html.twig') }}
+{# {{ include('partials/header-reproupement.html.twig') }}
 
                         {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Dashboard'}) }}
 
@@ -9,7 +9,7 @@
                                         <div>
                                             <div class="row">
                                             <h5>Transfer Management</h5>
-                                            {% if doublonsArrivee == true %}
+                                            {% if doublonsArrivee %}
                                                 <div class="col-md-4">
                                                     <a href="{{ path('duplicate_transfers', { param: 'arrival'})}}" class="text-danger">
                                                         <div class="card mt-4 maintenance-box border border-danger">
@@ -32,7 +32,7 @@
                                             {% endif %}
 
 
-                                            {% if doublonsInterHotel == true %}
+                                            {% if doublonsInterHotel %}
                                                 <div class="col-md-4">
                                                     <a href="{{ path('duplicate_transfers', { param: 'interhotel'})}}" class="text-danger">
                                                         <div class="card mt-4 maintenance-box border border-danger">
@@ -55,7 +55,7 @@
                                             {% endif %}
 
 
-                                            {% if doublonsDepart == true %}
+                                            {% if doublonsDepart %}
                                                 <div class="col-md-4">
                                                     <a href="{{ path('duplicate_transfers', { param: 'departure'})}}" class="text-danger">
                                                         <div class="card mt-4 maintenance-box border border-danger">
@@ -90,3 +90,4 @@
 
 
 
+ #}
