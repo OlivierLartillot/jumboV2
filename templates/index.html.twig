@@ -2,7 +2,7 @@
 
                         {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Dashboard'}) }}
 
-                        <div class="row">
+ {#                        <div class="row">
                             <div class="col">
                                 <div class="card">
                                     <div class="card-body">
@@ -79,43 +79,10 @@
 
                                             {% endif %}
                                         </div>
-
-{#                                             <ul>
-                                            {% for doublon in doublonsArrivee %} 
-                                                <li>
-                                                    <a href="{{path('app_customer_card_show',{id: doublon.transferArrival.customerCard.id } )}}">{{ doublon.transferArrival.customerCard.holder}}</a>
-
-                                                    <a href="{{ path('ignore_duplicate_transfers', {id: doublon.transferArrival.customerCard.id, param:'arrival' }) }}" class="btn btn-danger">Ignore duplicate</a>
-                                                </li>
-                                            {% endfor %} 
-                                            </ul>
-
-                                            <ul>
-                                            {% for doublon in doublonsInterHotel %} 
-                                                <li>
-                                                    <a href="{{path('app_customer_card_show',{id: doublon.transferInterHotel.customerCard.id } )}}">{{ doublon.transferInterHotel.customerCard.holder}}</a>
-
-                                                    <a href="{{ path('ignore_duplicate_transfers', {id: doublon.transferInterHotel.customerCard.id, param:'interhotel' }) }}" class="btn btn-danger">Ignore duplicate</a>
-                                                </li>
-                                            {% endfor %} 
-                                            </ul>
-
-                                            <ul>
-                                            {% for doublon in doublonsDepart %} 
-                                                <li>
-                                                    <a href="{{path('app_customer_card_show',{id: doublon.transferDeparture.customerCard.id } )}}">{{ doublon.transferDeparture.customerCard.holder}}</a>
-
-                                                    <a href="{{ path('ignore_duplicate_transfers', {id: doublon.transferDeparture.customerCard.id, param:'departure' }) }}" class="btn btn-danger">Ignore duplicate</a>
-                                                </li>
-                                            {% endfor %} 
-                                            </ul>
- #}
-
-                                        </p>
                                     </div>
                                 </div>
                             </div> <!-- end col-->
-                        </div>
+                        </div> #}
 
 
 {{ include('partials/footer-regroupement.html.twig') }}
