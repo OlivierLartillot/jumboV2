@@ -9,17 +9,18 @@ use App\Entity\TransferInterHotel;
 use App\Entity\TransferJoan;
 use App\Entity\TransferVehicleArrival;
 use App\Entity\TransferVehicleDeparture;
-use App\Entity\TransportCompany;
+use App\Entity\TransferVehicleInterHotel;
+use App\Form\DragAndDropType;
 use App\Form\TransferJoanType;
-use App\Repository\AirportHotelRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
 use App\Repository\TransferJoanRepository;
 use App\Repository\TransferVehicleArrivalRepository;
-use App\Repository\TransportCompanyRepository;
-use App\Services\ErrorsImportManager;
+use App\Repository\TransferVehicleDepartureRepository;
+use App\Repository\TransferVehicleInterHotelRepository;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,53 +45,43 @@ class TransferJoanController extends AbstractController
     public function index(Request $request, 
                           EntityManagerInterface $manager,
                           CustomerCardRepository $customerCardRepository,
-                          TransferArrivalRepository $transferArrivalRepository,
                           TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
-                          TransferInterHotelRepository $transferInterHotelRepository,
-                          TransferDepartureRepository $transferDepartureRepository,
-                          TransportCompanyRepository $transportCompanyRepository, 
-                          ErrorsImportManager $errorsImportManager,
-                          AirportHotelRepository $AirportHotelRepository,
+                          TransferVehicleInterHotelRepository $transferVehicleInterHotelRepository,
+                          TransferVehicleDepartureRepository $transferVehicleDepartureRepository
                           ): Response
     {
 
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
         $mimeType = $fileToUpload->getMimeType();
         $error = $fileToUpload->getError();
-
-        $ecrituresDeLlegada = ['llegada', 'llegadas'];
-        $ecrituresDeInterHotel = ['interhotel', 'interhotels' ,'inter-hotel' ,'inters-hotel','inter-hotels','inters-hotels', 'inter hotel', 'inters hotel', 'inter hotels', 'inters hotels'];
-        $ecrituresDeSalidas = ['salida', 'salidas'];
-
  
         // récupération du token
         $submittedToken = $request->request->get('token');
-                    
-        $errorDetails = [];
+        //les clients n'ayant pas de customerCard
+        $errorClients = [];                                        
         // 'delete-item' is the same value used in the template to generate the token
         if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
-           $errorDetails[] = 'Code import 1 - Token error, please refresh the page and start again.';
+            // ... do something, like deleting an object
+           // redirige vers page erreur token
+           //dd('stop erreur token');
         }
 
+        
         // test des données recues
+        
         // infos sur le csv
         if ( $error > 0) {
-            $errorDetails[] = 'Code import 2 - Error uploading the file. Error code :' . $error;
-        }
-    
-        // Vérifier si le fichier a été correctement téléchargé
-        if (!file_exists($fileToUpload)) {
-            $errorDetails[] = "Code import 3 - File not found.";
-        }
-        // Vérifier le type de fichier
-        if ( ($fileToUpload->getClientOriginalExtension() != "xlsm") and ($fileToUpload->getClientOriginalExtension() != "xlsx") ){
-            $errorDetails[] = "Code import 4 - The file extension is not correct !";
+            die("Erreur lors de l'upload du fichier. Code d'erreur : " . $error);
         }
         
-        if (count($errorDetails) > 0) {
-            
-            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorDetails]);
-
+        // Vérifier si le fichier a été correctement téléchargé
+        if (!file_exists($fileToUpload)) {
+            die("Fichier non trouvé.");
+        }
+        
+        // Vérifier le type de fichier
+        if ($mimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+            die("l extension du fichier n est pas bonne !");
         }
 
         // Charger le fichier Excel
@@ -98,150 +89,37 @@ class TransferJoanController extends AbstractController
         //$spreadsheet->setActiveSheetIndexByName('OPERATIVA');
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
-        
+
         // 1. on va récupérer le nom pour savoir si c est llegada/interHotel/salida
         // LLEGADAS - INTERHOTEL - SALIDAS -> llegadas - interhotel - salidas
         $natureTransfer = strtolower($rows[2][1]);  
+    
+        if ($natureTransfer == 'llegadas') { 
+            $natureTransferRepository = $transferVehicleArrivalRepository;
+            $natureTransferObject = new TransferVehicleArrival();
+        }
+        else if ($natureTransfer == 'interhotel') { 
+            $natureTransferRepository = $transferVehicleInterHotelRepository;
+            $natureTransferObject = new TransferVehicleInterHotel();
         
-        if (in_array($natureTransfer,$ecrituresDeLlegada)) { 
-            $natureTransferRepository = $transferArrivalRepository;
-            $newTransfer = new TransferArrival ;
-            $newTransferVehicleArrival = new TransferVehicleArrival();
         }
-        else if (in_array($natureTransfer,$ecrituresDeInterHotel)) { 
-            $natureTransferRepository = $transferInterHotelRepository;
-            $newTransfer = new TransferInterHotel();
-        }
-        else if (in_array($natureTransfer,$ecrituresDeSalidas)) { 
-            $natureTransferRepository = $transferDepartureRepository;
-            $newTransfer = new TransferDeparture();
+        else if ($natureTransfer == 'salidas') { 
+            $natureTransferRepository = $transferVehicleDepartureRepository;
+            $natureTransferObject = new TransferVehicleDeparture();
         } else {
-            $listeLlegada = '';
-            $listeInterHotel = '';
-            $listesalidas = '';
-            foreach ($ecrituresDeLlegada as $ecriture) { $listeLlegada .= '- ' . $ecriture . ' '; }
-            foreach ($ecrituresDeInterHotel as $ecriture) { $listeInterHotel .= '- ' . $ecriture . ' '; }
-            foreach ($ecrituresDeSalidas as $ecriture) { $listesalidas .= '- ' . $ecriture . ' '; }
-
-            $errorsImportManager->addErrors('Code import 30 - In cell B3 should be written:');
-            $errorsImportManager->addErrors('<b>Arrival:</b> ' . $listeLlegada);
-            $errorsImportManager->addErrors('<b>InterHotel:</b> ' .$listeInterHotel);
-            $errorsImportManager->addErrors('<b>Departure:</b>  ' . $listesalidas);
-            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' =>  $errorsImportManager->getErrors()]);
+            die('La nature du transfer n est pas reconnue !');
         }
-        
-        if (strtolower($rows[8][0]) != 'num reserva') {
-            $errorsImportManager->addErrors('Code import 31 - In cell A9 should be written: Num Reserva');
-            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+ 
+        // recuperer toutes les entrees qui ont la date du nouvel envoi
+        // si c est > a 0 alors il faut les supprimer une a une $row[8] = date !!!
+
+        // il va falloir récupérer la premiere date, on recherche ici le numéro de la ligne
+        $d = 0;
+        while ( ($rows[$d][4] == NULL) OR ($rows[$d][4]=='Dia Vuelo') ){
+            $d++;
         }
-        // check toute les lignes et problèmes en amont pour ne pas executer le fichier
-        $firstRow = 9;
-        $i = 0;
-        // on remplit pour voir si il y a plusieurs dates dans ce fichier
-        $dates = [];
-        $inOuts = [];
-        $serviceNumbersInCSV = [];
-        $reservationNumberFlightNumberIncsv = [];
-
-        foreach ($rows as $row) {
-            // les lignes à ignorer
-            if ( ($i<$firstRow) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
-                $i++;
-                continue;
-            }    
-            // si les deux premieres cellules de la ligne sont vides 
-            // on considère qu'il n'y a plus de données à récupérer
-            // et on sort de la boucle
-            else if ( ($row[0] == null) and ($row[1] == null) ) {
-                break;
-            }
-            // on va checker les erreurs dans les lignes à garder
-            else {
-                // check le format de la date, s'il n'est pas bon s'est inadmissible :p
-                $testDate = explode("/", $row[4]);
-                if (!isset($testDate[2])) {
-                    $errorsImportManager->addErrors('Code import 33 -At least one date is not in day/month/year format: ' . $row[4]); 
-                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
-                }
-                // si il existe plusieurs dates différentes => erreur
-                if (!in_array($row[4], $dates)) {
-                $dates[] = $row[4];
-                    if (count($dates) > 1) {
-                        $errorsImportManager->addErrors('Code import 32 - There are several dates in the file. Make sure all "Dia Vuelo" are on the same day !');
-                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]); 
-                    }
-                }
-                //check si tous les in/out sont pareils
-                if (!in_array($row[12], $inOuts)) {
-                $dates[] = $row[12];
-                    if (count($inOuts) > 1) {
-                        $errorsImportManager->addErrors('Code import 33 - There are several in/out in the file. Make sure all "In/Out" are the same !'); 
-                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
-                    }
-                }
-                // liste des écritures valables
-                $liste = '';
-                // check si le in/out est == a B3
-                if (in_array($natureTransfer,$ecrituresDeLlegada)) {
-                    if (!in_array(strtolower($row[12]),$ecrituresDeLlegada))  {
-                        $natureTransferError = true;
-                        
-                        foreach ($ecrituresDeLlegada as $ecriture) { $liste .= '- ' . $ecriture . ' '; }
-                        $errorsImportManager->addErrors('Code import 30 - In column M (in/out) should be written: ' . $liste);
-                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
-                    }
-                } 
-                else if (in_array($natureTransfer,$ecrituresDeInterHotel)) {
-                    if ( !in_array(strtolower($row[12]), $ecrituresDeInterHotel) )
-                    {
-                        $natureTransferError = true;
-                        foreach ($ecrituresDeInterHotel as $ecriture) { $liste .= '- ' . $ecriture . ' '; }
-                        $errorsImportManager->addErrors('Code import 30 - In column M (in/out) should be written: ' . $liste);
-                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
-                    }
-                }
-                else {
-                    if (!in_array(strtolower($row[12]),$ecrituresDeSalidas)) {
-                        $natureTransferError = true;
-                        foreach ($ecrituresDeSalidas as $ecriture) { $liste .= '- ' . $ecriture . ' '; }
-                        $errorsImportManager->addErrors('Code import 30 - In column M (in/out) should be written: ' . $liste);
-                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
-                    }
-                }
-                //sinon renvoie l'erreur
-                if ((isset($natureTransferError)) and ($natureTransferError) ) {
-                    $errorsImportManager->addErrors('Code import 34 - the nature of the transfer declared in B3 is not the same as in/out.'); 
-                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
-                }
-
-                //check si la compagnie existe sinon il faut la rajouter en bdd
-                $suplidor = trim(strtolower($row[16])); 
-                if ($suplidor != null) {
-                    $suplidor=str_replace("\n"," ",$suplidor);
-                    $suplidor=str_replace("\r"," ",$suplidor);
-                    // on regarde si elle existe
-                    $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
-                    // sinon, ajouter le transportCompany en bdd
-                    if (!$transportCompany) {
-                        $transportCompany = new TransportCompany();
-                        $transportCompany->setName($suplidor);
-                        $manager->persist($transportCompany);
-                        $manager->flush();
-                    }
-
-                }
-
-                $reservationNumber = trim($row[0]);
-                $serviceNumbersInCSV[] = $reservationNumber;
-                $vuelo = trim(strtolower($row[3])); 
-                $reservationNumberFlightNumberIncsv[] = $reservationNumber .'-'. $vuelo ;
-            }
-        }
-        $countEachServiceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
-        $countEachreservationNumberFlightNumberIncsv = array_count_values ($reservationNumberFlightNumberIncsv);
 
         $i = 0;
-        $errorClients = [];
         foreach ($rows as $row) {
 
             if ( ($i<9) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
@@ -256,60 +134,40 @@ class TransferJoanController extends AbstractController
                 break;
             }
             else {
-
                 $reservaId= trim($row[0]); 
-                $agencia = trim(strtolower($row[1])); 
-                $nombre = trim(strtolower($row[2])); 
-                $vuelo = trim(strtolower($row[3])); 
+                $agencia = $row[1]; 
+                $nombre = $row[2]; 
+                $vuelo = $row[3]; 
                 $dia_vuelo = $row[4]; 
                 $hora_v = $row[5]; 
-                $desde = trim(strtolower($row[6])); 
-                $hasta = trim(strtolower($row[7])); 
-                $tipo_trf = trim(strtolower($row[8])); 
-                $tipo_trf = ($tipo_trf == "colectivo") ? true : false ; 
-                $ad = trim($row[9]); 
-                $ni = trim($row[10]); 
-                $bb = trim($row[11]); 
-                $in_out = trim(strtolower($row[12])); 
-                $n_veh = trim($row[13]); 
-                $t_veh = trim(strtolower($row[14]));     
-                $pickup = trim($row[15]); 
-                $suplidor = trim(strtolower($row[16])); 
-                $bono = trim(strtolower($row[17])); 
-                $zonas = trim(strtolower($row[18]));
+                $desde = $row[6]; 
+                $hasta = $row[7]; 
+                $tipo_trf = $row[8]; 
+                $tipo_trf = ($tipo_trf == "Colectivo") ? true : false ; 
+                $ad = $row[9]; 
+                $ni = $row[10]; 
+                $bb = $row[11]; 
+                $in_out = $row[12]; 
+                $n_veh = $row[13]; 
+                $t_veh = $row[14]; 
+                $pickup = $row[15]; 
+                $suplidor = $row[16]; 
+                $bono = $row[17]; 
+                $zonas = $row[18];
                
-
-                
-                $date= explode("/", $dia_vuelo);
-                $dateFormat = $date[2] . '-' . $date[0] .'-'. $date[1];
-                $dia_vuelo = new DateTimeImmutable($dateFormat);
-        
-                if ($hora_v != "") {
-                    $hour = explode(':', $hora_v);
-                    $dateTimeFormat = $hour[0] .':'. $hour[1];
-                    $hour = new DateTimeImmutable($dateTimeFormat);
-                }
-                
-                if ($pickup != "") {
-                    $pickup = explode(':', $pickup);
-                    $dateTimeFormat = $pickup[0] .':'. $pickup[1];
-                    $pickup = new DateTimeImmutable($dateTimeFormat);
-                }
-                
+                $dia = new DateTime($dia_vuelo);
+                $dia = $dia->format('Y-d-m');
+                $dia_vuelo = new DateTimeImmutable($dia);
             }
             if ($agencia != null) {
                 $agencia=str_replace("\n"," ",$agencia);
                 $agencia=str_replace("\r"," ",$agencia);
             }
-            if ($nombre != null) {
-                $nombre=str_replace("\n"," ",$nombre);
-                $nombre=str_replace("\r"," ",$nombre);
-            }
             if ($zonas != null) {
                 $zonas=str_replace("\n"," ",$zonas);
                 $zonas=str_replace("\r"," ",$zonas);
             }
-            
+
             if ($desde != null) {
                 $desde=str_replace("\n"," ",$desde);
                 $desde=str_replace("\r"," ",$desde);
@@ -318,312 +176,75 @@ class TransferJoanController extends AbstractController
                 $hasta=str_replace("\n"," ",$hasta);
                 $hasta=str_replace("\r"," ",$hasta);
             }
-            if ($in_out != null) {
-                $in_out=str_replace("\n"," ",$in_out);
-                $in_out=str_replace("\r"," ",$in_out);
-            }
-            if ($suplidor != null) {
-                $suplidor=str_replace("\n"," ",$suplidor);
-                $suplidor=str_replace("\r"," ",$suplidor);
-            }
             
             // Normalement ce numéro de reservation existe dans le customer card
-            $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservaId, 'holder' => $nombre]);
-            $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
+            $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservaId]);
+            //dd($customerCard);
 
-            /*******************  TODO: ************************************ */
             if ($customerCard) {
-                //dd($customerCard);
-               
-                $transfersExistent =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo]);
-    
-                
-                // si dans la bdd ce n est pas présent, il faut ajouter 
-                // (si l arrivée n existe pas ce jour il faut le signaler !! on ne créé pas une nouvelle arrivée !!!)
-                if (!$transfersExistent) {       
-                    // l'arrivée (transferArrival doit etre uniquement créé par ivan ou son fichier)
-                    // par conséquent si y a une fiche client mais pas d'arrivée ce jour, on ne peut pas l'importer
-                    if (in_array($natureTransfer,$ecrituresDeLlegada)) {
-                        $errorClients[] = 'You cannot create an arrival transfer if there is no arrival on this day. ' . ucfirst($nombre) . ', reservation number ' . $reservaId.'  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival.';
-                    } else {
-    
-                        $newTransfer->setCustomerCard($customerCard);
-                        $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                        $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
-                        $newTransfer->setFromStart($from);
-                        $newTransfer->setToArrival($to);
-                        $newTransfer->setTransportCompany($transportCompany);
-                        $newTransfer->setDate($dia_vuelo);
-                        $newTransfer->setPickUp($pickup);
-                        $newTransfer->setVehicleNumber($n_veh);
-                        $newTransfer->setVehicleType($t_veh);
-                        $newTransfer->setIsCollective($tipo_trf);
-                        $newTransfer->setVoucherNumber($bono);
-                        $newTransfer->setArea($zonas);
-                        $newTransfer->setAdultsNumber($ad);
-                        $newTransfer->setChildrenNumber($ni);
-                        $newTransfer->setBabiesNumber($bb);                    
-                        
-                        if (in_array($natureTransfer,$ecrituresDeSalidas)) {
-                            $newTransfer->setFlightNumber($vuelo);
-                            $newTransfer->setHour($hour);
-                        }
-                        
-                        $manager->persist($newTransfer);
-                    }                       
+                // on regarde si le nature transfert existe 
+                $natureTransferExiste = $natureTransferRepository->findOneBy(['customerCard' => $customerCard]); 
+                if ($natureTransfer == 'llegadas') { 
+                    $natureTransferObject = new TransferVehicleArrival();
+                } else if ($natureTransfer == 'interhotel') { 
+                    $natureTransferObject = new TransferVehicleInterHotel();
+                } else if ($natureTransfer == 'salidas') { 
+                    $natureTransferObject = new TransferVehicleDeparture();
                 }
-           
-                /************ !!!  A ce stade ca existe en bdd !!!  **************/
-                else {
                 
+                if ($natureTransferExiste) {
+                    // on met a jour le natureTransfer
+                    // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
+                    $natureTransferExiste->setCustomerCard($customerCard);
+                    $natureTransferExiste->setIsCollective($tipo_trf);
+                    $natureTransferExiste->setVehicleNumber($n_veh);
+                    $natureTransferExiste->setVehicleType($t_veh);
+                    $natureTransferExiste->setDate($dia_vuelo);
+                    ($natureTransfer == 'llegadas') ? $natureTransferExiste->setPickUp($hora_v) : $natureTransferExiste->setPickUp($pickup);
+                    $natureTransferExiste->setTransportCompany($suplidor);
+                    $natureTransferExiste->setVoucherNumber($bono);
+                    $natureTransferExiste->setArea($zonas);
+
+                   
+
+                    //dd('ce nature transfert existe déja');
+                } else {
+
+                  
+                    // sinon il faut créer un nouvel objet natureTransfer on utilise $natureTransferObject
+                    $natureTransferObject->setCustomerCard($customerCard);
+                    $natureTransferObject->setIsCollective($tipo_trf);
+                    $natureTransferObject->setVehicleNumber($n_veh);
+                    $natureTransferObject->setVehicleType($t_veh);
+                    $natureTransferObject->setDate($dia_vuelo);
+                    ($natureTransfer == 'llegadas') ? $natureTransferObject->setPickUp($hora_v) : $natureTransferObject->setPickUp($pickup);
+
                     
-                    // si dans le csv c est présent qu une fois et dans la bdd présent une fois juste MAJ
-                    if ( ($countEachServiceNumbersInCSV[$reservaId] == 1) and (count($transfersExistent) == 1) ) {
-                        
-                        // si c est une arrivée 
-                        if (in_array($natureTransfer,$ecrituresDeLlegada)) {
-                            // il y a un vehicule pour une arrivée et 1 SEUL PRESENT EN BDD 
-                            // si le transfer vehicle existe MAJ sinon NEW
-                            $transferVehicleArrivalexiste = $transfersExistent[0]->getTransferVehicleArrival();
-                            $transferVehicleArrival = ($transferVehicleArrivalexiste == null) ? new TransferVehicleArrival() : $transferVehicleArrivalexiste;
-                            $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                            $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
-                            $transfersExistent[0]->setFromStart($from);
-                            $transfersExistent[0]->setToArrival($to);
-                            $transferVehicleArrival->setTransferArrival($transfersExistent[0]);
-                            $transferVehicleArrival->setIsCollective($tipo_trf);
-                            $transferVehicleArrival->setVehicleNumber($n_veh);
-                            $transferVehicleArrival->setVehicleType($t_veh);
-                            $transferVehicleArrival->setDate($dia_vuelo);
-                            $transferVehicleArrival->setVoucherNumber($bono);
-                            $transferVehicleArrival->setArea($zonas);
-                            $transferVehicleArrival->setTransportCompany($transportCompany);
-                            $transferVehicleArrival->setAdultsNumber($ad);
-                            $transferVehicleArrival->setChildrenNumber($ni);
-                            $transferVehicleArrival->setBabiesNumber($bb);
-                                  
-                            if($transferVehicleArrivalexiste == null){
-                                $manager->persist($transferVehicleArrival);
-                            }
-                        }
+                    
+                    $natureTransferObject->setTransportCompany($suplidor);
+                    $natureTransferObject->setVoucherNumber($bono);
+                    $natureTransferObject->setArea($zonas);
 
-                        else {
-                            // sinon
-                            $transfersExistent[0]->setCustomerCard($customerCard);
-                            $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                            $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
-                            $transfersExistent[0]->setFromStart($from);
-                            $transfersExistent[0]->setToArrival($to);
-                            $transfersExistent[0]->setTransportCompany($transportCompany);
-                            $transfersExistent[0]->setDate($dia_vuelo);
-                            $transfersExistent[0]->setPickUp($pickup);
-                            $transfersExistent[0]->setVehicleNumber($n_veh);
-                            $transfersExistent[0]->setVehicleType($t_veh);
-                            $transfersExistent[0]->setIsCollective($tipo_trf);
-                            $transfersExistent[0]->setVoucherNumber($bono);
-                            $transfersExistent[0]->setArea($zonas);
-                            $transfersExistent[0]->setAdultsNumber($ad);
-                            $transfersExistent[0]->setChildrenNumber($ni);
-                            $transfersExistent[0]->setBabiesNumber($bb);                    
-                            
-                            if (in_array($natureTransfer,$ecrituresDeSalidas)) {
-                                $transfersExistent[0]->setFlightNumber($vuelo);
-                                $transfersExistent[0]->setHour($hour);
-                            }
-                        }
-                    }
-                    else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
-                        
-                        // si c est une arrivée = del transferVehicle   
-                        if (in_array($natureTransfer,$ecrituresDeLlegada)) {                            
-                            // si dans le csv c'est présent plusieurs fois on supprime tous dans la bdd 
-                            
-                            // rechercher l'arrivée par le flight number
-                            $transfersaMaj =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
-                            // si le transferMaj est reconnu (== a 1) on met a jour
-                            if (count($transfersaMaj) == 1) {
-                                
-                                // si transfer vehicleArrival existe on maj sinon crée
-                                $newTransferVehicleArrival = ($transfersaMaj[0]->getTransferVehicleArrival() == null) ? new TransferVehicleArrival(): $transfersaMaj[0]->getTransferVehicleArrival();
-                                $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                                $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
-                                $transfersaMaj[0]->setFromStart($from);
-                                $transfersaMaj[0]->setToArrival($to);
-
-                                if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
-
-                                    $newTransferVehicleArrival->setTransferArrival($transfersaMaj[0]);
-                                }
-
-                                $newTransferVehicleArrival->setIsCollective($tipo_trf);
-                                $newTransferVehicleArrival->setVehicleNumber($n_veh);
-                                $newTransferVehicleArrival->setVehicleType($t_veh);
-                                $newTransferVehicleArrival->setDate($dia_vuelo);
-                                $newTransferVehicleArrival->setVoucherNumber($bono);
-                                $newTransferVehicleArrival->setArea($zonas);
-                                $newTransferVehicleArrival->setTransportCompany($transportCompany);
-                                $newTransferVehicleArrival->setAdultsNumber($ad);
-                                $newTransferVehicleArrival->setChildrenNumber($ni);
-                                $newTransferVehicleArrival->setBabiesNumber($bb);
-                            
-                                if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
-                                    $manager->persist($newTransferVehicleArrival);
-                                }
-                               
-                            }
-                            // sinon on prévient avec une erreur
-                            else{
-                                $errorClients[] = 'The combination of flight number, date and customer card does not match for this day. ' . ucfirst($nombre) . ', reservation number: ' . $reservaId . ', flight number: ' . $vuelo   ;
-                            }
-                        }
-                        // sinon del transfer
-                        else {
-    
-                            foreach ($transfersExistent as $transfer) {
-                                $manager->remove($transfer);
-                                $manager->flush();
-                            }
-
-                            // on recré le transfer courant, (les autres seront des nouveaux pour la boucle car 0 en bdd)
-                            $newTransfer->setCustomerCard($customerCard);
-                            $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                            $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
-                            $newTransfer->setFromStart($from);
-                            $newTransfer->setToArrival($to);
-                            $newTransfer->setTransportCompany($transportCompany);
-                            $newTransfer->setDate($dia_vuelo);
-                            $newTransfer->setPickUp($pickup);
-                            $newTransfer->setVehicleNumber($n_veh);
-                            $newTransfer->setVehicleType($t_veh);
-                            $newTransfer->setIsCollective($tipo_trf);
-                            $newTransfer->setVoucherNumber($bono);
-                            $newTransfer->setArea($zonas);
-                            $newTransfer->setAdultsNumber($ad);
-                            $newTransfer->setChildrenNumber($ni);
-                            $newTransfer->setBabiesNumber($bb);                    
-                            
-                            if (in_array($natureTransfer,$ecrituresDeSalidas)) {
-                                $newTransfer->setFlightNumber($vuelo);
-                                $newTransfer->setHour($hour);
-                            }
-                            
-                            $manager->persist($newTransfer);
-                        }
-                    }
-
-
+                    $manager->persist($natureTransferObject);
+                    //dd('ce nature transfert n existe PAS');
+                    
                 }
             } 
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
-                $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
+                $errorClients[] = $reservaId;
             }
         }
-
+        
         $manager->flush();
         
-
-        //****************************** Recherche des  Arrivéées de ce jour qui ne sont plus présentes dans le CSV ******************************//
-        //****************************************************************************************************************************************//
-            if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
-            
-                if (in_array($natureTransfer,$ecrituresDeLlegada)) {
-                    // construit un tableau pour chaque arrivée de ce jour
-                    $clientNumberArrivalsInBdd = [];    
-                    // recherche toute les arrivées de ce jour
-                    $arrivalVehicles = $transferVehicleArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
-                    // les arrivées de ce jour dans un tableau avec 182232-cm802 (reservationNumber, flightNumber)
-                    foreach ($arrivalVehicles as $arrivalVehicle) { 
-                        $clientNumberArrivalsInBdd[] = $arrivalVehicle->getTransferArrival()->getCustomerCard()->getReservationNumber() .'-'.  strtolower($arrivalVehicle->getTransferArrival()->getFlightNumber());
-                    }
-                    // on regarde si il y a des diff ( des numéros qui étaient en bdd mais plus dans le csv)
-                    $nonPresentsDansLeNouveauCSV = array_diff($clientNumberArrivalsInBdd, $reservationNumberFlightNumberIncsv);
-                    
-                    // sinon on peut supprimer
-                    foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
-
-                        $dataToDelete = explode('-',$toDelete);
-
-                        $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
-                        $flightNumber = $dataToDelete[1];   
-
-                        // on re-récupère les arrivées  avec le numéro de vol qui correspond !!!
-                        $arrivalsDayInBdd = $transferArrivalRepository->findBy(['customerCard' => $customerCard, 
-                                                                                'date' => new DateTimeImmutable($dateFormat),
-                                                                                'flightNumber'=> $flightNumber  ,                   
-                                                                                ]);
-                        // on supprimer les transferts vehicule arrivée
-                        foreach ($arrivalsDayInBdd as $arrival) {   
-                            $transferVehicleArrivalRepository->remove($arrival->getTransferVehicleArrival(), true);
-                        }
-                    
-                    
-                    }
-                }
-                else if (in_array($natureTransfer,$ecrituresDeInterHotel)) {
-                    $clientNumberTransfersInBdd = []; 
-                    $interHotels = $transferInterHotelRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
-                    foreach ($interHotels as $interHotel) { 
-                        $clientNumberTransfersInBdd[] = $interHotel->getCustomerCard()->getReservationNumber() .'-inthtl';
-                    }
-                    $nonPresentsDansLeNouveauCSV = array_diff($clientNumberTransfersInBdd, $reservationNumberFlightNumberIncsv);
-                    // sinon on peut supprimer
-                    foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
-
-                        $dataToDelete = explode('-',$toDelete);
-
-                        $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
- 
-
-                        // arrivée 
-                        $interHotelsDayInBdd = $transferInterHotelRepository->findBy(['customerCard' => $customerCard, 
-                                                                                'date' => new DateTimeImmutable($dateFormat),                
-                                                                                ]);
-                        foreach ($interHotelsDayInBdd as $interHotel) {   
-                            $transferInterHotelRepository->remove($interHotel, true);
-                        }
-                    }
-                }
-                // sinon c est depart
-                else {
-                    $clientNumberTransfersInBdd = []; 
-                    $departures = $transferDepartureRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
-                    foreach ($departures as $departure) { 
-                        $clientNumberTransfersInBdd[] = $departure->getCustomerCard()->getReservationNumber() .'-'.  strtolower($departure->getFlightNumber());
-                    }
-                    $nonPresentsDansLeNouveauCSV = array_diff($clientNumberTransfersInBdd, $reservationNumberFlightNumberIncsv);
-                    // sinon on peut supprimer
-                    foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
-
-                        $dataToDelete = explode('-',$toDelete);
-                        $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
-                        $flightNumber = $dataToDelete[1];   
- 
-                        // arrivée 
-                        $departureDayInBdd = $transferDepartureRepository->findBy(['customerCard' => $customerCard, 
-                                                                                    'date' => new DateTimeImmutable($dateFormat),
-                                                                                    'flightNumber'=> $flightNumber  ,                   
-                                                                                ]);
-                        foreach ($departureDayInBdd as $departure) {   
-                            $transferDepartureRepository->remove($departure, true);
-                        }
-                    }
-                }                
-            } 
-        //***************************************************************** fin  *****************************************************************//
-        //****************************************************************************************************************************************//
-
-
-
-
         return $this->render('transfer/import.html.twig', [
             'errorClients' => $errorClients
         ]);
-/*         return $this->redirectToRoute('app_transfer_import', [
+        return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients
-        ]); */
+        ]);
     }
-    
 
     #[Route('/new', name: 'app_transfer_joan_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TransferJoanRepository $transferJoanRepository): Response
@@ -638,7 +259,7 @@ class TransferJoanController extends AbstractController
             return $this->redirectToRoute('app_transfer_joan_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('transfer_joan/new.html.twig', [
+        return $this->renderForm('transfer_joan/new.html.twig', [
             'transfer_joan' => $transferJoan,
             'form' => $form,
         ]);
@@ -664,7 +285,7 @@ class TransferJoanController extends AbstractController
             return $this->redirectToRoute('app_transfer_joan_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('transfer_joan/edit.html.twig', [
+        return $this->renderForm('transfer_joan/edit.html.twig', [
             'transfer_joan' => $transferJoan,
             'form' => $form,
         ]);

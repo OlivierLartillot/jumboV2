@@ -1,12 +1,4 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
-
-
-.bg-success-subtle {
-  color: black;
-  font-size: 1.5rem;
-  background-color: rgba(25, 135, 84, 0.5);
-}
-
 /* common */
 .ribbon {
   width: 131px;

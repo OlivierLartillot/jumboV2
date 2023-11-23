@@ -2,10 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Agency;
 use App\Entity\CustomerCard;
 use App\Entity\User;
-use App\Repository\AgencyRepository;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -14,17 +12,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomerCardType extends AbstractType
 {
-    private $agencyRepository;
+    private $userRepository;
 
 
-    public function __construct(AgencyRepository  $agencyRepository){
-        $this->agencyRepository = $agencyRepository;
+    public function __construct(UserRepository  $userRepository){
+        $this->userRepository = $userRepository;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $agencies = $this->agencyRepository->findBy([], ["name" => "ASC"]);
+        $repList = [];
+        $users = $this->userRepository->findAll();
+        foreach ($users as $user) {
+            if (in_array('ROLE_REP', $user->getRoles())) {
+                $repList[] = $user;
+            }
+        }
 
 
         $builder
@@ -37,11 +41,29 @@ class CustomerCardType extends AbstractType
             ->add('holder', null, [
                 'label' => 'Full Name',
             ])
-            ->add('agency', EntityType::class, [
-                'class' => Agency::class,
-                'choices'=> $agencies,
-                ])
+            ->add('agency')
+            ->add('adultsNumber', null, [
+                'label' => 'Adults quantity',
+            ])
+            ->add('childrenNumber', null, [
+                'label' => 'Children quantity',
+            ])
+            ->add('babiesNumber', null, [
+                'label' => 'Babies quantity',
+            ])
+            ->add('meetingAt', null, [
+                'widget' => 'single_text',
+            ])
             ->add('reservationCancelled')
+            ->add('status')
+            ->add('meetingPoint')
+            ->add('staff', EntityType::class, [
+                'label' => "Reps",
+                'placeholder' => 'Choose a Rep',
+                'class' => User::class,
+                'choices' => $repList,
+                
+            ] )
         ;
     }
 

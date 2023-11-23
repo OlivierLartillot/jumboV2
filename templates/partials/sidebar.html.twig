@@ -159,25 +159,13 @@
                             <li><a href="{{ path('app_area_index')}}"><i class="uil-location-point"></i>{% trans %}Areas{% endtrans %}</a></li>
                             <li><a href="{{ path('app_meeting_point_index')}}"><i class="uil-map-pin"></i>{% trans %}Briefing Places{% endtrans %}</a></li>
                             <li><a href="{{ path('app_agency_index')}}"><i class="uil-home"></i>{% trans %}Agencies{% endtrans %}</a></li>
-
                             {% if ("ROLE_HULK" in app.user.roles) %}
                                 <li><a href="{{ path('app_status_index')}}"><i class="uil-check-square"></i>{% trans %}Client Status{% endtrans %}</a></li>
                             {% endif %}
                         </ul>
                     </li>
-
-                    <li>
-                         <a href="javascript: void(0);" class="has-arrow waves-effect">
-                            <i class="uil-setting"></i>
-                            <span>{% trans %}Backup{% endtrans %}</span>
-                        </a>
-
-                        <ul class="sub-menu" aria-expanded="true">
-                            <li><a href="{{ path('app_backup_reservation')}}"><i class="uil-user"></i>{% trans %}Reservations{% endtrans %}</a></li>
-                            <li><a href="#"><i class="uil-location-point"></i>{% trans %}Transfers{% endtrans %}</a></li>
-                        </ul>
-                    </li> 
                 {% endif %}
+
             </ul>
         </div>
         <!-- Sidebar -->

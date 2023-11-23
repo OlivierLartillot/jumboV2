@@ -14,6 +14,15 @@ class TransferInterHotel
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 50)]
+    private ?string $serviceNumber = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $dateHour = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $flightNumber = null;
+
     #[ORM\ManyToOne(inversedBy: 'transferInterHotels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerCard $customerCard = null;
@@ -26,51 +35,54 @@ class TransferInterHotel
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
+    #[ORM\Column]
+    private ?bool $isCollective = null;
+
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $pickUp = null;
+    private ?\DateTimeImmutable $hour = null;
 
-    #[ORM\Column]
-    private ?bool $isCollective = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $vehicleNumber = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $vehicleType = null;
-
-    #[ORM\Column(length: 16, nullable: true)]
-    private ?string $voucherNumber = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $area = null;
-
-    #[ORM\ManyToOne(inversedBy: 'transferInterHotels')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?TransportCompany $transportCompany = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $adultsNumber = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $childrenNumber = null;
-
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $babiesNumber = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable('now');
-    }
-    
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getServiceNumber(): ?string
+    {
+        return $this->serviceNumber;
+    }
+
+    public function setServiceNumber(string $serviceNumber): self
+    {
+        $this->serviceNumber = $serviceNumber;
+
+        return $this;
+    }
+
+    public function getDateHour(): ?\DateTimeImmutable
+    {
+        return $this->dateHour;
+    }
+
+    public function setDateHour(\DateTimeImmutable $dateHour): self
+    {
+        $this->dateHour = $dateHour;
+
+        return $this;
+    }
+
+    public function getFlightNumber(): ?string
+    {
+        return $this->flightNumber;
+    }
+
+    public function setFlightNumber(?string $flightNumber): self
+    {
+        $this->flightNumber = $flightNumber;
+
+        return $this;
     }
 
     public function getCustomerCard(): ?CustomerCard
@@ -109,18 +121,6 @@ class TransferInterHotel
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeImmutable $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
     public function isIsCollective(): ?bool
     {
         return $this->isCollective;
@@ -133,128 +133,27 @@ class TransferInterHotel
         return $this;
     }
 
-    public function getVehicleNumber(): ?int
+    public function getDate(): ?\DateTimeImmutable
     {
-        return $this->vehicleNumber;
+        return $this->date;
     }
 
-    public function setVehicleNumber(?int $vehicleNumber): self
+    public function setDate(\DateTimeImmutable $date): self
     {
-        $this->vehicleNumber = $vehicleNumber;
+        $this->date = $date;
 
         return $this;
     }
 
-    public function getVehicleType(): ?string
+    public function getHour(): ?\DateTimeImmutable
     {
-        return $this->vehicleType;
+        return $this->hour;
     }
 
-    public function setVehicleType(?string $vehicleType): self
+    public function setHour(\DateTimeImmutable $hour): self
     {
-        $this->vehicleType = $vehicleType;
+        $this->hour = $hour;
 
         return $this;
     }
-
-    public function getPickUp(): ?\DateTimeImmutable
-    {
-        return $this->pickUp;
-    }
-
-    public function setPickUp(\DateTimeImmutable $pickUp): self
-    {
-        $this->pickUp = $pickUp;
-
-        return $this;
-    }
-    
-    public function getVoucherNumber(): ?string
-    {
-        return $this->voucherNumber;
-    }
-
-    public function setVoucherNumber(?string $voucherNumber): self
-    {
-        $this->voucherNumber = $voucherNumber;
-
-        return $this;
-    }
-
-    public function getArea(): ?string
-    {
-        return $this->area;
-    }
-
-    public function setArea(?string $area): self
-    {
-        $this->area = $area;
-
-        return $this;
-    }
-
-    public function getTypeTransfer() {
-        return 'vehicleInterHotel';
-    }
-
-    public function getTransportCompany(): ?TransportCompany
-    {
-        return $this->transportCompany;
-    }
-
-    public function setTransportCompany(?TransportCompany $transportCompany): static
-    {
-        $this->transportCompany = $transportCompany;
-
-        return $this;
-    }
-
-    public function getAdultsNumber(): ?int
-    {
-        return $this->adultsNumber;
-    }
-
-    public function setAdultsNumber(?int $adultsNumber): static
-    {
-        $this->adultsNumber = $adultsNumber;
-
-        return $this;
-    }
-
-    public function getChildrenNumber(): ?int
-    {
-        return $this->childrenNumber;
-    }
-
-    public function setChildrenNumber(?int $childrenNumber): static
-    {
-        $this->childrenNumber = $childrenNumber;
-
-        return $this;
-    }
-
-    public function getBabiesNumber(): ?int
-    {
-        return $this->babiesNumber;
-    }
-
-    public function setBabiesNumber(?int $babiesNumber): static
-    {
-        $this->babiesNumber = $babiesNumber;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-  
 }

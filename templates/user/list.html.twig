@@ -35,13 +35,11 @@
                                     {% for user in users %}
 
 
-                                        {# si le user courant n a pas role hulk dans ses roles et que sans le user.roles y a hulk alors on saute la ligne #}
+                                            {# si le user courant n a pas role hulk dans ses roles et que sans le user.roles y a hulk alors on saute la ligne #}
                                         {% if "ROLE_HULK" not in app.user.roles and "ROLE_HULK" in user.roles %} 
 
                                         {# si le user est désactivé ? #}
                                         {% elseif user.deactivate %}
-
-                                        {% elseif "ROLE_HULK" not in app.user.roles and user.username == 'skip'  %}
                                         
                                         {% else %}
                                             <tr>

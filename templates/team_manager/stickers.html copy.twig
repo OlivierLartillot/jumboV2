@@ -281,7 +281,7 @@
 							</div>
 							<div class="mb-2">
 								<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
-								<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }} {% if is set meetingInfos.meetingAtTime %}{{ meetingInfos.meetingAtTime }} {% endif %} </strong></p>
+								<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }} {{ meetingInfos.meetingAtTime }} </strong></p>
 								<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: <strong class="crimson">{{ (meetingInfos.meetingPoint.name is defined) ? meetingInfos.meetingPoint.name : ""}} </strong></p>
 								<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
 								<p class="line-height-5">Whatsapp:  

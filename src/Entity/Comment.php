@@ -26,14 +26,14 @@ class Comment
     private ?user $createdBy = null;
 
     #[ORM\Column]
-    private ?DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?CustomerCard $customerCard = null;
+    private ?customerCard $customerCard = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
@@ -108,12 +108,12 @@ class Comment
         return $this;
     }
 
-    public function getCustomerCard(): ?CustomerCard
+    public function getCustomerCard(): ?customerCard
     {
         return $this->customerCard;
     }
 
-    public function setCustomerCard(?CustomerCard $customerCard): self
+    public function setCustomerCard(?customerCard $customerCard): self
     {
         $this->customerCard = $customerCard;
 

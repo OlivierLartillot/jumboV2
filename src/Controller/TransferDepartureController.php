@@ -33,7 +33,12 @@ class TransferDepartureController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $date =$transferDeparture->getDate()->format('Y-m-d');
+            $hour = $transferDeparture->getHour()->format('H:i');
 
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+
+            $transferDeparture->setDateHour($dateHour);
             $transferDeparture->setCustomerCard($customerCard);
 
 
@@ -64,7 +69,12 @@ class TransferDepartureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
+            $date =$transferDeparture->getDate()->format('Y-m-d');
+            $hour = $transferDeparture->getHour()->format('H:i');
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+            $transferDeparture->setDateHour($dateHour);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_customer_card_show', ['id' => $transferDeparture->getCustomerCard()->getId()], Response::HTTP_SEE_OTHER);
