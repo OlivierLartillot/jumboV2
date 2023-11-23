@@ -55,12 +55,11 @@ class TransferArrivalRepository extends ServiceEntityRepository
                     ->getResult();
     }
 
-
     /**
-     * 
+     * @return 
      * retourne un tableau des arrivées multiples pour un meme compte (customer_card)
      */
-    public function findMultiplesArrivals() 
+    public function findMultiplesArrivals() :array
     {
         $tableauFinalDesDoublons = [];
         $results = $this->createQueryBuilder('t')

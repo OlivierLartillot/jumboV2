@@ -34,25 +34,60 @@ class HomeController extends AbstractController
 {
 
     #[Route('/admin', name: 'home' )]
-    public function accueil(TransferArrivalRepository $transferArrivalRepository, TransferInterHotelRepository $transferInterHotelRepository, TransferDepartureRepository $transferDepartureRepository)
+    public function accueil(TransferArrivalRepository $transferArrivalRepository, 
+                            TransferInterHotelRepository $transferInterHotelRepository, 
+                            TransferDepartureRepository $transferDepartureRepository)
     {
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
 
         $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
-       
-        // recherche pour un client si il y a deux interHotels
-        // recherche pour un client si il y a deux départ
+        $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
+        $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures();
 
-        // renvoie chaque résultat à la page
-
-
-
+        $doublonsArrivee = $doublonsArrivee ? true : false;
+        $doublonsInterHotel = $doublonsInterHotel ? true : false;
+        $doublonsDepart = $doublonsDepart ? true : false;
+    
         return $this->render('index.html.twig', [
             'doublonsArrivee' => $doublonsArrivee,
+            'doublonsInterHotel' => $doublonsInterHotel,
+            'doublonsDepart' => $doublonsDepart
         ]);
     }
     
+    #[Route('/duplicate/transfers/{param}', name: 'duplicate_transfers' )]
+    public function duplicateTransfers($param,
+                                       TransferArrivalRepository $transferArrivalRepository, 
+                                       TransferInterHotelRepository $transferInterHotelRepository, 
+                                       TransferDepartureRepository $transferDepartureRepository)
+    {
+        /** Peu importe le jour !!! **/
+        // recherche pour un client si il y a deux arrivées
+        
+        //TODO: Il faut avoir les droits pour accéder a cette page !!!!
+
+        //********************************************************* */
+        
+        if ($param === 'arrival') {
+            $doublons = $transferArrivalRepository->findMultiplesArrivals();
+        } else if ($param === 'interhotel') {
+            $doublons = $transferInterHotelRepository->findMultiplesInterHotels();
+         } else if ($param === 'departure') {
+            $doublons = $transferDepartureRepository->findMultiplesDepartures();
+         } else {
+            return throw $this->createAccessDeniedException('Please, don\'t modify the URL');
+         }
+
+        return $this->render('dashboard/duplicate_dashboard.html.twig', [
+            'doublons' => $doublons,
+            'param' => $param
+        ]);
+    }
+
+
+
+
     #[Route('/ignore-duplicate/transfers/{id}/{param}', name: 'ignore_duplicate_transfers' )]
     public function ignoreDuplicateArrivals($id, 
                                             $param,
@@ -61,7 +96,7 @@ class HomeController extends AbstractController
                                             TransferDepartureRepository $transferDepartureRepository,
                                             EntityManagerInterface $em): RedirectResponse
     {
-        
+
         //TODO: Il faut avoir les droits pour accéder a cette page !!!!
 
         //********************************************************* */
@@ -87,7 +122,7 @@ class HomeController extends AbstractController
        
         $em->flush();
 
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('duplicate_transfers', ['param' => $param]);
     }
 
     #[Route('/team-manager/import', name: 'app_import', methods: ['GET', 'POST'] )]

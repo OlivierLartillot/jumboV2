@@ -79,7 +79,29 @@ class TransferDepartureRepository extends ServiceEntityRepository
         ;
     }
 
+   /**
+     * @return 
+     * retourne un tableau des Départs multiples pour un meme compte (customer_card)
+     */
+    public function findMultiplesDepartures() :array
+    {
+        $tableauFinalDesDoublons = [];
+        $results = $this->createQueryBuilder('t')
+                    ->select('t as transferDeparture', 'count(t.id) as count', 't.duplicateIgnored')
+                    ->where('t.duplicateIgnored = false')
+                    ->groupBy('t.customerCard')
+                    ->getQuery()
+                    ->getResult();
 
+        foreach ($results as $result) {
+            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
+
+                $tableauFinalDesDoublons[] = $result;
+            }
+        }
+
+        return $tableauFinalDesDoublons;
+    }
 
 //    public function findOneBySomeField($value): ?TransferDeparture
 //    {

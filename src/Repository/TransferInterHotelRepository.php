@@ -61,6 +61,31 @@ class TransferInterHotelRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return 
+     * retourne un tableau des interHotel multiples pour un meme compte (customer_card)
+     */
+    public function findMultiplesInterHotels() :array
+    {
+        $tableauFinalDesDoublons = [];
+        $results = $this->createQueryBuilder('t')
+                    ->select('t as transferInterHotel', 'count(t.id) as count', 't.duplicateIgnored')
+                    ->where('t.duplicateIgnored = false')
+                    ->groupBy('t.customerCard')
+                    ->getQuery()
+                    ->getResult();
+
+        foreach ($results as $result) {
+            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
+
+                $tableauFinalDesDoublons[] = $result;
+            }
+        }
+
+        return $tableauFinalDesDoublons;
+    }
+
+
 //    /**
 //     * @return TransferInterHotel[] Returns an array of TransferInterHotel objects
 //     */
