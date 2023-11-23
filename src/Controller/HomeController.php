@@ -34,9 +34,9 @@ class HomeController extends AbstractController
 {
 
     #[Route('/admin', name: 'home' )]
-    public function accueil(TransferArrivalRepository $transferArrivalRepository, 
+    public function accueil(/* TransferArrivalRepository $transferArrivalRepository, 
                             TransferInterHotelRepository $transferInterHotelRepository, 
-                            TransferDepartureRepository $transferDepartureRepository)
+                            TransferDepartureRepository $transferDepartureRepository */)
     {
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
