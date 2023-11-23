@@ -53,7 +53,9 @@ class CustomerCardController extends AbstractController
         $reps = [];
         foreach ($users as $user) {
             if (in_array("ROLE_REP", $user->getRoles() )) {
-                $reps[] = $user;
+                if ($user->getUsername() != "skip") {
+                    $reps[] = $user;
+                }
             }
         }
         
