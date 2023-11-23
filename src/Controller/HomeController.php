@@ -52,9 +52,9 @@ class HomeController extends AbstractController
         $doublonsDepart = $doublonsDepart ? true : false;
   
         return $this->render('index.html.twig', [
-/*             'doublonsArrivee' => $doublonsArrivee,
+            'doublonsArrivee' => $doublonsArrivee,
             'doublonsInterHotel' => $doublonsInterHotel,
-            'doublonsDepart' => $doublonsDepart */
+            'doublonsDepart' => $doublonsDepart 
         ]); 
     }
     
