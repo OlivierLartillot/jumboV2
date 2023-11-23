@@ -34,20 +34,25 @@ class HomeController extends AbstractController
 {
 
     #[Route('/admin', name: 'home' )]
-    public function accueil()
+    public function accueil(TransferArrivalRepository $transferArrivalRepository, 
+                            TransferInterHotelRepository $transferInterHotelRepository, 
+                            TransferDepartureRepository $transferDepartureRepository)
     {
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
 
-/*         $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
+ /*       $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
          $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures();
 
         $doublonsArrivee = $doublonsArrivee ? true : false;
         $doublonsInterHotel = $doublonsInterHotel ? true : false;
-        $doublonsDepart = $doublonsDepart ? true : false; */
+        $doublonsDepart = $doublonsDepart ? true : false;
+   */ 
         return $this->render('index.html.twig', [
-
+/*             'doublonsArrivee' => $doublonsArrivee,
+            'doublonsInterHotel' => $doublonsInterHotel,
+            'doublonsDepart' => $doublonsDepart */
         ]); 
     }
     
