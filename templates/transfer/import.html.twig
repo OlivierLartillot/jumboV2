@@ -11,8 +11,9 @@
 
                         {% if errorClients|length > 0 %}
                             <div class="alert alert-danger" role="alert">
-                                {% trans %}Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again{% endtrans %}.
-
+                                <h3 class="m-3 p-3">
+                                    {% trans %}Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again{% endtrans %}.
+                                </h3>
                                 {% for error in errorClients %} 
                                     <ul>
                                         <li>{{ error }}</li>

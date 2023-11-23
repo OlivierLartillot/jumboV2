@@ -5,7 +5,17 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
-
+                        {% if (row is defined) and (row != null )  %}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card shadow bg-success-subtle">
+                                        <div class="card-body text-center">
+                                           {{ row }} rows have been imported or updated
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                         <div class="row">
                             <div class="col">
                                 <div class="card">

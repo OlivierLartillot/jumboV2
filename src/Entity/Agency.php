@@ -41,6 +41,11 @@ class Agency
         return $this->id;
     }
 
+    public function __toString(): string
+    {
+        return ucfirst($this->name);
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -81,11 +86,6 @@ class Agency
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
     }
 
     public function getIsActive(): ?bool

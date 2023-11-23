@@ -12,6 +12,25 @@
               }
           </script>
 
+ 		<script type="text/javascript">  
+            function selects(){  
+                var ele=document.getElementsByClassName('chk');  
+                for(var i=0; i<ele.length; i++){  
+                    if(ele[i].type=='checkbox')  
+                        ele[i].checked=true;  
+                }  
+            }  
+            function deSelect(){  
+                var ele=document.getElementsByClassName('chk');  
+                for(var i=0; i<ele.length; i++){  
+                    if(ele[i].type=='checkbox')  
+                        ele[i].checked=false;  
+                      
+                }  
+            }             
+        </script>  
+
+
 
         <style>
 
@@ -156,9 +175,15 @@
 
 													<div>
 														<h2>{% trans %}Agencies{% endtrans %}</h2>
+
+														<div class="my-3">
+															<a class="btn btn-success waves-effect waves-light btn-sm" type="button" onclick='selects()'/><i class="mdi mdi-plus me-2"></i>Select All</a> 
+															<a class="btn btn-warning waves-effect waves-light btn-sm" type="button" onclick='deSelect()'/> <i class="mdi mdi-minus me-2"></i>Deselect All</a> 
+														</div>
+
 														{% for agency in agencies|sort((a,b)=>a.name <=> b.name )%}
 															<div class="form-check">
-																<input class="form-check-input" type="checkbox" id="agency_{{agency.id}}" name="agence_{{agency.id}}"
+																<input class="form-check-input chk" type="checkbox" id="agency_{{agency.id}}" name="agence_{{agency.id}}"
 																	{% if  printingOptionsUser != null %}
 																		{% for currentAgency in printingOptionsUser.agencies %} 
 																			{{ currentAgency.id == agency.id ? "checked" : "" }}
@@ -249,7 +274,17 @@
 									{% endif %}
 							</div>
 						</div>
-
+						<div class="notImpressed row justify-content-center">
+							{% for meetingInfos in meetings %} 
+								{% if meetingInfos.meetingAt is null %} 
+									<div class="text-center text-white border border-dark col-lg-3 rounded bg-danger py-3">
+										{% trans %}Reservation number{% endtrans %}: {{ meetingInfos.reservationNumber}}<br>
+										{% trans %}Meeting date is missing{% endtrans %}<br>
+										<a class="btn btn-primary btn-sm mt-3" href="{{ path('app_customer_card_show', {'id' : meetingInfos.id})}}">{% trans %}Go to Client Card{% endtrans %}</a>
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
 						<div class="break">	
 							{% set i = 1 %} 
 							{% set page = 1 %} 
@@ -313,9 +348,8 @@
 
 							{% for meetingInfos in meetings %} 
 
-								{% set currentLanguage = meetingInfos.agency.language %}
-								
-									
+								{% set currentLanguage = meetingInfos.customerCard.agency.language %}
+		
 								{% if (i == 1) %} 
 									{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
 									<div class="labels-container {{ pagesSuivantes }}">
@@ -344,25 +378,23 @@
 										{% endif %}
 
 										<div class="mt-2">
-											<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.holder|title }}</p>
-											<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 
-												{% for infosTransfer in meetingInfos.transferArrivals %}
-													{{ infosTransfer.toArrival|title}}
-												{% endfor %}
+											<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.customerCard.holder|title }}</p>
+											<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 		
+												{{ meetingInfos.toArrival|title}}	
 											</p>
 										</div>
 										<div class="mb-2">
 										
 											<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
-											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }} {{ meetingInfos.meetingAtTime }} </strong></p>
+											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }}{% if meetingInfos.meetingAt is null %}   {% else %} {{ meetingInfos.meetingAtTime }} {% endif %}</strong></p>
 											<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
 												<strong class="crimson">
-													{% if (meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) %} 
+													{% if ((meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) and  (meetingInfos.meetingPoint.checkLanguage(currentLanguage) != NULL))%} 
 														{{ meetingInfos.meetingPoint.checkLanguage(currentLanguage) }}
-													{% elseif meetingInfos.meetingPoint.en is defined %} 
+													{% elseif ( (meetingInfos.meetingPoint.en is defined) and  (meetingInfos.meetingPoint.en != NULL) ) %} 
 														{{ meetingInfos.meetingPoint.en }} 												
 													{% else %}
-														
+													    ??? 
 													{% endif %}
 													
 												</strong>

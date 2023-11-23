@@ -2,11 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Agency;
 use App\Entity\PrintingOptions;
-use App\Entity\TransferArrival;
 use App\Entity\User;
-use App\Form\AgenciesActivationType;
 use App\Form\RepAttributionType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
@@ -14,7 +11,6 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\PrintingOptionsRepository;
 use App\Repository\TransferArrivalRepository;
-use App\Repository\TransferRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
@@ -29,7 +25,12 @@ class TeamManagerController extends AbstractController
     
     // route qui affiche tous les rep a attribuer en fonction de la date
     #[Route('/team-manager/briefings/attribution', name: 'app_admin_team_manager',methods:["POST", "GET"])]
-    public function index(Request $request, CustomerCardRepository $customerCardRepository,  DefineQueryDate $defineQueryDate): Response
+    public function index(Request $request, 
+                        CustomerCardRepository $customerCardRepository,  
+                        DefineQueryDate $defineQueryDate,
+                        TransferArrivalRepository $transferArrivalRepository,
+                        UserRepository $userRepository
+                        ): Response
     {
 
 
@@ -39,32 +40,33 @@ class TeamManagerController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
         $meetingDate = $date->modify('+1 day');
 
-        // Récupérer tous les customerCards qui n'ont pas de staff id et qui colle avec la date
-        $firstClient = $customerCardRepository->findOneBy(
+        // Récupérer tous les transferArrival qui n'ont pas de staff id et qui colle avec la date
+            $firstClient = $transferArrivalRepository->findOneBy(
             [
                 'staff' => NULL,
                 'meetingAt' => $meetingDate
             ]);
-        $countNonAttributedClients = count($customerCardRepository->findBy(
-            [
-                'staff' => NULL,
-                'meetingAt' => $meetingDate
-            ]
-        ));
+            $countNonAttributedClients = count($transferArrivalRepository->findBy(
+                [
+                    'staff' => NULL,
+                    'meetingAt' => $meetingDate
+                ]
+            ));
 
-        $daterestantes = $customerCardRepository->datesForCustomersWithoutRep();
+        $daterestantes = $transferArrivalRepository->datesForCustomersWithoutRep();
 
+        // le représentant "skip" si ivan ne veut pas attribuer des gens tout de suite
+        $skipUsername = 'skip';
+        $rep = $userRepository->findBy(['username' => $skipUsername]);
+        $datesWithSkippedClients = $transferArrivalRepository->findDatesWithSkippedClients($rep);
+        
         // si il y a encore des clients (firstclient)
         if ($firstClient != null) {
             //On récupère l'hotel d'arrivé
-            $hotels = [];
-
-            foreach ($firstClient->getTransferArrivals() as $arrival) {
-                    $hotels[] = $arrival->getToArrival();
-                }
-
-            $agency = $firstClient->getAgency();
-            $hotel = $hotels[0];
+            
+            $hotel = $firstClient->getToArrival();
+            $agency = $firstClient->getCustomerCard()->getAgency();
+            // !!! je les ai laissé dans le customer card mais on coompte les arrivals !!!
             $paxAdults = $customerCardRepository->countPaxAdultsAttribbutionRep($meetingDate, $hotel, $agency);
             $paxChildren = $customerCardRepository->countPaxChildrenAttribbutionRep($meetingDate, $hotel, $agency);
             $paxBabies = $customerCardRepository->countPaxBabiesAttribbutionRep($meetingDate, $hotel, $agency);
@@ -84,21 +86,24 @@ class TeamManagerController extends AbstractController
                 //Attribuer le représentant a toutes les personnes sans représentants avec la date 00:01 et qui ont le meme couple hotels-agence
                 $staff = $firstClient->getStaff();
                 
-                // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
-                $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency);
+                // récupérer tous les arrivées qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
+                $arrivalsWithoutRep = $transferArrivalRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency);
                 
+                // récupérer tous les clients qui n ont pas de staff et meeting = $date et qui ont le meme couple hotels-agence
+                /* $customersWithoutRep = $customerCardRepository->findByForAttribbutionRep($meetingDate, $hotel, $agency); */
                 
                 // pour chacun de ces objets, leur attribuer le staff correpondant
-                foreach ($customersWithoutRep as $customer) {
-                    $customer->setStaff($staff);
+                foreach ($arrivalsWithoutRep as $transferArrival) {
+                    $transferArrival->setStaff($staff);
                 }
                 
-                $customerCardRepository->save($customer, true);   
+                $transferArrivalRepository->save($transferArrival, true);   
                             
                 return $this->redirect($this->generateUrl('app_admin_team_manager'));
 
             }
-            
+
+          
             return $this->render('team_manager/attributionRepresentants.html.twig', [
                 'firstClient' => $firstClient,
                 'form' => $form,
@@ -108,7 +113,8 @@ class TeamManagerController extends AbstractController
                 'paxAdults' => $paxAdults,
                 'paxChildren' => $paxChildren,
                 'paxBabies' => $paxBabies,
-                'daterestantes' => $daterestantes
+                'daterestantes' => $daterestantes,
+                'skipDates' => $datesWithSkippedClients
             ]);
         }  
 
@@ -120,30 +126,30 @@ class TeamManagerController extends AbstractController
                 'paxAdults' => $paxAdults,
                 'paxChildren' => $paxChildren,
                 'paxBabies' => $paxBabies,
-                'daterestantes' =>  $daterestantes
+                'daterestantes' =>  $daterestantes,
+                'skipDates' => $datesWithSkippedClients
             ]); 
         } 
-
-
     }
 
     // route qui affiche la liste des rep - client en fonction de la date
     // la liste doit comporter le nombre de client par rep 
     #[Route('/team-manager/briefings/replist', name: 'app_admin_team_manager_replist',methods:["POST", "GET"])]
-    public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository, TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function repList(UserRepository $userRepository, TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
         // utilisation du service qui définit si on utilise la query ou la session
-        $day =  $defineQueryDate->returnDay($request);
+        $day = $defineQueryDate->returnDay($request);
 
-        // on fixe la date que l'on va utiliser dans le filtre
+
+          // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
-        
+
         // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
         $repUsers = $userRepository->findAll();
 
-        // nombre de clients sans attributions
-        $countNonAssignedClient = $customerCardRepository->countNumberNonAttributedMeetingsByDate($date);
+        // nombre de arrivals sans attributions
+        $countNonAssignedClient = $transferArrivalRepository->countNumberNonAttributedMeetingsByDate($date);
         $users = [];
         $paxTab = []; // on va récupérer les paw globaux pour chaque rep
         $paxPerHotelAgency = []; // on va récupérer les pax pour chaque rep et par agence et hotels 
@@ -153,40 +159,39 @@ class TeamManagerController extends AbstractController
        foreach($repUsers as $user) {
            if(in_array('ROLE_REP', $user->getRoles())){  
                $users[] = $user; 
-               
-
-
+            
                // pour la recherche date == meetingDate on récupere les pax de date -1 pour avoir les arrivées
-               $paxTab[$user->getUsername()]['adults'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "adults");
-               $paxTab[$user->getUsername()]['children'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "children");
-               $paxTab[$user->getUsername()]['babies'] = $customerCardRepository->staffPaxAdultsByDate($user, $arrivalDate, "babies");
-               
+               $paxTab[$user->getUsername()]['adults'] = $transferArrivalRepository->staffPaxByDate($user, $date, "adults");
+               $paxTab[$user->getUsername()]['children'] = $transferArrivalRepository->staffPaxByDate($user, $date, "children");
+               $paxTab[$user->getUsername()]['babies'] = $transferArrivalRepository->staffPaxByDate($user, $date, "babies");
+           
+       
                $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
-             
+           
                $regroupementsClients[] = $regroupements;
                foreach ($regroupements as $transferArrival) {
-
-                   $agency = $transferArrival->getCustomerCard()->getAgency();
+                   
                    $hotels = [];
+                   $agency = $transferArrival->getCustomerCard()->getAgency();
                    $hotels[] = $transferArrival->getToArrival();
 
-                   $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', $transferArrival->getflightNumber());
-                   $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', $transferArrival->getflightNumber());
-                   $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', $transferArrival->getflightNumber());
-                   
-                   
-                   $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupAdults;
-                   $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupChildren;
-                   $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupBabies;
+                   //dd($transferArrival->getMeetingAt());
+                   $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint() );
+                   $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                   $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint()); 
+              
+                   $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotels[0]->getId() . '_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
+                   $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotels[0]->getId() . '_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;
+                   $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotels[0]->getId() . '_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupBabies;
+                
                 } 
             }
-        }
-      
+        }  
+
         return $this->render('team_manager/repList.html.twig', [
             'date' => $date,
             'users' => $users,
             'regroupementsClients' => $regroupementsClients,
-            /* 'clientsListByRepAndDate' => $clientsListByRepAndDate,  */
             'countNonAssignedClient' => $countNonAssignedClient,
             'paxTab' => $paxTab,
             'paxPerHotelAgency' => $paxPerHotelAgency
@@ -197,11 +202,11 @@ class TeamManagerController extends AbstractController
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team-manager/briefings/fiche/{user}/date', name: 'app_admin_team_manager_fiche_par_date',methods:["POST", "GET"])]
-    public function ficheRepParDate(User $user, CustomerCardRepository $customerCardRepository, 
-                                                TransferArrivalRepository $transferArrivalRepository,
-                                                MeetingPointRepository $meetingPointRepository,  
-                                                UserRepository $userRepository,
-                                                EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function ficheRepParDate(User $user,
+                                    TransferArrivalRepository $transferArrivalRepository,
+                                    MeetingPointRepository $meetingPointRepository,  
+                                    UserRepository $userRepository,
+                                    EntityManagerInterface $manager, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
         $day =  $defineQueryDate->returnDay($request);
@@ -224,14 +229,24 @@ class TeamManagerController extends AbstractController
             $hotels = [];
             $hotels[] = $transferArrival->getToArrival();
 
-            $paxRegroupAdults = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', $transferArrival->getflightNumber());
-            $paxRegroupChildren = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', $transferArrival->getflightNumber());
-            $paxRegroupBabies = $customerCardRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', $transferArrival->getflightNumber());
-            
+/*             $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'adults', null);
+            $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'children', null);
+            $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($date,$hotels[0],$agency, $user, 'babies', null);
             
             $paxPerHotelAgency['adults'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupAdults;
             $paxPerHotelAgency['children'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupChildren;
-            $paxPerHotelAgency['babies'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupBabies;
+            $paxPerHotelAgency['babies'][$agency->getId() . '_'.$hotels[0]->getId().'_'.$transferArrival->getflightNumber()] =  $paxRegroupBabies; */
+            
+            $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint() );
+            $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+            $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotels[0],$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint()); 
+       
+            $paxPerHotelAgency['adults'][$agency->getId() . '_'.$hotels[0]->getId() . '_'.$transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
+            $paxPerHotelAgency['children'][$agency->getId() . '_'.$hotels[0]->getId() . '_'.$transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;
+            $paxPerHotelAgency['babies'][$agency->getId() . '_'.$hotels[0]->getId() . '_'.$transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupBabies;
+
+
+
         }
 
         // calcul les pax de chaque regroupement
@@ -251,16 +266,16 @@ class TeamManagerController extends AbstractController
             
             // pour chacun de ces objets, mettre a jour time, rep et place
             
-            $testCustomersId = [];
             foreach ($request->request as $key => $currentRequest) {
                 
                 // convertir la clé en tableau
                 $keyTab = explode("_", $key);
-                $transfer = $transferArrivalRepository->findOneBy(['customerCard' => $keyTab[1]]);
-                $firstClient = $customerCardRepository->find($keyTab[1]);
-                $staff = $firstClient->getStaff();
+    
+                $transfer = $transferArrivalRepository->find($keyTab[1]);
+                $firstClient =  $transfer->getCustomerCard();
+                $staff = $transfer->getStaff();
                 $agency = $firstClient->getAgency();
-                $flightNumber = $transfer->getFlightNumber();
+
                 $hotels = []; 
 
                 foreach ($firstClient->getTransferArrivals() as $arrivals) {
@@ -270,32 +285,32 @@ class TeamManagerController extends AbstractController
                 //dump('client id: ' . $firstClient->getId() . ' s: ' .$staff . ' a: ' . $agency . ' h: ' . $hotel);
                 // pour chaque personne ce jour et ce staff, cet hotel et cet agence mettre a jour
                 // 1st récupérer la liste de ces personnes
-                $customersListForThisCouple = $customerCardRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber);
+                $arrivalsListForThisCouple = $transferArrivalRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, null, $transfer->getMeetingAt(), $transfer->getMeetingPoint());
   
                 // 2d mettre a jour
                 // récupérer chaque couple hotel agence pour ce rep a ce jour 
                 // pour chaque résultats  
 
-                foreach ($customersListForThisCouple as $customer ) {
+                foreach ($arrivalsListForThisCouple as $arrival ) {
 
                     // récupérer l'objet correspondant a l id
                     //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
-                    $currentCustommerCard = $customer;
+                    $currentArrival = $arrival;
 
                     // si c est heure set l objet avec l heure
                     if ($keyTab[0] == 'hour') {
                         $dateTimeImmutable = new DateTimeImmutable($day . ' '. $currentRequest);
-                        $currentCustommerCard->setMeetingAt($dateTimeImmutable);
+                        $currentArrival->setMeetingAt($dateTimeImmutable);
                     }
                     // si c est l'endroit convertir l objet avec l endroit 
                     else if ($keyTab[0] == 'meetingPoint') {
                         $meetingPoint = $meetingPointRepository->find($currentRequest);
-                        $currentCustommerCard->setMeetingPoint($meetingPoint);
+                        $currentArrival->setMeetingPoint($meetingPoint);
                     }
                     // si c est l'endroit convertir l objet avec l endroit 
                     else if ($keyTab[0] == 'staff') {
                         $staff = $userRepository->find($currentRequest);
-                        $currentCustommerCard->setStaff($staff);
+                        $currentArrival->setStaff($staff);
                     }
                 }
 
@@ -336,12 +351,14 @@ class TeamManagerController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
 
         // attraper la liste des objets correpsondants au representant et au jour 
-        $attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
+        $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date);
 
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
     
 
+        // on check - pour le 1er client, l heure, puis le rep, puis le lieu, puis le 2eme client, l heure ... etc
+        // si jamais on veut mettre à jour à partir d ici
         if (!empty($_POST) and $request->getMethod() == "POST") { 
 
             // récupérer toutes les personnes avec ce couple ce jour et staff 
@@ -352,49 +369,32 @@ class TeamManagerController extends AbstractController
                 
                 // convertir la clé en tableau
                 $keyTab = explode("_", $key);
-                $transfer = $transferArrivalRepository->findOneBy(['customerCard' => $keyTab[1]]);
-                $firstClient = $customerCardRepository->find($keyTab[1]);
-                $staff = $firstClient->getStaff();
-                $agency = $firstClient->getAgency();
+
+                $transfer = $transferArrivalRepository->find($keyTab[1]);
+                $client = $transfer->getCustomerCard();
+                $staff = $transfer->getStaff();
+                $agency = $client->getAgency();
                 $flightNumber = $transfer->getFlightNumber();
-                $hotels = []; 
+                $hotel = $transfer->getToArrival();
 
-                foreach ($firstClient->getTransferArrivals() as $arrivals) {
-                    $hotels[] = $arrivals->getToArrival();
-                }
-                $hotel = $hotels[0];
-                //dump('client id: ' . $firstClient->getId() . ' s: ' .$staff . ' a: ' . $agency . ' h: ' . $hotel);
-                // pour chaque personne ce jour et ce staff, cet hotel et cet agence mettre a jour
-                // 1st récupérer la liste de ces personnes
-                $customersListForThisCouple = $customerCardRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber);
-                
-                // 2d mettre a jour
-                // récupérer chaque couple hotel agence pour ce rep a ce jour 
-                // pour chaque résultats  
-
-                foreach ($customersListForThisCouple as $customer ) {
-
-                    // récupérer l'objet correspondant a l id
-                    //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
-                    $currentCustommerCard = $customer;
+                //  mettre à jour le transfer
 
                     // si c est heure set l objet avec l heure
                     if ($keyTab[0] == 'hour') {
                         $dateTimeImmutable = new DateTimeImmutable($day . ' '. $currentRequest);
-                        $currentCustommerCard->setMeetingAt($dateTimeImmutable);
+                        $transfer->setMeetingAt($dateTimeImmutable);
                     }
                     // si c est l'endroit convertir l objet avec l endroit 
                     else if ($keyTab[0] == 'meetingPoint') {
                         $meetingPoint = $meetingPointRepository->find($currentRequest);
-                        $currentCustommerCard->setMeetingPoint($meetingPoint);
+                        $transfer->setMeetingPoint($meetingPoint);
                     }
                     // si c est l'endroit convertir l objet avec l endroit 
                     else if ($keyTab[0] == 'staff') {
                         $staff = $userRepository->find($currentRequest);
-                        $currentCustommerCard->setStaff($staff);
+                        $transfer->setStaff($staff);
+                  
                     }
-                }
-
             }
            
 
@@ -430,7 +430,7 @@ class TeamManagerController extends AbstractController
     // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team-manager/briefings/stickers',name: 'app_admin_stickers_par_date',methods:["POST", "GET"])]
-    public function stickersParDate(CustomerCardRepository $customerCardRepository, 
+    public function stickersParDate(TransferArrivalRepository $transferArrivalRepository,
                                     EntityManagerInterface $manager, 
                                     AgencyRepository $agencyRepository,
                                     AirportHotelRepository $airportHotelRepository,
@@ -445,14 +445,11 @@ class TeamManagerController extends AbstractController
         // sert a prévenir l utilisateur que lorsque qu il a changé les agences il faut aussi mettre a jour la date
         $formAgencySend = false;
         $user = $this->getUser();
-
-        
         $agencies = $agencyRepository->findAll();
         $airports = $airportHotelRepository->findBy(['isAirport' => true]);
         
         // regarder si une fiche Printing Options existe pour cet utilisateur
         $printingOptionsUser = $printingOptionsRepository->findOneBy(["user" => $user]); 
-        $printingOptionsUserExist = true;
         
         $choosenAirports = [];
         $choosenAgencies = [];
@@ -464,34 +461,30 @@ class TeamManagerController extends AbstractController
                 $choosenAgencies[] = $agency;
             }
         }
-
-
+        
         // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $customerCardRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
-
-
+        $meetings = $transferArrivalRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
+    
         $checkFormAgencies = $request->request->get("form_check_agencies");
         if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
             foreach ($agencies as $agency) {
-                 
+                
                 $data = $request->request->get("agence_". $agency->getId());
                 
                 $test = ($data == "on") ? true : false;
-
+                
                 // si non, la créer
                 
                 if ($printingOptionsUser == null) {
                     $printingOptionsUser = new PrintingOptions();
                     $printingOptionsUser->setUser($user);
-                    $printingOptionsUserExist = false;
-
                 } 
-
-                    if($test) {
-                        $printingOptionsUser->addAgency($agency);
-                    } else {
-                        $printingOptionsUser->removeAgency($agency);
-                    }
+                
+                if($test) {
+                    $printingOptionsUser->addAgency($agency);
+                } else {
+                    $printingOptionsUser->removeAgency($agency);
+                }
               
                 foreach ($airports as $airport) { 
                     $data = $request->request->get("airport_". $airport->getId());

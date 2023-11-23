@@ -8,30 +8,39 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefineQueryDate { 
 
-
-
     public function returnDay(Request $request) 
     {
         $session = $request->getSession();
             
         $queryDate = $request->query->get('date');
+        if ((!preg_match('/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/', $queryDate)) and ($session->get('date') == null) )  { 
+            $queryDate = null;
+            $session->set('date', null);
+        }
+
+        else if ((!preg_match('/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/', $queryDate)) and ($session->get('date') != null) ) {
+            $queryDate = null;
+        }
         
-    
+
         // quand on arrive, pas de query et pas de session
         if (($queryDate == NULL) and ($session->get('date') == null)) {
             $date = new DateTime('now');
-            $date->modify('+1 day');
+            $date->modify('+1 day'); 
             $date = $date->format('Y-m-d');
             $date = new DateTimeImmutable($date);
             $day = $date->format('Y-m-d');
         }
         // si on choisi une date 
         else if ($queryDate != null) {
-            $session->set('date', $queryDate);
-            $dateEnSession = $session->get('date');
-            $date = $dateEnSession;
-            $date = new DateTimeImmutable($date);
-            $day = $date->format('Y-m-d');
+    
+               $session->set('date', $queryDate);
+               $dateEnSession = $session->get('date');
+               $date = $dateEnSession;
+               $date = new DateTimeImmutable($date);
+               $day = $date->format('Y-m-d');
+              
+        
         }
         else if (($queryDate == NULL) and ($session->get('date') != null)) {
             $dateEnSession = $session->get('date');

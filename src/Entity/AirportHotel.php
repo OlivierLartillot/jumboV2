@@ -46,6 +46,11 @@ class AirportHotel
         return $this->id;
     }
 
+    public function __toString()
+    {
+        return ucfirst($this->name);
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -160,10 +165,7 @@ class AirportHotel
         return $this;
     }
 
-    public function __toString()
-    {
-        return $this->name;
-    }
+
 
     /**
      * @return Collection<int, PrintingOptions>
