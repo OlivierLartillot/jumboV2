@@ -64,7 +64,7 @@ class CustomerCardRepository extends ServiceEntityRepository
             ->andWhere('transferArrival.date <= :date_end')
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
             ->setParameter('date_end', $dateTimeImmutable->format($dateTime . ' 23:59:59'))
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('c.holder', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -306,7 +306,9 @@ class CustomerCardRepository extends ServiceEntityRepository
             }
         }
 
-        $requete = $requete ->getQuery()->getResult();
+        $requete = $requete->orderBy('c.holder', 'ASC')
+                            ->getQuery()
+                            ->getResult();
 
         return $requete;
 

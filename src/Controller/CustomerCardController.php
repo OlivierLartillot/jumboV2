@@ -58,25 +58,30 @@ class CustomerCardController extends AbstractController
                 }
             }
         }
-        
-        // si on a cliqué sur envoyé
-        if (count($request->query) > 0) {
+
             $empty = true;
-            //on vérifie si on a envoyé au moins un élément de tri
-            foreach ($request->query as $param) {
-                if ($param != null) {
-                    $empty = false;
-                    break;
+            // on vérifie si on a cliqué sur envoyé
+            if (count($request->query) > 0) {
+                // si y en a qu un et que c est page alors tu renvoie la page de base donc empty true
+                if ( (count($request->query) === 1) and $request->query->get('page') ) {
+                    $empty = true;
+                } else {
+                    //on vérifie si on a envoyé au moins un élément de tri (donc différent de page)
+                    foreach ($request->query as $param) {    
+                        if ($param != null) {
+                            $empty = false;
+                            break;
+                        }
+                    }
+
                 }
-                
             }
+            
 
             // si y a au moins un élément envoyé au tri
             if ($empty == false) {
 
-    
                 // alors on peut récupérer les données et les filtrer
-                
                 $customerPresence = $request->query->get('customerPresence');
                 
                 // si tout va bien  on envoie la dql 
@@ -127,8 +132,7 @@ class CustomerCardController extends AbstractController
             }
             // sinon on renvoie la page de base 
             // todo ? peut etre un message flash ?
-        }
-
+        
 
         // quand on arrive sur la page on récupere les mouvements du jour
         $findAllByNow = $customerCardRepository->findByNow();
