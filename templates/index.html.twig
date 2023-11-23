@@ -2,12 +2,15 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Dashboard'}) }}
 
+
+
+
         <div class="row">
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <div>
-                            <div class="row">
+                        {% if is_granted('ROLE_SUPERMAN') %}
+                        <div class="row">
                             <h5>Transfer Management</h5>
                             {% if doublonsArrivee %}
                                 <div class="col-md-4">
@@ -79,11 +82,13 @@
 
                             {% endif %}
                         </div>
+                        <!-- end row-->
+                        {% endif %}
                     </div>
                 </div>
-            </div> <!-- end col-->
+            </div> 
+            <!-- end col-->
         </div>
-
  
 {{ include('partials/footer-regroupement.html.twig') }}
 
