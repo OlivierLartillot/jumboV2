@@ -44,8 +44,8 @@ class HomeController extends AbstractController
        
 
  $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
-   /*       $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
-        $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures(); */
+ $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
+    /*     $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures(); */
 
         $doublonsArrivee = $doublonsArrivee ? true : false;
 /*        $doublonsInterHotel = $doublonsInterHotel ? true : false;
