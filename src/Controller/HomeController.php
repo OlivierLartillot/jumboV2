@@ -43,14 +43,14 @@ class HomeController extends AbstractController
 
        
 
- $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
- $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
+        $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
+        $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures(); 
 
         $doublonsArrivee = $doublonsArrivee ? true : false;
-/*        $doublonsInterHotel = $doublonsInterHotel ? true : false;
+        $doublonsInterHotel = $doublonsInterHotel ? true : false;
         $doublonsDepart = $doublonsDepart ? true : false;
-   */ 
+  
         return $this->render('index.html.twig', [
 /*             'doublonsArrivee' => $doublonsArrivee,
             'doublonsInterHotel' => $doublonsInterHotel,
