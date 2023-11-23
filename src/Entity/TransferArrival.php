@@ -80,6 +80,7 @@ class TransferArrival
 
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable('now');
+        $this->duplicateIgnored = false;
     }
     
     public function getId(): ?int
