@@ -11,7 +11,15 @@
                                         </div>
                                         <div>
                                             <h4 class="mb-1 mt-1">Dashboard</h4>
+                                            <ul>
+                                            {% for doublon in doublonsArrivee %} 
+                                                <li>
+                                                    <a href="{{path('app_customer_card_show',{id: doublon.transferArrival.customerCard.id } )}}">{{ doublon.transferArrival.customerCard.holder}}</a>
 
+                                                    <a href="{{ path('ignore_duplicate_transfers', {id: doublon.transferArrival.customerCard.id, param:'arrival' }) }}" class="btn btn-danger">Ignore duplicate</a>
+                                                </li>
+                                            {% endfor %} 
+                                            </ul>
                                         </p>
                                     </div>
                                 </div>

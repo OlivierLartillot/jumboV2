@@ -14,26 +14,80 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferDepartureRepository;
+use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use App\Services\ErrorsImportManager;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use League\Csv\Reader;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HomeController extends AbstractController
 {
 
     #[Route('/admin', name: 'home' )]
-    public function accueil()
+    public function accueil(TransferArrivalRepository $transferArrivalRepository, TransferInterHotelRepository $transferInterHotelRepository, TransferDepartureRepository $transferDepartureRepository)
     {
+        /** Peu importe le jour !!! **/
+        // recherche pour un client si il y a deux arrivées
+
+        $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
+       
+        // recherche pour un client si il y a deux interHotels
+        // recherche pour un client si il y a deux départ
+
+        // renvoie chaque résultat à la page
+
+
+
         return $this->render('index.html.twig', [
+            'doublonsArrivee' => $doublonsArrivee,
         ]);
+    }
+    
+    #[Route('/ignore-duplicate/transfers/{id}/{param}', name: 'ignore_duplicate_transfers' )]
+    public function ignoreDuplicateArrivals($id, 
+                                            $param,
+                                            TransferArrivalRepository $transferArrivalRepository, 
+                                            TransferInterHotelRepository $transferInterHotelRepository,
+                                            TransferDepartureRepository $transferDepartureRepository,
+                                            EntityManagerInterface $em): RedirectResponse
+    {
+        
+        //TODO: Il faut avoir les droits pour accéder a cette page !!!!
+
+        //********************************************************* */
+        $currentRepository = '';
+        if ($param === 'arrival') {
+            $currentRepository = $transferArrivalRepository;
+        } else if ($param === 'interhotel') {
+            $currentRepository = $transferInterHotelRepository;
+         } else if ($param === 'departure') {
+            $currentRepository = $transferDepartureRepository;
+         } else {
+            return throw $this->createAccessDeniedException('Please, don\'t modify the URL');
+         }
+
+        // récupère toutes les arrivées de ce client et passe les en ignoré (true)
+        $alltransfersForThisClient = $currentRepository->findBy([
+            'customerCard' => $id 
+        ]);
+
+        foreach ($alltransfersForThisClient as $transfer) {
+            $transfer->setDuplicateIgnored(true);
+        }
+       
+        $em->flush();
+
+        return $this->redirectToRoute('home');
     }
 
     #[Route('/team-manager/import', name: 'app_import', methods: ['GET', 'POST'] )]

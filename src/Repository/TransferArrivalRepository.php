@@ -55,6 +55,33 @@ class TransferArrivalRepository extends ServiceEntityRepository
                     ->getResult();
     }
 
+
+    /**
+     * 
+     * retourne un tableau des arrivées multiples pour un meme compte (customer_card)
+     */
+    public function findMultiplesArrivals() 
+    {
+        $tableauFinalDesDoublons = [];
+        $results = $this->createQueryBuilder('t')
+                    ->select('t as transferArrival', 'count(t.id) as count', 't.duplicateIgnored')
+                    ->where('t.duplicateIgnored = false')
+                    ->groupBy('t.customerCard')
+                    ->getQuery()
+                    ->getResult();
+
+        foreach ($results as $result) {
+            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
+
+                $tableauFinalDesDoublons[] = $result;
+            }
+        }
+
+        return $tableauFinalDesDoublons;
+    }
+
+
+
     /**
      * @return TransferArrival[] Returns an array of TransferArrival objects
      */
