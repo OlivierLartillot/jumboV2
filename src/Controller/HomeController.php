@@ -42,7 +42,7 @@ class HomeController extends AbstractController
         // recherche pour un client si il y a deux arrivées
 
         $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
-        $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
+/*         $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures();
 
         $doublonsArrivee = $doublonsArrivee ? true : false;
@@ -53,7 +53,7 @@ class HomeController extends AbstractController
             'doublonsArrivee' => $doublonsArrivee,
             'doublonsInterHotel' => $doublonsInterHotel,
             'doublonsDepart' => $doublonsDepart
-        ]);
+        ]); */
     }
     
     #[Route('/duplicate/transfers/{param}', name: 'duplicate_transfers' )]
@@ -64,7 +64,7 @@ class HomeController extends AbstractController
     {
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
-        
+
         //TODO: Il faut avoir les droits pour accéder a cette page !!!!
 
         //********************************************************* */
