@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\DragAndDrop;
 use App\Entity\TransferArrival;
 use App\Entity\TransferDeparture;
 use App\Entity\TransferInterHotel;
 use App\Entity\TransferJoan;
 use App\Entity\TransferVehicleArrival;
-use App\Entity\TransferVehicleDeparture;
 use App\Entity\TransportCompany;
 use App\Form\TransferJoanType;
 use App\Repository\AirportHotelRepository;
