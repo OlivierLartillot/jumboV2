@@ -34,14 +34,16 @@ class HomeController extends AbstractController
 {
 
     #[Route('/admin', name: 'home' )]
-    public function accueil(TransferArrivalRepository $transferArrivalRepository, 
-                            TransferInterHotelRepository $transferInterHotelRepository, 
-                            TransferDepartureRepository $transferDepartureRepository)
+    public function accueil()
     {
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
 
- /*       $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
+ /*       
+ TransferArrivalRepository $transferArrivalRepository, 
+                            TransferInterHotelRepository $transferInterHotelRepository, 
+                            TransferDepartureRepository $transferDepartureRepository
+ $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
          $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures();
 
