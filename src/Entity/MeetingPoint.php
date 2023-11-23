@@ -18,6 +18,9 @@ class MeetingPoint
     #[ORM\Column(length: 100)]
     private ?string $en = null;
 
+    #[ORM\OneToMany(mappedBy: 'meetingPoint', targetEntity: CustomerCard::class)]
+    private Collection $customerCards;
+
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $es = null;
 
@@ -27,12 +30,9 @@ class MeetingPoint
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $it = null;
 
-    #[ORM\OneToMany(mappedBy: 'meetingPoint', targetEntity: TransferArrival::class)]
-    private Collection $transferArrivals;
-
     public function __construct()
     {
-        $this->transferArrivals = new ArrayCollection();
+        $this->customerCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,6 +48,36 @@ class MeetingPoint
     public function setEn(string $en): self
     {
         $this->en = $en;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CustomerCard>
+     */
+    public function getCustomerCards(): Collection
+    {
+        return $this->customerCards;
+    }
+
+    public function addCustomerCard(CustomerCard $customerCard): self
+    {
+        if (!$this->customerCards->contains($customerCard)) {
+            $this->customerCards->add($customerCard);
+            $customerCard->setMeetingPoint($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomerCard(CustomerCard $customerCard): self
+    {
+        if ($this->customerCards->removeElement($customerCard)) {
+            // set the owning side to null (unless already changed)
+            if ($customerCard->getMeetingPoint() === $this) {
+                $customerCard->setMeetingPoint(null);
+            }
+        }
 
         return $this;
     }
@@ -100,35 +130,5 @@ class MeetingPoint
         }
 
         return $this->$lang;
-    }
-
-    /**
-     * @return Collection<int, TransferArrival>
-     */
-    public function getTransferArrivals(): Collection
-    {
-        return $this->transferArrivals;
-    }
-
-    public function addTransferArrival(TransferArrival $transferArrival): static
-    {
-        if (!$this->transferArrivals->contains($transferArrival)) {
-            $this->transferArrivals->add($transferArrival);
-            $transferArrival->setMeetingPoint($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransferArrival(TransferArrival $transferArrival): static
-    {
-        if ($this->transferArrivals->removeElement($transferArrival)) {
-            // set the owning side to null (unless already changed)
-            if ($transferArrival->getMeetingPoint() === $this) {
-                $transferArrival->setMeetingPoint(null);
-            }
-        }
-
-        return $this;
     }
 }

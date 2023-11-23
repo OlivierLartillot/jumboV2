@@ -18,12 +18,12 @@ class Status
     #[ORM\Column(length: 30)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'status', targetEntity: TransferArrival::class)]
-    private Collection $transferArrivals;
+    #[ORM\OneToMany(mappedBy: 'status', targetEntity: CustomerCard::class)]
+    private Collection $customerCards;
 
     public function __construct()
     {
-        $this->transferArrivals = new ArrayCollection();
+        $this->customerCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -43,38 +43,38 @@ class Status
         return $this;
     }
 
-    public function __toString()
-    {
-        return $this->name; 
-    }
-
     /**
-     * @return Collection<int, TransferArrival>
+     * @return Collection<int, CustomerCard>
      */
-    public function getTransferArrivals(): Collection
+    public function getCustomerCards(): Collection
     {
-        return $this->transferArrivals;
+        return $this->customerCards;
     }
 
-    public function addTransferArrival(TransferArrival $transferArrival): static
+    public function addCustomerCard(CustomerCard $customerCard): self
     {
-        if (!$this->transferArrivals->contains($transferArrival)) {
-            $this->transferArrivals->add($transferArrival);
-            $transferArrival->setStatus($this);
+        if (!$this->customerCards->contains($customerCard)) {
+            $this->customerCards->add($customerCard);
+            $customerCard->setStatus($this);
         }
 
         return $this;
     }
 
-    public function removeTransferArrival(TransferArrival $transferArrival): static
+    public function removeCustomerCard(CustomerCard $customerCard): self
     {
-        if ($this->transferArrivals->removeElement($transferArrival)) {
+        if ($this->customerCards->removeElement($customerCard)) {
             // set the owning side to null (unless already changed)
-            if ($transferArrival->getStatus() === $this) {
-                $transferArrival->setStatus(null);
+            if ($customerCard->getStatus() === $this) {
+                $customerCard->setStatus(null);
             }
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name; 
     }
 }

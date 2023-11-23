@@ -19,7 +19,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for agency in agencies|sort((a,b) => a.name <=> b.name )  %}
+                                {% for agency in agencies %}
                                     <tr>
                                         <td>{{ agency.id }}</td>
                                         <td>{{ agency.name|title }}</td>

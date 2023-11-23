@@ -19,21 +19,3 @@ au lieu de
 ```php
     ->groupBy('c.staff', 'c.flightNumber') ...
 ```
-
-## Notice: SessionHandler::gc(): ps_files_cleanup_dir: opendir(/var/cpanel/php/sessions/ea-php82) failed: Permission denied (13)
-
-### description: 
-
-Lorsque je repasse en dev sur le serveur de prod (bluehost) cette erreur apparait
-
-### Résolution
-
-Changer le php ini temporaire => "session.save_path"
-j'ai ajouté un dossier tmp dans var et fait pointé le session.save.path vers /var/tmp
-Dans Bluehost on le trouve dans cpanel=>PHP=>php ini
-
-## Debug bar ne s'affiche pas
-
-config/packages/dev/web_profiler.yaml
-
-passer la => toolbar: true

@@ -4,22 +4,22 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
+use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\CustomerCardType;
-use App\Form\TransferArrivalNewType;
+use App\Form\CustomerCardNewType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
 use App\Repository\CommentRepository;
 use App\Repository\CustomerCardRepository;
-use App\Repository\MeetingPointRepository;
 use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferVehicleArrivalRepository;
 use App\Repository\TransferVehicleDepartureRepository;
-
+use App\Repository\TransferVehicleInterHotelRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -43,7 +43,7 @@ class CustomerCardController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
 
-        //Listes des informations a afficher dans les tris
+            //Listes des informations a afficher dans les tris
         $agencies = $agencyRepository->findAllAsc();
         $hotels = $airportHotelRepository->findAllAsc();
    
@@ -94,6 +94,7 @@ class CustomerCardController extends AbstractController
                 $search = $request->query->get('search');
                     
                 $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
+
 
                 // la requete qui execute la recherche
                 $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
@@ -166,16 +167,14 @@ class CustomerCardController extends AbstractController
     }
     
     #[Route('team-manager/pax', name: 'app_customer_card_pax', methods: ['GET'])]
-    public function pax(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository, StatusRepository $statusRepository): Response
+    public function pax(Request $request, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
-     
+        
         $users = $userRepository->findBy([],['username' => 'ASC']);
         $reps = [];
         foreach ($users as $user) {
             if (in_array("ROLE_REP", $user->getRoles() )) {
-                if ($user->getUsername() != 'skip') {
-                    $reps[] = $user;
-                }
+                $reps[] = $user;
             }
         }
         // on va ranger les résultats dans un tableau pour les transmettre a la vue en une fois
@@ -199,16 +198,11 @@ class CustomerCardController extends AbstractController
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-            $dateStart = $dateStart->format('Y-m-d');
-            $dateEnd = new DateTimeImmutable('now');
-            $dateEnd = $dateEnd->format('Y-m-d');
-            $rep="all";
+                $dateEnd = new DateTimeImmutable('now');
+                $rep="all";
         }
 
-
-        $noShow = $statusRepository->findOneBy(["name"=> "No Show"]);
-
-         //pax adults de tel date à tel date
+        //pax adults de tel date à tel date
         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
         $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children");
@@ -219,16 +213,16 @@ class CustomerCardController extends AbstractController
         $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
         $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
         // pax adults sans no show
-        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults", $noShow);
+        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "adults", 'No Show');
         $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
-        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children", $noShow);
+        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "children", 'No Show');
         $results['nbrChildrenShow'] = intval($results['nbrChildrenShow']);
         $results['paxChildrenShow'] = $results['nbrChildrenShow'] * 0.5;
-        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "babies", $noShow);
+        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $rep, "babies", 'No Show');
         $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
         $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
         $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
-        
+
         if ($rep == "all") {
             $tabDetails = [];
             $i = 0;
@@ -239,23 +233,20 @@ class CustomerCardController extends AbstractController
                 $tabDetails[$i]['nbrTotalAdults'] = intval($tabDetails[$i]['nbrTotalAdults']);
                 $tabDetails[$i]['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children");
                 $tabDetails[$i]['nbrTotalChildren'] = intval($tabDetails[$i]['nbrTotalChildren']);
+                
                 $tabDetails[$i]['paxTotalChildren'] = $tabDetails[$i]['nbrTotalChildren'] * 0.5;
                 $tabDetails[$i]['nbrTotalbabies'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies");
                 $tabDetails[$i]['nbrTotalbabies'] = intval($tabDetails[$i]['nbrTotalbabies']);
                 $tabDetails[$i]['sumNbrTotal'] = $tabDetails[$i]['nbrTotalAdults'] + $tabDetails[$i]['nbrTotalChildren'] + $tabDetails[$i]['nbrTotalbabies'];
                 $tabDetails[$i]['sumPaxTotal'] = $tabDetails[$i]['nbrTotalAdults'] + $tabDetails[$i]['paxTotalChildren'];
-
-
-
                 // pax adults sans no show
-                $tabDetails[$i]['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults", $noShow);
+                $tabDetails[$i]['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "adults", 'No Show');
                 $tabDetails[$i]['nbrAdultsShow'] = intval($tabDetails[$i]['nbrAdultsShow']);
-                $tabDetails[$i]['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children", $noShow);
+                $tabDetails[$i]['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "children", 'No Show');
                 $tabDetails[$i]['nbrChildrenShow'] = intval($tabDetails[$i]['nbrChildrenShow']);
                 $tabDetails[$i]['paxChildrenShow'] = $tabDetails[$i]['nbrChildrenShow'] * 0.5;
-                $tabDetails[$i]['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies", $noShow);
+                $tabDetails[$i]['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $repUser, "babies", 'No Show');
                 $tabDetails[$i]['nbrBabiesShow'] = intval($tabDetails[$i]['nbrBabiesShow']);
-
                 $tabDetails[$i]['sumNbrShow'] = $tabDetails[$i]['nbrAdultsShow'] + $tabDetails[$i]['nbrChildrenShow'] + $tabDetails[$i]['nbrBabiesShow'];
                 $tabDetails[$i]['sumPaxShow'] = $tabDetails[$i]['nbrAdultsShow'] + $tabDetails[$i]['paxChildrenShow'];
 
@@ -273,7 +264,7 @@ class CustomerCardController extends AbstractController
     }
 
     #[Route('/pax/rep/{id}', name: 'app_customer_card_pax_par_rep', methods: ['GET', 'POST'])]
-    public function paxParRep(Request $request, User $user, CustomerCardRepository $customerCardRepository, StatusRepository $statusRepository): Response
+    public function paxParRep(Request $request, User $user, CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     { 
         
         //! Attention si l id est différent du user courant, pas le droit
@@ -302,13 +293,8 @@ class CustomerCardController extends AbstractController
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-            $dateStart = $dateStart->format('Y-m-d');
             $dateEnd = new DateTimeImmutable('now');
-            $dateEnd = $dateEnd->format('Y-m-d');
         }
-
-        $noShow = $statusRepository->findOneBy(["name"=> "No Show"]);
-
         //pax adults de tel date à tel date
         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
@@ -320,12 +306,12 @@ class CustomerCardController extends AbstractController
         $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
         $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
         // pax adults sans no show
-        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", $noShow);
+        $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", 'No Show');
         $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
-        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children", $noShow);
+        $results['nbrChildrenShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children", 'No Show');
         $results['nbrChildrenShow'] = intval($results['nbrChildrenShow']);
         $results['paxChildrenShow'] = $results['nbrChildrenShow'] * 0.5;
-        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies", $noShow);
+        $results['nbrBabiesShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies", 'No Show');
         $results['nbrBabiesShow'] = intval($results['nbrBabiesShow']);
         $results['sumNbrShow'] = $results['nbrAdultsShow'] + $results['nbrChildrenShow'] + $results['nbrBabiesShow'];
         $results['sumPaxShow'] = $results['nbrAdultsShow'] + $results['paxChildrenShow'];
@@ -337,16 +323,18 @@ class CustomerCardController extends AbstractController
 
     #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
     public function transportationManagement(Request $request, 
-                                             TransferVehicleArrivalRepository $transferVehicleArrivalRepository, 
-                                             CustomerCardRepository $customerCardRepository, 
-                                             UserRepository $userRepository): Response
+                                             TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
+                                             TransferVehicleInterHotelRepository $transferVehicleInterHotelRepository,
+                                             TransferVehicleDepartureRepository $transferVehicleDepartureRepository
+    
+        , CustomerCardRepository $customerCardRepository, UserRepository $userRepository): Response
     {
 
         // TODO refaire les compagnies a partir du repos vehicleArrival
 
         $transportCompaniesArr = $transferVehicleArrivalRepository->transportCompanyList();
-/*         $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
-        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyLis t();*/
+        $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
+        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyList();
 
         $transportCompanies = [];
         foreach ($transportCompaniesArr as $company) {
@@ -484,56 +472,55 @@ class CustomerCardController extends AbstractController
     #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
     public function new(Request $request, 
                         CustomerCardRepository $customerCardRepository,
-                        AgencyRepository $agencyRepository,
-                        TransferArrivalRepository $transferArrivalRepository,
-                        MeetingPointRepository $meetingPointRepository,
-                        StatusRepository $statusRepository
+                        AirportHotelRepository $airportHotelRepository,
+                        TransferArrivalRepository $transferArrivalRepository
                         ): Response
     {
 
 
 
-        $transferArrival = new TransferArrival();
-        $form = $this->createForm(TransferArrivalNewType::class, $transferArrival);
+        $customerCard = new CustomerCard();
+        $form = $this->createForm(CustomerCardNewType::class, $customerCard);
         $form->handleRequest($request);
 
+        // récupérer les airports
+        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
+        // récupérer les hotels
+        $hotels = $airportHotelRepository->findBy(['isAirport' => false]);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $customerCard->setStatusUpdatedBy($this->getUser());
 
-            $post = $_POST['transfer_arrival_new'];
-   
-            $transferArrival->setStatusUpdatedBy($this->getUser());
-            $transferArrival->setStatusUpdatedAt(new DateTimeImmutable('now', new DateTimeZone('America/Santo_Domingo')));
-            //récupère le premier élément de meeting
-            $firstMeetingPoint = $meetingPointRepository->findOneBy([]);
-            $firstStatus = $statusRepository->findOneBy([]);    
-            $transferArrival->setMeetingPoint($firstMeetingPoint);
-            $transferArrival->setStatus($firstStatus);
-
-
-            // mettre a jour le meeting grace a l'arrivée;
-            $meetingDate = new DateTimeImmutable($post['date']);
+            // mettre a jour le meeting grace a l'arrivée
+            $meetingDate = new DateTimeImmutable($request->request->get('date'));
             $meetingDateFormat = new DateTimeImmutable($meetingDate->format('Y-m-d 00:01'));
             $meetingDateHour = $meetingDateFormat->modify('+1 day');
-            $transferArrival->setMeetingAt( $meetingDateHour);  
+            $customerCard->setMeetingAt( $meetingDateHour);  
 
- 
-            $customerCard = new CustomerCard();
-            $customerCard->setHolder($post['fullName']);
-            $customerCard->setReservationNumber($post['reservationNumber']);
-            $customerCard->setJumboNumber($post['jumboNumber']);
-            $agencyObject = $agencyRepository->find($post['agency']);
-            $customerCard->setAgency($agencyObject);
+            $airport = $airportHotelRepository->find($request->request->get('fromStart'));
+            $hotel = $airportHotelRepository->find($request->request->get('toArrival'));
 
-            $transferArrival->setCustomerCard($customerCard);
+            $arrival = new TransferArrival();
+            $arrival->setServiceNumber($request->request->get('serviceNumber'));
+            $arrival->setFlightNumber($request->request->get('flightNumber'));
+            $arrival->setIsCollective($request->request->get('isCollective'));
+            $arrival->setDate(new DateTimeImmutable($request->request->get('date')));
+            $arrival->setHour(new DateTimeImmutable($request->request->get('hour')));
+            $arrival->setDateHour(new DateTimeImmutable($request->request->get('dateHour')));
+            $arrival->setFromStart($airport);
+            $arrival->setToArrival($hotel);
+            $arrival->setCustomerCard($customerCard);
 
-            $customerCardRepository->save($customerCard, false);
-            $transferArrivalRepository->save($transferArrival, true);
+            $customerCardRepository->save($customerCard, true);
+            $transferArrivalRepository->save($arrival, true);
             return $this->redirectToRoute('app_customer_card_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer_card/new.html.twig', [
-            'customer_card' => $transferArrival,
+            'customer_card' => $customerCard,
             'form' => $form,
+            'airports' => $airports,
+            'hotels' => $hotels,
         ]);
     }
 
@@ -555,24 +542,13 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['name'] = 'Arrival';
             $tableauTimeline[$i]['date'] = $arrival->getDate();
             $tableauTimeline[$i]['hour'] = $arrival->getHour()->format('H:i');
-            
-            $tableauTimeline[$i]['name'] = 'Meeting';
-            $tableauTimeline[$i]['date'] = $arrival->getMeetingAt();
-            $tableauTimeline[$i]['hour'] = $arrival->getMeetingAt()->format('H:i');
-            $tableauTimeline[$i]['staff'] = $arrival->getStaff();
-            $tableauTimeline[$i]['meetingPoint'] = $arrival->getMeetingPoint();
-            $i++;            
-            
-            
-            
-            
             $i++;
         }
 
         foreach ($customerCard->getTransferInterHotels() as $interHotel) {
             $tableauTimeline[$i]['name'] = 'Inter Hotel';
             $tableauTimeline[$i]['date'] = $interHotel->getDate();
-            $tableauTimeline[$i]['hour'] = $interHotel->getPickUp()->format('H:i');
+            $tableauTimeline[$i]['hour'] = $interHotel->getHour()->format('H:i');
             $i++;
         }
         foreach ($customerCard->getTransferDeparture() as $departure) {
@@ -581,14 +557,14 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
             $i++;
         }
-/*         if ($customerCard->getMeetingAt()) {
+        if ($customerCard->getMeetingAt()) {
             $tableauTimeline[$i]['name'] = 'Meeting';
             $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt();
             $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
             $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
             $tableauTimeline[$i]['meetingPoint'] = $customerCard->getMeetingPoint();
             $i++;
-        } */
+        }
 
 
 
@@ -689,12 +665,28 @@ class CustomerCardController extends AbstractController
             return throw $this->createAccessDeniedException();
         }
 
+        // trouve le status
+        $oldStatus = $customerCard->getStatus();
 
         $form = $this->createForm(CustomerCardType::class, $customerCard);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // si le status à changé on met à jour le status updatedBy
+            $newStatus = $customerCard->getStatus();
+            if ($oldStatus->getName() != $newStatus->getName()) {
+                $dateNowDominican = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo')); 
+                $customerCard->setStatusUpdatedBy($user);
+                $customerCard->setStatusUpdatedAt($dateNowDominican);
+
+                $statusHistory = new StatusHistory();
+                $statusHistory->setStatus($newStatus);
+                $statusHistory->setCustomerCard($customerCard);
+                $statusHistory->setUpdatedBy($user);
+                $statusHistory->setCreatedAt($dateNowDominican);
+                $statusHistoryRepository->save($statusHistory, false);
+            }
 
             $customerCardRepository->save($customerCard, true);
 

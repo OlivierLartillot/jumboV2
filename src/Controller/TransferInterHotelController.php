@@ -34,6 +34,12 @@ class TransferInterHotelController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
 
+            $date =$transferInterHotel->getDate()->format('Y-m-d');
+            $hour = $transferInterHotel->getHour()->format('H:i');
+
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+
+            $transferInterHotel->setDateHour($dateHour);
             $transferInterHotel->setCustomerCard($customerCard);
 
             $entityManager->persist($transferInterHotel);
@@ -64,6 +70,11 @@ class TransferInterHotelController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $date =$transferInterHotel->getDate()->format('Y-m-d');
+            $hour = $transferInterHotel->getHour()->format('H:i');
+            $dateHour = new DateTimeImmutable($date . ' '. $hour);
+
+            $transferInterHotel->setDateHour($dateHour);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_customer_card_show', [

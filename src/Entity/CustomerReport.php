@@ -20,7 +20,7 @@ class CustomerReport
     private ?\DateTimeImmutable $uploadedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'customerReports')]
-    private ?CustomerCard $customerCard = null;
+    private ?customerCard $customerCard = null;
 
     public function getId(): ?int
     {
@@ -51,12 +51,12 @@ class CustomerReport
         return $this;
     }
 
-    public function getCustomerCard(): ?CustomerCard
+    public function getCustomerCard(): ?customerCard
     {
         return $this->customerCard;
     }
 
-    public function setCustomerCard(?CustomerCard $customerCard): self
+    public function setCustomerCard(?customerCard $customerCard): self
     {
         $this->customerCard = $customerCard;
 

@@ -7,11 +7,11 @@
     <body>
       <trans-unit id="ZjmD79F" resname="label_previous">
         <source>label_previous</source>
-        <target></target>
+        <target>__label_previous</target>
       </trans-unit>
       <trans-unit id="FAwb90d" resname="label_next">
         <source>label_next</source>
-        <target></target>
+        <target>__label_next</target>
       </trans-unit>
     </body>
   </file>
