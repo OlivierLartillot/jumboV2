@@ -63,7 +63,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
     {
         $tableauFinalDesDoublons = [];
         $results = $this->createQueryBuilder('t')
-                    ->select('t as transferArrival', 'count(t) as count', 't.duplicateIgnored')
+                    ->select('t as transferArrival', 'count(t.id) as count', 't.duplicateIgnored')
                     ->where('t.duplicateIgnored = false')
                     ->groupBy('t.customerCard')
                     ->getQuery()
