@@ -41,8 +41,6 @@ class HomeController extends AbstractController
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
 
-       
-
         $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
         $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures(); 
@@ -65,10 +63,8 @@ class HomeController extends AbstractController
                                        TransferDepartureRepository $transferDepartureRepository)
     {
         /** Peu importe le jour !!! **/
-        // recherche pour un client si il y a deux arrivées
-
-        //TODO: Il faut avoir les droits pour accéder a cette page !!!!
-
+        //******************** SECURITY *************************** */
+        $this->denyAccessUnlessGranted('ROLE_SUPERMAN');
         //********************************************************* */
         
         if ($param === 'arrival') {
@@ -98,10 +94,11 @@ class HomeController extends AbstractController
                                             TransferDepartureRepository $transferDepartureRepository,
                                             EntityManagerInterface $em): RedirectResponse
     {
-
-        //TODO: Il faut avoir les droits pour accéder a cette page !!!!
-
+        
+        //******************** SECURITY *************************** */
+        $this->denyAccessUnlessGranted('ROLE_SUPERMAN');
         //********************************************************* */
+
         $currentRepository = '';
         if ($param === 'arrival') {
             $currentRepository = $transferArrivalRepository;
