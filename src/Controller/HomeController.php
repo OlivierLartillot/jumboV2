@@ -449,7 +449,6 @@ class HomeController extends AbstractController
                             if (empty($agency)) {
                                 $agency = new Agency();
                                 $agency->setName($record['Agencia']);
-                                $agency->setIsActive(1);
                                 $manager->persist($agency);
                                 $manager->flush();
                             }
