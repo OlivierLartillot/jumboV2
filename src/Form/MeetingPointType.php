@@ -36,6 +36,9 @@ class MeetingPointType extends AbstractType
             ->add('it', null, [
                 'label' => $this->translator->trans('Italian')
             ])
+            ->add('po', null, [
+                'label' => $this->translator->trans('Portuguese')
+            ])
         ;
     }
 

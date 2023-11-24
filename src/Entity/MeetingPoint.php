@@ -26,6 +26,9 @@ class MeetingPoint
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $it = null;
+    
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $po = null;
 
     #[ORM\OneToMany(mappedBy: 'meetingPoint', targetEntity: TransferArrival::class)]
     private Collection $transferArrivals;
@@ -93,6 +96,18 @@ class MeetingPoint
         return $this;
     }
 
+    public function getPo(): ?string
+    {
+        return $this->po;
+    }
+
+    public function setPo(?string $po): static
+    {
+        $this->po = $po;
+
+        return $this;
+    }
+
     public function checklanguage($lang) {
 
         if ($lang == null) {
@@ -131,4 +146,5 @@ class MeetingPoint
 
         return $this;
     }
+
 }
