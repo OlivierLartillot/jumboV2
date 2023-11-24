@@ -22,16 +22,22 @@
 
                                         {% if agency.language == 'en' %}
                                             {% set flagCountry = 'us' %}
+                                            {% set countryLanguage = 'English' %}
                                         {% elseif agency.language ==  'es' %}
                                             {% set flagCountry = 'spain' %}
+                                            {% set countryLanguage = 'Spanish' %}
                                         {% elseif agency.language ==  'fr' %}
                                             {% set flagCountry = 'french' %}
+                                            {% set countryLanguage = 'French' %}
                                         {% elseif agency.language ==  'it' %}
                                             {% set flagCountry = 'italy' %}
+                                            {% set countryLanguage = 'Italian' %}
                                         {% elseif agency.language ==  'po' %}
-                                            {% set flagCountry = 'us' %}
+                                            {% set flagCountry = null %}
+                                            {% set countryLanguage = 'Portuguese' %}
                                         {% else %}
                                             {% set flagCountry = null %}
+                                            {% set countryLanguage = null %}
                                         {% endif %}
  
 
@@ -40,9 +46,9 @@
                                         <td>{{ agency.name|title }}</td>
                                         <td>{% if agency.language %}
                                                 {% if flagCountry is not null %}
-                                                    <img class="header-lang-img" src="/images/flags/{{ flagCountry }}.jpg" alt="Header Language" height="16">
+                                                    <img class="header-lang-img" src="/images/flags/{{ flagCountry }}.jpg" alt="flag {{ flagCountry }}" title="{{countryLanguage|trans}}" height="16">
                                                 {% else %}
-                                                    ??
+                                                    {{agency.language}}
                                                 {% endif %}
                                             {% else %}
                                                 ??
