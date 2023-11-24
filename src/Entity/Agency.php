@@ -32,6 +32,7 @@ class Agency
 
     public function __construct()
     {
+        $this->language = 'en';
         $this->customerCards = new ArrayCollection();
         $this->printingOptions = new ArrayCollection();
     }
