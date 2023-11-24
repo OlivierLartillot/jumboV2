@@ -36,23 +36,29 @@ class HomeController extends AbstractController
     #[Route('/admin', name: 'home' )]
     public function accueil(TransferArrivalRepository $transferArrivalRepository, 
                             TransferInterHotelRepository $transferInterHotelRepository, 
-                            TransferDepartureRepository $transferDepartureRepository)
+                            TransferDepartureRepository $transferDepartureRepository,
+                            UserRepository $userRepository
+                            )
     {
+
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
-
+        /***** section  Transfer Management ******/
         $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
         $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures(); 
-
-        $doublonsArrivee = $doublonsArrivee ? true : false;
-        $doublonsInterHotel = $doublonsInterHotel ? true : false;
-        $doublonsDepart = $doublonsDepart ? true : false;
   
+        /***** section  Rep Assignement ******/
+        $dateRestantes = $transferArrivalRepository->datesForCustomersWithoutRep();
+        $rep = $userRepository->findBy(['username' => 'skip']);
+        $datesWithSkippedClients = $transferArrivalRepository->findDatesWithSkippedClients($rep);
+
         return $this->render('index.html.twig', [
             'doublonsArrivee' => $doublonsArrivee,
             'doublonsInterHotel' => $doublonsInterHotel,
-            'doublonsDepart' => $doublonsDepart 
+            'doublonsDepart' => $doublonsDepart,
+            'dateRestantes' => $dateRestantes,
+            'datesWithSkippedClients' => $datesWithSkippedClients
         ]); 
     }
     
