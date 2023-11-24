@@ -2,9 +2,6 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Dashboard'}) }}
 
-
-
-
         <div class="row">
             <div class="col">
                 <div class="card">
@@ -12,13 +9,17 @@
                         {% if is_granted('ROLE_SUPERMAN') %}
                         <div class="row">
                             <h5>Transfer Management</h5>
+                            
+                            {% set problems = 'Be careful, you have problems to resolve.' %}
+                            {% set noProblem = 'Nothing to do.' %}
+
                             {% if doublonsArrivee %}
                                 <div class="col-md-4">
                                     <a href="{{ path('duplicate_transfers', { param: 'arrival'})}}" class="text-danger">
                                         <div class="card mt-4 maintenance-box border border-danger">
                                             <div class="card-body p-4 ">
                                                 <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> Arrivals</h5>
-                                                <p class="mb-0">Attention vous avez des problèmes à régler.</p>
+                                                <p class="mb-0">{{ problems|trans }}</p>
                                             </div>
                                         </div>
                                     </a>
@@ -28,12 +29,11 @@
                                     <div class="card mt-4 maintenance-box">
                                         <div class="card-body p-4">
                                             <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> Arrivals</h5>
-                                            <p class="mb-0 text-success">Rien à faire.</p>
+                                            <p class="mb-0 text-success">{{ noProblem }}</p>
                                         </div>
                                     </div>
                                 </div>
                             {% endif %}
-
 
                             {% if doublonsInterHotel %}
                                 <div class="col-md-4">
@@ -41,7 +41,7 @@
                                         <div class="card mt-4 maintenance-box border border-danger">
                                             <div class="card-body p-4">
                                                 <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> InterHotels</h5>
-                                                <p class="mb-0">Attention vous avez des problèmes à régler.</p>
+                                                <p class="mb-0">{{ problems|trans }}</p>
                                             </div>
                                         </div>
                                     </a>
@@ -51,12 +51,11 @@
                                     <div class="card mt-4 maintenance-box">
                                         <div class="card-body p-4">
                                             <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> InterHotels</h5>
-                                            <p class="text-success mb-0">Rien à faire.</p>
+                                            <p class="text-success mb-0">{{ noProblem }}</p>
                                         </div>
                                     </div>
                                 </div>                                            
                             {% endif %}
-
 
                             {% if doublonsDepart %}
                                 <div class="col-md-4">
@@ -64,22 +63,20 @@
                                         <div class="card mt-4 maintenance-box border border-danger">
                                             <div class="card-body p-4">
                                                 <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> Departures</h5>
-                                                <p class="mb-0">Attention vous avez des problèmes à régler.</p>
+                                                <p class="mb-0">{{ problems|trans }}</p>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
                             {% else %}
-
-                                    <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="card mt-4 maintenance-box">
                                         <div class="card-body p-4">
                                             <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> Departures</h5>
-                                            <p class="text-success mb-0">Rien à faire.</p>
+                                            <p class="text-success mb-0">{{ noProblem }}</p>
                                         </div>
                                     </div>
                                 </div>
-
                             {% endif %}
                         </div>
                         <!-- end row-->
