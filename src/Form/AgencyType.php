@@ -27,7 +27,7 @@ class AgencyType extends AbstractType
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('isActive')
+           
         ;
     }
 

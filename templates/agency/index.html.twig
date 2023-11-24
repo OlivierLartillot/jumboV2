@@ -13,18 +13,41 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Name</th>
-                                    <th>IsActive</th>
                                     <th>Language</th>
                                     <th>Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for agency in agencies|sort((a,b) => a.name <=> b.name )  %}
+
+                                        {% if agency.language == 'en' %}
+                                            {% set flagCountry = 'us' %}
+                                        {% elseif agency.language ==  'es' %}
+                                            {% set flagCountry = 'spain' %}
+                                        {% elseif agency.language ==  'fr' %}
+                                            {% set flagCountry = 'french' %}
+                                        {% elseif agency.language ==  'it' %}
+                                            {% set flagCountry = 'italy' %}
+                                        {% elseif agency.language ==  'po' %}
+                                            {% set flagCountry = 'us' %}
+                                        {% else %}
+                                            {% set flagCountry = null %}
+                                        {% endif %}
+ 
+
                                     <tr>
                                         <td>{{ agency.id }}</td>
                                         <td>{{ agency.name|title }}</td>
-                                        <td>{{ agency.isActive ? 'Yes' : 'No' }}</td>
-                                        <td>{{ agency.language ? agency.language : "en" }}</td>
+                                        <td>{% if agency.language %}
+                                                {% if flagCountry is not null %}
+                                                    <img class="header-lang-img" src="/images/flags/{{ flagCountry }}.jpg" alt="Header Language" height="16">
+                                                {% else %}
+                                                    ??
+                                                {% endif %}
+                                            {% else %}
+                                                ??
+                                            {% endif %} 
+                                        </td>
                                         <td>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item">

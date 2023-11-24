@@ -210,7 +210,7 @@ class HomeController extends AbstractController
                     $clientNumberDepartureList = [];
                     if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
                         $natureTransferCSV = 'arrival'; 
-                        $clientNumberArrivalList = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber,$dateFormat);               
+                        $clientNumberArrivalList = $transferArrivalRepository->findByDateNaturetransferClientnumber($reservationNumber,$dateFormat, $record['Titular']);               
                     } else if ($record['Nº Vuelo/Transporte Destino'] != NULL) { 
                         $natureTransferCSV = 'departure'; 
                         $clientNumberDepartureList = $transferDepartureRepository->findByDateNaturetransferClientnumber($reservationNumber,$dateFormat, $natureTransferCSV);
@@ -327,7 +327,7 @@ class HomeController extends AbstractController
                                 $airportHotel->setName($record['Traslado desde']);
                                 $airportHotel->setIsAirport(0);
                                 $manager->persist($airportHotel);
-                                $manager->flush($airportHotel);
+                                $manager->flush();
                                 $desde = $airportHotel;
                             } ;
                             if (empty($hasta)){
@@ -335,7 +335,7 @@ class HomeController extends AbstractController
                                 $airportHotel->setName($record['Traslado hasta']);
                                 $airportHotel->setIsAirport(0);
                                 $manager->persist($airportHotel);
-                                $manager->flush($airportHotel);
+                                $manager->flush();
                                 $hasta = $airportHotel;
                             } ;
                         }
