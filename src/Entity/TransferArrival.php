@@ -31,7 +31,7 @@ class TransferArrival
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $fromStart = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    #[ORM\ManyToOne(inversedBy: 'transferToArrivals')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
@@ -65,7 +65,7 @@ class TransferArrival
     #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
     private ?Status $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    #[ORM\ManyToOne(inversedBy: 'statusUpdatedBy')]
     private ?User $statusUpdatedBy = null;
 
     #[ORM\Column(nullable: true)]

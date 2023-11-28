@@ -10,11 +10,11 @@
                         <div class="row">
 
                             <p>
-                                <a class="btn btn-success btn-sm">Manage </a> This is the most logical way to handle the situation. If the duplicate should not exist, delete the bad transfer in the client file.   
+                                <a class="btn btn-success btn-sm">{% trans %}Manage{% endtrans %} </a> {% trans %}This is the most logical way to handle the situation. If the duplicate should not exist, delete the bad transfer in the client file.{% endtrans %}  
                             </p>
 
                             <p>
-                                <a class="btn btn-danger btn-sm">Ignore Duplicate</a> Make sure the duplicate is normal before choosing this option.                                         
+                                <a class="btn btn-danger btn-sm">{% trans %}Ignore Duplicate{% endtrans %}</a> {% trans %}Make sure the duplicate is normal before choosing this option.{% endtrans %}                                         
                             </p>
                             <hr/>
 
@@ -28,10 +28,10 @@
                                                 <div class="row justify-content-around">
                                                     <div class="col-md-4">
                                                         <a href="{{path('app_customer_card_show',{id: doublon.transferArrival.customerCard.id } )}}" class="btn btn-success">
-                                                            Manage
+                                                            {% trans %}Manage{% endtrans %}
                                                         </a>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mt-3 mt-md-0">
                                                         <form method="post" action="{{ path('ignore_duplicate_transfers', {id: doublon.transferArrival.customerCard.id, param:'arrival' }) }}" onsubmit="return confirm('if you ignore this duplicate it will no longer be present in the list. You can always access it by going to the customer file.');">
                                                         {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transfer_arrival.id) }}"> #}
                                                         <button class="btn btn-danger">{% trans %}Ignore Duplicate{% endtrans %}</button>
@@ -55,10 +55,10 @@
                                                 <div class="row justify-content-around">
                                                     <div class="col-md-4">
                                                         <a href="{{path('app_customer_card_show',{id: doublon.transferInterHotel.customerCard.id } )}}" class="btn btn-success">
-                                                            Manage
+                                                            {% trans %}Manage{% endtrans %}
                                                         </a>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mt-3 mt-md-0">
                                                         <form method="post" action="{{ path('ignore_duplicate_transfers', {id: doublon.transferInterHotel.customerCard.id, param:'interhotel' }) }}" onsubmit="return confirm('if you ignore this duplicate it will no longer be present in the list. You can always access it by going to the customer file.');">
                                                         {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transfer_arrival.id) }}"> #}
                                                         <button class="btn btn-danger">{% trans %}Ignore Duplicate{% endtrans %}</button>
@@ -81,10 +81,10 @@
                                                 <div class="row justify-content-around">
                                                     <div class="col-md-4">
                                                         <a href="{{path('app_customer_card_show',{id: doublon.transferDeparture.customerCard.id } )}}" class="btn btn-success">
-                                                            Manage
+                                                            {% trans %}Manage{% endtrans %}
                                                         </a>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mt-3 mt-md-0">
                                                         <form method="post" action="{{ path('ignore_duplicate_transfers', {id: doublon.transferDeparture.customerCard.id, param:'departure' }) }}" onsubmit="return confirm('if you ignore this duplicate it will no longer be present in the list. You can always access it by going to the customer file.');">
                                                         {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transfer_arrival.id) }}"> #}
                                                         <button class="btn btn-danger">{% trans %}Ignore Duplicate{% endtrans %}</button>
@@ -92,13 +92,12 @@
                                                     
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
                                 {% endfor %}                             
                             {% else %}
-                                A problem has occurred
+                                {% trans %}A problem has occurred{% endtrans %}
                             {% endif %}
 
 

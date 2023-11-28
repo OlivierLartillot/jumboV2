@@ -74,8 +74,9 @@ class RepController extends AbstractController
 
         // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
-    #[Route('/rep/fiche/{user}/date/details', name: 'app_admin_rep_fiche_par_date_details',methods:["GET"])]
+    #[Route('/rep/fiche/{user}/date/details/{hour}', name: 'app_admin_rep_fiche_par_date_details',methods:["GET"])]
     public function ficheRepParDateDetails( User $user, 
+                                            $hour,
                                             TransferArrivalRepository $transferArrivalRepository, 
                                             MeetingPointRepository $meetingPointRepository,  
                                             UserRepository $userRepository,
@@ -83,6 +84,7 @@ class RepController extends AbstractController
                                             DefineQueryDate $defineQueryDate
                                           ): Response 
     {
+    
 
         // si le user de l'url n'est pas le user courant, tu n'as pas les droits
         if ($user != $this->getUser()) {
@@ -93,8 +95,9 @@ class RepController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
 
         // attraper la liste des objets correpsondants au representant et au jour 
-        $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date);
-        //dd($attributionClientsByRepAndDate );
+        $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date, $hour);
+        
+       $hotel = $attributionClientsByRepAndDate[0]->getToArrival();
 
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
@@ -112,14 +115,17 @@ class RepController extends AbstractController
         // Compte le nombre Total de Pax
         $countPax = $paxTab['adults'] + ($paxTab['children']*0.5);
 
-        return $this->render('team_manager/attributionMeetingsDetails.html.twig', [
+        return $this->render('rep/myBriefings.html.twig', [
             "date" => $date,
+            "hotel" => $hotel,
+            "hour" => $hour,
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
             "user" => $user,
             "users" => $users,
             "paxTab" => $paxTab,
             "countPax" => $countPax
+
         ]);
     }
 

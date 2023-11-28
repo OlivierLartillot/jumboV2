@@ -78,7 +78,7 @@ class TransferArrivalNewType extends AbstractType
                 'choices' => $hotels,
             ])
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'save'],
+                'attr' => ['class' => 'btn btn-success'],
             ]);
         ;
     }

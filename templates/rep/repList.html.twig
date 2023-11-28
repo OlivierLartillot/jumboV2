@@ -2,23 +2,75 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
 
-        <div class="row mb-3">    
-            <form action={{ path('app_admin_rep_replist') }} method="GET">
-                <input name="date" type="date" value="{{date | date('Y-m-d') }}">
-                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
-            </form>
+
+
+        <div class="row mb-3 justify-content-center">   
+            <div class="col-xl-4 col-sm-6 text-center">
+                <form action={{ path('app_admin_rep_replist') }} method="GET">
+                    <input name="date" type="date" value="{{date | date('Y-m-d') }}">
+                    <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+                </form>
+            </div>
+        </div>
+
+
+        <div class="row mb-3 justify-content-center">   
+            <div class="col-xl-4 col-sm-6 text-center">
+                <p class="alert alert-info" role="alert">
+                    {% trans %}Arrival date{% endtrans %}: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
+                    {% trans %}Briefing date{% endtrans %}: <b>{{ date| date('d-m-Y')}}</b>
+                </p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="font-size-16 mb-4">{% trans %}TimeLine{% endtrans %}</h5>
+
+                        <ul class="activity-feed  mb-0 ps-2">
+                            {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                {% if (regroupement is not empty) %}                                                        
+                                    {% if regroupement.staff == user %}
+                                        {% set hotel =  regroupement.toArrival %}
+                                        <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id, 'hour': regroupement.getMeetingAtTime }) }}">
+                                            <li class="feed-item  border-top border-primary">
+                                                <div class="feed-item-list rep-timeline-box ">
+                                                    <p class="badge rounded-pill bg-primary mt-1 mb-3">{{ regroupement.getMeetingAtTime }}</p>
+                                                    <p class="text-muted mb-1"><b>{{ hotel.name|title }}</b> </p>
+                                                    <p class="text-muted mb-1">
+                                                    
+                                                        {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
+                                                        {% endif %}
+                                                        {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
+                                                        {% endif %}
+                                                        {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
+                                                        {% endif %}                                           
+                            
+                                                    </p>
+
+                                                </div>
+                                            </li>
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 
 
-        <p class="alert alert-info" role="alert">
-            {% trans %}Arrival date{% endtrans %}: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
-            {% trans %}Briefing date{% endtrans %}: <b>{{ date| date('d-m-Y')}}</b>
-        </p>
 
         <div class="row">
             
-           
                 <div class="col-sm-5 mb-3 mb-sm-0">
                     <div class="card">
                         <div class="card-body">
@@ -67,8 +119,8 @@
                                     {% endif %}
                                 {% endfor %}
                                 {% if paxCount > 0 %}
-                                <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
-                            {% endif %}
+{#                                 <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
+ #}                            {% endif %}
                         </div>              
                     </div>
                 </div>

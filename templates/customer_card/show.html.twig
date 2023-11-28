@@ -695,59 +695,6 @@
                                 {% endfor %}
                             </ul>
 
-
-
-
-
-
-{#                         <ul class="activity-feed mb-0 ps-2">
-
-                            {% for transfer in customer_card.transferDeparture %} 
-                                    <li class="feed-item">
-                                        <div class="feed-item-list">
-                                            <p class="text-muted mb-1">Arrival: {{ transfer.dateHour | date('d-m-Y') }}</p>
-    
-                                        </div>
-                                    </li>
-                            {% endfor %}
-
-                            <li class="feed-item">
-                                <div class="feed-item-list">
-                                    <p class="text-muted mb-1">Status: No show</p>
-                                    <p class="text-muted">By ben at 10:00 le 05-10-2023</p>
-                                </div>
-                            </li>
-
-                            <li class="feed-item">
-                                <div class="feed-item-list">
-                                    <p class="text-muted mb-1">Meeting: {{ customer_card.meetingAt | date('d-m-Y')}}</p>
-                                    <p class="text-muted">with {{ customer_card.staff }} at  {{ customer_card.meetingAt| date('H:i')}}  à {{ customer_card.meetingPoint }} </p>
-                                </div>
-                            </li>
-
-
-                            {% for transfer in customer_card.transferInterHotels %} 
-                                    <li class="feed-item">
-                                        <div class="feed-item-list">
-                                            <p class="text-muted mb-1">Inter Hotel: {{ transfer.dateHour | date('d-m-Y') }}</p>
-                                        </div>
-                                    </li>
-                            {% endfor %}        
-                            {% for transfer in customer_card.transferArrivals %} 
-                                    <li class="feed-item">
-                                        <div class="feed-item-list">
-                                            <p class="text-muted mb-1">Departure: {{ transfer.dateHour | date('d-m-Y') }}</p>
-                                        </div>
-                                    </li>
-                            {% endfor %}
-
-                        </ul> #}
-
-
-
-
-
-
                         
                     </div>
 

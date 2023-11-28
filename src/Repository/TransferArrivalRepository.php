@@ -175,20 +175,27 @@ class TransferArrivalRepository extends ServiceEntityRepository
     /**
      * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day)
      */
-    public function findByStaffAndMeetingDate($staff, $dateTimeImmutable): array
+    public function findByStaffAndMeetingDate($staff, $dateTimeImmutable, $hour=null): array
     {
 
-        $dateTime = $dateTimeImmutable->format('Y-m-d');
 
+        $dateTime = $dateTimeImmutable->format('Y-m-d');
+        $meeting = $dateTimeImmutable->format($dateTime . ' ' . $hour);
   
-        return $this->createQueryBuilder('t')
+        $requete = $this->createQueryBuilder('t')
             ->andWhere('t.staff = :staff')
             ->andWhere('t.meetingAt >= :date_start')
             ->andWhere('t.meetingAt <= :date_end')
             ->setParameter('staff', $staff)
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
-            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
-            ->orderBy('t.id', 'ASC')
+            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'));
+
+        if ($hour != null) {
+            $requete = $requete->andWhere('t.meetingAt = :hour')
+                               ->setParameter('hour', $meeting);
+        }
+
+         return $requete->orderBy('t.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
