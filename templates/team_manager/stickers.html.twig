@@ -352,81 +352,84 @@
 							%}
 							
 							{% set labelNumber = app.request.get('labelNumber') %}
-
-							{% for meetingInfos in meetings %} 
-
-								{% set currentLanguage = meetingInfos.customerCard.agency.language %}
-		
-								{% if (i == 1) %} 
-									{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
-									<div class="labels-container {{ pagesSuivantes }}">
-								{% endif %} 
-
-									{% if labelNumber > 1 %}
-									{% set labelNumber = labelNumber - 1 %}
-										{% for j in 1..labelNumber %}
-											<div class="label d-flex flex-column justify-content-between"></div>
-											{% set i = i + 1 %}
-										{% endfor %}
-									{% endif %}
-									{% set labelNumber = 0 %}
-
-									<div class="label d-flex flex-column justify-content-between">
+								
+								{% for meetingInfos in meetings %} 
+									{% if meetingInfos.staff ==  "skip" %}
+									
+									{% else %}
 										
-										{% if meetingInfos.staff %}
+										{% set currentLanguage = meetingInfos.customerCard.agency.language %}
+				
+										{% if (i == 1) %} 
+											{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
+											<div class="labels-container {{ pagesSuivantes }}">
+										{% endif %} 
 
-										<div class="qrcode">
-											{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}   
-												<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
-												<div class="chattez-rep">{{ languageTab[0][currentLanguage] }}<br>{{ meetingInfos.staff }}</div>
+											{% if labelNumber > 1 %}
+											{% set labelNumber = labelNumber - 1 %}
+												{% for j in 1..labelNumber %}
+													<div class="label d-flex flex-column justify-content-between"></div>
+													{% set i = i + 1 %}
+												{% endfor %}
 											{% endif %}
-										</div>
+											{% set labelNumber = 0 %}
 
-										{% endif %}
-
-										<div class="mt-2">
-											<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.customerCard.holder|title }}</p>
-											<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 		
-												{{ meetingInfos.toArrival|title}}	
-											</p>
-										</div>
-										<div class="mb-2">
-										
-											<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
-											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }}{% if meetingInfos.meetingAt is null %}   {% else %} {{ meetingInfos.meetingAtTime }} {% endif %}</strong></p>
-											<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
-												<strong class="crimson">
-													{% if ((meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) and  (meetingInfos.meetingPoint.checkLanguage(currentLanguage) != NULL))%} 
-														{{ meetingInfos.meetingPoint.checkLanguage(currentLanguage) }}
-													{% elseif ( (meetingInfos.meetingPoint.en is defined) and  (meetingInfos.meetingPoint.en != NULL) ) %} 
-														{{ meetingInfos.meetingPoint.en }} 												
-													{% else %}
-													    ??? 
-													{% endif %}
-													
-												</strong>
-											</p>
-											<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
-											<p class="line-height-5">Whatsapp:  
-												{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
+											<div class="label d-flex flex-column justify-content-between">
 												
-											</p>
-										</div>
-									</div>
+												{% if meetingInfos.staff %}
 
-								{% if (i == 10) %}     
-									</div></div>
-								{% endif %}
-								{# si $i = 10 alors $i == 1 sinon $i++ #}
-								{% if (i == 10) %}  
-									{% set i = 1 %} 
-									{% set page = page + 1 %}
-									<div class="break">
-								{% else %}  
-									{% set i = i + 1 %} 
-								{% endif %} 
+												<div class="qrcode">
+													{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}   
+														<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
+														<div class="chattez-rep">{{ languageTab[0][currentLanguage] }}<br>{{ meetingInfos.staff }}</div>
+													{% endif %}
+												</div>
 
-							{% endfor %}
+												{% endif %}
+
+												<div class="mt-2">
+													<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.customerCard.holder|title }}</p>
+													<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 		
+														{{ meetingInfos.toArrival|title}}	
+													</p>
+												</div>
+												<div class="mb-2">
+												
+													<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
+													<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }}{% if meetingInfos.meetingAt is null %}   {% else %} {{ meetingInfos.meetingAtTime }} {% endif %}</strong></p>
+													<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
+														<strong class="crimson">
+															{% if ((meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) and  (meetingInfos.meetingPoint.checkLanguage(currentLanguage) != NULL))%} 
+																{{ meetingInfos.meetingPoint.checkLanguage(currentLanguage) }}
+															{% elseif ( (meetingInfos.meetingPoint.en is defined) and  (meetingInfos.meetingPoint.en != NULL) ) %} 
+																{{ meetingInfos.meetingPoint.en }} 												
+															{% else %}
+																??? 
+															{% endif %}
+															
+														</strong>
+													</p>
+													<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
+													<p class="line-height-5">Whatsapp:  
+														{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
+														
+													</p>
+												</div>
+											</div>
+
+										{% if (i == 10) %}     
+											</div></div>
+										{% endif %}
+										{# si $i = 10 alors $i == 1 sinon $i++ #}
+										{% if (i == 10) %}  
+											{% set i = 1 %} 
+											{% set page = page + 1 %}
+											<div class="break">
+										{% else %}  
+											{% set i = i + 1 %} 
+										{% endif %} 
+									{% endif %}
+								{% endfor %}
 							</div>
 						</div>
 
