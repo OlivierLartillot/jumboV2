@@ -197,11 +197,11 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
      * Attribution des représentants
      */
-    public function findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber = null, $meetingAt=null, $meetingPoint = null): array
+    public function findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber = null, $meetingPoint = null): array
     {
 
         $requete = $this->createQueryBuilder('t')
-            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.meetingAt >= :dateStart')
             ->andWhere('t.meetingAt <= :dateEnd')
             ->andWhere('t.toArrival = :hotel')
@@ -217,9 +217,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
                 ->andWhere('t.flightNumber = :flightNumber')
                 ->setParameter('flightNumber', $flightNumber)     ;
             }
-            if ($meetingAt != null) {
-                $requete= $requete->andWhere('t.meetingAt = :meetingAt')->setParameter('meetingAt', $meetingAt);
-            }
+
             if ($meetingPoint != null) {
                 $requete= $requete->andWhere('t.meetingPoint = :meetingPoint')->setParameter('meetingPoint', $meetingPoint);
             }        
