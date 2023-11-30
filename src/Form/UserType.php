@@ -18,6 +18,9 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        
+
         $builder
             ->add('username')
             ->add('password', RepeatedType::class, [

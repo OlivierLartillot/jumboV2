@@ -80,12 +80,20 @@ class UserController extends AbstractController
     }
 
     #[Route('team-manager/user/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $hasher): Response
     {
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $user = $form->getData();
+            $plainPassword = $form->get('password')->getData();
+
+            if (null !== $plainPassword) {
+                $user->setPassword($hasher->hashPassword($user, $plainPassword));
+            }
+
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_list', [], Response::HTTP_SEE_OTHER);
@@ -110,15 +118,12 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $user = $form->getData();
+            $plainPassword = $form->get('password')->getData();
 
-            $newHashedPassword = $hasher->hashPassword(
-                $user, 
-                $user->getPassword()
-            ); 
-    
-            $userRepository->upgradePassword($user,  $newHashedPassword);
-
-
+            if (null !== $plainPassword) {
+                $user->setPassword($hasher->hashPassword($user, $plainPassword));
+            }
 
             $userRepository->save($user, true);
 
