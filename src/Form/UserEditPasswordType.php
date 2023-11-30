@@ -18,26 +18,28 @@ class UserEditPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+
         $builder
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                /* 'invalid_message' => 'Les mots de passe doivent être identiques.', */
-                'options' => ['attr' => ['class' => 'password-field']],
-                'required' => true,
-                'first_options'  => ['label' => 'Password*'],
-                'second_options' => ['label' => 'Confirm password*'],
-                'constraints' => [
-                        new NotBlank([
-                            'message' => 'Password is required',
-                        ]),
-                        new Length([
-                            'min' => 8,
-                            'minMessage' => 'Your password must contain at least {{ limit }} characters',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 21,
-                        ]),
-                    ],
-                ])         
+
+        ->add('password', RepeatedType::class, [
+            'type' => PasswordType::class,
+            'mapped' => false,
+            'required'=>false,
+            /* 'invalid_message' => 'Les mots de passe doivent être identiques.', */
+            'options' => ['attr' => ['class' => 'password-field'], 'required' => false ],
+            'first_options'  => ['label' => 'Password'],
+            'second_options' => ['label' => 'Confirm password'],
+            'constraints' => [
+                new Length([
+                    'min' => 8,
+                    'minMessage' => 'Your password must contain at least {{ limit }} characters',
+                    // max length allowed by Symfony for security reasons
+                    'max' => 21,
+                    ]),
+                ],
+            ])
+        
             ->add('phoneNumber')
         ;
     }

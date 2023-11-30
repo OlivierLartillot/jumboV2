@@ -47,7 +47,7 @@ security:
         - { path: ^/pax, roles: [ROLE_HULK, ROLE_REP] }
 
     role_hierarchy:
-            ROLE_SUPERMAN: ROLE_USER
+            ROLE_SUPERMAN: [ROLE_OPERATIONS, ROLE_USER]
             ROLE_HULK: [ROLE_SUPERMAN, ROLE_ALLOWED_TO_SWITCH]        
 
         # - { path: ^/profile, roles: ROLE_USER }
