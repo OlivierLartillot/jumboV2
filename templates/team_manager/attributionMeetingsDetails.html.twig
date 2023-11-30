@@ -12,7 +12,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles)) %}
+                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles)) %}
                                     <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
                                     <a href="{{ path('app_admin_team_manager_fiche_par_date',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Update{% endtrans %}</a>
                                 {% else %}
@@ -24,7 +24,7 @@
                     </div>
                     <i>{% trans %}*Number total of pax{% endtrans %}: {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}, {% trans %}Children{% endtrans %}:{{paxTab['children']}} ,{% trans %}Babies{% endtrans %}:{{paxTab['babies']}} = {{ countPax}} pax</i> 
                     <div class="table-responsive mb-4">
-                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
+                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %}
                     <form action="" method="POST">
                     {% endif %}
                         <table class="table table-centered table-striped table-nowrap border shadow mb-0">
@@ -67,14 +67,14 @@
                                             </ul>
                                         </td>
                                         <td>
-                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
+                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
                                                 <input type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/>
                                             {% else %}
                                                 {{ transferArrival.getMeetingAtTime}}
                                             {% endif %}
                                         </td> 
                                         <td> 
-                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
+                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
                                                 <select name="staff_{{ transferArrival.id }}" title="Rep">
                                                     {% for user in users %}
                                                         {% if "ROLE_REP" in user.roles %}
@@ -87,7 +87,7 @@
                                             {% endif %}
                                         </td> 
                                         <td>
-                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
+                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
                                             <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
                                                 {% for meetingPoint in meetingPoints %}
                                                     {% if (meetingPoint is not null)  %}
@@ -106,7 +106,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}    
+                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %}    
                         <input type="submit" value="{% trans %}Submit{% endtrans %}">
                     </form>
                     {% endif %}
