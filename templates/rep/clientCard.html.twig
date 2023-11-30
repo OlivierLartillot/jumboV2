@@ -1,0 +1,60 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Rep', title: 'Fiche Client'}) }}
+
+
+
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+
+
+
+                        {{ customerCard.holder }}<br/>
+                        {{ customerCard.agency }}<br/>
+                        {{ customerCard.reservationNumber }}<br/>
+
+                    {% for arrival in customerCard.transferArrivals %}
+
+                        {{dump(arrival)}}
+
+                    {% endfor %}
+
+
+                   {% for arrival in customerCard.transferArrivals %}
+
+                        <i></i>Arrival
+          
+                        {{ arrival.staff }}
+                        {{ arrival.status }}
+
+                        {{ arrival.status }}
+                        adults: {{ arrival.adultsNumber }}
+                        children: {{ arrival.childrenNumber }}
+                        babies: {{ arrival.babiesNumber }}<br/>
+
+                   {% endfor %}
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+{#             'transferArrivals' => $transferArrivals,
+            'transferAInterHotels' => $transferAInterHotels,
+            'transferDepartures' => $transferDepartures, #}
+
+
+
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}

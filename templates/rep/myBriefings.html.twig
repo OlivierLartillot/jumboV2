@@ -3,14 +3,14 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: ''}) }}
 
 
-    <h4 class="text-center mb-4">Briefing {{date | date('d/m/Y') }}</h4>
+<h4 class="text-center mb-4">Briefing {{date | date('d/m/Y') }}</h4>
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
 
 
         <div class="d-flex flex-row bd-highlight mb-3 ">
-            <div>
+            <div class="boxVertical"> 
                 <div class="badge rounded-pill bg-primary mt-1 mb-3 verticaltext">
                     <span>{{ hour }}</span>
                 </div>
@@ -46,7 +46,7 @@
                                     <i class="uil uil-arrow-circle-right"></i>
                                 </div>
                                 <div class="">
-                                    <p><a href="{{ path('app_customer_card_show', { 'id':transferArrival.customerCard.id  })   }}   "> <b>{{ transferArrival.customerCard.holder|title }}</b> </a><br>
+                                    <p><a href="{{ path('app_admin_rep_fiche_client', { 'customerCard':transferArrival.customerCard.id })   }}   "> <b>{{ transferArrival.customerCard.holder|title }}</b> </a><br>
                                         {{ transferArrival.customerCard.agency|title }}<br>
                                         <b>{{ transferArrival.toArrival|title}}</b>
                                     </p>

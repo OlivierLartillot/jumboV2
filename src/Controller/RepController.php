@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\CustomerCard;
+use App\Entity\TransferVehicleArrival;
 use App\Entity\User;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
+use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
@@ -71,8 +74,7 @@ class RepController extends AbstractController
        
     } 
 
-
-        // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
+    // route qui affiche la fiche d un rep et ses assignations de clients pou un jour donné
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/rep/fiche/{user}/date/details/{hour}', name: 'app_admin_rep_fiche_par_date_details',methods:["GET"])]
     public function ficheRepParDateDetails( User $user, 
@@ -85,7 +87,6 @@ class RepController extends AbstractController
                                           ): Response 
     {
     
-
         // si le user de l'url n'est pas le user courant, tu n'as pas les droits
         if ($user != $this->getUser()) {
             return throw $this->createAccessDeniedException();
@@ -129,15 +130,30 @@ class RepController extends AbstractController
         ]);
     }
 
+    // la route qui affiche la carte client pour les reps
+    #[Route('/rep/fiche/{customerCard}', name: 'app_admin_rep_fiche_client',methods:["GET"])]
+    public function clientCard(CustomerCard $customerCard): Response
+    {
+/* 
+        $transferArrivals = $customerCard->getTransferArrivals();
+        $transferAInterHotels = $customerCard->getTransferInterHotels();
+        $transferDepartures = $customerCard->getTransferDeparture();
+ */
+        return $this->render('rep/clientCard.html.twig', [
+            'customerCard' => $customerCard,
+/*             'transferArrivals' => $transferArrivals,
+            'transferAInterHotels' => $transferAInterHotels,
+            'transferDepartures' => $transferDepartures, */
+        ]);
+
+    }
+
 
     #[Route('/rep/salidas', name: 'app_rep')]
-    public function index(UserRepository $userRepository, TransferDepartureRepository $transferDepartureRepository): Response
+    public function salidas(UserRepository $userRepository, TransferDepartureRepository $transferDepartureRepository): Response
     {
 
-        
         // si le formulaire a été envoyé
-
-
         if (( !empty($_GET['date']) )) {
   
         $date = $_GET['date'];
@@ -151,10 +167,6 @@ class RepController extends AbstractController
             'allCustomersDeparture' => $allCustomersDeparture
         ]);
         }
-
-
-
-
         return $this->render('rep/index.html.twig', [
             
         ]);
