@@ -6,7 +6,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        {% if is_granted('ROLE_AIRPORT_SUPERVISOR') %}
+                        {% if is_granted('ROLE_SUPERMAN') %}
                             <div class="row">
                                 <h5>Transfer Management</h5>
                                 
@@ -81,6 +81,8 @@
                             </div>
                             <!-- end row-->
                             <hr class="border border-2 text-black"/>
+                            {% endif %}
+                            {% if is_granted('ROLE_AIRPORT_SUPERVISOR') %}
                             <div class="row">
                                 <h5>Rep Assignment</h5>
 

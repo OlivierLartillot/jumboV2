@@ -32,17 +32,16 @@
         <div id="sidebar-menu">
 
 
-            <ul class="metismenu list-unstyled" id="side-menu">
+     
+
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">       
                 <li>
                     <a href="{{ path('home') }}">
                         <i class="mdi mdi-monitor-dashboard"></i>
                         <span>{% trans %}Dashboard{% endtrans %}</span>
                     </a>
                 </li>
-            </ul>
-
-            <!-- Left Menu Start -->
-            <ul class="metismenu list-unstyled" id="side-menu">
                 {% if ( ("ROLE_HULK" in app.user.roles) or 
                         ("ROLE_SUPERMAN" in app.user.roles) or 
                         ("ROLE_OPERATIONS" in app.user.roles) or 
