@@ -64,7 +64,7 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
         } ;
 
         // For example:
-        if ((in_array('ROLE_HULK', $user->getRoles())) or (in_array('ROLE_SUPERMAN', $user->getRoles()))) {
+        if ((in_array('ROLE_HULK', $user->getRoles())) or (in_array('ROLE_SUPERMAN', $user->getRoles())) or (in_array('ROLE_OPERATIONS', $user->getRoles())) ) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
         }
         return new RedirectResponse($this->urlGenerator->generate('app_customer_card_index'));
