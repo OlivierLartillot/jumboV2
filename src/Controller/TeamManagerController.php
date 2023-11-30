@@ -141,7 +141,7 @@ class TeamManagerController extends AbstractController
         $day = $defineQueryDate->returnDay($request);
 
 
-          // on fixe la date que l'on va utiliser dans le filtre
+        // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
 
@@ -268,9 +268,11 @@ class TeamManagerController extends AbstractController
             
             foreach ($request->request as $key => $currentRequest) {
                 
+                /* dump($key .' - '. $currentRequest); */
                 // convertir la clé en tableau
                 $keyTab = explode("_", $key);
     
+               /*  dump($keyTab); */
                 $transfer = $transferArrivalRepository->find($keyTab[1]);
                 $firstClient =  $transfer->getCustomerCard();
                 $staff = $transfer->getStaff();
@@ -285,17 +287,21 @@ class TeamManagerController extends AbstractController
                 //dump('client id: ' . $firstClient->getId() . ' s: ' .$staff . ' a: ' . $agency . ' h: ' . $hotel);
                 // pour chaque personne ce jour et ce staff, cet hotel et cet agence mettre a jour
                 // 1st récupérer la liste de ces personnes
-                $arrivalsListForThisCouple = $transferArrivalRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, null, $transfer->getMeetingAt(), $transfer->getMeetingPoint());
-  
+                $arrivalsListForThisCouple = $transferArrivalRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, null,$transfer->getMeetingPoint());
+               
                 // 2d mettre a jour
                 // récupérer chaque couple hotel agence pour ce rep a ce jour 
                 // pour chaque résultats  
 
-                foreach ($arrivalsListForThisCouple as $arrival ) {
+                foreach ($arrivalsListForThisCouple as $currentArrival ) {
 
+                    
                     // récupérer l'objet correspondant a l id
                     //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
-                    $currentArrival = $arrival;
+                    
+
+
+                    /* dump($keyTab[0] .': '. $currentRequest .' - '.$currentArrival->getId()); */
 
                     // si c est heure set l objet avec l heure
                     if ($keyTab[0] == 'hour') {
@@ -312,10 +318,11 @@ class TeamManagerController extends AbstractController
                         $staff = $userRepository->find($currentRequest);
                         $currentArrival->setStaff($staff);
                     }
+                    
                 }
 
             }
-
+           
             
             $manager->flush();
             return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));

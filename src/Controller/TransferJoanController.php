@@ -72,7 +72,7 @@ class TransferJoanController extends AbstractController
 
         // test des données recues
         // infos sur le csv
-        if ( $error > 0) {
+        if ($error > 0) {
             $errorDetails[] = 'Code import 2 - Error uploading the file. Error code :' . $error;
         }
     
@@ -279,7 +279,7 @@ class TransferJoanController extends AbstractController
 
                 
                 $date= explode("/", $dia_vuelo);
-                $dateFormat = $date[2] . '-' . $date[0] .'-'. $date[1];
+                $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
                 $dia_vuelo = new DateTimeImmutable($dateFormat);
         
                 if ($hora_v != "") {
