@@ -26,14 +26,20 @@ class UserEditType extends AbstractType
                 'label' => 'Role',
                 'choices' => [
                     'Admin' => 'ROLE_SUPERMAN',
+                    'Airport supervisor' => 'ROLE_AIRPORT_SUPERVISOR',
                     'Rep' => 'ROLE_REP',
                     'Airport' => 'ROLE_AIRPORT',
-                    'Operations' => 'ROLE_OPERATIONS',
-                    'Import' => 'ROLE_IMPORT',
+                    'Reservations' => 'ROLE_RESERVATIONS',
+                    'Transfers' => 'ROLE_TRANSFERS',
                     'Briefings' => 'ROLE_BRIEFING',
                 ],
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
+                'constraints' => [
+                        new NotBlank([
+                            'message' => 'Select at least one choice.',
+                        ]), 
+                ],
             ])         
             ->add('phoneNumber')
             ->add('area', EntityType::class, [

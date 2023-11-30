@@ -33,11 +33,18 @@
 
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or 
+                        ("ROLE_SUPERMAN" in app.user.roles) or 
+                        ("ROLE_OPERATIONS" in app.user.roles) or 
+                        ("ROLE_IMPORT" in app.user.roles)  or 
+                        ("ROLE_RESERVATIONS" in app.user.roles) or
+                        ("ROLE_TRANSFERS" in app.user.roles) )
+                %} 
                 <li class="menu-title">{% trans %}Import File{% endtrans %}</li>
                 {% endif %} 
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) or 
+                        ("ROLE_RESERVATIONS" in app.user.roles)) %} 
                 <li>
                     <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
@@ -46,7 +53,7 @@
                 </li>
                 {% endif %}
                 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) or ("ROLE_TRANSFERS" in app.user.roles)) %} 
                 <li>
                     <a href="{{ path('app_transfer_import') }}">
                         <i class="uil-import"></i>
@@ -83,8 +90,7 @@
                     </li>
                 {% endif %}
 
-                
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles)) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles)) %} 
                     <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 
                     <li>
@@ -125,7 +131,7 @@
                     </li>
                 {% endif %}
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) or ("ROLE_AIRPORT" in app.user.roles) ) %} 
                     <li class="menu-title">{% trans %}Airport Team{% endtrans %}</li>
 
                     <li>
@@ -136,7 +142,7 @@
                     </li>
                 {% endif %}
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_TRANSFERS" in app.user.roles)) %} 
                     <li class="menu-title">{% trans %}Accounting{% endtrans %}</li>
 
                     <li>

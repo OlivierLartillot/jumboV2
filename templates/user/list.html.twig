@@ -55,8 +55,10 @@
                                                     {% for role in user.roles %}
                                                         {% if role == "ROLE_USER" %}{% endif %}
                                                         {% if role == "ROLE_SUPERMAN" %} <span class="badge bg-danger">{% set roleExist = roleExist + 1 %} Admin  {% if roleExist < user.roles|length %} / {% endif %} </span> {% endif %}
+                                                        {% if role == "ROLE_AIRPORT_SUPERVISOR" %}{% set roleExist = roleExist + 1 %} A.Supervisor {% if roleExist < user.roles|length %} / {% endif %} {% endif %}
                                                         {% if role == "ROLE_REP" %}{% set roleExist = roleExist + 1 %} Rep {% if roleExist < user.roles|length %} / {% endif %} {% endif %}
-                                                        {% if role == "ROLE_OPERATIONS" %}{% set roleExist = roleExist + 1 %} Operations {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
+                                                        {% if role == "ROLE_RESERVATIONS" %}{% set roleExist = roleExist + 1 %} Reservation {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
+                                                        {% if role == "ROLE_TRANSFERS" %}{% set roleExist = roleExist + 1 %} Transfers {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
                                                         {% if role == "ROLE_AIRPORT" %}{% set roleExist = roleExist + 1 %} Airport {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
                                                         {% if role == "ROLE_BRIEFING" %}{% set roleExist = roleExist + 1 %} Briefing {% if roleExist < user.roles|length %} / {% endif %}{% endif %}
                                                         {% if role == "ROLE_IMPORT" %}{% set roleExist = roleExist + 1 %} Import {% if roleExist < user.roles|length %} / {% endif %}{% endif %}                                                                           
@@ -87,24 +89,5 @@
                 </div>
             </div> 
         </div>
-                            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        
 {{ include('partials/footer-regroupement.html.twig') }}
