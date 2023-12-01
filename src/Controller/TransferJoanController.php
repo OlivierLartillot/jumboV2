@@ -53,7 +53,7 @@ class TransferJoanController extends AbstractController
     {
 
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
-        $mimeType = $fileToUpload->getMimeType();
+       /*  $mimeType = $fileToUpload->getMimeType(); */
         $error = $fileToUpload->getError();
 
         $ecrituresDeLlegada = ['llegada', 'llegadas'];
@@ -236,10 +236,15 @@ class TransferJoanController extends AbstractController
             }
         }
         $countEachServiceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
-        $countEachreservationNumberFlightNumberIncsv = array_count_values ($reservationNumberFlightNumberIncsv);
+/*         $countEachreservationNumberFlightNumberIncsv = array_count_values ($reservationNumberFlightNumberIncsv);
+ */
 
+        /*******************************************************************************************************/
+        /*********************************** Début des traitements *********************************************/
         $i = 0;
         $errorClients = [];
+        $numberOfRows = 0;
+        $insertedLine = 0;
         foreach ($rows as $row) {
 
             if ( ($i<9) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
@@ -254,6 +259,23 @@ class TransferJoanController extends AbstractController
                 break;
             }
             else {
+
+                $numberOfRows++;
+
+                if (in_array($natureTransfer,$ecrituresDeLlegada)) { 
+                    $natureTransferRepository = $transferArrivalRepository;
+                    $newTransfer = new TransferArrival ;
+                    $newTransferVehicleArrival = new TransferVehicleArrival();
+                }
+                else if (in_array($natureTransfer,$ecrituresDeInterHotel)) { 
+                    $natureTransferRepository = $transferInterHotelRepository;
+                    $newTransfer = new TransferInterHotel();
+                }
+                else if (in_array($natureTransfer,$ecrituresDeSalidas)) { 
+                    $natureTransferRepository = $transferDepartureRepository;
+                    $newTransfer = new TransferDeparture();
+                }
+
 
                 $reservaId= trim($row[0]); 
                 $agencia = trim(strtolower($row[1])); 
@@ -334,7 +356,7 @@ class TransferJoanController extends AbstractController
                 //dd($customerCard);
                
                 $transfersExistent =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo]);
-    
+               
                 
                 // si dans la bdd ce n est pas présent, il faut ajouter 
                 // (si l arrivée n existe pas ce jour il faut le signaler !! on ne créé pas une nouvelle arrivée !!!)
@@ -343,8 +365,9 @@ class TransferJoanController extends AbstractController
                     // par conséquent si y a une fiche client mais pas d'arrivée ce jour, on ne peut pas l'importer
                     if (in_array($natureTransfer,$ecrituresDeLlegada)) {
                         $errorClients[] = 'You cannot create an arrival transfer if there is no arrival on this day. ' . ucfirst($nombre) . ', reservation number ' . $reservaId.'  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival.';
+                        continue;
                     } else {
-    
+                        $newTransfer = $newTransfer;
                         $newTransfer->setCustomerCard($customerCard);
                         $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
                         $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
@@ -366,8 +389,8 @@ class TransferJoanController extends AbstractController
                             $newTransfer->setFlightNumber($vuelo);
                             $newTransfer->setHour($hour);
                         }
-                        
-                        $manager->persist($newTransfer);
+                        $manager->persist($newTransfer);      
+                        $insertedLine++;
                     }                       
                 }
            
@@ -403,6 +426,7 @@ class TransferJoanController extends AbstractController
                             if($transferVehicleArrivalexiste == null){
                                 $manager->persist($transferVehicleArrival);
                             }
+                            $insertedLine++;
                         }
 
                         else {
@@ -428,6 +452,7 @@ class TransferJoanController extends AbstractController
                                 $transfersExistent[0]->setFlightNumber($vuelo);
                                 $transfersExistent[0]->setHour($hour);
                             }
+                            $insertedLine++;  
                         }
                     }
                     else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
@@ -467,7 +492,8 @@ class TransferJoanController extends AbstractController
                                 if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
                                     $manager->persist($newTransferVehicleArrival);
                                 }
-                               
+
+                                $insertedLine++;
                             }
                             // sinon on prévient avec une erreur
                             else{
@@ -506,6 +532,7 @@ class TransferJoanController extends AbstractController
                             }
                             
                             $manager->persist($newTransfer);
+                            $insertedLine++;
                         }
                     }
 
@@ -517,6 +544,7 @@ class TransferJoanController extends AbstractController
                 $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
             }
         }
+
 
         $manager->flush();
         
@@ -611,11 +639,10 @@ class TransferJoanController extends AbstractController
         //***************************************************************** fin  *****************************************************************//
         //****************************************************************************************************************************************//
 
-
-
-
         return $this->render('transfer/import.html.twig', [
-            'errorClients' => $errorClients
+            'errorClients' => $errorClients,
+            'numberOfRows' => $numberOfRows,
+            'insertedLine' => $insertedLine
         ]);
 /*         return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients

@@ -5,15 +5,25 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
+                    {% if numberOfRows is defined and insertedLine is defined %}
+                         <div class="alert alert-success" role="alert">
+                            <p class="m-3 p-3">
+                                        Inserted Lines: {{ insertedLine }} / {{ numberOfRows}} 
+                            </p>
+                        </div>
+                    {% endif %}
+    
 
-                    
                     {% if errorClients is defined %}
 
                         {% if errorClients|length > 0 %}
                             <div class="alert alert-danger" role="alert">
-                                <h3 class="m-3 p-3">
+                                <p class="m-3 p-3">
+                                    Errors Lines: {{ numberOfRows - insertedLine }} / {{ numberOfRows}}
+                                </p>
+                                <p class="m-3 p-3">
                                     {% trans %}Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again{% endtrans %}.
-                                </h3>
+                                </p>
                                 {% for error in errorClients %} 
                                     <ul>
                                         <li>{{ error }}</li>
