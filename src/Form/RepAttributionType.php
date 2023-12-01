@@ -27,17 +27,20 @@ class RepAttributionType extends AbstractType
         if ($skip != null) {
             $repList[] = $skip; 
         }
+        $noRep =  $this->userRepository->findOneBy(['username' => 'no rep']);
+        if ($noRep != null) {
+            $repList[] = $noRep; 
+        }
         $users = $this->userRepository->findBy([], ['username' => 'ASC']);
         foreach ($users as $user) {
             if (in_array('ROLE_REP', $user->getRoles())) {
                 // mais si $user = skip tu le sautes !!!
-                if ($user->getUsername() != 'skip' ) { 
+                if ( ($user->getUsername() != 'skip' ) or ($user->getUsername() != 'no rep') ){ 
                     $repList[] = $user;
                 }
             }
         }
    
-
         $builder
         ->add('staff', EntityType::class, [
             'label' => "Reps",

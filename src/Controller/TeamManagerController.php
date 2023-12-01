@@ -216,7 +216,27 @@ class TeamManagerController extends AbstractController
         // attraper la liste des objets correpsondants au representant et au jour du meeting
         //$attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
         $meetingPoints = $meetingPointRepository->findAll();
-        $users = $userRepository->findAll();
+        
+        $users = [];  /*   $users = $userRepository->findAll(); MAIS EN METTANT TRIE + SKIP ET NO rep en premier */
+        // trouve le skip pour le mettre en premier puis le No rep
+        $skip =  $userRepository->findOneBy(['username' => 'skip']);
+        if ($skip != null) {
+            $users[] = $skip; 
+        }
+        $noRep =  $userRepository->findOneBy(['username' => 'no rep']);
+        if ($noRep != null) {
+            $users[] = $noRep; 
+        }
+        
+        $usersRestant = $userRepository->findBy([], ['username' => 'ASC']);
+        foreach ($usersRestant as $userToPut) {
+            
+            // mais si $user = skip tu le sautes !!!
+            if ( (strtolower($userToPut->getUsername()) !== 'skip' ) and (strtolower($userToPut->getUsername()) !== 'no rep') ){ 
+                $users [] = $userToPut;
+            }
+            
+        }
 
         // on a un seul user dans cette page
         // Ne sert pas pour les pax car c'est groupé, on ne peut pas ajouté
@@ -361,7 +381,26 @@ class TeamManagerController extends AbstractController
         $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date);
 
         $meetingPoints = $meetingPointRepository->findAll();
-        $users = $userRepository->findAll();
+        $users = [];  /*   $users = $userRepository->findAll(); */
+        // trouve le skip pour le mettre en premier puis le No rep
+        $skip =  $userRepository->findOneBy(['username' => 'skip']);
+        if ($skip != null) {
+            $users[] = $skip; 
+        }
+        $noRep =  $userRepository->findOneBy(['username' => 'no rep']);
+        if ($noRep != null) {
+            $users[] = $noRep; 
+        }
+        
+        $usersRestant = $userRepository->findBy([], ['username' => 'ASC']);
+        foreach ($usersRestant as $userToPut) {
+            
+            // mais si $user = skip tu le sautes !!!
+            if ( (strtolower($userToPut->getUsername()) !== 'skip' ) and (strtolower($userToPut->getUsername()) !== 'no rep') ){ 
+                $users [] = $userToPut;
+            }
+            
+        }
     
 
         // on check - pour le 1er client, l heure, puis le rep, puis le lieu, puis le 2eme client, l heure ... etc

@@ -354,7 +354,7 @@
 							{% set labelNumber = app.request.get('labelNumber') %}
 								
 								{% for meetingInfos in meetings %} 
-									{% if meetingInfos.staff ==  "skip" %}
+									{% if meetingInfos.staff|lower ==  "skip" or  meetingInfos.staff|lower == "no rep" %}
 									
 									{% else %}
 										
