@@ -298,8 +298,6 @@ class TransferJoanController extends AbstractController
                 $bono = trim(strtolower($row[17])); 
                 $zonas = trim(strtolower($row[18]));
                
-
-                
                 $date= explode("/", $dia_vuelo);
                 $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
                 $dia_vuelo = new DateTimeImmutable($dateFormat);
@@ -367,7 +365,6 @@ class TransferJoanController extends AbstractController
                         $errorClients[] = 'You cannot create an arrival transfer if there is no arrival on this day. ' . ucfirst($nombre) . ', reservation number ' . $reservaId.'  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival.';
                         continue;
                     } else {
-                        $newTransfer = $newTransfer;
                         $newTransfer->setCustomerCard($customerCard);
                         $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
                         $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
