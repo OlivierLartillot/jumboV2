@@ -1,0 +1,26 @@
+<div class="bottom-navbar d-flex flex-row justify-content-evenly d-lg-none">
+    <div>
+        <a href="{{ path('app_admin_rep_replist')}}" class="active">
+            <span class="fs-1"><i class="uil-calendar-alt"></i></span><br>
+            <span>Briefings</span>
+        </a>
+    </div>
+    <div>
+        <a href="#departure">
+            <span class="fs-1"><i class="mdi mdi-airplane-takeoff fs-1"></i></span><br>
+            <span>Departure</span>
+        </a>
+    </div>
+    <div>
+    <a href="{{ path('app_customer_card_pax_par_rep', {id: app.user.id})}}">
+        <span class="fs-1"><i class="uil-users-alt fs-1"></i></span><br>
+        <span>Pax</span>
+    </a>
+    </div>
+    <div>            
+        <a href="{{ path('app_customer_card_index')}}">
+            <span class="fs-1"><i class="fas fa-id-card"></i></span><br>
+            <span>Clients</span>
+        </a>
+    </div>    
+</div>
