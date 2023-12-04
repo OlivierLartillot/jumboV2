@@ -10,10 +10,10 @@
                             <div class="col-md-6 col-lg-5">
 
 
-                                <div class="d-flex flex-row bd-highlight mb-3 ">
+                                <div class="d-flex flex-row bd-highlight mb-3 me-4  align-items-center">
                                     <div class="boxVertical"> 
                                         <div class="badge rounded-pill bg-primary mt-1 mb-3 verticaltext">
-                                            <span>{{ hour }}</span>
+                                            <span class="fs-6">{{ hour }}</span>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1 feed-item-list rep-timeline-box border-primary  mb-3">
@@ -27,14 +27,14 @@
                                         {% endfor %}
                                         </div>
 
-                                        <div class="row justify-content-around">
-                                            <div class="col-4">
+                                        <div class="d-flex justify-content-between justify-content-sm-evenly">
+                                            <div>
                                                 {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}
                                             </div>
-                                            <div class="col-4">
+                                            <div>
                                                 {% trans %}Children{% endtrans %}:{{paxTab['children']}}
                                             </div>
-                                            <div class="col-4">
+                                            <div>
                                                 {% trans %}Babies{% endtrans %}:{{paxTab['babies']}}
                                             </div>
                                         </div>
