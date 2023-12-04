@@ -1,100 +1,176 @@
-{{ include('partials/header-reproupement.html.twig') }}
+{{ include('partials/main.html.twig') }}
+
+    <head>
+
+        {% if title is not defined %} 
+            {% set title = "To Admin" %}
+        {% endif %}
+
+        
+        {{ include('partials/title-meta.html.twig', {  title: title}) }}
+
+        {% block stylesheets %}
+
+            <!-- Bootstrap Css -->
+            <link href="{{ asset('css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+            <!-- Icons Css -->
+            <link href="{{ asset('css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+            <!-- App Css-->
+            <link href="{{ asset('css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+            {{ encore_entry_link_tags('app') }}
+
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+
+    </head>
+
+
+    {{ include('partials/body.html.twig') }}
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+ {#            <div class="d-none d-md-block">
+            </div> #}
+            {{ include('partials/menu.html.twig') }}
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Contacts', title: ''}) }}
 
 
-<h4 class="text-center mb-4">Briefing {{date | date('d/m/Y') }}</h4>
+                        <h4 class="text-center mb-4">Briefing {{date | date('d/m/Y') }}</h4>
 
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-
-
-        <div class="d-flex flex-row bd-highlight mb-3 ">
-            <div class="boxVertical"> 
-                <div class="badge rounded-pill bg-primary mt-1 mb-3 verticaltext">
-                    <span>{{ hour }}</span>
-                </div>
-            </div>
-            <div class="flex-grow-1 feed-item-list rep-timeline-box border-primary  mb-3">
-                <div class="text-muted mb-1">
-                    <b>{{ hotel.name|title }}</b>
-                </div>
-                <div class="row justify-content-around">
-                    <div class="col-4">
-                        {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}
-                    </div>
-                    <div class="col-4">
-                        {% trans %}Children{% endtrans %}:{{paxTab['children']}}
-                    </div>
-                    <div class="col-4">
-                        {% trans %}Babies{% endtrans %}:{{paxTab['babies']}}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% for transferArrival in attributionClientsByRepAndDate|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 col-lg-5">
 
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
+                                <div class="d-flex flex-row bd-highlight mb-3 ">
+                                    <div class="boxVertical"> 
+                                        <div class="badge rounded-pill bg-primary mt-1 mb-3 verticaltext">
+                                            <span>{{ hour }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 feed-item-list rep-timeline-box border-primary  mb-3">
 
-                            <div class="d-flex flex-row bd-highlight mb-3">
-                                <div class="me-2">
-                                    <i class="uil uil-arrow-circle-right"></i>
-                                </div>
-                                <div class="">
-                                    <p><a href="{{ path('app_admin_rep_fiche_client', { 'customerCard':transferArrival.customerCard.id })   }}   "> <b>{{ transferArrival.customerCard.holder|title }}</b> </a><br>
-                                        {{ transferArrival.customerCard.agency|title }}<br>
-                                        <b>{{ transferArrival.toArrival|title}}</b>
-                                    </p>
-            
-                                </div>
-                            </div>
-                            <div class="row mb-3 justify-content-around">
-                                <div class="col-4">
-                                    Adultes: <b>{{ transferArrival.adultsNumber }}</b> <br/>
-                                    Children: <b>{{ transferArrival.childrenNumber }}</b> <br/>
-                                    Bébés: <b>{{ transferArrival.babiesNumber }}</b> <br/>
-                                </div>
-                                <div class="col-4 text-center">
-                                    image copy
-                                </div>
-                                <div class="col-4 text-end">
-                                    image whatsapp
+                                        <p> {{ hotels|length }}  {{ hotels|length > 1 ? 'hotels'|trans : 'hotel'|trans }}</p>
+                                        <div class="row mb-2">
+                                        {% for hotel in hotels %}
+                                            <div class="text-muted mb-1">
+                                                <b>{{ hotel.name|title }}</b>
+                                            </div>   
+                                        {% endfor %}
+                                        </div>
+
+                                        <div class="row justify-content-around">
+                                            <div class="col-4">
+                                                {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}
+                                            </div>
+                                            <div class="col-4">
+                                                {% trans %}Children{% endtrans %}:{{paxTab['children']}}
+                                            </div>
+                                            <div class="col-4">
+                                                {% trans %}Babies{% endtrans %}:{{paxTab['babies']}}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                            </div>
-                            <div class="row justify-content-around">
-                                <div class="col-4">
-                                    <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div>
+                                <div class="row">
+                                {% for transferArrival in attributionClientsByRepAndDate|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                                <div class="d-flex flex-row bd-highlight mb-3">
+                                                    <div class="me-2">
+                                                        <i class="uil uil-arrow-circle-right"></i>
+                                                    </div>
+                                                    <div class="">
+                                                        <p><a href="{{ path('app_admin_rep_fiche_client', { 'customerCard':transferArrival.customerCard.id })   }}   "> <b>{{ transferArrival.customerCard.holder|title }}</b> </a><br>
+                                                            {{ transferArrival.customerCard.agency|title }}<br>
+                                                            <b>{{ transferArrival.toArrival|title}}</b>
+                                                        </p>
+                                
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3 justify-content-around">
+                                                    <div class="col-4">
+                                                        Adultes: <b>{{ transferArrival.adultsNumber }}</b> <br/>
+                                                        Children: <b>{{ transferArrival.childrenNumber }}</b> <br/>
+                                                        Bébés: <b>{{ transferArrival.babiesNumber }}</b> <br/>
+                                                    </div>
+                                                    <div class="col-4 text-center">
+                                                        image copy
+                                                    </div>
+                                                    <div class="col-4 text-end">
+                                                        image whatsapp
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-around">
+                                                    <div class="col-4">
+                                                        <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div>
+                                                    </div>
+                                                    <div class="col-4 text-center">                     
+                                                        {% if transferArrival.fromStart == "Punta cana international (puj)" %}
+                                                            <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
+                                                        {% elseif transferArrival.fromStart == "Santo domingo (sdq)" %}
+                                                            <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
+                                                        {% elseif transferArrival.fromStart == "La romana international (lrm)" %}
+                                                            <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
+                                                        {% else %}
+                                                            <div><span>{{ transferArrival.fromStart }}</div>
+                                                        {% endif %} 
+                                                    </div>
+                                                    <div class="col-4 text-end">
+                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ transferArrival.hour|date('H:i') }}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                                    
+                                {% endfor %}
                                 </div>
-                                <div class="col-4 text-center">                     
-                                    {% if transferArrival.fromStart == "Punta cana international (puj)" %}
-                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
-                                    {% elseif transferArrival.fromStart == "Santo domingo (sdq)" %}
-                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
-                                    {% elseif transferArrival.fromStart == "La romana international (lrm)" %}
-                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
-                                    {% else %}
-                                        <div><span>{{ transferArrival.fromStart }}</div>
-                                    {% endif %} 
-                                </div>
-                                <div class="col-4 text-end">
-                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ transferArrival.hour|date('H:i') }}</span></div>
+
                             </div>
                         </div>
-                    </div>
+
+                    </div> <!-- container-fluid -->
                 </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
             </div>
-                            
-        {% endfor %}
+            <!-- end main content-->
 
-    </div>
-</div>
+            {{ include('partials/bottom-menu.html.twig') }}
+
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        
 
 
+        <!-- apexcharts -->
+        <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script>
 
-{{ include('partials/footer-regroupement.html.twig') }}
+        <script src="/js/pages/dashboard.init.js"></script>
+
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+
+    </body>
+
+</html>

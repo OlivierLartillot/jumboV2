@@ -1,5 +1,76 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
+/* bottom menu */
+
+.bottom-navbar {
+  background-color: #f5f6f8;
+  opacity: 0.9;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.bottom-navbar a {
+  float: left;
+  display: block;
+  color: #495057;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 0.6rem;
+}
+
+.bottom-navbar a:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.bottom-navbar a.active {
+  background-color: #5b73e8;
+  color: white;
+}
+
+.dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropup {
+  position: relative;
+  display: inline-block;
+}
+
+.dropup-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  bottom: 50px;
+  z-index: 9999;
+}
+
+.dropup-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropup-content a:hover {background-color: #ccc}
+
+.dropup:hover .dropup-content {
+  display: block;
+}
+
+.dropup:hover .dropbtn {
+  background-color: #2980B9;
+}
+
+
 /* common */
 .ribbon {
   width: 131px;

@@ -1,0 +1,50 @@
+<div class="bottom-navbar d-flex flex-row justify-content-between">
+    <div>
+        <a href="#calendar" class="active">
+            <span class="fs-1"><i class="uil-calendar-alt"></i></span><br>
+            <span>Briefings</span>
+        </a>
+    </div>
+    <div>            
+        <a href="#search">
+            <span class="fs-1"><i class="uil-search fs-1"></i></span><br>
+            <span>Search</span>
+        </a>
+    </div>
+    <div>
+        <a href="#departure">
+            <span class="fs-1"><i class="mdi mdi-airplane-takeoff fs-1"></i></span><br>
+            <span>Departure</span>
+        </a>
+    </div>
+    <div>
+      <a href="#mesPax">
+        <span class="fs-1"><i class="uil-users-alt fs-1"></i></span><br>
+        <span>Pax</span>
+      </a>
+    </div>
+    
+
+    <div class="dropup d-inline-block ">
+        <a class="btn header-item waves-effect" id="page-header-user-dropdown"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {# <img class="rounded-circle header-profile-user" src="/images/users/avatar-4.jpg" alt="Header Avatar"> #}
+            <span class="fs-1"><i class="uil-user"></i></span><br>
+            <span>Profile</span>
+            {# <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">{{ app.user }}</span>
+            <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i> #}
+        </a>
+        <div class="dropdown-menu dropdown-menu-end bg bg-light">
+            <!-- item-->
+            <a class="dropdown-item" href="{{ path('app_user_edit_my_profile', {id:app.user.id}) }}"><i class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span class="align-middle">{% trans %}View Profile{% endtrans %}</span></a>
+            <a class="dropdown-item" href="{{ path('app_logout')}}"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}Sign out{% endtrans %}</span></a>
+        </div>
+    </div>
+
+
+        {#         <a href="#profil">
+            <span class="fs-1"><i class="uil-user fs-1"></i></span><br>
+            <span>Profile</span>
+        </a> #}
+  
+</div>

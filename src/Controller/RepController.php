@@ -95,10 +95,19 @@ class RepController extends AbstractController
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:01:00');
 
+        // parfois il y a plusieurs hotels pour un meme meeting
+        $hotels = [];
         // attraper la liste des objets correpsondants au representant et au jour 
         $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date, $hour);
-        
-       $hotel = $attributionClientsByRepAndDate[0]->getToArrival();
+       
+
+        foreach ($attributionClientsByRepAndDate as $arrival) {
+            if (!in_array($arrival->getToArrival(), $hotels)){
+                $hotels[] = $arrival->getToArrival();
+            }
+        }
+     
+        $hotel = $attributionClientsByRepAndDate[0]->getToArrival();
 
         $meetingPoints = $meetingPointRepository->findAll();
         $users = $userRepository->findAll();
@@ -119,6 +128,7 @@ class RepController extends AbstractController
         return $this->render('rep/myBriefings.html.twig', [
             "date" => $date,
             "hotel" => $hotel,
+            "hotels" => $hotels,
             "hour" => $hour,
             "attributionClientsByRepAndDate" => $attributionClientsByRepAndDate,
             "meetingPoints" => $meetingPoints, 
