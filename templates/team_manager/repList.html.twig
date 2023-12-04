@@ -2,10 +2,19 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
 
-        <div class="row mb-3">    
+        <div class="row mb-3 text-center">    
             <form action={{ path('app_admin_team_manager_replist') }} method="GET">
-                <input name="date" type="date" value="{{date | date('Y-m-d') }}">
-                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+        
+                <div class="row justify-content-center mb-3 shadow border border-dark rounded">
+                    <div class="col-md-3 mt-3 ">
+                        <label class="form-label">{% trans %}Choose the briefing date{% endtrans %}</label>
+                        <input class="form-control" name="date" type="date" value="{{date | date('Y-m-d') }}">      
+                    </div>
+                    <div class="my-3">
+                        <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+                    </div>
+                </div>
+
             </form>
         </div>
 
@@ -23,7 +32,7 @@
         <div class="row">
             
             {% for user in users|sort((a, b) => a.username <=> b.username)  %}
-                <div class="col-sm-5 mb-3 mb-sm-0">
+                <div class="col-sm-6 mb-3 mb-sm-0">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ user }} </h5>

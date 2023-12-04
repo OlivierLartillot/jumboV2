@@ -7,7 +7,9 @@
             <!-- end main content-->
 
             <!-- Le menu créé pour les rep en bas de page -->
-            {{ include('partials/rep-bottom-menu.html.twig') }}
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
         </div>
         <!-- END layout-wrapper -->
         {{ include('partials/right-sidebar.html.twig') }}
