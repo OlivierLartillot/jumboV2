@@ -22,6 +22,7 @@ class RepController extends AbstractController
     #[Route('/rep/replist', name: 'app_admin_rep_replist',methods:["GET"])]
     public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository,TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
+
         // utilisation du service qui définit si on utilise la query ou la session
         $day =  $defineQueryDate->returnDay($request);
 

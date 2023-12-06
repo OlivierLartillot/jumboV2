@@ -16,8 +16,10 @@ let app = {
 
     handleChange: function(event) {
         // cible le groupe de boutons sur lequel on a cliqué (ex: group-2)
-        let targetGroup = event.target.dataset.group;
-  
+        const targetGroup = event.target.dataset.group;
+        const serverUrl = document.getElementById('serverUrl');
+        console.log(serverUrl.textContent);
+
         const group = document.querySelectorAll('[data-group=' + targetGroup + ' ]');
         buttonsGroup = [];
         group.forEach(element => {
@@ -57,7 +59,7 @@ let app = {
             mode:   'cors',
             cache:  'no-cache'
         };
-        fetch('https://localhost:8000/transfer/arrival/maj/status/' + transferArivalId + '/'+ event.target.id  , fetchOptions)
+        fetch('/transfer/arrival/maj/status/' + transferArivalId + '/'+ event.target.id  , fetchOptions)
             .then(function (response) {
             if (response.ok) {
                 return response.json();

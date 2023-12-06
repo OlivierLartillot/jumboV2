@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\CustomerCard;
-use App\Entity\Status;
 use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Form\TransferArrivalType;
