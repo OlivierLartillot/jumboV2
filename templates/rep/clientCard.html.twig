@@ -11,7 +11,7 @@
                             <i class="uil uil-arrow-circle-right"></i>
                         </div>
                         <div>
-                                <span class="fw-bold">{{ customerCard.holder|title }}</span><br/>
+                                <a href="{{ path('app_customer_card_show', {id: customerCard.id  })}}"><span class="fw-bold">{{ customerCard.holder|title }}</span></a><br/>
                                 <span class="fw-bold">{{ customerCard.agency|capitalize }}</span><br/>
 
                                 {{ customerCard.reservationNumber|upper }}<br/>
@@ -28,11 +28,7 @@
                                     </div>
                                     <div>
                                         <span class="badge bg-secondary">{{ arrival.staff }}</span><br>
-
-                                      
                                             {{ arrival.status|lower  == 'no show' ? '<span class="badge bg-danger">' : '<span class="badge bg-success">' }}
-                                
-                                        
                                         {{ arrival.status }}</span>
                                     </div>
                                 </div>
@@ -68,7 +64,7 @@
                                 <div class="row">
                                     <span class="btn btn-outline-primary">{{ arrival.fromStart }}</span>
                                 </div> 
-                                <div class="fs-5 bolder text-center">V</div>
+                                <div class="fs-5 bolder text-center"><i class="uil-arrow-down fs-1"></i></div>
                                 <div class="row">
                                     <span class="btn btn-outline-primary">{{ arrival.ToArrival }}</span>
                                 </div> 
@@ -81,7 +77,7 @@
                         {% for interHotel in customerCard.transferInterHotels %}
 
                                 <div class="d-flex flex-row justify-content-between">
-                                    <div >
+                                    <div>
                                         <i class="mdi mdi-car fs-3"></i> Inter-Hotel
                                     </div>
                                 </div>
@@ -178,3 +174,4 @@
 
 
 {{ include('partials/footer-regroupement.html.twig') }}
+

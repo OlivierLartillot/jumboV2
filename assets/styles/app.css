@@ -307,11 +307,16 @@
   height: 7rem;
 }
 
+/****** timeline box pour les reps ******/
 .rep-timeline-box {
-  background-color: hsl(0, 0%, 90%);
+  color: black;
+  background-color: white;
   padding: 0.8rem;
   border-radius: 0 0 10px 10px; 
-  border-top: 0.4rem solid;
+  border-top: 0.4rem solid #5b73e8;
+  border-right: 0.1rem solid #5b73e8;
+  border-bottom: 0.1rem solid #5b73e8;
+  border-left: 0.1rem solid #5b73e8;
 }
 
 .rep-timeline-badge {

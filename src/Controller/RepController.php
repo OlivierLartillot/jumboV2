@@ -67,7 +67,8 @@ class RepController extends AbstractController
             'user' => $user,
             'regroupementsClients' => $regroupementsClients,   
             'paxTab' => $paxTab,
-            'paxPerHotelAgency' => $paxPerHotelAgency
+            'paxPerHotelAgency' => $paxPerHotelAgency,
+            'briefingsMenu' => true
         ]);
        
     } 
@@ -133,7 +134,8 @@ class RepController extends AbstractController
             "user" => $user,
             "users" => $users,
             "paxTab" => $paxTab,
-            "countPax" => $countPax
+            "countPax" => $countPax,
+            'briefingsMenu' => true
 
         ]);
     }
@@ -149,6 +151,7 @@ class RepController extends AbstractController
  */
         return $this->render('rep/clientCard.html.twig', [
             'customerCard' => $customerCard,
+            'briefingsMenu' => true
 /*             'transferArrivals' => $transferArrivals,
             'transferAInterHotels' => $transferAInterHotels,
             'transferDepartures' => $transferDepartures, */
