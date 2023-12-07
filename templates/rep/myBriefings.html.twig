@@ -1,0 +1,154 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+   {#  {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }} #}
+
+
+        <!-- Ma page -->
+       {#  <h4 class="text-center mb-4">Briefing {{date | date('d/m/Y') }}</h4> #}
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-6 col-lg-5">
+                <div class="d-flex flex-row bd-highlight mb-3 me-4  align-items-center">
+                    <div class="boxVertical"> 
+                        <div class="badge rounded-pill bg-primary mt-1 mb-3 verticaltext">
+                            <span class="fs-6">{{ hour }}</span>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 feed-item-list rep-timeline-box border-primary  mb-3">
+                        <div class="d-flex justify-content-between">
+                            <p>{{date | date('d/m/Y') }}</p>
+                            <p>{{ hotels|length }}  {{ hotels|length > 1 ? 'hotels'|trans : 'hotel'|trans }}</p>
+                        </div>
+                        <div class="row mb-2">
+                        {% for hotel in hotels %}
+                            <div class="text-muted mb-1">
+                                -<b>{{ hotel.name|title }}</b>
+                            </div>   
+                        {% endfor %}
+                        </div>
+
+                        <div class="d-flex justify-content-between justify-content-sm-evenly">
+                            <div>
+                                {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}
+                            </div>
+                            <div>
+                                {% trans %}Children{% endtrans %}:{{paxTab['children']}}
+                            </div>
+                            <div>
+                                {% trans %}Babies{% endtrans %}:{{paxTab['babies']}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                {% set i = 1 %}
+                {% for transferArrival in attributionClientsByRepAndDate|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+
+                    {%  set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
+                    <div class="col-lg-12">
+                        <div data-group="group-{{i}}" class="card border {{ statusClass }}">
+                            <div class="card-body">
+
+
+                                <div data-group="group-{{i}}" class="alert alert-danger alert-dismissible fade show px-4 mb-0 text-center d-none" role="alert">
+                                    <i class="uil uil-exclamation-octagon d-block display-4 mt-2 mb-3 text-danger"></i>
+                                    {# <h5 class="text-danger">Be carrefulle</h5> #}
+                                    <p>{% trans %}You just changed the status{% endtrans %}<br/> 
+                                        <span id="oldStatus">{{ transferArrival.status.name }}</span> <i class="uil-arrow-right"></i> <span id="newStatus"></span>
+                                    </p>
+                                </div>
+
+
+                                <div class="d-flex flex-row bd-highlight mb-3">
+                                    <div class="me-2">
+                                        <i class="uil uil-arrow-circle-right"></i>
+                                    </div>
+                                    <div class="">
+                                        <p><a href="{{ path('app_admin_rep_fiche_client', { 'customerCard':transferArrival.customerCard.id })   }}   "> <b>{{ transferArrival.customerCard.holder|title }}</b> </a><br>
+                                            {{ transferArrival.customerCard.agency|title }}<br>
+                                            <b>{{ transferArrival.toArrival|title}}</b>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row justify-content-around bd-highlight mb-3">
+                                    <button type="button" id="arrived" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "arrived") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1 ">Arrived</button>
+                                    <button type="button" id="go show (airport)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (airport)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show A.</button>
+                                    <button type="button" id="go show (hotel)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (hotel)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show H.</button>
+                                    <button type="button" id="no show" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "no show") ? 'btn-danger' : 'btn-outline-danger' }} btn-sm p-1">No Show</button>
+                                    <span id="transferArrivalId" data-group="group-{{i}}" class="d-none">{{ transferArrival.id }}</span>
+                                    <span id="staffId" data-group="group-{{i}}" class="d-none">{{ app.user.id }}</span>
+                                    <span id="group-{{i}}" data-group="group-{{i}}" class="d-none">group-{{i}}</span>
+                                </div>
+                                <div class="row mb-3 justify-content-around">
+                                    <div class="col-4">
+                                        Adultes: <b>{{ transferArrival.adultsNumber }}</b> <br/>
+                                        Children: <b>{{ transferArrival.childrenNumber }}</b> <br/>
+                                        Bébés: <b>{{ transferArrival.babiesNumber }}</b> <br/>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        image copy
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        image whatsapp
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around">
+                                    <div class="col-4">
+                                        <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div>
+                                    </div>
+                                    <div class="col-4 text-center">                     
+                                        {% if transferArrival.fromStart == "Punta cana international (puj)" %}
+                                            <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
+                                        {% elseif transferArrival.fromStart == "Santo domingo (sdq)" %}
+                                            <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
+                                        {% elseif transferArrival.fromStart == "La romana international (lrm)" %}
+                                            <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
+                                        {% else %}
+                                            <div><span>{{ transferArrival.fromStart }}</div>
+                                        {% endif %} 
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ transferArrival.hour|date('H:i') }}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% set i = i+1 %}        
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+
+<!-- footer -->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        {# <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> #}
+        {#  <script src="/js/pages/dashboard.init.js"></script> #}
+       
+
+        <!-- App js --> 
+        <script src="/js/jsPersos/changementStatusAjax.js"></script>
+        <script src="/js/app.js"></script>
+
+    </body>
+
+</html>

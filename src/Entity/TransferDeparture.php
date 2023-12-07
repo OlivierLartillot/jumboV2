@@ -24,7 +24,7 @@ class TransferDeparture
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $fromStart = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
+    #[ORM\ManyToOne(inversedBy: 'transferToDepartures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 

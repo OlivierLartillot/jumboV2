@@ -1,78 +1,75 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
-
-        <div class="row mb-3">    
-            <form action={{ path('app_admin_rep_replist') }} method="GET">
-                <input name="date" type="date" value="{{date | date('Y-m-d') }}">
-                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
-            </form>
-        </div>
+{#     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }} #}
 
 
 
-        <p class="alert alert-info" role="alert">
-            {% trans %}Arrival date{% endtrans %}: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
-            {% trans %}Briefing date{% endtrans %}: <b>{{ date| date('d-m-Y')}}</b>
-        </p>
-
-        <div class="row">
-            
-           
-                <div class="col-sm-5 mb-3 mb-sm-0">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ user }} </h5>
-
-                                {% if paxTab is empty %} {% set paxCount = 0 %} {% endif %}  
-
-                                {% if  paxTab[user.username] is defined %}
-                                    {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
-                                    {% if paxCount == 0 %}  <p class="card-text">{% trans %}This rep has no client assigned today.{% endtrans %}</p> 
-                                    {% else %}   
-                                    <p>{% trans %}Adults{% endtrans %}: {{ paxTab[user.username]['adults'] }}  / {% trans %}Children{% endtrans %}: {{ paxTab[user.username]['children'] }}  / {% trans %}Babies{% endtrans %}: {{ paxTab[user.username]['babies'] }} </p>
-                                    {% endif %}
-                                {% endif %}
-                                <hr>
-                                {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
-
-                                    {% if (regroupement is not empty) %}                                                        
-                                    
-                                        {% if regroupement.staff == user %}
-                                            <p class="card-text {{ (regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
-                                                {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
-                                                {% set hotel =  regroupement.toArrival %}
-
-                                                <strong>{{ hotel.name|title }}<br/>
-                                                {{ regroupement.getMeetingAtTime }} - {{ (regroupement.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.meetingPoint.checkLanguage(app.user.language) : regroupement.meetingPoint.en }}</strong><br/>
-                                
-
-                                                {% trans %}Agency{% endtrans %}: {{ regroupement.customerCard.agency|title }}<br/>
-                                                Pax:
-                                                {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
-                                                {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
-                                                    A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
-                                                {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
-                                                    N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
-                                                {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
-                                                    B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
-                                                {% endif %}
-                                               
-                                                <br/>
-                                            </p>
-                                            <hr>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if paxCount > 0 %}
-                                <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
-                            {% endif %}
-                        </div>              
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-row bd-highlight mb-2 justify-content-center">   
+                            <form action={{ path('app_admin_rep_replist') }} method="GET">
+                                <div class="text-center">
+                                    <input class="form-control mt-3 mb-3" name="date" type="date" value="{{date | date('Y-m-d') }}">
+                                </div>
+                                <div class="text-center">
+                                    <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-          
+            </div>
         </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        {% if regroupementsClients|length > 0 %}
+
+                        <ul class="activity-feed  mb-0 ps-2">
+                            {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                {% if (regroupement is not empty) %}                                                        
+                                    {% if regroupement.staff == user %}
+                                        {% set hotel =  regroupement.toArrival %}
+                                        <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id, 'hour': regroupement.getMeetingAtTime }) }}">
+                                            <li class="feed-item  border-top border-primary">
+                                                <div class="feed-item-list rep-timeline-box ">
+                                                    <p class="badge rounded-pill bg-primary mt-1 mb-3 fs-6">{{ regroupement.getMeetingAtTime }}</p>
+                                                    <p class="text-muted mb-1"><b>{{ hotel.name|title }}</b> </p>
+                                                    <p class="text-muted mb-1">
+                                                    
+                                                        {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
+                                                        {% endif %}
+                                                        {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
+                                                        {% endif %}
+                                                        {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
+                                                        {% endif %}                                           
+                            
+                                                    </p>
+
+                                                </div>
+                                            </li>
+                                        </a>
+                                    {% endif %}
+                                
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        {% trans  %}You don't have any client today{% endtrans %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
 {{ include('partials/footer-regroupement.html.twig') }}

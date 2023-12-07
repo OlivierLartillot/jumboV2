@@ -1,6 +1,10 @@
-    {{ include('modules/loaderPerso.html.twig') }}
+{{ include('modules/loaderPerso.html.twig') }}
 
-<header id="page-topbar">
+
+{% if "ROLE_REP" not in app.user.roles %}
+{# on affiche pour  #}
+<header id="page-topbar" >
+
     <div class="navbar-header">
         <div class="d-flex">
             <!-- LOGO -->
@@ -100,7 +104,7 @@
                         <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
                     </a>
                     {% endif %}
- #}
+                    #}
                     {# {% if app.user.language != 'it' %}
                     <!-- item-->
                     <a href="{{ path('app_change_locale', {'locale': 'it'}) }}" class="dropdown-item notify-item language" data-lang="it">
@@ -125,7 +129,8 @@
                 </button>
             </div>
 
-{#             <div class="dropdown d-inline-block">
+                {#             
+                <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="uil-bell"></i>
@@ -238,3 +243,363 @@
         </div>
     </div>
 </header>
+
+{# si y a le role rep, ca dépend de l'affichage #}
+{% else %}
+
+{# pour les petits écrans on change tout #}
+<header id="page-topbar" class="d-lg-none" >
+    <div class="navbar-header">
+        <div class="d-flex">
+            <a href="javascript:history.go(-1)" class="btn btn-secondary btn-sm ms-3">Retour</a>
+        </div>
+
+        <div class="d-flex">
+
+            <div class="dropdown d-inline-block d-lg-none ms-2">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="uil-search"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-search-dropdown">
+                    
+                    <form action="{{ path('app_customer_card_search')}}" class="p-3" method="POST">
+                        <div class="m-0">
+                            <div class="input-group">
+                                <input name="search" type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}..." aria-label="Recipient's username">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if app.user.language == 'en' %}
+                       <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+                    {% elseif app.user.language == 'es' %}
+                       <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
+                   {#  {% elseif app.user.language == 'de' %}
+                        <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16"> #}
+                   {#  {% elseif app.user.language == 'it' %}
+                        <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16"> #}
+                    {% elseif app.user.language == 'fr' %}
+                        <img class="header-lang-img" src="/images/flags/french.jpg" alt="Header Language" height="16">
+                    {% else %}
+                       <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    
+
+                    {% if app.user.language != 'en' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'en'}) }}" class="dropdown-item notify-item language" data-lang="eng">
+                        <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
+                    </a>
+                    {% endif %}
+
+                    {% if app.user.language != 'es' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'es'}) }}" class="dropdown-item notify-item language" data-lang="sp">
+                        <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
+                    </a>
+                    {% endif %}
+                    
+                   {#  {% if app.user.language != 'de' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'de'}) }}" class="dropdown-item notify-item language" data-lang="gr">
+                        <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
+                    </a>
+                    {% endif %}
+ #}
+                    {# {% if app.user.language != 'it' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'it'}) }}" class="dropdown-item notify-item language" data-lang="it">
+                        <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
+                    </a>
+                    {% endif %} #}
+
+                    {% if app.user.language != 'fr' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'fr'}) }}" class="dropdown-item notify-item language" data-lang="ru">
+                        <img src="/images/flags/french.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">French</span>
+                    </a>
+                    {% endif %}
+                    
+                </div>
+            </div>
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                    <i class="uil-minus-path"></i>
+                </button>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {# <img class="rounded-circle header-profile-user" src="/images/users/avatar-4.jpg" alt="Header Avatar"> #}
+                    <img class="rounded-circle header-profile-user" src="/images/logo-sm.png"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">{{ app.user }}</span>
+                    <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="{{ path('app_user_edit_my_profile', {id:app.user.id}) }}"><i class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span class="align-middle">{% trans %}View Profile{% endtrans %}</span></a>
+                    <a class="dropdown-item" href="{{ path('app_logout')}}"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}Sign out{% endtrans %}</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{# sinon on affiche l'ancien #}
+<header id="page-topbar" class="d-none d-lg-block">
+
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="{{ path('home') }}" class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="/images/logo-sm.png" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/images/logo-dark.png" alt="" height="20">
+                    </span>
+                </a>
+
+                <a href="{{ path('home') }}" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="/images/logo-sm.png" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/images/logo-light.png" alt="" height="20">
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+            <!-- App Search-->
+            <form action="{{ path('app_customer_card_search')}}" class="app-search d-none d-lg-block" method="POST" >
+                <div class="position-relative">
+                    <input name="search" type="text" class="form-control" placeholder="{% trans %}Search!{% endtrans %}...">
+                    <span class="uil-search"></span>
+                </div>
+            </form>
+        </div>
+
+        <div class="d-flex">
+
+            <div class="dropdown d-inline-block d-lg-none ms-2">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="uil-search"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-search-dropdown">
+                    
+                    <form action="{{ path('app_customer_card_search')}}" class="p-3" method="POST">
+                        <div class="m-0">
+                            <div class="input-group">
+                                <input name="search" type="text" class="form-control" placeholder="{% trans %}Search{% endtrans %}..." aria-label="Recipient's username">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="dropdown d-inline-block language-switch">
+                <button type="button" class="btn header-item waves-effect"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if app.user.language == 'en' %}
+                       <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+                    {% elseif app.user.language == 'es' %}
+                       <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language" height="16">
+                   {#  {% elseif app.user.language == 'de' %}
+                        <img class="header-lang-img" src="/images/flags/germany.jpg" alt="Header Language" height="16"> #}
+                   {#  {% elseif app.user.language == 'it' %}
+                        <img class="header-lang-img" src="/images/flags/italy.jpg" alt="Header Language" height="16"> #}
+                    {% elseif app.user.language == 'fr' %}
+                        <img class="header-lang-img" src="/images/flags/french.jpg" alt="Header Language" height="16">
+                    {% else %}
+                       <img class="header-lang-img" src="/images/flags/us.jpg" alt="Header Language" height="16">
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    
+
+                    {% if app.user.language != 'en' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'en'}) }}" class="dropdown-item notify-item language" data-lang="eng">
+                        <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
+                    </a>
+                    {% endif %}
+
+                    {% if app.user.language != 'es' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'es'}) }}" class="dropdown-item notify-item language" data-lang="sp">
+                        <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
+                    </a>
+                    {% endif %}
+                    
+                   {#  {% if app.user.language != 'de' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'de'}) }}" class="dropdown-item notify-item language" data-lang="gr">
+                        <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
+                    </a>
+                    {% endif %}
+                    #}
+                    {# {% if app.user.language != 'it' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'it'}) }}" class="dropdown-item notify-item language" data-lang="it">
+                        <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
+                    </a>
+                    {% endif %} #}
+
+                    {% if app.user.language != 'fr' %}
+                    <!-- item-->
+                    <a href="{{ path('app_change_locale', {'locale': 'fr'}) }}" class="dropdown-item notify-item language" data-lang="ru">
+                        <img src="/images/flags/french.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">French</span>
+                    </a>
+                    {% endif %}
+                    
+                </div>
+            </div>
+
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                    <i class="uil-minus-path"></i>
+                </button>
+            </div>
+
+                {#             
+                <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="uil-bell"></i>
+                    <span class="badge bg-danger rounded-pill">3</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h5 class="m-0 font-size-16"> {% trans %}Notifications{% endtrans %} </h5>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#!" class="small"> {% trans %}Mark all as read{% endtrans %}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-simplebar style="max-height: 230px;">
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                        <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                            <i class="uil-shopping-basket"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{% trans %}Your order is placed{% endtrans %}</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}3 min ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <img src="/images/users/avatar-3.jpg" class="rounded-circle avatar-xs" alt="user-pic">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">James Lemire</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}It will seem like simplified English.{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}1 hour ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                        <span class="avatar-title bg-success rounded-circle font-size-16">
+                                            <i class="uil-truck"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{% trans %}Your item is shipped{% endtrans %}</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}If several languages coalesce the grammar{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}3 min ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <img src="/images/users/avatar-4.jpg" class="rounded-circle avatar-xs" alt="user-pic">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Salena Layfield</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1">{% trans %}As a skeptical Cambridge friend of mine occidental.{% endtrans %}</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> {% trans %}5 hours ago{% endtrans %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="p-2 border-top">
+                        <div class="d-grid">
+                            <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <i class="uil-arrow-circle-right me-1"></i> {% trans %}View More{% endtrans %}..
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> #}
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {# <img class="rounded-circle header-profile-user" src="/images/users/avatar-4.jpg" alt="Header Avatar"> #}
+                    <img class="rounded-circle header-profile-user" src="/images/logo-sm.png"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">{{ app.user }}</span>
+                    <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="{{ path('app_user_edit_my_profile', {id:app.user.id}) }}"><i class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span class="align-middle">{% trans %}View Profile{% endtrans %}</span></a>
+                    <a class="dropdown-item" href="{{ path('app_logout')}}"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">{% trans %}Sign out{% endtrans %}</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% endif %}

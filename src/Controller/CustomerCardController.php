@@ -123,6 +123,7 @@ class CustomerCardController extends AbstractController
                     'hotels' => $hotels,
                     'statusList' => $statusList,
                     'reps' => $reps,
+                    'clientsMenu' => true
                 ]);
                 
                 
@@ -149,6 +150,7 @@ class CustomerCardController extends AbstractController
             'statusList' => $statusList,
             'reps' => $reps,
             'count' => $count,
+            'clientsMenu' => true
         ]);
     }
 
@@ -338,6 +340,7 @@ class CustomerCardController extends AbstractController
 
         return $this->render('customer_card/calcul_pax_par_rep.html.twig', [
             'results' =>$results,
+            'paxMenu' => true
         ]);
     }
 
@@ -647,7 +650,11 @@ class CustomerCardController extends AbstractController
 
 
             $commentRepository->save($comment, true);
-            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', [
+                'id' => $customerCard->getId(),
+                'clientsMenu' => true
+            ], 
+            Response::HTTP_SEE_OTHER);
         }
 
  
@@ -668,7 +675,8 @@ class CustomerCardController extends AbstractController
             'customer_card' => $customerCard,
             'comments' => $comments,
             'form' => $form,
-            'tableauTimeline' => $tableauTimeline
+            'tableauTimeline' => $tableauTimeline,
+            'clientsMenu' => true
         ]);
     }
 

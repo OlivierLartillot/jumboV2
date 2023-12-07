@@ -58,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: StatusHistory::class)]
     private Collection $statusHistories;
 
+    #[ORM\OneToMany(mappedBy: 'statusUpdatedBy', targetEntity: TransferArrival::class)]
+    private Collection $statusUpdatedBy;
+
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $language = null;
 

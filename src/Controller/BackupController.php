@@ -125,4 +125,24 @@ class BackupController extends AbstractController
         ]);
     }
 
+
+    // Route pour passer tout en test
+/*     #[Route('/fixtures', name: 'app_backup_delete_reservation')]
+    public function fixtures(CustomerCardRepository $customerCardRepository, EntityManagerInterface $em): Response
+    {
+        $i = 0;
+        foreach ($customerCardRepository->findAll() as $customer) {
+            $customer->setHolder('client ' . $i);
+            $customer->setReservationNumber('reserva' . $i);
+            $customer->setJumboNumber('Jnumber' . $i);
+            $i++;
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('home');
+    } */
+
+
+
 }

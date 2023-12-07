@@ -2,12 +2,33 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'New Customer Card'|trans}) }}
     
-        <a href="{{ path('app_customer_card_index') }}" class="btn btn-secondary">back to list</a>
-        <div class="row justify-content-center">
 
-            <div class="col-lg-3">
-                <h3>Client informations</h3>
-                {{ form_start(form) }}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                <h3 class="mb-3">{% trans %}Client informations{% endtrans %}</h3>
+                                {{ form_start(form) }}
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+
+                       
+                
+
+            
+
+
+
+
+
 {#                     {{ form_widget(form) }}
                     <hr>
                     <h3>Arrival</h3>
@@ -59,7 +80,7 @@
                     </div>
                     #}
 
-                {{ form_end(form) }}
+
 
 
 

@@ -22,7 +22,7 @@ class TransferInterHotel
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $fromStart = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferInterHotels')]
+    #[ORM\ManyToOne(inversedBy: 'transferToInterHotels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
