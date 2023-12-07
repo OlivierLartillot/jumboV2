@@ -127,7 +127,7 @@ class BackupController extends AbstractController
 
 
     // Route pour passer tout en test
-    #[Route('/fixtures', name: 'app_backup_delete_reservation')]
+/*     #[Route('/fixtures', name: 'app_backup_delete_reservation')]
     public function fixtures(CustomerCardRepository $customerCardRepository, EntityManagerInterface $em): Response
     {
         $i = 0;
@@ -141,7 +141,7 @@ class BackupController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('home');
-    }
+    } */
 
 
 
