@@ -146,7 +146,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
 
-    public function customerCardPageSearch( DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
+    public function customerCardPageSearch(DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
     {      
         $requete = $this->createQueryBuilder('c');
         
@@ -170,8 +170,8 @@ class CustomerCardRepository extends ServiceEntityRepository
                                     ->orWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd')
                                     ->orWhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd')
 
-                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
-                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                                    ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                                    ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
                 ;
 
             } 
@@ -184,7 +184,7 @@ class CustomerCardRepository extends ServiceEntityRepository
                                                     and transferArrival.date <= :dateEnd) 
                                                     and (transferDeparture.date >= :dateStart 
                                                     or transferDeparture.date is null)')
-    /*                                     ->orWhere('(transferArrival.date >= :dateStart 
+                                       /*  ->orWhere('(transferArrival.date >= :dateStart 
                                                     and transferArrival.date >= :dateEnd)
                                                     and (transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd 
                                                     or transferDeparture.date is null)') */
@@ -192,19 +192,12 @@ class CustomerCardRepository extends ServiceEntityRepository
                                         ->setParameter('dateStart',  $dateStart->format('Y-m-d'))->setParameter('dateEnd', $dateEnd->format('Y-m-d'));
 
                 }
-/*                 else {
+                /* else {
                     $requete = $requete->andWhere('transferArrival.toArrival = :hotel and transferArrival
                                                     or transferInterHotel.toArrival = :hotel
                                                     or transferDeparture.fromStart = :hotel) ');
             
                     $requete = $requete->setParameter('hotel', $hotel);
-                                         
-                   
-
-
-
-
-
                 } */
         
         
@@ -257,7 +250,14 @@ class CustomerCardRepository extends ServiceEntityRepository
         }
          
 
-        if ($rep != "all") { $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );}
+         if ($rep != "all") { 
+            /** joindre le transfer arrival avec le client card */
+             $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );
+            /** récupérer l'inter hotel associé a ce client card c est interhotel */ 
+
+        }
+
+
         if ($status != "all") { $requete = $requete->andWhere('transferArrival.status = :status')->setParameter('status', $status );}
 
 

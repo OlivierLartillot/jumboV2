@@ -9,12 +9,12 @@ let app = {
         let buttons = document.getElementsByClassName('btn-status');
         //console.log(buttons);
         buttons.forEach(element => {
-            element.addEventListener('click',app.handleChange);
+            element.addEventListener('click',app.handleClic);
             
         });
     },
 
-    handleChange: function(event) {
+    handleClic: function(event) {
         // cible le groupe de boutons sur lequel on a cliqué (ex: group-2)
         const targetGroup = event.target.dataset.group;
 
@@ -43,14 +43,14 @@ let app = {
         // Boite d'alerte, nouvelle valeure
         alert.getElementsByTagName('span')[1].textContent = event.target.textContent;
 
-        const transferArivalId = group[6].textContent;
+        const transferArrivalId = group[6].textContent;
 
         let fetchOptions = {
             method: 'POST',
             mode:   'cors',
             cache:  'no-cache'
         };
-        fetch('/transfer/arrival/maj/status/' + transferArivalId + '/'+ event.target.id  , fetchOptions)
+        fetch('/transfer/arrival/maj/status/' + transferArrivalId + '/'+ event.target.id  , fetchOptions)
             .then(function (response) {
             if (response.ok) {
                 return response.json();
@@ -72,8 +72,6 @@ let app = {
                     button.classList.add("btn-success");
                     button.classList.replace("btn-outline-danger", "btn-danger");
                 }
-
-
 
             });
 
