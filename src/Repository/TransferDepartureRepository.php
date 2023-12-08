@@ -103,6 +103,44 @@ class TransferDepartureRepository extends ServiceEntityRepository
         return $tableauFinalDesDoublons;
     }
 
+    /**
+     * @return TransferDeparture Returns an array of CustomerCard objects by the day, the nature transfer and service number
+     *
+     */
+    /* 
+    public function findByDateAndCustomerCard($customerCard, $date): array
+    { 
+
+        return $this->createQueryBuilder('t')
+                    ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+                    ->andWhere('customerCard.id = :customerCard')
+                    ->andwhere('t.date = :date')
+                    ->setParameter('date', $date)
+                    ->setParameter('customerCard', $customerCard)
+                    ->getQuery()
+                    ->getResult()
+        ;
+    } */
+
+     /**
+     * @return TransferDeparture Returns an array of TransferDeparture objects by the day, and the staff
+     * 
+     */ 
+    public function finfByStaffAndDate($date, $staff): array
+    { 
+
+        return $this->createQueryBuilder('d')
+                    /* ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = d.customerCard') */
+                    ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'transferArrival.customerCard = d.customerCard')
+                    ->andwhere('d.date = :date')
+                    ->andwhere('transferArrival.staff = :staff')
+                    ->setParameter('date', $date)
+                    ->setParameter('staff', $staff)
+                    ->getQuery()
+                    ->getResult()
+        ;
+    }
+
 //    public function findOneBySomeField($value): ?TransferDeparture
 //    {
 //        return $this->createQueryBuilder('t')

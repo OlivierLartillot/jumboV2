@@ -8,6 +8,7 @@ use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
+use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
@@ -158,6 +159,36 @@ class RepController extends AbstractController
             'transferAInterHotels' => $transferAInterHotels,
             'transferDepartures' => $transferDepartures, 
             */
+        ]);
+
+    }
+
+
+    // la route qui affiche la carte client pour les reps
+    #[Route('/rep/transfers', name: 'app_admin_rep_transfers',methods:["GET"])]
+    public function transfers(TransferArrivalRepository $transferArrivalRepository, 
+                              TransferInterHotelRepository $transferInterHotelRepository,
+                              TransferDepartureRepository $transferDepartureRepository,
+                              Request $request, 
+                              DefineQueryDate $defineQueryDate): Response
+    {
+
+        // si le user de l'url n'est pas le user courant, tu n'as pas les droits
+        /*  if ($user != $this->getUser()) {
+            return throw $this->createAccessDeniedException();
+        } */
+
+        $day =  $defineQueryDate->returnDay($request);
+        $date = new DateTimeImmutable($day . '00:00:00');
+
+        $transfersInterHotelThisday = $transferInterHotelRepository->finfByStaffAndDate($date, $this->getUser());
+        $transfersDepartureThisday = $transferDepartureRepository->finfByStaffAndDate($date, $this->getUser());
+
+        return $this->render('rep/transfers.html.twig', [
+            "date" => $date,
+            'transfersInterHotelThisday' => $transfersInterHotelThisday,
+            'transfersDepartureThisday' => $transfersDepartureThisday,
+            'transfersMenu' => true
         ]);
 
     }

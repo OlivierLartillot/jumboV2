@@ -1,0 +1,144 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    <div class="row justify-content-center">
+        <div class="col-xl-4 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-row bd-highlight mb-2 justify-content-center">   
+                        <form action={{ path('app_admin_rep_replist') }} method="GET">
+                            <div class="text-center">
+                                <input class="form-control mt-3 mb-3" name="date" type="date" value="{{date | date('Y-m-d') }}">
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mt-4">
+
+        {# <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal">Standard modal</button> #}
+        
+        
+
+        <div class="col-md-4">
+            <a href="{{ path('duplicate_transfers', { param: 'arrival'})}}" class="text-danger" data-bs-toggle="modal" data-bs-target="#myInterHotelModal">
+                <div class="card mt-4 maintenance-box border border-primary">
+                    <div class="card-body p-4 ">
+                        {% if transfersInterHotelThisday|length > 0 %}
+                            <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> You have {{ transfersInterHotelThisday|length }} Transfer(s) inter hotel</h5>
+                        {% else %}
+                            
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ path('duplicate_transfers', { param: 'arrival'})}}" class="text-danger" data-bs-toggle="modal" data-bs-target="#myDepartureModal">
+                <div class="card mt-4 maintenance-box border border-primary">
+                    <div class="card-body p-4 ">
+                        {% if transfersDepartureThisday|length > 0 %}
+                            <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> You have {{ transfersDepartureThisday|length }} Transfer(s) departure</h5>
+                        {% else %}
+                            
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        
+        <!-- sample modal content -->
+        <div id="myInterHotelModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Inter Hotels</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="font-size-16">{{ date | date('d-m-Y') }}</h5>
+                        <hr>
+                        {% for interHotel in transfersInterHotelThisday|sort((a, b) => a.pickup|date('H:i') <=> b.pickup|date('H:i')) %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h6><a href="">{{ interHotel.customerCard.holder|title }}</a></h6>
+                                <p>From:{{ interHotel.fromStart }}</p>
+                                <p>To: {{ interHotel.toArrival }}</p>
+                                <p>Pickup: {{ interHotel.pickup|date('H:i')}}</p>
+                                
+                            </div>
+                        </div>
+                        {% endfor %}
+            
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <!-- sample modal content -->
+        <div id="myDepartureModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Departures</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="font-size-16">{{ date | date('d-m-Y') }}</h5>
+                        <hr>
+                        {% for departure in transfersDepartureThisday|sort((a, b) => a.pickup|date('H:i') <=> b.pickup|date('H:i')) %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h6><a href="">{{ departure.customerCard.holder|title }}</a></h6>
+                                <p>From:{{ departure.fromStart }}</p>
+                                <p>To: {{ departure.toArrival }}</p>
+                                <p>Pickup: {{ departure.pickup|date('H:i')}}</p>
+                                
+                            </div>
+                        </div>
+                        {% endfor %}
+            
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+
+    </div>
+
+{#     {% for interHotel in transfersInterHotelThisday %}
+
+             {{ dump(interHotel) }}
+
+    {% endfor %} #}
+
+{#     {% for departure in transfersDepartureThisday %}
+
+             {{ dump(departure) }}
+
+    {% endfor %} #}
+
+
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}

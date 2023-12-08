@@ -6,6 +6,7 @@ use App\Entity\TransferArrival;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Days;
 
 /**
  * @extends ServiceEntityRepository<TransferArrival>
@@ -442,6 +443,31 @@ class TransferArrivalRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getSingleScalarResult()
         ;
+    }
+
+
+    /**
+     * @return array customerCard[] counts number of time arrival exist EXCEPT TODAY
+     * Récupérer toutes les customers cards liées a ce staff dans les arrivées et superieur a la date envoyée pourlimiter les réponses
+     */
+    public function arrivalByStaffAndSupADATE($staff, $dateInterHotel): array
+    { 
+
+        $MoinsUnMoiEtDemie = $dateInterHotel->modify('-1 month -15days');
+
+        return $this->createQueryBuilder('t')
+                    ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+                    ->select('customerCard.id')
+                    ->andwhere('t.date < :dateInterHotel')
+                    ->andWhere('t.date > :minusTwoMonth')
+                    ->andwhere('t.staff = :staff')
+                    ->setParameter('dateInterHotel', $dateInterHotel)
+                    ->setParameter('minusTwoMonth', $MoinsUnMoiEtDemie)
+                    ->setParameter('staff', $staff)
+                    ->getQuery()
+                    ->getResult()
+        ;
+
     }
 
 
