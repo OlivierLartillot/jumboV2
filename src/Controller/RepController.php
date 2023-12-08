@@ -145,17 +145,19 @@ class RepController extends AbstractController
     #[Route('/rep/fiche/{customerCard}', name: 'app_admin_rep_fiche_client',methods:["GET"])]
     public function clientCard(CustomerCard $customerCard): Response
     {
-/* 
+        /* 
         $transferArrivals = $customerCard->getTransferArrivals();
         $transferAInterHotels = $customerCard->getTransferInterHotels();
         $transferDepartures = $customerCard->getTransferDeparture();
- */
+        */
         return $this->render('rep/clientCard.html.twig', [
             'customerCard' => $customerCard,
             'briefingsMenu' => true
-/*             'transferArrivals' => $transferArrivals,
+            /*
+            'transferArrivals' => $transferArrivals,
             'transferAInterHotels' => $transferAInterHotels,
-            'transferDepartures' => $transferDepartures, */
+            'transferDepartures' => $transferDepartures, 
+            */
         ]);
 
     }
@@ -170,11 +172,11 @@ class RepController extends AbstractController
   
         $date = $_GET['date'];
 
-        // TODO : recupérer le rep actif
-        $user= $userRepository->find($this->getUser());
+        // recupérer le rep actif
+        $currentUser= $this->getUser();
         
         //recupérer tous les  clients de ce rep pour departure a cette date
-        $allCustomersDeparture = $transferDepartureRepository->findByUserAndDate($user, $date);
+        $allCustomersDeparture = $transferDepartureRepository->findByUserAndDate($currentUser, $date);
         return $this->render('rep/index.html.twig', [
             'allCustomersDeparture' => $allCustomersDeparture
         ]);

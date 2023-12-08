@@ -95,17 +95,15 @@ class TransferArrivalController extends AbstractController
         return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/maj/status/{id}/{statusId}', name: 'app_transfer_arrival_maj_status', methods: ['POST'])]
+    #[Route('/maj/status/{id}/{statusName}', name: 'app_transfer_arrival_maj_status', methods: ['POST'])]
     public function majStatusAjax(TransferArrival $transferArrival, 
-                                    $statusId, 
-                                  
-                                    StatusRepository $statusRepository, 
-                                    StatusHistoryRepository $statusHistoryRepository, 
-                                    EntityManagerInterface $entityManager): Response
+                                  $statusName, 
+                                  StatusRepository $statusRepository, 
+                                  EntityManagerInterface $entityManager): Response
     {
 
         //je fais mes traitements
-        $newStatus = $statusRepository->findOneBy(['name' => $statusId]);
+        $newStatus = $statusRepository->findOneBy(['name' => $statusName]);
         $transferArrival->setStatus($newStatus);
 
         // On met à jour le statusHistory
@@ -116,10 +114,6 @@ class TransferArrivalController extends AbstractController
         $newStatusHistory->setUpdatedBy($currentUser);
 
         $entityManager->persist($newStatusHistory);
-
-
-
-
 
         $entityManager->flush();
 
