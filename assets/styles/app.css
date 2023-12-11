@@ -1,6 +1,19 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
 
+
+
+
+.btn-primary {
+  color: #fff;
+  background-color: #ce211d;
+  border-color: #5b73e8;
+}
+
+
+
+
+
 /* bottom menu */
 
 .bottom-navbar {
