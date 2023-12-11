@@ -60,7 +60,15 @@
 
     <div id="message">
 
-        {{ languageTab.nom[language] }}: 
+
+        Salut {{ transferObject.customerCard.holder|title }}. Votre transfert de demain pour l’aéroport ( {{ transferObject.toArrival }} ) aura lieu à la réception de votre hôtel à : {{ transferObject.pickup|date('H:i') }}
+        J'en profite pour vous rappeler que vous devez avoir libéré la chambre avant midi et faire le checkout a la réception.
+        Confiez vos bagages aux bagagistes qui vont les surveiller et continuez a utiliser l'hôtel normalement jusqu'à l'heure de votre depart.
+        Bon voyage et au plaisir 😉
+
+
+
+{#         {{ languageTab.nom[language] }}: 
         {{ transferObject.customerCard.holder|title }}        
         
         {{ languageTab.from[language] }}: 
@@ -69,7 +77,7 @@
         {{ transferObject.toArrival }} 
 
         pickUp:
-        {{ date }} {{ languageTab.at[language]}} {{ transferObject.pickup|date('H:i') }}
+        {{ date }} {{ languageTab.at[language]}} {{ transferObject.pickup|date('H:i') }} #}
 
         {#
         Rendez-vous:

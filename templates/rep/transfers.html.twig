@@ -73,16 +73,18 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h6><a href="{{ path('app_customer_card_show', {id:departure.customerCard.id})}}">{{ departure.customerCard.holder|title }}</a></h6>
+                    <h6><a href="{{ path('app_customer_card_show', {id:departure.customerCard.id})}}"><span id="textToCopy-{{i}}">{{ departure.customerCard.holder|title }}</span></a></h6>
                     <p>From:{{ departure.fromStart }}</p>
                     <p>To: {{ departure.toArrival }}</p>
                     <p>Pickup: {{ departure.pickup|date('H:i')}}</p>
                     <p>     
                         <a href="{{ path('app_whats_app_client', {'natureTransfer': 'departure','transferId': departure.id}) }}" class="linkButton {# {% if infos_client.envoiClient == false %} btn btn-danger {% else %}btn btn-success {% endif %} #}">WhatsApp</a>
                     </p>
+                    <p><button id="{{i}}" class="bontonCopier">copier</button></p>
                 </div>
             </div>
         </div>
+        {% set i = i + 1 %}
         {% endfor %}          
     </div>
 
