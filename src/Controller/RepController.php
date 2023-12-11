@@ -174,9 +174,10 @@ class RepController extends AbstractController
     {
 
         // si le user de l'url n'est pas le user courant, tu n'as pas les droits
-        /*  if ($user != $this->getUser()) {
-            return throw $this->createAccessDeniedException();
-        } */
+        /*          
+            if ($user != $this->getUser()) {
+            return throw $this->createAccessDeniedException();} 
+        */
 
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:00:00');

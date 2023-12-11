@@ -1,0 +1,125 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    <h1>WhatsApp du client</h1>
+
+{# ! Décliné en plusieurs langues ici pour plus de simplicité plutot que d'utiliser la traduction ! #}
+{# ! Pas d'intentation pour des messages formatés sur whatsapp #}
+
+
+{% set 
+    languageTab = {
+        'nom' : {
+            'fr': "Nom", 
+            '' : "Name", 
+            'en' : "Name", 
+            'es' : "Apellido",  
+            'it' : "Cognome",
+            'po' : "Sobrenome", 
+        },
+        'from': {
+            'fr': "De", 
+            '' : "From", 
+            'en' : "From", 
+            'es' : "De",  
+            'it' : "Da",
+            'po' : "De", 
+        },
+        'to': {
+            'fr': "A", 
+            '' : "To", 
+            'en' : "To", 
+            'es' : "Al",  
+            'it' : "Al",
+            'po' : "Para o", 
+        },
+        'at': {
+            'fr': "à", 
+            '' : "at", 
+            'en' : "at", 
+            'es' : "a las",  
+            'it' : "alle",
+            'po' : "às", 
+        },
+    }
+    
+%}
+
+{# {{ dump(transferObject) }} #}
+
+{{ transferObject.customerCard.agency.language}}
+
+
+
+{% set language = transferObject.customerCard.agency.language  %} {# eg: fr #}
+{% if language == 'en' %}
+    {% set date = transferObject.date|date('Y-m-d') %}
+{% else %}
+    {% set date = transferObject.date|date('d-m-Y') %}
+{% endif %}
+
+
+    <div id="message">
+
+        {{ languageTab.nom[language] }}: 
+        {{ transferObject.customerCard.holder|title }}        
+        
+        {{ languageTab.from[language] }}: 
+        {{ transferObject.fromStart }} 
+        {{ languageTab.to[language] }}: 
+        {{ transferObject.toArrival }} 
+
+        pickUp:
+        {{ date }} {{ languageTab.at[language]}} {{ transferObject.pickup|date('H:i') }}
+
+        {#
+        Rendez-vous:
+        {{ infosClient.bus.location|trans }} à {{ infosClient.bus.hour|date('H:i') }}  le {{ infosClient.day|date('d M') }}
+
+        Hotel:
+        {{ infosClient.bus.hotel }}#}
+    </div> 
+
+
+
+{# <div id="tel">{{ infosClient.codeAndPhone }}</div> #}
+
+
+
+{# '+ phone +' #}
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <!-- apexcharts -->
+        <!-- <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> -->
+
+        <!-- <script src="/js/pages/dashboard.init.js"></script> -->
+
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+
+        <script>
+            //die()
+            let message = document.querySelector('#message').textContent
+            /* let phone = document.querySelector('#tel').textContent */
+
+            console.log(message)
+            window.location.href = encodeURI('https://api.whatsapp.com/send?phone=&text=' + message);
+        </script>
+
+    </body>
