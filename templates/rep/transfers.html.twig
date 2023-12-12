@@ -30,7 +30,7 @@
             <div>
             </div>
                 {% else %}
-                    You have don't have any Transfer inter hotel
+                    <i class="mdi mdi-car"></i> {% trans %}Inter Hotel{% endtrans %}: {% trans %}You don't have any Transfer{% endtrans %} 
                 {% endif %}
             </div>
         </div>
@@ -41,13 +41,35 @@
             <div class="card">
                 <div class="card-body">
                     <h6><a href="{{ path('app_customer_card_show', {id:interHotel.customerCard.id})}}"><span id="textToCopy-{{i}}">{{ interHotel.customerCard.holder|title }}</span></a></h6>
-                    <p>From:{{ interHotel.fromStart }}</p>
-                    <p>To: {{ interHotel.toArrival }}</p>
-                    <p>Pickup: {{ interHotel.pickup|date('H:i')}}</p>
-                    <p>     
-                        <a href="{{ path('app_whats_app_client', {'natureTransfer': 'interhotel','transferId': interHotel.id}) }}" class="linkButton {# {% if infos_client.envoiClient == false %} btn btn-danger {% else %}btn btn-success {% endif %} #}">WhatsApp</a>
-                    </p>
-                    <p><button id="{{i}}" class="bontonCopier">copier</button></p>
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>From:{{ interHotel.fromStart }}</p>
+                            <p>To: {{ interHotel.toArrival }}</p>
+                            <p>Pickup: {{ interHotel.pickup|date('H:i')}}</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row justify-content-between">
+                                <div class="col-6 text-center">
+                                    <p>     
+                                        <a href="{{ path('app_whats_app_client', {'natureTransfer': 'interhotel','transferId': interHotel.id}) }}" class="linkButton {# {% if infos_client.envoiClient == false %} btn btn-danger {% else %}btn btn-success {% endif %} #}">
+                                            <img src="{{ asset("images/brands/whatsApp.png")}}" class="w-50"/>
+                                        </a>
+                                    </p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <p class="pt-1">
+                                        <img src="{{ asset("images/brands/copier.png")}}" id="{{i}}" class="bontonCopier w-40" title="copier" value="copier"/><br>
+                                        <span id="thumb-{{i}}" class="thumb d-none">👍</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
             </div>
         </div>
@@ -63,7 +85,7 @@
             <div>
             </div>
                 {% else %}
-                    You have don't have any Transfer Departure
+                    <i class="mdi mdi-airplane-takeoff "></i> {% trans %}Departure{% endtrans %}: {% trans %}You don't have any Transfer{% endtrans %} 
                 {% endif %}
             </div>
         </div>
@@ -74,13 +96,30 @@
             <div class="card">
                 <div class="card-body">
                     <h6><a href="{{ path('app_customer_card_show', {id:departure.customerCard.id})}}"><span id="textToCopy-{{i}}">{{ departure.customerCard.holder|title }}</span></a></h6>
-                    <p>From:{{ departure.fromStart }}</p>
-                    <p>To: {{ departure.toArrival }}</p>
-                    <p>Pickup: {{ departure.pickup|date('H:i')}}</p>
-                    <p>     
-                        <a href="{{ path('app_whats_app_client', {'natureTransfer': 'departure','transferId': departure.id}) }}" class="linkButton {# {% if infos_client.envoiClient == false %} btn btn-danger {% else %}btn btn-success {% endif %} #}">WhatsApp</a>
-                    </p>
-                    <p><button id="{{i}}" class="bontonCopier">copier</button></p>
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>From:{{ departure.fromStart }}</p>
+                            <p>To: {{ departure.toArrival }}</p>
+                            <p>Pickup: {{ departure.pickup|date('H:i')}}</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row justify-content-between">
+                                <div class="col-6 text-center">
+                                    <p>     
+                                        <a href="{{ path('app_whats_app_client', {'natureTransfer': 'departure','transferId': departure.id}) }}" class="linkButton "><img src="{{ asset("images/brands/whatsApp.png")}}" class="w-50"/></a>
+                                    </p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <p class="pt-1">
+                                    <img src="{{ asset("images/brands/copier.png")}}" id="{{i}}" class="bontonCopier w-40" title="copier" value="copier"/><br>
+                                    <span id="thumb-{{i}}" class="thumb d-none">👍</span>
+                                    
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
