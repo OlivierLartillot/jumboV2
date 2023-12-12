@@ -1,7 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
 
-/* bottom menu */
+
+.w-30 {
+  width: 30% !important; }
+
+.w-40 {
+  width: 40% !important; }
+
+  .bontonCopier {
+    cursor: pointer;
+  }
+  /* bottom menu */
 
 .bottom-navbar {
   background-color: white;

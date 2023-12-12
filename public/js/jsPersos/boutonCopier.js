@@ -16,11 +16,22 @@ let app = {
 
 
     handleClic: function(event) {
+        event.preventDefault();
         const buttonId = event.target.id;
 
-        const textToCopy = document.getElementById("textToCopy-"+ buttonId);
-        navigator.clipboard.writeText(textToCopy.textContent);
+        const textToCopy = document.getElementById("textToCopy-"+ buttonId).textContent;
+        navigator.clipboard.writeText(textToCopy);
 
+        // tous les éléments de pouce vers le haut 👍
+        const thumbs = document.getElementsByClassName('thumb');
+        const thumb = document.getElementById('thumb-' + buttonId);
+
+        console.log(thumb)
+        thumbs.forEach(element => {
+            (element.id == thumb.id ) ? element.classList.remove("d-none") : element.classList.add("d-none")
+
+            
+        });
         
     }
 }
