@@ -1,6 +1,6 @@
 
 // Notre variable qui contient le "module" app (un objet)
-let app = {
+let appCopyButton = {
 
     // Méthode appelée au chargement de la page
     init: function() {
@@ -9,7 +9,7 @@ let app = {
         let copyButtons = document.getElementsByClassName('bontonCopier');
         //console.log(buttons);
         copyButtons.forEach(element => {
-            element.addEventListener('click',app.handleClic);
+            element.addEventListener('click',appCopyButton.handleClic);
             
         });
     },
@@ -19,24 +19,19 @@ let app = {
         event.preventDefault();
         const buttonId = event.target.id;
 
-        const textToCopy = document.getElementById("textToCopy-"+ buttonId).textContent;
+        const textToCopy = document.getElementById("textToCopy-"+ buttonId).textContent.toUpperCase();
+
         navigator.clipboard.writeText(textToCopy);
 
         // tous les éléments de pouce vers le haut 👍
         const thumbs = document.getElementsByClassName('thumb');
         const thumb = document.getElementById('thumb-' + buttonId);
 
-        console.log(thumb)
         thumbs.forEach(element => {
-            (element.id == thumb.id ) ? element.classList.remove("d-none") : element.classList.add("d-none")
-
-            
+            (element.id == thumb.id ) ? element.classList.remove("d-none") : element.classList.add("d-none") 
         });
         
     }
 }
 
-
-
-// Quand la page est entièrement chargée, on exécute la méthode init située dans l'object app.
-document.addEventListener('DOMContentLoaded', app.init)
+document.addEventListener('DOMContentLoaded', appCopyButton.init);
