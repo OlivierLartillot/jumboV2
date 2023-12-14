@@ -1,15 +1,16 @@
 
-// Notre variable qui contient le "module" app (un objet)
-let app = {
+// Notre variable qui contient le "module" changementStatusAjax (un objet)
+let changementStatusAjax = {
 
-    // Méthode appelée au chargement de la page
+    // Méthode changementStatusAjaxelée au chargement de la page
     init: function() {
         console.log('on écoute l ajax');
         
         let buttons = document.getElementsByClassName('btn-status');
         //console.log(buttons);
+
         buttons.forEach(element => {
-            element.addEventListener('click',app.handleClic);
+            element.addEventListener('click',changementStatusAjax.handleClic);
             
         });
     },
@@ -96,5 +97,4 @@ let app = {
 
 }
 
-// Quand la page est entièrement chargée, on exécute la méthode init située dans l'object app.
-document.addEventListener('DOMContentLoaded', app.init)
+document.addEventListener('DOMContentLoaded', changementStatusAjax.init);
