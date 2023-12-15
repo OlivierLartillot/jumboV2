@@ -92,7 +92,7 @@
                                                                                         <i class="uil uil-arrow-circle-right"></i>
                                                                                     </div>
                                                                                     <div>
-                                                                                        <p><a href="{{ path('app_customer_card_show', {id: client.customerCard.id  }) }}"> <b><span id="textToCopy-{{i}}">{{ client.customerCard.holder|title }}</span></b> </a><br>
+                                                                                        <p><a href="{{ path('app_customer_card_show', {id: client.customerCard.id  }) }}"> <b><span id="textToCopy-{{client.id}}">{{ client.customerCard.holder|title }}</span></b> </a><br>
                                                                                             {{ client.customerCard.agency|title }}
                                                                                         </p>
                                                                                     </div>
@@ -153,8 +153,8 @@
 
                                                                                 <div class="col-3 text-end">
                                                                                     <p class="pt-1">
-                                                                                        <img src="{{ asset("images/brands/copier.png")}}" id="{{i}}" class="cursor w-60" title="copier" value="copier"/><br>
-                                                                                        <span id="thumb-{{i}}" class="thumb d-none">👍</span>
+                                                                                        <img src="{{ asset("images/brands/copier.png")}}" id="{{client.id}}" class="cursor w-60 bontonCopier" title="copier" value="copier"/><br>
+                                                                                        <span id="thumb-{{client.id}}" class="thumb d-none">👍</span>
                                                                                     </p>
                                                                                 </div>
                                                                                 <div class="col-3 text-end">
