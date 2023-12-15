@@ -31,20 +31,17 @@ class RepController extends AbstractController
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
         
-        // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
-        $user = $userRepository->find($this->getUser());
+        // récupération de l'utilisateur courant du site
+        $user = $this->getUser();
 
-        // nombre de clients sans attributions
         $paxPerHotelAgency = [];
         $paxTab = []; // on va récupérer les pax globaux pour chaque rep
         //$regroupementsClients = $customerCardRepository->regroupmentByDayStaffAgencyAndHotel($date);
-        $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
+        $regroupementsClients = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user, true);
         //dd($regroupementsClients);
-        // pour chaque staff on va définir les infos a récupérer
-        
-            if(in_array('ROLE_REP', $user->getRoles())){  
-               
 
+        // si l'utilisateur courant a le role user, on va définir les infos a récupérer
+            if(in_array('ROLE_REP', $user->getRoles())){  
                 // pour la recherche date == meetingDate on récupere les pax de date -1 pour avoir les arrivées
                 $paxTab[$user->getUsername()]['adults'] = $transferArrivalRepository->staffPaxByDate($user, $date, "adults");
                 $paxTab[$user->getUsername()]['children'] = $transferArrivalRepository->staffPaxByDate($user, $date, "children");
@@ -54,23 +51,35 @@ class RepController extends AbstractController
                     $agency = $transferArrival->getCustomerCard()->getAgency();
                     $hotel = $transferArrival->getToArrival();
                     
-                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotel,$agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotel,$agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementHotelAndAgencies($hotel,$agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementMeetingAt($agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementMeetingAt($agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementMeetingAt($agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
 
                         $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
                         $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;
                         $paxPerHotelAgency[$user->getUsername().'_babies'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupBabies;
                 } 
             }
-        
+            
+            $meetingsClients = [];
+            // pour chaque regroupements rechercher les clients de ce meetings (meme jour et meme heure avec ce rep)
+            foreach ($regroupementsClients as $regroupement) {
+                $meetingsClients[] = $transferArrivalRepository->findBy([
+                    'meetingAt' => $regroupement->getMeetingAt(),
+                    'staff' => $regroupement->getStaff(),
+                ]);
+            }
+
+            //dd($meetingClients);
+
         return $this->render('rep/repList.html.twig', [
             'date' => $date,
             'user' => $user,
             'regroupementsClients' => $regroupementsClients,   
             'paxTab' => $paxTab,
             'paxPerHotelAgency' => $paxPerHotelAgency,
-            'briefingsMenu' => true
+            'briefingsMenu' => true,
+            'meetingsClients'=> $meetingsClients
         ]);
        
     } 
@@ -143,25 +152,16 @@ class RepController extends AbstractController
     }
 
     // la route qui affiche la carte client pour les reps
-    #[Route('/rep/fiche/{customerCard}', name: 'app_admin_rep_fiche_client',methods:["GET"])]
+/*     #[Route('/rep/fiche/{customerCard}', name: 'app_admin_rep_fiche_client',methods:["GET"])]
     public function clientCard(CustomerCard $customerCard): Response
     {
-        /* 
-        $transferArrivals = $customerCard->getTransferArrivals();
-        $transferAInterHotels = $customerCard->getTransferInterHotels();
-        $transferDepartures = $customerCard->getTransferDeparture();
-        */
         return $this->render('rep/clientCard.html.twig', [
             'customerCard' => $customerCard,
             'briefingsMenu' => true
-            /*
-            'transferArrivals' => $transferArrivals,
-            'transferAInterHotels' => $transferAInterHotels,
-            'transferDepartures' => $transferDepartures, 
-            */
+
         ]);
 
-    }
+    } */
 
 
     // la route qui affiche la carte client pour les reps

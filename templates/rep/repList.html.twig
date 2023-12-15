@@ -29,13 +29,13 @@
                     <div class="card-body">
 
                         {% if regroupementsClients|length > 0 %}
-
+                        {% set i = 0 %}
                         <ul class="activity-feed  mb-0 ps-2">
                             {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
                                 {% if (regroupement is not empty) %}                                                        
                                     {% if regroupement.staff == user %}
                                         {% set hotel =  regroupement.toArrival %}
-                                        <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id, 'hour': regroupement.getMeetingAtTime }) }}">
+                                        <a  data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
                                             <li class="feed-item  border-top border-primary">
                                                 <div class="feed-item-list rep-timeline-box ">
                                                     <p class="badge rounded-pill bg-primary mt-1 mb-3 fs-6">{{ regroupement.getMeetingAtTime }}</p>
@@ -60,6 +60,111 @@
                                     {% endif %}
                                 
                                 {% endif %}
+
+                                    <!-- Button Modal -->
+{#                                     <button type="button" class="badge btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">Show More</button>
+ #}                                
+                        
+                                    <!-- sample modal content -->
+                                    <div id="myModal-{{i}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myModalLabel">{{hotel}}<br>{{ regroupement.getMeetingAtTime }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+            
+                                                    {% for currentMeeting in meetingsClients %}
+                                                        {% for client in currentMeeting %}
+
+                                                            {% if client.meetingAt ==  regroupement.getMeetingAt  %}
+                                                                {%  set statusClass = (client.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
+                                                                <div class="col-lg-12">
+                                                                    <div data-group="group-{{i}}" class="card border {{ statusClass }}">
+
+                                                                        <div class="card-body">
+                                                                            <div class="d-flex flex-row bd-highlight mb-3">
+                                                                                <div class="me-2">
+                                                                                    <i class="uil uil-arrow-circle-right"></i>
+                                                                                </div>
+                                                                                <div class="">
+                                                                                    <p><a href="{{ path('app_customer_card_show', {id: client.customerCard.id  }) }}"> <b><span id="textToCopy-{{i}}">{{ client.customerCard.holder|title }}</span></b> </a><br>
+                                                                                        {{ client.customerCard.agency|title }}<br>
+                                                                                        <b>{{ client.toArrival|title}}</b>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div class="row mb-3 justify-content-around align-items-center">
+
+                                                                                <div class="col-6 ps-4">
+                                                                                    <div class="mb-1">
+                                                                                        Adultes: <b>{{ client.adultsNumber }}</b>
+                                                                                    </div>
+                                                                                    <div class="mb-1">
+                                                                                        Children: <b>{{ client.childrenNumber }}</b>
+                                                                                    </div>
+                                                                                    <div class="mb-1">
+                                                                                        Bébés: <b>{{ client.babiesNumber }}</b>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-3 text-end">
+                                                                                    <p class="pt-1">
+                                                                                        <img src="{{ asset("images/brands/copier.png")}}" id="{{i}}" class="bontonCopier w-60" title="copier" value="copier"/><br>
+                                                                                        <span id="thumb-{{i}}" class="thumb d-none">👍</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-3 text-end">
+                                                                                    <p>
+                                                                                        <a href="{{ path('app_whats_app_client', {'natureTransfer': 'arrival','transferId': client.id}) }}" target="blank" class="linkButton "><img src="{{ asset("images/brands/whatsApp.png")}}" class="w-75"/></a>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="row justify-content-around">
+                                                                                <div class="col-4">
+                                                                                    <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ client.customerCard.reservationNumber }}</span></div>
+                                                                                </div>
+                                                                                <div class="col-4 text-center">                     
+                                                                                    {% if client.fromStart == "Punta cana international (puj)" %}
+                                                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
+                                                                                    {% elseif client.fromStart == "Santo domingo (sdq)" %}
+                                                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
+                                                                                    {% elseif client.fromStart == "La romana international (lrm)" %}
+                                                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
+                                                                                    {% else %}
+                                                                                        <div><span>{{ client.fromStart }}</div>
+                                                                                    {% endif %} 
+                                                                                </div>
+                                                                                <div class="col-4 text-end">
+                                                                                    <div>
+                                                                                        <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ client.hour|date('H:i') }}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                             {% endif %}
+                                                             {% set i = i+1 %}  
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                        
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+
+                             
                             {% endfor %}
                         </ul>
                         {% else %}
@@ -72,4 +177,37 @@
 
 
 
-{{ include('partials/footer-regroupement.html.twig') }}
+                    {# {{ include('partials/footer-regroupement.html.twig') }} #}
+                    <!--******************** footer ********************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        {# <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> #}
+        {#  <script src="/js/pages/dashboard.init.js"></script> #}
+       
+
+        <!-- App js --> 
+        <script src="/js/app.js"></script>
+    
+        <script src="/js/jsPersos/changementStatusAjax.js"></script>
+        <script src="/js/jsPersos/boutonCopier.js"></script>
+
+    </body>
+
+</html>
