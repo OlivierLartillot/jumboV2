@@ -2,6 +2,30 @@
 
    {#  {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }} #}
 
+<div data-group="group-{{i}}" >
+
+    <!-- Message d'alerte : vous avez bien changez le status -->
+    <div data-group="group-{{i}}" class="alert alert-danger alert-dismissible fade show px-4 mb-0 text-center d-none" role="alert">
+        <i class="uil uil-exclamation-octagon d-block display-4 mt-2 mb-3 text-danger"></i>
+        {# <h5 class="text-danger">Be carrefulle</h5> #}
+        <p>{% trans %}You just changed the status{% endtrans %}<br/> 
+            <span id="oldStatus">{{ transferArrival.status.name }}</span> <i class="uil-arrow-right"></i> <span id="newStatus"></span>
+        </p>
+    </div>
+
+
+    <div class="d-flex flex-row justify-content-around bd-highlight mb-3">
+        <button type="button" id="arrived" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "arrived") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1 ">Arrived</button>
+        <button type="button" id="go show (airport)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (airport)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show A.</button>
+        <button type="button" id="go show (hotel)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (hotel)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show H.</button>
+        <button type="button" id="no show" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "no show") ? 'btn-danger' : 'btn-outline-danger' }} btn-sm p-1">No Show</button>
+        <span id="transferArrivalId" data-group="group-{{i}}" class="d-none">{{ transferArrival.id }}</span>
+        <span id="staffId" data-group="group-{{i}}" class="d-none">{{ app.user.id }}</span>
+        <span id="group-{{i}}" data-group="group-{{i}}" class="d-none">group-{{i}}</span>
+    </div>
+</div>
+
+
 
         <!-- Ma page -->
        {#  <h4 class="text-center mb-4">Briefing {{date | date('d/m/Y') }}</h4> #}
@@ -79,7 +103,7 @@
 
                                     <div class="col-3 text-end">
                                         <p class="pt-1">
-                                            <img src="{{ asset("images/brands/copier.png")}}" id="{{i}}" class="bontonCopier w-60" title="copier" value="copier"/><br>
+                                            <img src="{{ asset("images/brands/copier.png")}}" id="{{i}}" class="cursor w-60" title="copier" value="copier"/><br>
                                             <span id="thumb-{{i}}" class="thumb d-none">👍</span>
                                         </p>
                                     </div>

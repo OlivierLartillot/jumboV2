@@ -129,7 +129,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
             ->setParameter('staff', $staff);
         if ($deactivateHotel){
-            $requete = $requete->groupBy('t.staff', 'c.agency', 't.meetingAt', 't.meetingPoint');     
+            $requete = $requete->groupBy('t.staff', 't.meetingAt');     
         } else {
             $requete = $requete->groupBy('t.staff', 'c.agency' ,'t.toArrival', 't.meetingAt', 't.meetingPoint');   
         }
