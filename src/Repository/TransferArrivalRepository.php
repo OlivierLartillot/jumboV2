@@ -113,24 +113,27 @@ class TransferArrivalRepository extends ServiceEntityRepository
     /**
      * @return TransferArrival[] Returns an array of customersCards at this 
      * - choosen date by staff, 
-     * - grouped by staff, agency and arrival hotel
+     * - grouped by staff, agency and arrival hotel-
+     * - on désactive l'hotel si on veut regrouper les gens dans un meeting sans prendre en compte les différences d hotel ou d agence
      * Attribution des meetings
      */
-    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
+    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff, $deactivateHotel=false) :array
     {
 
-        
-
-        return $this->createQueryBuilder('t')
+        $requete =  $this->createQueryBuilder('t')
             ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.meetingAt >= :dateStart')
             ->andWhere('t.meetingAt <= :dateEnd')
             ->andWhere('t.staff = :staff')
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
-            ->setParameter('staff', $staff)
-            ->groupBy('t.staff', 'c.agency' ,'t.toArrival', 't.meetingAt', 't.meetingPoint')      
-            ->getQuery()
+            ->setParameter('staff', $staff);
+        if ($deactivateHotel){
+            $requete = $requete->groupBy('t.staff', 'c.agency', 't.meetingAt', 't.meetingPoint');     
+        } else {
+            $requete = $requete->groupBy('t.staff', 'c.agency' ,'t.toArrival', 't.meetingAt', 't.meetingPoint');   
+        }
+        return $requete->getQuery()
             ->getResult()
         ;
     }
@@ -172,6 +175,52 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
         return $requete;
     }
+
+    /**
+     * @return int the Sum of paxes by regroupment 
+     * Attribution des représentants
+     */
+    public function paxForRegroupementMeetingAt($agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
+    {
+
+        $requete = $this->createQueryBuilder('t');
+
+        if ($age == "adults") { $requete = $requete->select('sum(t.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(t.childrenNumber)');} 
+        else { $requete = $requete->select('sum(t.babiesNumber)') ;}
+
+     $requete = $requete
+            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->andWhere('t.staff = :staff')
+            ->andWhere('t.meetingAt = :meetingAt')
+            ->andWhere('t.meetingPoint = :meetingPoint')
+            ->andWhere('c.agency = :agency')
+            ->setParameter('meetingAt', $meetingAt) 
+            ->setParameter('meetingPoint', $meetingPoint) 
+            ->setParameter('agency', $agency)
+            ->setParameter('staff', $staff);
+
+            if ($flightNumber != null) {
+                $requete = $requete
+                ->andWhere('t.flightNumber = :flightNumber')
+                ->setParameter('flightNumber', $flightNumber);
+            }
+            $requete = $requete
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        return $requete;
+    }
+
+
+
+
+
+
+
+
+
+
 
     /**
      * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day)
