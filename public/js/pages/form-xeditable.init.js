@@ -34,12 +34,14 @@ $(function () {
     });
 
     $('#inline-sex').editable({
-        prepend: "not selected",
+        prepend: "change status",
         mode: 'inline',
         inputclass: 'form-select form-select-sm',
         source: [
-            {value: 1, text: 'Male'},
-            {value: 2, text: 'Female'}
+            {value: 1, text: 'Arrived'},
+            {value: 2, text: 'Go Show Airport'},            
+            {value: 3, text: 'Go Show Hotel'},
+            {value: 4, text: 'No Show'}
         ],
         display: function (value, sourceData) {
             var colors = {"": "#98a6ad", 1: "#5fbeaa", 2: "#5d9cec"},
