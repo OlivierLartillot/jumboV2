@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
-use App\Entity\Status;
 use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Entity\User;
@@ -20,8 +19,6 @@ use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferVehicleArrivalRepository;
-use App\Repository\TransferVehicleDepartureRepository;
-
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
