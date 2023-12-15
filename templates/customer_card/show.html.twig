@@ -57,37 +57,85 @@
                                         <i class="me-1">#</i> {{ customer_card.reservationNumber }}
                                     </p>
                                     {% for transferArrival in customer_card.transferArrivals %}
-                                        <p>
+                                        <p id="currentStatus" class="cursor">
                                             {% if transferArrival.status|lower == "no show" %}
                                                 <span class="badge rounded-pill bg-danger">{{ transferArrival.status }}</span>
                                             {% else %}
                                                 <span class="badge rounded-pill bg-success">{{ transferArrival.status }}</span>
                                             {% endif %}
                                         </p>
-                                    
-                                        {% set i = 1 %}
-                                        <div data-group="group-{{i}}" >
-                                        
-                                                <!-- Message d'alerte : vous avez bien changez le status -->
-                                                <div data-group="group-{{i}}" class="alert alert-danger alert-dismissible fade show px-4 mb-0 text-center d-none" role="alert">
-                                                    <i class="uil uil-exclamation-octagon d-block display-4 mt-2 mb-3 text-danger"></i>
-                                                    {# <h5 class="text-danger">Be carrefulle</h5> #}
-                                                    <p>{% trans %}You just changed the status{% endtrans %}<br/> 
-                                                        <span id="oldStatus">{{ transferArrival.status.name }}</span> <i class="uil-arrow-right"></i> <span id="newStatus"></span>
-                                                    </p>
-                                                </div>
+                                        <div id="changeArea" class="d-none">
+                                            <form action="{{ path('app_customer_card_change_status', {id: transferArrival.id }) }}" method="POST">
+                                                        
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <select name="status" id="changeStatus" class="form-select">
+                                                            <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                            <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                            <option value="Go show (hotel)"   {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                            <option value="No Show"  {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="ms-2">
+                                                        <button id="button-submit-status" type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light"><i class="mdi mdi-check"></i></button>
+                                                        <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light"><i class="mdi mdi-close"></i></button>
+                                                    </div>
 
-
-                                                <div class="d-flex flex-row justify-content-around bd-highlight mb-3">
-                                                    <button type="button" id="arrived" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "arrived") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1 ">Arrived</button>
-                                                    <button type="button" id="go show (airport)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (airport)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show A.</button>
-                                                    <button type="button" id="go show (hotel)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (hotel)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show H.</button>
-                                                    <button type="button" id="no show" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "no show") ? 'btn-danger' : 'btn-outline-danger' }} btn-sm p-1">No Show</button>
-                                                    <span id="transferArrivalId" data-group="group-{{i}}" class="d-none">{{ transferArrival.id }}</span>
-                                                    <span id="staffId" data-group="group-{{i}}" class="d-none">{{ app.user.id }}</span>
-                                                    <span id="group-{{i}}" data-group="group-{{i}}" class="d-none">group-{{i}}</span>
                                                 </div>
+                                            </form>
+                                                
                                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        {# 
+                                            {% set i = 1 %}
+                                            <div data-group="group-{{i}}" >
+                                            
+                                                    <!-- Message d'alerte : vous avez bien changez le status -->
+                                                    <div data-group="group-{{i}}" class="alert alert-danger alert-dismissible fade show px-4 mb-0 text-center d-none" role="alert">
+                                                        <i class="uil uil-exclamation-octagon d-block display-4 mt-2 mb-3 text-danger"></i>
+                                                        <h5 class="text-danger">Be carrefulle</h5>
+                                                        <p>{% trans %}You just changed the status{% endtrans %}<br/> 
+                                                            <span id="oldStatus">{{ transferArrival.status.name }}</span> <i class="uil-arrow-right"></i> <span id="newStatus"></span>
+                                                        </p>
+                                                    </div>
+
+
+                                                    <div class="d-flex flex-row justify-content-around bd-highlight mb-3">
+                                                        <button type="button" id="arrived" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "arrived") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1 ">Arrived</button>
+                                                        <button type="button" id="go show (airport)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (airport)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show A.</button>
+                                                        <button type="button" id="go show (hotel)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (hotel)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show H.</button>
+                                                        <button type="button" id="no show" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "no show") ? 'btn-danger' : 'btn-outline-danger' }} btn-sm p-1">No Show</button>
+                                                        <span id="transferArrivalId" data-group="group-{{i}}" class="d-none">{{ transferArrival.id }}</span>
+                                                        <span id="staffId" data-group="group-{{i}}" class="d-none">{{ app.user.id }}</span>
+                                                        <span id="group-{{i}}" data-group="group-{{i}}" class="d-none">group-{{i}}</span>
+                                                    </div>
+                                            </div>
+                                        #}
 
                                     {% endfor %}
 
@@ -830,15 +878,11 @@
 
         {{ include('partials/vendor-scripts.html.twig') }}
 
-        {# <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> #}
-        {#  <script src="/js/pages/dashboard.init.js"></script> #}
-       
 
         <!-- App js --> 
         <script src="/js/app.js"></script>
-    
-        <script src="/js/jsPersos/changementStatusAjax.js"></script>
-        <script src="/js/jsPersos/boutonCopier.js"></script>
+        <script src="/js/jsPersos/changementStatus.js"></script>
+
 
     </body>
 

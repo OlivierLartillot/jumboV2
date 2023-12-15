@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
+use App\Entity\Status;
+use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Entity\User;
 use App\Form\CommentType;
@@ -24,6 +26,7 @@ use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -657,20 +660,6 @@ class CustomerCardController extends AbstractController
             Response::HTTP_SEE_OTHER);
         }
 
- 
-/*         if (($request->request->get('message') !== null)) {
-
-            $comment = new Comment;
-            $comment->setCreatedBy($user);
-            $comment->setContent($request->request->get('message'));
-            $comment->setCustomerCard($customerCard);
-            $commentRepository->save($comment, true);
-
-            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
-
-        } */
-
-
         return $this->render('customer_card/show.html.twig', [
             'customer_card' => $customerCard,
             'comments' => $comments,
@@ -679,6 +668,34 @@ class CustomerCardController extends AbstractController
             'clientsMenu' => true
         ]);
     }
+
+    #[Route('customer/card/change/{id}', name: 'app_customer_card_change_status', methods: ['POST'])]
+    public function changeStatus(TransferArrival $transferArrival, 
+                                 StatusRepository $statusRepository, 
+                                 EntityManagerInterface $entityManager): Response
+    {
+
+        $statusName = $_POST['status'];
+        
+        //je fais mes traitements
+        $newStatus = $statusRepository->findOneBy(['name' => strtolower($statusName)]);
+        $transferArrival->setStatus($newStatus);
+
+        // On met à jour le statusHistory
+        $newStatusHistory = new StatusHistory();
+        $currentUser = $this->getUser();
+        $newStatusHistory->setStatus($newStatus);
+        $newStatusHistory->setCustomerCard( $transferArrival->getCustomerCard());
+        $newStatusHistory->setUpdatedBy($currentUser);
+
+        $entityManager->persist($newStatusHistory);
+        $entityManager->flush();
+
+        return $this->redirectToRoute("app_customer_card_show", ['id' => $transferArrival->getCustomerCard()->getId()]);
+
+    }
+
+
 
     #[Route('customer/card/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository, StatusHistoryRepository $statusHistoryRepository): Response
