@@ -146,7 +146,7 @@ class CustomerCardRepository extends ServiceEntityRepository
     }
 
 
-    public function customerCardPageSearch(DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
+    public function customerCardPageSearchPresence(DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
     {      
         $requete = $this->createQueryBuilder('c');
         
@@ -282,7 +282,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
                             OR c.holder LIKE :holder
                             OR c.jumboNumber LIKE :jumboNumber
-                            OR transferJoan.voucherNumber LIKE :voucherNumber
+                            
                             ')
                             ->setParameter('reservationNumber', '%'.$search.'%')
                             ->setParameter('holder', '%'.$search.'%')
@@ -305,6 +305,150 @@ class CustomerCardRepository extends ServiceEntityRepository
                 $requete = $requete->andWhere('transferInterHotel.flightNumber LIKE :transferInterHotel')->setParameter('transferInterHotel', '%'.$flightNumber.'%');
             }
         }
+
+        $requete = $requete->orderBy('c.holder', 'ASC')
+                            ->getQuery()
+                            ->getResult();
+
+        return $requete;
+
+    } 
+
+
+    public function customerCardPageSearchOperation(DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber): ?array
+    {      
+        $requete = $this->createQueryBuilder('c')            
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'transferArrival.id = transferVehicleArrival.transferArrival');
+        
+        if ($natureTransfer == "all") {
+            $requete = $requete
+                ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+                ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+                ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
+                            'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival 
+                            OR airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival
+                            OR airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival
+                            ')
+                ->andWhere('transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd' )
+                ->orWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd' )
+                ->orWhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd' )
+                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))            
+                ;
+                
+        } else if ($natureTransfer == "1") { 
+            $requete = $requete
+                ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
+                'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival' 
+                )
+                ->andWhere('transferArrival.date >= :dateStart AND transferArrival.date <= :dateEnd' )
+                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+        } else if ($natureTransfer == "2") { 
+            $requete = $requete
+                ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+                ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
+                            'airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival
+                            ')
+                ->andWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd' )
+                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))
+                ;
+        } else {
+            $requete = $requete
+                ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+                ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
+                'airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival
+                ')
+                ->andWhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd' )
+                ->setParameter('dateStart', $dateStart->format('Y-m-d'))
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))    
+                
+                ;
+        }
+ 
+
+         if ($rep != "all") { 
+
+            /** joindre le transfer arrival avec le client card */
+             $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );
+            /** récupérer l'inter hotel associé a ce client card c est interhotel */ 
+        }
+
+
+        if ($status != "all") { $requete = $requete->andWhere('transferArrival.status = :status')->setParameter('status', $status );}
+
+ 
+        // recup de l agence
+        if ($agency != "all") {
+            $requete = $requete->andWhere('c.agency = :agency')->setParameter('agency', $agency);
+        }
+       // recup de l hotel
+        if ($hotel != "all") {
+            // si c est arrivée 
+            $requete = $requete->andWhere('airportHotel.id = :hotel' )->setParameter('hotel', $hotel) ;
+        }
+
+        // traitement du numéro de vol (est associé a la nature du transfer)
+        if ($flightNumber != 'all') {
+            if ($natureTransfer == "all") {
+                $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival 
+                                OR transferDeparture.flightNumber LIKE :transferDeparture')
+                                ->setParameter('transferArrival', '%'.$flightNumber.'%')
+                                ->setParameter('transferDeparture', '%'.$flightNumber.'%');
+            } elseif ($natureTransfer == 1) {
+                $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival')->setParameter('transferArrival', '%'.$flightNumber.'%');
+            } elseif ($natureTransfer == 3) {
+                $requete = $requete->andWhere('transferDeparture.flightNumber LIKE :transferDeparture')->setParameter('transferDeparture', '%'.$flightNumber.'%');
+            }
+            elseif($natureTransfer == 2) {
+                $requete = $requete->andWhere('transferInterHotel.flightNumber LIKE :transferInterHotel')->setParameter('transferInterHotel', '%'.$flightNumber.'%');
+            }
+        } 
+        // SEARCH : jointure avec la table transfer pour le numéro de bon
+
+         if ($natureTransfer == '1') {
+            $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
+                                OR c.holder LIKE :holder
+                                OR c.jumboNumber LIKE :jumboNumber
+                                OR transferVehicleArrival.voucherNumber LIKE :voucherNumber
+                                ');
+        } else if ($natureTransfer == '2') {
+            $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
+                                OR c.holder LIKE :holder
+                                OR c.jumboNumber LIKE :jumboNumber
+                                OR transferInterHotel.voucherNumber LIKE :voucherNumber
+                                ');
+        } else if ($natureTransfer == '3') {
+            $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
+                                OR c.holder LIKE :holder
+                                OR c.jumboNumber LIKE :jumboNumber
+                                OR transferDeparture.voucherNumber LIKE :voucherNumber
+                                ');
+        } else{
+            $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
+                                OR c.holder LIKE :holder
+                                OR c.jumboNumber LIKE :jumboNumber
+                                OR transferVehicleArrival.voucherNumber LIKE :voucherNumber
+                                OR transferInterHotel.voucherNumber LIKE :voucherNumber
+                                OR transferDeparture.voucherNumber LIKE :voucherNumber
+                                ');
+
+        }
+        $requete = $requete
+        ->setParameter('reservationNumber', '%'.$search.'%')
+        ->setParameter('holder', '%'.$search.'%')
+        ->setParameter('jumboNumber', '%'.$search.'%')
+        ->setParameter('voucherNumber', '%'.$search.'%'); 
+
+
+
+
+
+
+
 
         $requete = $requete->orderBy('c.holder', 'ASC')
                             ->getQuery()
