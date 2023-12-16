@@ -97,6 +97,12 @@
                             <span>{% trans %}My briefings{% endtrans %}</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path('app_admin_rep_transfers')}}" {{ (transfersMenu is defined) ? 'class="active"' }}>
+                            <i class="uil-arrows-h-alt"></i>
+                            <span>{% trans %}Transfers{% endtrans %}</span>
+                        </a>
+                    </li>
                 {% endif %}
 
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles)) %} 

@@ -14,7 +14,6 @@ let appCopyButton = {
         });
     },
 
-
     handleClic: function(event) {
         event.preventDefault();
         const buttonId = event.target.id;

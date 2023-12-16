@@ -59,80 +59,88 @@ class CustomerCardController extends AbstractController
             }
         }
 
-            $empty = true;
-            // on vérifie si on a cliqué sur envoyé
-            if (count($request->query) > 0) {
-                // si y en a qu un et que c est page alors tu renvoie la page de base donc empty true
-                if ( (count($request->query) === 1) and $request->query->get('page') ) {
-                    $empty = true;
-                } else {
-                    //on vérifie si on a envoyé au moins un élément de tri (donc différent de page)
-                    foreach ($request->query as $param) {    
-                        if ($param != null) {
-                            $empty = false;
-                            break;
-                        }
+        $empty = true;
+        // on vérifie si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            // si y en a qu un et que c est page alors tu renvoie la page de base donc empty true
+            if ( (count($request->query) === 1) and $request->query->get('page') ) {
+                $empty = true;
+            } else {
+                //on vérifie si on a envoyé au moins un élément de tri (donc différent de page)
+                foreach ($request->query as $param) {    
+                    if ($param != null) {
+                        $empty = false;
+                        break;
                     }
-
                 }
+
             }
+        }
+        
+
+        // si y a au moins un élément envoyé au tri
+        if ($empty == false) {
+
+            // alors on peut récupérer les données et les filtrer
+            $customerPresence = $request->query->get('customerPresence');
+
+
+            // si tout va bien  on envoie la dql 
+            $dateStart = $request->query->get('dateStart');
+            $dateEnd = $request->query->get('dateEnd');
+
+            $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
+            $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
+            $rep = $request->query->get('reps');
+            $natureTransfer = $request->query->get('natureTransfer');
+            $status = $request->query->get('status');
+
+            //! hotels
+            $hotel = $request->query->get('hotel');
+            $agency = $request->query->get('agency');
+            $flightNumber = $request->query->get('flightNumber');
+            $search = $request->query->get('search');
+                
+            $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
+
+
+            // si c est présence
+            if ($customerPresence == 1){
+                // la requete qui execute la recherche
+                $results = $customerCardRepository->customerCardPageSearchPresence($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+            } else { // si c est opération
+                $results = $customerCardRepository->customerCardPageSearchOperation($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+
+            }
+
+            $count = count($results);
             
 
-            // si y a au moins un élément envoyé au tri
-            if ($empty == false) {
+            $pagination = $paginator->paginate(
+                $results,
+                $request->query->getInt('page', 1),
+                27,
+            );
 
-                // alors on peut récupérer les données et les filtrer
-                $customerPresence = $request->query->get('customerPresence');
-                
-                // si tout va bien  on envoie la dql 
-                $dateStart = $request->query->get('dateStart');
-                $dateEnd = $request->query->get('dateEnd');
+            //dd($results);
+            // et on envoi la nouvelle page 
+            return $this->render('customer_card/index.html.twig', [
+                'customer_cards' => $pagination,
+                'count' => $count,
+                'agencies' => $agencies,
+                'hotels' => $hotels,
+                'statusList' => $statusList,
+                'reps' => $reps,
+                'clientsMenu' => true
+            ]);
+            
+            
+            // sinon renvoyer la page de base
+            
 
-                $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
-                $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
-                $rep = $request->query->get('reps');
-                $natureTransfer = $request->query->get('natureTransfer');
-                $status = $request->query->get('status');
-
-                //! hotels
-                $hotel = $request->query->get('hotel');
-                $agency = $request->query->get('agency');
-                $flightNumber = $request->query->get('flightNumber');
-                $search = $request->query->get('search');
-                    
-                $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
-
-                // la requete qui execute la recherche
-                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
-
-                $count = count($results);
-                
-
-                $pagination = $paginator->paginate(
-                    $results,
-                    $request->query->getInt('page', 1),
-                    27,
-                );
-
-                //dd($results);
-                // et on envoi la nouvelle page 
-                return $this->render('customer_card/index.html.twig', [
-                    'customer_cards' => $pagination,
-                    'count' => $count,
-                    'agencies' => $agencies,
-                    'hotels' => $hotels,
-                    'statusList' => $statusList,
-                    'reps' => $reps,
-                    'clientsMenu' => true
-                ]);
-                
-                
-                // sinon renvoyer la page de base
-                
-
-            }
-            // sinon on renvoie la page de base 
-            // todo ? peut etre un message flash ?
+        }
+        // sinon on renvoie la page de base 
+        // todo ? peut etre un message flash ?
         
 
         // quand on arrive sur la page on récupere les mouvements du jour
