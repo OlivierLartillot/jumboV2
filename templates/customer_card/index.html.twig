@@ -110,7 +110,7 @@
                             {# <label for="hotel">Select Hotel</label> #}
                         </div>
                     </div>    
-                    <div id="divFlightNumber" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }}">
+                    <div id="divFlightNumber" class="col-md-2 {{ (app.request.query.get('customerPresence') == 2 ) ? '' : 'd-none' }} {{ (app.request.query.get('natureTransfer') == 2 ) ? 'd-none' : ''  }}">
                         <div class="form-floating mb-3">
                             <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Enter Name" value="{{ (app.request.query.get('flightNumber')) }}">
                             <label for="flightNumber">Flight Number</label>
