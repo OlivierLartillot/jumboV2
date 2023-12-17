@@ -307,13 +307,6 @@ class CustomerCardRepository extends ServiceEntityRepository
         ->setParameter('jumboNumber', '%'.$search.'%')
         ->setParameter('voucherNumber', '%'.$search.'%'); 
 
-
-
-
-
-
-
-
         $requete = $requete->orderBy('c.holder', 'ASC')
                             ->getQuery()
                             ->getResult();

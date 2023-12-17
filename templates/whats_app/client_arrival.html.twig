@@ -69,8 +69,16 @@
 {% endif %}
 
 
+{% set textBrute =  transferObject.meetingPoint %}
+
+
+
+
+{# bonjour transferObject.staff #}
 <div id="message">
-Salut! Bienvenue à Punta Cana! 🌴 
+    {{ textBrute|replace({'transferObject.staff': 'blablabalblb', 'hihih':'hahah'}) }}
+</div>
+{# Salut! Bienvenue à Punta Cana! 🌴 
 
 *Je suis {{ transferObject.staff }} votre représentant Jumbo Tours.*
 
@@ -81,8 +89,7 @@ Vous pouvez me joindre à ce numéro en cas de besoin.
 Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre retour*. Je vous demanderai donc s’il vous plaît de venir *munis de vos documents de voyage*.
 
 *A demain !*
-{{ transferObject.staff }}
-</div>
+{{ transferObject.staff }} #}
 {#         {{ languageTab.nom[language] }}: 
         {{ transferObject.customerCard.holder|title }}        
         

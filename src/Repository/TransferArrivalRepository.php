@@ -6,7 +6,6 @@ use App\Entity\TransferArrival;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Days;
 
 /**
  * @extends ServiceEntityRepository<TransferArrival>
@@ -211,16 +210,6 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
         return $requete;
     }
-
-
-
-
-
-
-
-
-
-
 
     /**
      * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day)
