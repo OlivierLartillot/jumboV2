@@ -44,10 +44,21 @@
     
 %}
 
+
+{% set trans_day_french = { 
+        "Monday": "Lundi", 
+        "Tuesday": "Mardi", 
+        "Wednesday": "Mercredi", 
+        "Thursday": "Jeudi", 
+        "Friday": "Vendredi", 
+        "Saturday": "Samedi", 
+        "Sunday": "Dimanche" 
+    } 
+%}
+
 {# {{ dump(transferObject) }} #}
 
-{{ transferObject.customerCard.agency.language}}
-
+{# {{ transferObject.customerCard.agency.language}} #}
 
 
 {% set language = transferObject.customerCard.agency.language  %} {# eg: fr #}
@@ -59,8 +70,18 @@
 
 
 <div id="message">
-Salut {{ transferObject.customerCard.holder|title }}. Bienvenue à Punta Cana. Je suis {{ transferObject.staff }} votre représentant Jumbo Tour....
+Salut! Bienvenue à Punta Cana! 🌴 
 
+*Je suis {{ transferObject.staff }} votre représentant Jumbo Tours.*
+
+Vous pouvez me joindre à ce numéro en cas de besoin. 
+
+*N’oubliez pas notre rendez-vous de demain matin ({{ trans_day_french[transferObject.date|date('l')] }})  à  {{ transferObject.meetingAt|date('H:i') }} à la {{ transferObject.meetingPoint }} de l'hôtel* durant lequel je vous donnerai toutes les informations concernant votre séjour ( infos sur l’hôtel, sur le pays, horaire de retour, test PCR si besoin etc) 
+
+Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre retour*. Je vous demanderai donc s’il vous plaît de venir *munis de vos documents de voyage*.
+
+*A demain !*
+{{ transferObject.staff }}
 </div>
 {#         {{ languageTab.nom[language] }}: 
         {{ transferObject.customerCard.holder|title }}        
