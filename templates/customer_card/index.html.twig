@@ -65,13 +65,20 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-2 {{ ((app.user.roles|length == 2) and ('ROLE_REP' in app.user.roles)) ? 'd-none' : '' }}  ">
                         <div class="form-floating mb-3">
                             <select name="reps" class="form-select" id="reps" aria-label="Floating label select example">
-                                <option value="all" selected>{% trans %}All Reps{% endtrans %}</option>
-                                {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
-                                    <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
-                                {% endfor %}
+                                <!--Si le user est uniquement un rep (role_rep & role_user) -->
+                                {% if ((app.user.roles|length == 2) and ('ROLE_REP' in app.user.roles)) %}
+                                    <option value="{{ app.user.id }}" selected >{{ app.user }}  </option>
+                                {% else %}
+                                    <!--Sinon-->
+                                    <option value="all" selected>{% trans %}All Reps{% endtrans %}</option>
+                                    {% for rep in reps|sort((a, b) => a.username <=> b.username) %} 
+                                        <option value="{{ rep.id }}" {{ (app.request.query.get('reps') == rep.id ) ? 'selected' : '' }} >{{ rep }}  </option>
+                                    {% endfor %}
+                                {% endif %}
+
                             </select>
                             <label for="reps">{% trans %}Select a Rep{% endtrans %}</label>
                         </div>

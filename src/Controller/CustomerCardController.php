@@ -81,6 +81,15 @@ class CustomerCardController extends AbstractController
         if ($empty == false) {
 
             // alors on peut récupérer les données et les filtrer
+            $rep = $request->query->get('reps');
+            // si on est uniquement rep(role_rep & user) d ou  == 2 
+            if (( count($this->getUser()->getRoles()) == 2 ) and (in_array('ROLE_REP', $this->getUser()->getRoles()))) {
+                // si on envoie un autre rep => denied
+                if ($userRepository->find($rep) != $this->getUser()) {
+                    return throw $this->createAccessDeniedException();
+                };
+            }
+
             $customerPresence = $request->query->get('customerPresence');
 
 
@@ -90,7 +99,7 @@ class CustomerCardController extends AbstractController
 
             $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
             $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
-            $rep = $request->query->get('reps');
+            
             $natureTransfer = $request->query->get('natureTransfer');
             $status = $request->query->get('status');
 
