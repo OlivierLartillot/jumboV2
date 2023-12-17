@@ -76,8 +76,7 @@ class CustomerCardController extends AbstractController
 
             }
         }
-        
-
+    
         // si y a au moins un élément envoyé au tri
         if ($empty == false) {
 
