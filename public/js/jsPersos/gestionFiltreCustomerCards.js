@@ -1,12 +1,14 @@
 
-// Notre variable qui contient le "module" app (un objet)
-let app = {
+// Notre variable qui contient le "module" filterCustomerCard (un objet)
+let filterCustomerCard = {
 
     // Méthode appelée au chargement de la page
     init: function() {
 
         let customerPresence = document.querySelector('#customerPresence');
-        customerPresence.addEventListener("change", app.handleChange)        
+        customerPresence.addEventListener("change", filterCustomerCard.handleChange)     
+        let natureTransfer = document.getElementById(('natureTransfer'));
+        natureTransfer.addEventListener("change", filterCustomerCard.handleChangeNatureTransfer )
     },
 
     handleChange: function(event) {
@@ -32,7 +34,19 @@ let app = {
 
     },
 
+    handleChangeNatureTransfer: function(event){
+        console.log('natureTransfer is chnaging')
+        choosingOption = event.target.value;
+        let divFlightNumber = document.querySelector('#divFlightNumber')
+        // si interHotel, on enleve la case flight number, Sinon on la remet
+        if (choosingOption == 2) {
+            divFlightNumber.classList.add('d-none')
+        } else {
+            divFlightNumber.classList.remove('d-none')
+        }
+    }
+
 }
 
-// Quand la page est entièrement chargée, on exécute la méthode init située dans l'object app.
-document.addEventListener('DOMContentLoaded', app.init)
+// Quand la page est entièrement chargée, on exécute la méthode init située dans l'object filterCustomerCard.
+document.addEventListener('DOMContentLoaded', filterCustomerCard.init)
