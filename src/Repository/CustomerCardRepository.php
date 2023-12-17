@@ -149,61 +149,38 @@ class CustomerCardRepository extends ServiceEntityRepository
     public function customerCardPageSearchPresence(DateTimeImmutable $dateStart = null, DateTimeImmutable $dateEnd = null, $rep, $status, $agency, $hotel, $search, $flightNumber): ?array
     {      
         $requete = $this->createQueryBuilder('c');
-        
 
         // tous les transferts
-            $requete = $requete
-                ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
-                ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'transferArrival.id = transferVehicleArrival.transferArrival')
-                ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
-                ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
-                ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
-                            'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival 
-                            OR airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival
-                            OR airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival
-                            ')
-                            
-                // TODO: algorythme date   
+        $requete = $requete
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'transferArrival.id = transferVehicleArrival.transferArrival')
+            ->leftJoin('App\Entity\TransferInterHotel', 'transferInterHotel', 'WITH', 'c.id = transferInterHotel.customerCard')
+            ->leftJoin('App\Entity\TransferDeparture', 'transferDeparture', 'WITH', 'c.id = transferDeparture.customerCard')
+            ->leftJoin('App\Entity\AirportHotel', 'airportHotel', 'WITH', 
+                        'airportHotel.id = transferArrival.fromStart OR airportHotel.id = transferArrival.toArrival 
+                        OR airportHotel.id = transferInterHotel.fromStart OR airportHotel.id = transferInterHotel.toArrival
+                        OR airportHotel.id = transferDeparture.fromStart OR airportHotel.id = transferDeparture.toArrival
+                        ')   
+                // Algorythme dat
+                // -> pas d inter hotel car on calclul la présence (arrivée et départ)  
+                //1. soit l'arrivée ou le départ est dans la fourchette
                 ->orWhere('transferArrival.date >= :dateStart and transferArrival.date <= :dateEnd') 
                 ->orWhere('transferDeparture.date >= :dateStart and transferDeparture.date <= :dateEnd') 
-
-
+                //2. soit on arrive avant mais on part apres la fourchette
                 ->orWhere('transferArrival.date < :dateStart and transferDeparture.date > :dateEnd') 
-                /* ->orWhere('transferInterHotel.date >= :dateStart AND transferInterHotel.date <= :dateEnd' ) */
-                
-               /*  ->andwhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd' ) */
+                //3. soit on arrive avant et on a pas de départ
+                ->orWhere('transferArrival.date < :dateStart and transferDeparture.date is null') 
+
                 ->setParameter('dateStart', $dateStart->format('Y-m-d'))
-                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))            
-                            
-                            
-                            ;
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))                     
+            ;
         
-
-
-        if ($rep != "all") { 
-             $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );
-        }
-
- 
+        if ($rep != "all") { $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep ); }
         if ($status != "all") { $requete = $requete->andWhere('transferArrival.status = :status')->setParameter('status', $status );}
-
-
-        // recup de l agence
-        if ($agency != "all") {
-            $requete = $requete->andWhere('c.agency = :agency')->setParameter('agency', $agency);
-        }
-      // recup de l agence
-        if ($hotel != "all") {
-            $requete = $requete
-                            ->andWhere('
-                                airportHotel.id = :hotel 
-
-                                ')
-                            ->setParameter('hotel', $hotel);
-        }
+        if ($agency != "all") { $requete = $requete->andWhere('c.agency = :agency')->setParameter('agency', $agency);}
+        if ($hotel != "all") { $requete = $requete->andWhere('airportHotel.id = :hotel ')->setParameter('hotel', $hotel);}
         
-
-   // SEARCH : jointure avec la table transfer Joan pour le numéro de bon
+        // SEARCH : jointure avec la table transfer Joan pour le numéro de bon
         $requete = $requete->andWhere('c.reservationNumber LIKE :reservationNumber 
                                         OR c.holder LIKE :holder
                                         OR c.jumboNumber LIKE :jumboNumber
@@ -219,9 +196,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         $requete = $requete->orderBy('c.holder', 'ASC')
                             ->getQuery()
                             ->getResult();
-
         return $requete;
-
     } 
 
 
@@ -274,32 +249,14 @@ class CustomerCardRepository extends ServiceEntityRepository
                 ')
                 ->andWhere('transferDeparture.date >= :dateStart AND transferDeparture.date <= :dateEnd' )
                 ->setParameter('dateStart', $dateStart->format('Y-m-d'))
-                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))    
-                
+                ->setParameter('dateEnd', $dateEnd->format('Y-m-d'))                 
                 ;
         }
  
-
-         if ($rep != "all") { 
-
-            /** joindre le transfer arrival avec le client card */
-             $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );
-            /** récupérer l'inter hotel associé a ce client card c est interhotel */ 
-        }
-
-
+        if ($rep != "all") { $requete = $requete->andWhere('transferArrival.staff = :rep')->setParameter('rep', $rep );}
         if ($status != "all") { $requete = $requete->andWhere('transferArrival.status = :status')->setParameter('status', $status );}
-
- 
-        // recup de l agence
-        if ($agency != "all") {
-            $requete = $requete->andWhere('c.agency = :agency')->setParameter('agency', $agency);
-        }
-       // recup de l hotel
-        if ($hotel != "all") {
-            // si c est arrivée 
-            $requete = $requete->andWhere('airportHotel.id = :hotel' )->setParameter('hotel', $hotel) ;
-        }
+        if ($agency != "all") { $requete = $requete->andWhere('c.agency = :agency')->setParameter('agency', $agency);}
+        if ($hotel != "all") { $requete = $requete->andWhere('airportHotel.id = :hotel' )->setParameter('hotel', $hotel) ;}
 
         // traitement du numéro de vol (est associé a la nature du transfer)
         if ($flightNumber != 'all') {
@@ -312,9 +269,6 @@ class CustomerCardRepository extends ServiceEntityRepository
                 $requete = $requete->andWhere('transferArrival.flightNumber LIKE :transferArrival')->setParameter('transferArrival', '%'.$flightNumber.'%');
             } elseif ($natureTransfer == 3) {
                 $requete = $requete->andWhere('transferDeparture.flightNumber LIKE :transferDeparture')->setParameter('transferDeparture', '%'.$flightNumber.'%');
-            }
-            elseif($natureTransfer == 2) {
-                $requete = $requete->andWhere('transferInterHotel.flightNumber LIKE :transferInterHotel')->setParameter('transferInterHotel', '%'.$flightNumber.'%');
             }
         } 
         // SEARCH : jointure avec la table transfer pour le numéro de bon
