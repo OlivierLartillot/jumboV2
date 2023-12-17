@@ -107,9 +107,9 @@ class CustomerCardController extends AbstractController
             // si c est présence
             if ($customerPresence == 1){
                 // la requete qui execute la recherche
-                $results = $customerCardRepository->customerCardPageSearchPresence($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+                $results = $customerCardRepository->customerCardPageSearchPresence($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $flightNumber);
             } else { // si c est opération
-                $results = $customerCardRepository->customerCardPageSearchOperation($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+                $results = $customerCardRepository->customerCardPageSearchOperation($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
             }
 
