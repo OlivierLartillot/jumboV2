@@ -1,0 +1,94 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+        
+
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h1>WhatsApp arrival messages</h1>
+                    
+                    <form method="post">
+
+
+                        {% set language = {'es' : "Spanish", 'fr': "French", '' : "Spanish",'en' : "Ensglish", 'it' : "Italian", 'po' : "Portuguese", } %}
+                        
+
+                        Language : {{language[whatsAppMessage.language]}}<br>
+
+                        <label for="variable-select">Choose a variable:</label>
+
+                        <select name="variables" id="variable-select" class="form-select">
+                            <option value="">--Please choose an option--</option>
+                            <option value="%client%">Client</option>
+                            <option value="%rep%">rep(your name)</option>
+                            <option value="hamster">Hamster</option>
+                            <option value="parrot">Parrot</option>
+                            <option value="spider">Spider</option>
+                            <option value="goldfish">Goldfish</option>
+                        </select>
+
+
+                        <textarea id="myTextarea" name="textArea" class="form-control" rows="10" required>{{ textForArea is defined ? textForArea: ''}}</textarea>
+
+
+                        {% if zoneDefault %}
+                            <label class="mt-3">Is the default message ?</label>
+                            <div class="d-flex ">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="default" id="yes" value="yes">
+                                    <label class="form-check-label" for="yes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check ms-3">
+                                    <input class="form-check-input" type="radio" name="default" id="no" value="no" checked>
+                                    <label class="form-check-label" for="no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <input type="submit" name="submit">
+                    </form>
+
+                    <h2>Ici le texte</h2>
+                    {{ whatsAppMessage.message|raw }}
+      
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--********************** FOOTER **********************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <!-- apexcharts -->
+        <!-- <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> -->
+
+        <!-- <script src="/js/pages/dashboard.init.js"></script> -->
+
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+        <script src="/js/jsPersos/whatsApp/variableToinsert.js"></script>
+
+    </body>

@@ -335,11 +335,122 @@
                 </div>
             </div>
 
-            <div class="dropdown d-none d-lg-inline-block ms-1">
-                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
-                    <i class="uil-minus-path"></i>
-                </button>
-            </div>
+
+
+
+
+
+
+
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="uil-whatsapp"></i>
+                               
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown" style="">
+                                <div class="p-3">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h5 class="m-0 font-size-16"> Whats App Messages </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-simplebar="init" style="max-height: 230px;"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" style="height: auto; overflow: hidden; padding-right: 0px; padding-bottom: 0px;"><div class="simplebar-content" style="padding: 0px;">
+
+                                    <a href="{{ path('app_whats_app_message_index', {'transfer': 1 })}}" class="text-dark notification-item">
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar-xs">
+                                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                        <i class="mdi mdi-airplane-landing"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">My messages</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">Lorem ipsum</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+
+                                    <a href="{{ path('app_whats_app_message_new', {'transfer': 1 })}}" class="text-dark notification-item">
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar-xs">
+                                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                        <i class="mdi mdi-airplane-landing"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Arrival Messages</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">Lorem ipsum</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0);" class="text-dark notification-item">
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar-xs">
+                                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                        <i class="mdi mdi-car"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Inter Hotel Messages</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">Lorem ipsum</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0);" class="text-dark notification-item">
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar-xs">
+                                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                        <i class="mdi mdi-airplane-takeoff"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Departure Messages</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">Lorem ipsum</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    
+                                </div></div></div></div><div class="simplebar-placeholder" style="width: 0px; height: 0px;"></div></div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: hidden;"><div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); display: none; height: 147px;"></div></div></div>
+                                
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"

@@ -1,0 +1,97 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+        
+
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h1>WhatsApp arrival messages</h1>
+
+                    {% for message in app.flashes('danger') %}
+                        <div class="text-center text-white flash-notice bg bg-danger rounded p-1 ">
+                            {{ message|trans }}
+                        </div>
+                    {% endfor %}
+
+
+                    <form method="post">
+                    <label for="variable-select">Choose a language:</label>
+                    <select name="language" id="language-select" class="form-select" required>
+                        <option value="">--Please choose the message language--</option>
+                        <option value="es" {{ language is defined and language == 'es'  ? 'selected' : '' }}>Spanish</option>
+                        <option value="fr" {{ language is defined and language == 'fr' ? 'selected' : '' }}>French</option>
+                    </select>
+
+
+                    <div class="mt-3">
+                        <label for="variable-select">Insert variables in your message:</label>
+
+                        <select name="variables" id="variable-select" class="form-select">
+                            <option value="">--Please choose an option--</option>
+                            <option value="%client%">Client</option>
+                            <option value="%rep%">rep(your name)</option>
+                        </select>
+                    </div>
+                        <textarea id="myTextarea" name="textArea" class="form-control" rows="10" required  >{{ (text is defined ) ? text : ''}}</textarea>
+
+
+                        {% if zoneDefault %}
+                            <label class="mt-3">Is the default message ?</label>
+                            <div class="d-flex ">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="default" id="yes" value="yes">
+                                    <label class="form-check-label" for="yes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check ms-3">
+                                    <input class="form-check-input" type="radio" name="default" id="no" value="no" checked>
+                                    <label class="form-check-label" for="no">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        {% endif %}
+                
+                        <div class="mt-3">
+                            <input type="submit" name="submit">
+                        </div>
+                    </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--********************** FOOTER **********************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <!-- apexcharts -->
+        <!-- <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> -->
+
+        <!-- <script src="/js/pages/dashboard.init.js"></script> -->
+
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+        <script src="/js/jsPersos/whatsApp/variableToinsert.js"></script>
+
+    </body>
