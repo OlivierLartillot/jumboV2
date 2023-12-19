@@ -70,11 +70,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'staff', targetEntity: TransferArrival::class)]
     private Collection $transferArrivals;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WhatsAppMessage::class)]
+    private Collection $whatsAppMessages;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->statusHistories = new ArrayCollection();
         $this->transferArrivals = new ArrayCollection();
+        $this->whatsAppMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -310,6 +314,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($transferArrival->getStaff() === $this) {
                 $transferArrival->setStaff(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WhatsAppMessage>
+     */
+    public function getWhatsAppMessages(): Collection
+    {
+        return $this->whatsAppMessages;
+    }
+
+    public function addWhatsAppMessage(WhatsAppMessage $whatsAppMessage): static
+    {
+        if (!$this->whatsAppMessages->contains($whatsAppMessage)) {
+            $this->whatsAppMessages->add($whatsAppMessage);
+            $whatsAppMessage->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWhatsAppMessage(WhatsAppMessage $whatsAppMessage): static
+    {
+        if ($this->whatsAppMessages->removeElement($whatsAppMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($whatsAppMessage->getUser() === $this) {
+                $whatsAppMessage->setUser(null);
             }
         }
 

@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.5",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
+        "eckinox/tinymce-bundle": "^0.1.5",
         "endroid/qr-code-bundle": "^4.3",
         "knplabs/knp-paginator-bundle": "^6.2",
         "league/csv": "9.0",

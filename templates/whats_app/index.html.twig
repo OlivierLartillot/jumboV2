@@ -1,0 +1,43 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+
+                    <h3>WhatsAppMessage index</h3>
+
+                    <table class="table table-striped">
+
+                        <tbody>
+                        {% for whats_app_message in whats_app_messages %}
+                            <tr>
+                                <td>{% if (whats_app_message.typeTransfer == 1 ) %} Arrival {% elseif (whats_app_message.typeTransfer == 2 ) %} Inter Hotel {% else %} Departure {% endif %}</td>
+                                <td>{{ whats_app_message.language }}</td>
+                                <td>{{ whats_app_message.isDefaultMessage ? 'Yes' : 'No' }}</td>
+                                <td>
+                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_show', {'id': whats_app_message.id}) }}"><i class="uil-eye"></i></a>
+                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_edit', {'id': whats_app_message.id}) }}"><i class="uil-edit-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">no records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 1}) }}"><i class="mdi mdi-airplane-landing fs-3"></i><br>Create new Arrival message</a>
+                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 2}) }}"><i class="mdi mdi-car fs-3"></i><br>Create new InterHotel message</a> 
+                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 3}) }}"><i class="mdi mdi-airplane-takeoff fs-3"></i><br>Create new Departure message</a>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
