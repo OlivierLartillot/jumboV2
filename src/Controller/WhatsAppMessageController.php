@@ -145,22 +145,25 @@ class WhatsAppMessageController extends AbstractController
 
             // si tu ajoutes default, tu regardes si un autre été a default
             // si oui tu vires defaut pour l autre et tu mets le courant a default
-            $isDefault = $request->get('default') == 'yes' ? true : false ;
-                //si on le met en tant que default il faut virer l'ancien
-                if ($isDefault) {
-                     // on recupere le message par default
-                    $messageWithDefault = $whatsAppMessageRepository->findOneBy([
-                        'user' => $this->getUser(),
-                        'typeTransfer' => $whatsAppMessage->getTypeTransfer(),
-                        'isDefaultMessage' => true
-                    ]); 
-                    // et si on le trouve il n est plus par defaut !
-                    ($messageWithDefault) ? $messageWithDefault->setIsDefaultMessage(false) : "";
-                    // et on met le nouveau en default !
-                    $whatsAppMessage->setIsDefaultMessage(true);
-                } else {
-                    $whatsAppMessage->setIsDefaultMessage(false);
-                }
+            if ($request->get('default') != null) {
+
+                $isDefault = $request->get('default') == 'yes' ? true : false ;
+                    //si on le met en tant que default il faut virer l'ancien
+                    if ($isDefault) {
+                         // on recupere le message par default
+                        $messageWithDefault = $whatsAppMessageRepository->findOneBy([
+                            'user' => $this->getUser(),
+                            'typeTransfer' => $whatsAppMessage->getTypeTransfer(),
+                            'isDefaultMessage' => true
+                        ]); 
+                        // et si on le trouve il n est plus par defaut !
+                        ($messageWithDefault) ? $messageWithDefault->setIsDefaultMessage(false) : "";
+                        // et on met le nouveau en default !
+                        $whatsAppMessage->setIsDefaultMessage(true);
+                    } else {
+                        $whatsAppMessage->setIsDefaultMessage(false);
+                    }
+            }
             $entityManager->persist($whatsAppMessage);
             $entityManager->flush();
             //dd($whatsAppMessage);

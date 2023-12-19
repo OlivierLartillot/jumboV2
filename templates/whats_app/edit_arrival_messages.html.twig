@@ -37,13 +37,13 @@
                             <label class="mt-3">Is the default message ?</label>
                             <div class="d-flex ">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="default" id="yes" value="yes">
+                                    <input class="form-check-input" type="radio" name="default" id="yes" value="yes" {{ whatsAppMessage.isDefaultMessage == true ? 'checked':'' }}>
                                     <label class="form-check-label" for="yes">
                                         Yes
                                     </label>
                                 </div>
                                 <div class="form-check ms-3">
-                                    <input class="form-check-input" type="radio" name="default" id="no" value="no" checked>
+                                    <input class="form-check-input" type="radio" name="default" id="no" value="no" {{ whatsAppMessage.isDefaultMessage == false ? 'checked':'' }}>
                                     <label class="form-check-label" for="no">
                                         No
                                     </label>
