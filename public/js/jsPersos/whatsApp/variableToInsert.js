@@ -19,13 +19,16 @@ let appVariableToinsert = {
 
      handleChange: function(event) {
         event.preventDefault();
+    
         console.log(event.target.value);
 
         let textArea = document.getElementById("myTextarea");
-        newText = textArea.value + "" +  event.target.value
-        console.log(newText)
+        let selected = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd);
+        textArea.setRangeText(`${selected} ${event.target.value}`);
+       /*  newText = textArea.value + "" +  event.target.value */
+/*         console.log(newText)
 
-        textArea.value = newText
+        textArea.value = newText */
         
         document.getElementById('variable-select').value = "";
   

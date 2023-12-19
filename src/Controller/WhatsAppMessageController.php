@@ -124,12 +124,19 @@ class WhatsAppMessageController extends AbstractController
     #[Route('/{id}/edit', name: 'app_whats_app_message_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, WhatsAppMessage $whatsAppMessage, WhatsAppMessageRepository $whatsAppMessageRepository, EntityManagerInterface $entityManager): Response
     {
-
-        $textForArea = str_replace("<br>","\r\n", $whatsAppMessage->getMessage());
         
+        $textForArea = str_replace("<br>","\r\n", $whatsAppMessage->getMessage());
         // est ce qu on affiche la zone pour choisir isDefault ?
         $zoneDefault = ($whatsAppMessage->isIsDefaultMessage()) ? false : true;
 
+
+        $textForDiv = str_replace([
+            "%client%",
+            "%meetingHour%",
+            "%pickupHour%",
+            "%meetingPoint%",
+            "%flyHour%",
+            "[:)]" ],["John Do", "10:00","12:00" ,"At theatre" , "%flyHour%", "&#x1F600;"], $whatsAppMessage->getMessage());
 
 
         if ($request->get('submit') !== null  ) {
@@ -142,6 +149,8 @@ class WhatsAppMessageController extends AbstractController
             $text = str_replace("</script>","forbidden tag", $text);
             $text = str_replace("<input","forbidden tag", $text);
             $whatsAppMessage->setMessage($text);
+
+            
 
             // si tu ajoutes default, tu regardes si un autre été a default
             // si oui tu vires defaut pour l autre et tu mets le courant a default
@@ -177,6 +186,7 @@ class WhatsAppMessageController extends AbstractController
 
         return $this->render('whats_app/edit_arrival_messages.html.twig', [
             'whatsAppMessage' => $whatsAppMessage,
+            'textForDiv' => $textForDiv,
             'textForArea' => $textForArea,
             'zoneDefault' => $zoneDefault
         ]);
