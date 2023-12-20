@@ -73,10 +73,10 @@
 
 
 
-
 {# bonjour transferObject.staff #}
+    {# {{ textBrute|replace({'transferObject.staff': 'blablabalblb', 'hihih':'hahah'}) }} #}
 <div id="message">
-    {{ textBrute|replace({'transferObject.staff': 'blablabalblb', 'hihih':'hahah'}) }}
+{{ text|raw }}
 </div>
 {# Salut! Bienvenue à Punta Cana! 🌴 
 
@@ -149,7 +149,7 @@ Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre re
             /* let phone = document.querySelector('#tel').textContent */
 
             console.log(message)
-            window.location.href = encodeURI('https://api.whatsapp.com/send?phone=&text=' + message);
+             window.location.href = encodeURI('https://api.whatsapp.com/send?phone=&text=' + message); 
         </script>
 
     </body>
