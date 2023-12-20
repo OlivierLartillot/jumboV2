@@ -15,8 +15,7 @@ let appVariableToinsert = {
 
      handleClick: function(event) {
         event.preventDefault();
-        console.log('on est bien ici' )
-        console.log(event.currentTarget.id);
+
 
         let textArea = document.getElementById("myTextarea");
         let selected = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd);

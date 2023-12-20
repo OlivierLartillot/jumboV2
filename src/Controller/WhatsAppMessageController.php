@@ -17,7 +17,7 @@ class WhatsAppMessageController extends AbstractController
     public function index(WhatsAppMessageRepository $whatsAppMessageRepository): Response
     {
         return $this->render('whats_app//index.html.twig', [
-            'whats_app_messages' => $whatsAppMessageRepository->findAll(),
+            'whats_app_messages' => $whatsAppMessageRepository->findby(['user' => $this->getUser()]),
         ]);
     }
 
