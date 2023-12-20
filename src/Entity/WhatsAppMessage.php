@@ -27,8 +27,6 @@ class WhatsAppMessage
     #[ORM\Column(type: Types::TEXT)]
     private ?string $message = null;
 
-    #[ORM\Column]
-    private ?bool $isDefaultMessage = null;
 
     public function getId(): ?int
     {
@@ -83,15 +81,4 @@ class WhatsAppMessage
         return $this;
     }
 
-    public function isIsDefaultMessage(): ?bool
-    {
-        return $this->isDefaultMessage;
-    }
-
-    public function setIsDefaultMessage(bool $isDefaultMessage): static
-    {
-        $this->isDefaultMessage = $isDefaultMessage;
-
-        return $this;
-    }
 }
