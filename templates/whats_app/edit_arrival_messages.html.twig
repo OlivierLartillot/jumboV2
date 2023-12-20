@@ -20,16 +20,28 @@
                             
                                 <p class="text-center fs-4">Language : {{language[whatsAppMessage.language]}}</p>
 
-                                <label for="variable-select">Insert variables in your message::</label>
 
-                                <select name="variables" id="variable-select" class="form-select">
-                                    <option value="">--You can choose a variable here--</option>
-                                    <option value="%client%">Client</option>
-                                    <option value="%meetingHour%">Meeting Hour</option>
-                                    <option value="%pickupHour%">Pickup Hour</option>
-                                    <option value="%meetingPoint%">Meeting Point</option>
-                                    <option value="%flyHourt%">Fly Hour</option>
-                                </select>
+
+                                <div class="my-3 border border-light shadow p-1">
+                                <label for="variable-select">Insert variables in your message::</label><br>
+
+                                    <button class="variable btn btn-outline-dark fs-4" title="Client" id="client"><i class="uil-user-plus"></i></button>	
+
+                                    {% if whatsAppMessage.typeTransfer == 1 %}
+                                        <button class="variable btn btn-outline-primary fs-4" title="meeting point" id="meetingPoint"><i class="uil-map-marker"></i></button>	
+                                        <button class="variable btn btn-outline-primary fs-4" title="Meeting Hour" id="meetingHour"><i class="uil-clock-ten"></i></button>	
+                                    {% endif %}
+                                    {% if whatsAppMessage.typeTransfer != 1 %}
+                                        <button class="variable btn btn-outline-success fs-4" title="Pickup Number" id="pickupNumber"><i class="uil-bus-school"></i></button>	
+                                        <button class="variable btn btn-outline-success fs-4" title="Pickup Hour" id="pickupHour"><i class="uil-clock-ten"></i></button>	
+                                        <button class="variable btn btn-outline-warning fs-4" title="Flight Number" id="flightNumber"><i class="uil-plane-departure"></i></button>	
+                                        <button class="variable btn btn-outline-warning fs-4" title="Fly Hour" id="flyHour"><i class="uil-clock-ten"></i></button>	
+                                        
+                                    {% endif %}
+                           
+
+
+                                </div>
 
                                 <div class="my-3">
                                     <button class="bbcode btn btn-outline-primary" id="bold">B</button>	

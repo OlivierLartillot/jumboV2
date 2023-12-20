@@ -131,12 +131,11 @@ class WhatsAppMessageController extends AbstractController
 
 
         $textForDiv = str_replace([
-            "%client%",
-            "%meetingHour%",
-            "%pickupHour%",
-            "%meetingPoint%",
-            "%flyHour%",
-            "[:)]" ],["John Do", "10:00","12:00" ,"At theatre" , "%flyHour%", "&#x1F600;"], $whatsAppMessage->getMessage());
+            "%client%", "%meetingHour%", "%pickupHour%", "%pickupNumber%",  "%meetingPoint%", "%flightNumber%", "%flyHour%",
+            "[:)]", "[-!-]" 
+            ],["John Do", "10:00","12:00", "????" ,"At theatre" , "CM109", "14:00", 
+            "&#x1F600;", "&#x1F334;"
+        ], $whatsAppMessage->getMessage());
 
 
         if ($request->get('submit') !== null  ) {
