@@ -5,33 +5,62 @@
             <div class="card">
                 <div class="card-body">
 
-                    <h3>WhatsAppMessage index</h3>
+                    <h3>{% trans %}WhatsApp Messages{% endtrans %}</h3>
 
                     <table class="table table-striped">
-
-                        <tbody>
-                        {% for whats_app_message in whats_app_messages %}
+                        <thead>
                             <tr>
-                                <td>{% if (whats_app_message.typeTransfer == 1 ) %} Arrival {% elseif (whats_app_message.typeTransfer == 2 ) %} Inter Hotel {% else %} Departure {% endif %}</td>
-                                <td>{{ whats_app_message.language }}</td>
-                                <td>{{ whats_app_message.isDefaultMessage ? 'Yes' : 'No' }}</td>
+                                <td>{% trans %}Type transfer{% endtrans %}</td>
+                                <td><span title="language">Language</span></td>
+                                <td>{% trans %}Edit{% endtrans %}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if countWhatsAppMessages > 0 %}
+          
+                            {% for arrivalMessage in arrivalMessages %}
+                            <tr>
+                                <td>{% trans %}Arrival{% endtrans %}</td>
+                                <td><img class="header-lang-img" src="{{ asset('images/flags/'~arrivalMessage.language~'.jpg') }}" alt="flag {{ arrivalMessage.language }}" title="{{arrivalMessage.language|trans}}" height="16"></td>
                                 <td>
-                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_show', {'id': whats_app_message.id}) }}"><i class="uil-eye"></i></a>
-                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_edit', {'id': whats_app_message.id}) }}"><i class="uil-edit-alt"></i></a>
+                                    {# <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_show', {'id': arrivalMessage.id}) }}"><i class="uil-eye"></i></a> #}
+                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_edit', {'id': arrivalMessage.id}) }}"><i class="uil-edit-alt"></i></a>
                                 </td>
                             </tr>
+                            {% endfor %}
+
+                            {% for interHotelMessage in interHotelMessages %}
+                            <tr>
+                                <td>{% trans %}InterHotel{% endtrans %}</td>
+                                <td><img class="header-lang-img" src="{{ asset('images/flags/'~interHotelMessage.language~'.jpg') }}" alt="flag {{ interHotelMessage.language }}" title="{{interHotelMessage.language|trans}}" height="16"></td>
+                                <td>
+                                    {# <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_show', {'id': interHotelMessage.id}) }}"><i class="uil-eye"></i></a> #}
+                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_edit', {'id': interHotelMessage.id}) }}"><i class="uil-edit-alt"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% for departureMessage in departureMessages %}
+                            <tr>
+                                <td>{% trans %}Departure{% endtrans %}</td>
+                                <td><img class="header-lang-img" src="{{ asset('images/flags/'~departureMessage.language~'.jpg') }}" alt="flag {{ departureMessage.language }}" title="{{departureMessage.language|trans}}" height="16"></td>
+                                <td>
+                                    {# <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_show', {'id': departureMessage.id}) }}"><i class="uil-eye"></i></a> #}
+                                    <a class="btn btn-outline-primary" href="{{ path('app_whats_app_message_edit', {'id': departureMessage.id}) }}"><i class="uil-edit-alt"></i></a>
+                                </td>
+                            </tr>                                
+                            {% endfor %}
                         {% else %}
                             <tr>
                                 <td colspan="6">no records found</td>
                             </tr>
-                        {% endfor %}
+                        {% endif %}
                         </tbody>
                     </table>
 
                     <div class="d-flex">
-                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 1}) }}"><i class="mdi mdi-airplane-landing fs-3"></i><br>Create new Arrival message</a>
-                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 2}) }}"><i class="mdi mdi-car fs-3"></i><br>Create new InterHotel message</a> 
-                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 3}) }}"><i class="mdi mdi-airplane-takeoff fs-3"></i><br>Create new Departure message</a>
+                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 1}) }}"><i class="mdi mdi-airplane-landing fs-3"></i><br>{% trans %}Create new Arrival message{% endtrans %}</a>
+                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 2}) }}"><i class="mdi mdi-car fs-3"></i><br>{% trans %}Create new InterHotel message{% endtrans %}</a> 
+                        <a class="btn btn-outline-primary m-1 w-50" href="{{ path('app_whats_app_message_new', {'transfer': 3}) }}"><i class="mdi mdi-airplane-takeoff fs-3"></i><br>{% trans %}Create new Departure message{% endtrans %}</a>
                     </div>
 
             </div>

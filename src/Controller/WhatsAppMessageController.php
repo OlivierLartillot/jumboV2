@@ -16,8 +16,18 @@ class WhatsAppMessageController extends AbstractController
     #[Route('/', name: 'app_whats_app_message_index', methods: ['GET'])]
     public function index(WhatsAppMessageRepository $whatsAppMessageRepository): Response
     {
+        $countWhatsAppMessages = count($whatsAppMessageRepository->findby(['user' => $this->getUser()]));
+        $arrivalMessages = $whatsAppMessageRepository->findby(['user' => $this->getUser(), 'typeTransfer' => 1]);
+        $interHotelMessages = $whatsAppMessageRepository->findby(['user' => $this->getUser(), 'typeTransfer' => 2]);
+        $departureMessages = $whatsAppMessageRepository->findby(['user' => $this->getUser(), 'typeTransfer' => 3]);
+
+
+
         return $this->render('whats_app//index.html.twig', [
-            'whats_app_messages' => $whatsAppMessageRepository->findby(['user' => $this->getUser()]),
+            'arrivalMessages' => $arrivalMessages,
+            'interHotelMessages' => $interHotelMessages,
+            'departureMessages' => $departureMessages,
+            'countWhatsAppMessages' => $countWhatsAppMessages
         ]);
     }
 
@@ -26,18 +36,6 @@ class WhatsAppMessageController extends AbstractController
     {
 
         $whatsAppMessage = new WhatsAppMessage();
-        $zoneDefault = true;
-        // est ce qu il existe deja un message pour ce $treansfer et user
-        $messageExist = count($whatsAppMessageRepository->findBy([
-            'user' => $this->getUser(),
-            'typeTransfer' => $transfer
-        ]));
-
-
-        // s il n y a pas de message , on va virer la zone default pour obliger la nouvelle a etre true
-        if ($messageExist == false) {
-            $zoneDefault = false;
-        }
 
         if ($request->get('submit') !== null  ) {
             $language = $request->get('language');
@@ -56,7 +54,7 @@ class WhatsAppMessageController extends AbstractController
                 );
                 //dd('on renvoie flash error + le texte');
                 return $this->render('whats_app/create_arrival_messages.html.twig', [
-                            'zoneDefault' => $zoneDefault,
+                          
                             'text' => $text, 
                             'language' => $language
                         ]);
@@ -72,33 +70,8 @@ class WhatsAppMessageController extends AbstractController
             $text = str_replace("</script>","forbidden tag", $text);
             $text = str_replace("<input","forbidden tag", $text);
 
-
-
-
             $whatsAppMessage->setMessage($text);
-            // si il n y a pas de message il sera a default
-            if ($messageExist == false) {
-                $whatsAppMessage->setIsDefaultMessage(true);
-            } else {
-               
-                $isDefault = $request->get('default') == 'yes' ? true : false ;
-                //si on le met en tant que default il faut virer l'ancien
-                if ($isDefault) {
-                     // on recupere le message par default
-                    $messageWithDefault = $whatsAppMessageRepository->findOneBy([
-                        'user' => $this->getUser(),
-                        'typeTransfer' => $transfer,
-                        'isDefaultMessage' => true
-                    ]); 
-                    // et si on le trouve il n est plus par defaut !
-                    ($messageWithDefault) ? $messageWithDefault->setIsDefaultMessage(false) : "";
-                    // et on met le nouveau en default !
-                    $whatsAppMessage->setIsDefaultMessage(true);
-                } else {
-                    $whatsAppMessage->setIsDefaultMessage(false);
-                }
-            }
-            
+   
             $entityManager->persist($whatsAppMessage);
             $entityManager->flush();
 
@@ -108,9 +81,7 @@ class WhatsAppMessageController extends AbstractController
             ], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('whats_app/create_arrival_messages.html.twig', [
-            'zoneDefault' => $zoneDefault
-        ]);
+        return $this->render('whats_app/create_arrival_messages.html.twig', []);
     }
 
     #[Route('/{id}', name: 'app_whats_app_message_show', methods: ['GET'])]
@@ -127,13 +98,12 @@ class WhatsAppMessageController extends AbstractController
         
         $textForArea = str_replace("<br>","\r\n", $whatsAppMessage->getMessage());
         // est ce qu on affiche la zone pour choisir isDefault ?
-        $zoneDefault = ($whatsAppMessage->isIsDefaultMessage()) ? false : true;
 
 
         $textForDiv = str_replace([
-            "%client%", "%meetingHour%", "%pickupHour%", "%pickupNumber%",  "%meetingPoint%", "%flightNumber%", "%flyHour%",
+            "%client%", "%meetingHour%", "%pickupHour%", "%pickupNumber%",  "%meetingPoint%", "%flightNumber%", "%flyHour%", "%toHotel%", "%toAirport%",
             "[:)]", "[-!-]" 
-            ],["John Do", "10:00","12:00", "????" ,"At theatre" , "CM109", "14:00", 
+            ],["John Do", "10:00","12:00", "????" ,"At theatre" , "CM109", "14:00", "Hotel Riu Bambu", "Punta Cana International (PUJ)",
             "&#x1F600;", "&#x1F334;"
         ], $whatsAppMessage->getMessage());
 
@@ -150,28 +120,6 @@ class WhatsAppMessageController extends AbstractController
             $whatsAppMessage->setMessage($text);
 
             
-
-            // si tu ajoutes default, tu regardes si un autre été a default
-            // si oui tu vires defaut pour l autre et tu mets le courant a default
-            if ($request->get('default') != null) {
-
-                $isDefault = $request->get('default') == 'yes' ? true : false ;
-                    //si on le met en tant que default il faut virer l'ancien
-                    if ($isDefault) {
-                         // on recupere le message par default
-                        $messageWithDefault = $whatsAppMessageRepository->findOneBy([
-                            'user' => $this->getUser(),
-                            'typeTransfer' => $whatsAppMessage->getTypeTransfer(),
-                            'isDefaultMessage' => true
-                        ]); 
-                        // et si on le trouve il n est plus par defaut !
-                        ($messageWithDefault) ? $messageWithDefault->setIsDefaultMessage(false) : "";
-                        // et on met le nouveau en default !
-                        $whatsAppMessage->setIsDefaultMessage(true);
-                    } else {
-                        $whatsAppMessage->setIsDefaultMessage(false);
-                    }
-            }
             $entityManager->persist($whatsAppMessage);
             $entityManager->flush();
             //dd($whatsAppMessage);
@@ -179,7 +127,6 @@ class WhatsAppMessageController extends AbstractController
                 'id' => $whatsAppMessage->getId(),
                 'whatsAppMessage' => $whatsAppMessage,
                 'textForArea' => $textForArea,
-                'zoneDefault' => $zoneDefault
             ], Response::HTTP_SEE_OTHER);
         }
 
@@ -187,7 +134,6 @@ class WhatsAppMessageController extends AbstractController
             'whatsAppMessage' => $whatsAppMessage,
             'textForDiv' => $textForDiv,
             'textForArea' => $textForArea,
-            'zoneDefault' => $zoneDefault
         ]);
     }
 

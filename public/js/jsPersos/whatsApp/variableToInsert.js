@@ -16,24 +16,10 @@ let appVariableToinsert = {
      handleClick: function(event) {
         event.preventDefault();
 
-
         let textArea = document.getElementById("myTextarea");
         let selected = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd);
         textArea.setRangeText(`${selected}%${event.currentTarget.id}%`);
 
-
-
-/*         let textArea = document.getElementById("myTextarea");
-        let selected = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd); */
-
-/*         if (event.target.id == 'bold') {baliseStart = '<b>';baliseEnd = '</b>';
-        textArea.setRangeText(`${baliseStart}${selected}${baliseEnd} `);
-    }
-        console.log(event.target.name)
-        if (event.target.id == 'sourire') {
-            textArea.setRangeText('[:)]');
-        }
-         */
     } 
 }
 
