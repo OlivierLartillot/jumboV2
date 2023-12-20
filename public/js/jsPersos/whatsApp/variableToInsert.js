@@ -6,34 +6,35 @@ let appVariableToinsert = {
     init: function() {
         console.log('on écoute la variable a insérer');
         
-        const select = document.getElementById('variable-select');
-        select.addEventListener('change',appVariableToinsert.handleChange);
 
-/*         let copyButtons = document.getElementsByClassName('bontonCopier');
-        //console.log(buttons);
-        copyButtons.forEach(element => {
-            element.addEventListener('change',appVariableToinsert.handleChange);
-            
-        }); */
+        const variableButtons = document.getElementsByClassName('variable');
+        variableButtons.forEach(variableButton => {
+            variableButton.addEventListener('click', appVariableToinsert.handleClick);
+        })
     },
 
-     handleChange: function(event) {
+     handleClick: function(event) {
         event.preventDefault();
-    
-        console.log(event.target.value);
+        console.log('on est bien ici' )
+        console.log(event.currentTarget.id);
 
         let textArea = document.getElementById("myTextarea");
         let selected = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd);
-        textArea.setRangeText(`${selected} ${event.target.value}`);
-       /*  newText = textArea.value + "" +  event.target.value */
-/*         console.log(newText)
+        textArea.setRangeText(`${selected}%${event.currentTarget.id}%`);
 
-        textArea.value = newText */
-        
-        document.getElementById('variable-select').value = "";
-  
 
-    
+
+/*         let textArea = document.getElementById("myTextarea");
+        let selected = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd); */
+
+/*         if (event.target.id == 'bold') {baliseStart = '<b>';baliseEnd = '</b>';
+        textArea.setRangeText(`${baliseStart}${selected}${baliseEnd} `);
+    }
+        console.log(event.target.name)
+        if (event.target.id == 'sourire') {
+            textArea.setRangeText('[:)]');
+        }
+         */
     } 
 }
 
