@@ -32,25 +32,37 @@
                                     <!-- Button Modal variables -->
                                     <a type="button" data-bs-toggle="modal" data-bs-target="#myModalVariables"><i class="uil-question-circle fs-4 text-success"></i></a></label><br>
 
-                                    <button class="variable btn btn-outline-dark fs-4" title="Client" id="client"><i class="uil-user-plus"></i></button>	
+                                    <button class="variable badge btn-dark p-1 fs-6 mb-1" title="Client" id="client">{# <i class="uil-user-plus"></i> #}{% trans %}Client{% endtrans %}</button>		
 
                                     {% if whatsAppMessage.typeTransfer == 1 %}
-                                        <button class="variable btn btn-outline-primary fs-4" title="Meeting point" id="meetingPoint"><i class="uil-map-marker"></i></button>	
-                                        <button class="variable btn btn-outline-primary fs-4" title="Meeting at point" id="meetingAtPoint">...<i class="uil-map-marker"></i></button>	
-                                        <button class="variable btn btn-outline-primary fs-4" title="Meeting Hour" id="meetingHour"><i class="uil-clock-ten"></i></button>	
-                                        <button class="variable btn btn-outline-primary fs-4 " title="Day in letter" id="dayInLetter"><i class="uil-calendar-alt"></i></button>	
+{#                                     <button class="variable btn btn-outline-primary fs-4" title="Meeting point" id="meetingPoint"><i class="uil-map-marker"></i></button>
+                                    <button class="variable btn btn-outline-primary fs-4" title="Meeting at point" id="meetingAtPoint">...<i class="uil-map-marker"></i></button>                                    	
+                                    <button class="variable btn btn-outline-primary fs-4" title="Meeting Hour" id="meetingHour"><i class="uil-clock-ten"></i></button>		
+                                    <button class="variable btn btn-outline-primary fs-4 " title="Day in letter" id="dayInLetter"><i class="uil-calendar-alt"></i></button>	 #}
+
+                                    <button class="variable badge btn-primary p-1 fs-6" title="Meeting point" id="meetingPoint">{% trans %}Meeting Point{% endtrans %}</button>
+                                    <button class="variable badge btn-primary p-1 fs-6" title="Meeting at point" id="meetingAtPoint">{% trans %}At meeting point{% endtrans %}</button>                                    	
+                                    <button class="variable badge btn-primary p-1 fs-6" title="Meeting Hour" id="meetingHour">{% trans %}Meeting Time{% endtrans %}</button>		
+                                    <button class="variable badge btn-primary p-1 fs-6 " title="Day in letter" id="dayInLetter">{% trans %}Day{% endtrans %}</button>	
+                                
                                     {% endif %}
                                     {% if whatsAppMessage.typeTransfer == 2 or whatsAppMessage.typeTransfer == 3 %}
-                                        <button class="variable btn btn-outline-success fs-4" title="Pickup Number" id="pickupNumber"><i class="uil-bus-school"></i></button>	
-                                        <button class="variable btn btn-outline-success fs-4" title="Pickup Hour" id="pickupHour"><i class="uil-clock-ten"></i></button>	
+    {#                                     <button class="variable btn btn-outline-success fs-4" title="Pickup Number" id="pickupNumber"><i class="uil-bus-school"></i></button>	
+                                        <button class="variable btn btn-outline-success fs-4" title="Pickup Hour" id="pickupHour"><i class="uil-clock-ten"></i></button> #}	
+                                        <button class="variable badge btn-success p-1 fs-6 fs-6" title="Pickup Number" id="pickupNumber">{% trans %}Pickup Number{% endtrans %}</button>	
+                                        <button class="variable badge btn-success p-1 fs-6 fs-6" title="Pickup Hour" id="pickupHour">{% trans %}Pickup Time{% endtrans %}</button>
                                     {% endif %}
                                     {% if whatsAppMessage.typeTransfer == 2 %}   
-                                        <button class="variable btn btn-outline-success fs-4" title="To Hotel" id="toHotel"><i class="uil-arrow-to-right"></i></button>
+                                        {# <button class="variable btn btn-outline-success fs-4" title="To Hotel" id="toHotel"><i class="uil-arrow-to-right"></i></button> #}
+                                        <button class="variable badge btn-success p-1 fs-6 fs-6" title="To Hotel" id="toHotel">{% trans %}Arrival Hotel{% endtrans %}</button>
                                     {% endif %}
                                     {% if whatsAppMessage.typeTransfer == 3 %}   
-                                        <button class="variable btn btn-outline-warning fs-4" title="Flight Number" id="flightNumber"><i class="uil-plane-departure"></i></button>	
-                                        <button class="variable btn btn-outline-warning fs-4" title="Flight Hour" id="flightHour"><i class="uil-clock-ten"></i></button>
-                                        <button class="variable btn btn-outline-warning fs-4" title="To Airport" id="toAirport"><i class="uil-arrow-to-right"></i></button>
+    {#                                     <button class="variable btn btn-outline-warning fs-4" title="Flight Number" id="flightNumber"><i class="uil-plane-departure"></i></button>	
+                                        <button class="variable btn btn-outline-warning fs-4" title="Flight Hour" id="flightHour"><i class="uil-clock-ten"></i></button>	
+                                        <button class="variable btn btn-outline-warning fs-4" title="To Airport" id="toAirport"><i class="uil-arrow-to-right"></i></button> #}
+                                        <button class="variable badge btn-warning p-1 fs-6 fs-6" title="Flight Number" id="flightNumber">{% trans %}Flight Number{% endtrans %}</button>	
+                                        <button class="variable badge btn-warning p-1 fs-6 fs-6" title="Flight Hour" id="flightHour">{% trans %}Flight Time{% endtrans %}</button>	
+                                        <button class="variable badge btn-warning p-1 fs-6 fs-6" title="To Airport" id="toAirport">{% trans %}Airport{% endtrans %}</button>
                                     {% endif %}
                            
                                 </div>
