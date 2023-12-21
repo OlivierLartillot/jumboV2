@@ -32,7 +32,7 @@ class TextManager {
         "%MeetingPoint%" => "<u>Reception</u>",
         "%meetingAtPoint%" => "<u>at the reception</u>",
         "%flightNumber%" => "<u>CM109</u>", 
-        "%flyHour%" => "<u>14:00</u>",
+        "%flightHour%" => "<u>14:00</u>",
         "%toHotel%" => "<u>Hotel Riu Bambu</u>", 
         "%toAirport%" => "<u>Punta Cana International (PUJ)</u>",
         "%dayInLetter%" => "<u>monday</u>",

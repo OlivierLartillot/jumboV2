@@ -37,7 +37,7 @@
                                 {% endif %}
                                 {% if app.request.get('transfer') == 3 %}   
                                     <button class="variable btn btn-outline-warning fs-4" title="Flight Number" id="flightNumber"><i class="uil-plane-departure"></i></button>	
-                                    <button class="variable btn btn-outline-warning fs-4" title="Fly Hour" id="flyHour"><i class="uil-clock-ten"></i></button>	
+                                    <button class="variable btn btn-outline-warning fs-4" title="Flight Hour" id="flightHour"><i class="uil-clock-ten"></i></button>	
                                     <button class="variable btn btn-outline-warning fs-4" title="To Airport" id="toAirport"><i class="uil-arrow-to-right"></i></button>
 
                                 {% endif %}
@@ -173,7 +173,7 @@
                                     </div>
                                     <hr/>	
                                     <div>
-                                        <button class="btn btn-outline-warning fs-4"><i class="uil-clock-ten"></i></button> %flyHour%:
+                                        <button class="btn btn-outline-warning fs-4"><i class="uil-clock-ten"></i></button> %flightHour%:
                                         The flight time
                                         <p>Example: "10:00"</p>
                                     </div>

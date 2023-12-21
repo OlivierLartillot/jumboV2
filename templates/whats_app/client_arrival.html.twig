@@ -60,8 +60,9 @@
 
 {# {{ transferObject.customerCard.agency.language}} #}
 
+{# eg: fr #}
+{# {% set language = transferObject.customerCard.agency.language  %} 
 
-{% set language = transferObject.customerCard.agency.language  %} {# eg: fr #}
 {% if language == 'en' %}
     {% set date = transferObject.date|date('Y-m-d') %}
 {% else %}
@@ -69,7 +70,7 @@
 {% endif %}
 
 
-{% set textBrute =  transferObject.meetingPoint %}
+{% set textBrute =  transferObject.meetingPoint %} #}
 
 
 
