@@ -32,7 +32,9 @@
 
                                     {% if whatsAppMessage.typeTransfer == 1 %}
                                         <button class="variable btn btn-outline-primary fs-4" title="Meeting point" id="meetingPoint"><i class="uil-map-marker"></i></button>	
+                                        <button class="variable btn btn-outline-primary fs-4" title="Meeting at point" id="meetingAtPoint">...<i class="uil-map-marker"></i></button>	
                                         <button class="variable btn btn-outline-primary fs-4" title="Meeting Hour" id="meetingHour"><i class="uil-clock-ten"></i></button>	
+                                        <button class="variable btn btn-outline-primary fs-4 " title="Day in letter" id="dayInLetter"><i class="uil-calendar-alt"></i></button>	
                                     {% endif %}
                                     {% if whatsAppMessage.typeTransfer == 2 or whatsAppMessage.typeTransfer == 3 %}
                                         <button class="variable btn btn-outline-success fs-4" title="Pickup Number" id="pickupNumber"><i class="uil-bus-school"></i></button>	
@@ -52,7 +54,8 @@
                                 <div class="my-3">
                                     <button class="bbcode btn btn-outline-primary" id="bold">B</button>	
                                     <button class="bbcode btn btn-outline-primary" id="sourire">&#x1F600;</button>
-                                    <button class="bbcode btn btn-outline-primary" id="palmier">&#x1F334;</button>
+                                    <button class="bbcode btn btn-outline-primary" id="palmier">&#x1F334;</button>	
+                                    <button class="bbcode btn btn-outline-primary" id="sunglasses">&#x1F60E;</button>	
                                 </div>
 
                                 <textarea id="myTextarea" name="textArea" class="form-control" rows="10" required>{{ textForArea is defined ? textForArea: ''}}</textarea>

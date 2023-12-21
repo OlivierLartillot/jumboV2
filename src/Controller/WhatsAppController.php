@@ -6,6 +6,7 @@ use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
 use App\Repository\WhatsAppMessageRepository;
+use App\Services\DaysConversions;
 use App\Services\WhatsApp\TextManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +21,11 @@ class WhatsAppController extends AbstractController
                                     TransferInterHotelRepository $transferInterHotelRepository, 
                                     TransferDepartureRepository $transferDepartureRepository,
                                     WhatsAppMessageRepository $whatsAppMessageRepository,    
-                                    TextManager $textManager                           
+                                    TextManager $textManager,
+                                    DaysConversions $daysConversions                           
                                     ): Response
     {
+        
         /*arrival, interhotel, departure, */
         $arrival = false;
         switch ($natureTransfer) {
@@ -35,17 +38,22 @@ class WhatsAppController extends AbstractController
                 $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
                 $whatsAppLang = 'getWhatsApp'.$langue;
                 $meetingpointLang = 'get'.$langue;
-                $meetingPoint = $transferObject->getMeetingPoint()->$whatsAppLang();
-                if ($meetingPoint == null) {
-                    $meetingPoint = $transferObject->getMeetingPoint()->$meetingpointLang();
+                $meetingPointLower = strtolower($transferObject->getMeetingPoint()->$meetingpointLang());
+                $meetingPointUcfirst = ucfirst($transferObject->getMeetingPoint()->$meetingpointLang());
+                $meetingAtPoint = $transferObject->getMeetingPoint()->$whatsAppLang();
+                if ($meetingAtPoint == null) {
+                    $meetingAtPoint = $meetingPointLower;
                 }
+
+                $dayNumber =  $transferObject->getMeetingAt()->format('w');
+                $getDaysLang = 'getDays' . ucfirst($langue);
+                $dayInLetterLower = $daysConversions->getDays(strtoupper($langue), $dayNumber);
+                $dayInLetterUcfirst = ucfirst($daysConversions->getDays(strtoupper($langue), $dayNumber));
                 break;
             case 'interhotel':
                 $transferRepo = $transferInterHotelRepository;
                 $typeTransfer = 2;
                 $transferObject = $transferRepo->find($transferId);
-
-
 
                 break;
             case 'departure':
@@ -67,13 +75,19 @@ class WhatsAppController extends AbstractController
         // si il y a un whats app message on le transforme
         if ($whatsAppMessage) {
             $text =  $whatsAppMessage->getMessage();
-
-            $text = $textManager->replaceTags($text, 
-                                          ["<br>","<b>","</b>", "[:)]","[-!-]",], 
-                                        );   
+            $text = $textManager->replaceTags($text, $textManager->getConvertToWhatsApp());   
+            $text = $textManager->replaceTags($text, $textManager->getConvertSmileys());   
             // si c est arrivée
             if ($typeTransfer == 1) {
-                $text = $textManager->replaceTVariables($text, ["%client%" => $client, "%meetingHour%" => $meetingAt, "%meetingPoint%" => $meetingPoint]);
+                $text = $textManager->replaceVariables($text, [
+                    "%client%" => $client, 
+                    "%meetingHour%" => $meetingAt, 
+                    "%meetingPoint%" => $meetingPointLower, 
+                    "%MeetingPoint%" => $meetingPointUcfirst, 
+                    "%meetingAtPoint%" => $meetingAtPoint, 
+                    "%dayInLetter%" => $dayInLetterLower,
+                    "%DayInLetter%" => $dayInLetterUcfirst,
+                ]);
             } else if ($typeTransfer == 2) {// si c'est interhotel
 
             } else { // si c'est départ
