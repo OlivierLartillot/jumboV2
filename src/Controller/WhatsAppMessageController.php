@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\WhatsAppMessage;
 use App\Repository\WhatsAppMessageRepository;
+use App\Services\DaysConversions;
+use App\Services\WhatsApp\TextManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,36 +95,22 @@ class WhatsAppMessageController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_whats_app_message_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, WhatsAppMessage $whatsAppMessage, WhatsAppMessageRepository $whatsAppMessageRepository, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, WhatsAppMessage $whatsAppMessage, TextManager $textManager, EntityManagerInterface $entityManager): Response
     {
-        
+
+        // texte a  afficher dans le texteArea
         $textForArea = str_replace("<br>","\r\n", $whatsAppMessage->getMessage());
-        // est ce qu on affiche la zone pour choisir isDefault ?
-
-
-        $textForDiv = str_replace([
-            "%client%", "%meetingHour%", "%pickupHour%", "%pickupNumber%",  "%meetingPoint%", "%flightNumber%", "%flyHour%", "%toHotel%", "%toAirport%",
-            "[:)]", "[-!-]" 
-            ],["John Do", "10:00","12:00", "????" ,"At theatre" , "CM109", "14:00", "Hotel Riu Bambu", "Punta Cana International (PUJ)",
-            "&#x1F600;", "&#x1F334;"
-        ], $whatsAppMessage->getMessage());
-
+        // texte a afficher dans la div, Attention dans le deuxieme il faut utiliser la nouvelle valeur => $textForDiv !!! 
+        $textForDiv = $textManager->replaceVariables($whatsAppMessage->getMessage(), $textManager->getExampleVariables());
+        $textForDiv = $textManager->replaceTags($textForDiv, $textManager->getConvertSmileys());
 
         if ($request->get('submit') !== null  ) {
-
-
             // set uniquement le texte
             $text = $request->get('textArea');
-            $text = str_replace("\r\n","<br>", $text);
-            $text = str_replace("<script>","forbidden tag", $text);
-            $text = str_replace("</script>","forbidden tag", $text);
-            $text = str_replace("<input","forbidden tag", $text);
+            $text = $textManager->replaceTags($text, $textManager->getConvertToPhp());
             $whatsAppMessage->setMessage($text);
-
-            
             $entityManager->persist($whatsAppMessage);
             $entityManager->flush();
-            //dd($whatsAppMessage);
             return $this->redirectToRoute('app_whats_app_message_edit', [
                 'id' => $whatsAppMessage->getId(),
                 'whatsAppMessage' => $whatsAppMessage,

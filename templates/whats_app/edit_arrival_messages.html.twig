@@ -1,10 +1,12 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-        
 
+
+    <div>                
 
         <a href="{{ path('app_whats_app_message_index')}}" class="btn btn-secondary btn-sm">{% trans %}Back to message list{% endtrans %}</a>
         <div class="row mt-3">
+
             <div class="col">
                 <div class="card">
                     <div class="card-body">
@@ -26,13 +28,17 @@
                                 Language : {{language[whatsAppMessage.language]}} #}
 
                                 <div class="my-3 border border-light shadow p-1">
-                                <label for="variable-select">{% trans %}Insert variables in your message{% endtrans %}:</label><br>
+                                <label for="variable-select">{% trans %}Insert variables in your message{% endtrans %}:                                
+                                    <!-- Button Modal variables -->
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#myModalVariables"><i class="uil-question-circle fs-4 text-success"></i></a></label><br>
 
                                     <button class="variable btn btn-outline-dark fs-4" title="Client" id="client"><i class="uil-user-plus"></i></button>	
 
                                     {% if whatsAppMessage.typeTransfer == 1 %}
                                         <button class="variable btn btn-outline-primary fs-4" title="Meeting point" id="meetingPoint"><i class="uil-map-marker"></i></button>	
+                                        <button class="variable btn btn-outline-primary fs-4" title="Meeting at point" id="meetingAtPoint">...<i class="uil-map-marker"></i></button>	
                                         <button class="variable btn btn-outline-primary fs-4" title="Meeting Hour" id="meetingHour"><i class="uil-clock-ten"></i></button>	
+                                        <button class="variable btn btn-outline-primary fs-4 " title="Day in letter" id="dayInLetter"><i class="uil-calendar-alt"></i></button>	
                                     {% endif %}
                                     {% if whatsAppMessage.typeTransfer == 2 or whatsAppMessage.typeTransfer == 3 %}
                                         <button class="variable btn btn-outline-success fs-4" title="Pickup Number" id="pickupNumber"><i class="uil-bus-school"></i></button>	
@@ -43,7 +49,7 @@
                                     {% endif %}
                                     {% if whatsAppMessage.typeTransfer == 3 %}   
                                         <button class="variable btn btn-outline-warning fs-4" title="Flight Number" id="flightNumber"><i class="uil-plane-departure"></i></button>	
-                                        <button class="variable btn btn-outline-warning fs-4" title="Fly Hour" id="flyHour"><i class="uil-clock-ten"></i></button>
+                                        <button class="variable btn btn-outline-warning fs-4" title="Flight Hour" id="flightHour"><i class="uil-clock-ten"></i></button>
                                         <button class="variable btn btn-outline-warning fs-4" title="To Airport" id="toAirport"><i class="uil-arrow-to-right"></i></button>
                                     {% endif %}
                            
@@ -52,7 +58,10 @@
                                 <div class="my-3">
                                     <button class="bbcode btn btn-outline-primary" id="bold">B</button>	
                                     <button class="bbcode btn btn-outline-primary" id="sourire">&#x1F600;</button>
-                                    <button class="bbcode btn btn-outline-primary" id="palmier">&#x1F334;</button>
+                                    <button class="bbcode btn btn-outline-primary" id="palmier">&#x1F334;</button>	
+                                    <button class="bbcode btn btn-outline-primary" id="sunglasses">&#x1F60E;</button>	
+                                    <!-- Button Modal Bbcode -->
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#myModalBbcode"><i class="uil-question-circle fs-4 text-success"></i></a>
                                 </div>
 
                                 <textarea id="myTextarea" name="textArea" class="form-control" rows="10" required>{{ textForArea is defined ? textForArea: ''}}</textarea>
@@ -70,7 +79,8 @@
                             </div>
                         <div>
                             <hr>
-                            <h5>{% trans %}Example result{% endtrans %}:</h5>
+                            <h5>{% trans %}Example result{% endtrans %}: <a type="button" data-bs-toggle="modal" data-bs-target="#myModalExampleResult"><i class="uil-question-circle fs-4 text-success"></i></a></h5>
+                            
                             <div id="presentationtext" class="bg bg-light p-3 rounded border border-light shadow">
                                 {{ textForDiv|raw }}
                             </div>
@@ -79,6 +89,207 @@
                 </div>
             </div>
         </div>
+
+
+
+
+        <!-- sample modal Variables explications -->
+        <div id="myModalVariables" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Variables</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p>The variables you use will be replaced when you send the message on WhatsApp. You can view an example with the variables in English at the bottom of this page when you update the text.</p>
+                                    <p>
+                                        <u>Example:</u> 
+                                        <br>Good morning %client%. 
+                                        <br>will result in 
+                                        <br>Good morning John Doe.
+                                    </p>
+                                    
+                                    {% if whatsAppMessage.typeTransfer == 1 %}
+                                    <div>
+                                        <h6>Capitalize a variable</h6>
+                                        <p>To have the first letter capitalized in the variables <b>meetingHour</b> and <b>dayInLetter</b>, you can change the first letter of these variables as shown in the following example:</p>
+                                        <ul>
+                                            <li>%meetingHour% = reception</li>
+                                            <li>%MeetingHour% = Reception</li>
+                                            <li>%dayInLetter% = sunday</li>
+                                            <li>%DayInLetter% = Sunday</li>
+                                        </ul>
+                                        <p><i>*The difference is %<b><u>m</u></b>eetingHour% and %<b><u>M</u></b>eetingHour%</i></p>
+                                    </div>
+                                    <hr/>
+                                     {% endif %}
+                                    <div>
+                                        <h6>Client </h6>
+                                        <button class="btn btn-outline-dark fs-4"><i class="uil-user-plus"></i></button> %client%: your Client FullName
+                                        <p>Example: "John Do"</p>
+                                    </div>
+                                    <hr/>
+                                    {% if whatsAppMessage.typeTransfer == 1 %}
+                                    <div>
+                                        <h6>Meeting Point </h6>
+                                        <button class="btn btn-outline-primary fs-4"><i class="uil-map-marker"></i></button> %meetingPoint%: The meeting point
+                                        <p>Example: "Tour Desk"</p>
+                                    </div>
+                                    <hr/>
+                                    <div>
+                                        <h6>Meeting At Point</h6>
+                                        <button class="btn btn-outline-primary fs-4">...<i class="uil-map-marker"></i></button> %meetingAtPoint%:
+                                        The meeting point formatted by the administrator specifically for the WhatsApp message.
+                                        <p>Example: "at the Tour Desk"</p>
+                                    </div> 
+                                    <hr/>
+                                    <div>
+                                        <h6>Briefing Hour </h6>
+                                        <button class="btn btn-outline-primary fs-4"><i class="uil-clock-ten"></i></button> %meetingHour%:
+                                        The briefing hour
+                                        <p>Example: "10:00"</p>
+                                    </div> 
+                                    <hr/>
+                                    <div>
+                                        <h6>The day </h6>
+                                        <button class="btn btn-outline-primary fs-4"><i class="uil-calendar-alt"></i></button> %dayInLetter%:
+                                        The day
+                                        <p>Example: "Sunday"</p>
+                                    </div> 
+                                    {% endif %}
+
+                                    {% if whatsAppMessage.typeTransfer == 2 or whatsAppMessage.typeTransfer == 3%}
+                                    <div>
+                                        <h6>The Pickup Number </h6>
+                                        <button class="btn btn-outline-success fs-4"><i class="uil-bus-school"></i></button> %pickupNumber%:
+                                        The Pickup Number
+                                        <p>Example: "????"</p>
+                                    </div>	
+                                    <hr/>
+                                    <div>
+                                        <h6>The Pickup Hour </h6>
+                                        <button class="btn btn-outline-success fs-4"><i class="uil-clock-ten"></i></button> %pickupHour%: 
+                                        The Pickup Hour
+                                        <p>Example: "10:00"</p>
+                                    </div>	
+                                    <hr/>
+                                    {% endif %}
+                                    {% if whatsAppMessage.typeTransfer == 2 %}
+                                    <div>
+                                        <button class="btn btn-outline-success fs-4"><i class="uil-arrow-to-right"></i></button> %toHotel%:
+                                        Arrival hotel for your transfer
+                                        <p>Example: "Hotel Riu Bambu"</p>
+                                    </div>
+                                    {% endif %}
+                                    {% if whatsAppMessage.typeTransfer == 3 %}
+                                    <div>
+                                        <button class="btn btn-outline-warning fs-4"><i class="uil-plane-departure"></i></button> %flightNumber%:
+                                        The flight number
+                                        <p>Example: "AV0129"</p>
+                                    </div>	
+                                    <hr/>
+                                    <div>
+                                        <button class="btn btn-outline-warning fs-4"><i class="uil-clock-ten"></i></button> %flightHour%:
+                                        The flight time
+                                        <p>Example: "10:00"</p>
+                                    </div>
+                                    <hr/>
+                                    <div>
+                                        <button class="btn btn-outline-warning fs-4"><i class="uil-arrow-to-right"></i></button> %toAirport%:
+                                        Departure airport
+                                        <p>Example: "Punta Cana International (PUJ)"</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>          
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        
+        <!-- sample modal Bbcode explications -->
+        <div id="myModalBbcode" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Bbcode</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        <h6>Bold</h6>
+                                        <p>Be careful! There should be no space between the &lt;b&gt;&lt;/b&gt; tags and the text inside! In that case, the text will not be bold on WhatsApp.</p>
+                                        <ul>
+                                            <li>Good: &lt;b&gt;<b>It's bold</b>&lt;/b&gt;  </li>
+                                            <li>WhatsApp: *It's bold*</li>
+                                            <li>Bad: &lt;b&gt;It's not bold &lt;/b&gt;</li>
+                                            <li>WhatsApp: *It's not bold *</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h6>Do you want more emojis?</h6>
+                                        <p>You can directly copy the hexadecimal code that you can find on the internet !!!</p>
+                                        <p>Copy the hexadecimal code and paste it directly into the text box. &amp;#x1F44D might not look nice, but it works! Copy it, save the message, and you will see it appear in the 'Example Result' area.</p>
+                                        <ul>
+                                            <li>This hexadecimal code &amp;#x1F44D; will result in &#x1F44D;</li>
+                                            <li>&amp;#x1F680; => &#x1F680;</li>
+                                            <li>&amp;#x1F55B; => &#x1F55B;</li>
+                                        </ul>
+                                    </div>
+                                    <a href="https://crm-pour-pme.fr/liste-des-emojis.php" target="blank">You can find a list of emojis at this link.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+        <!-- sample modal Example Result explications -->
+        <div id="myModalExampleResult" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Example Result</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div>
+                                        The underlined variables will be replaced (and not underlined) by the actual information when the message is sent.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
 
         <!--********************** FOOTER **********************-->
 

@@ -6,6 +6,7 @@ use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
 use App\Repository\WhatsAppMessageRepository;
+use App\Services\DaysConversions;
 use App\Services\WhatsApp\TextManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,39 +21,53 @@ class WhatsAppController extends AbstractController
                                     TransferInterHotelRepository $transferInterHotelRepository, 
                                     TransferDepartureRepository $transferDepartureRepository,
                                     WhatsAppMessageRepository $whatsAppMessageRepository,    
-                                    TextManager $textManager                           
+                                    TextManager $textManager,
+                                    DaysConversions $daysConversions                           
                                     ): Response
     {
+        
         /*arrival, interhotel, departure, */
         $arrival = false;
+
+
+        
         switch ($natureTransfer) {
             case 'arrival':
                 $transferRepo = $transferArrivalRepository;
                 $arrival = true;
                 $typeTransfer = 1;
                 $transferObject = $transferRepo->find($transferId);
-                $meetingAt = $transferObject->getMeetingAt()->format('H:i');
                 $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
+                $meetingAt = $transferObject->getMeetingAt()->format('H:i');
                 $whatsAppLang = 'getWhatsApp'.$langue;
                 $meetingpointLang = 'get'.$langue;
-                $meetingPoint = $transferObject->getMeetingPoint()->$whatsAppLang();
-                if ($meetingPoint == null) {
-                    $meetingPoint = $transferObject->getMeetingPoint()->$meetingpointLang();
+                $meetingPointLower = strtolower($transferObject->getMeetingPoint()->$meetingpointLang());
+                $meetingPointUcfirst = ucfirst($transferObject->getMeetingPoint()->$meetingpointLang());
+                $meetingAtPoint = $transferObject->getMeetingPoint()->$whatsAppLang();
+                if ($meetingAtPoint == null) {
+                    $meetingAtPoint = $meetingPointLower;
                 }
+                $dayNumber =  $transferObject->getMeetingAt()->format('w');
+                $dayInLetterLower = $daysConversions->getDays(strtoupper($langue), $dayNumber);
+                $dayInLetterUcfirst = ucfirst($daysConversions->getDays(strtoupper($langue), $dayNumber));
                 break;
             case 'interhotel':
                 $transferRepo = $transferInterHotelRepository;
                 $typeTransfer = 2;
                 $transferObject = $transferRepo->find($transferId);
-
-
-
+                $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
+                $pickupHour = $transferObject->getPickUp()->format('H:i');
+                $hotel = $transferObject->getToArrival();
                 break;
             case 'departure':
                 $transferRepo = $transferDepartureRepository;
                 $typeTransfer = 3;
                 $transferObject = $transferRepo->find($transferId);
-
+                $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
+                $pickupHour = $transferObject->getPickUp()->format('H:i');
+                $airport = $transferObject->getToArrival();
+                $flightHour = $transferObject->getHour()->format('H:i');
+                $flightNumber = $transferObject->getFlightNumber();
                 break;
         }
         $client = ucwords($transferObject->getCustomerCard()->getHolder());
@@ -67,17 +82,33 @@ class WhatsAppController extends AbstractController
         // si il y a un whats app message on le transforme
         if ($whatsAppMessage) {
             $text =  $whatsAppMessage->getMessage();
-
-            $text = $textManager->replaceTags($text, 
-                                          ["<br>","<b>","</b>", "[:)]","[-!-]",], 
-                                        );   
+            $text = $textManager->replaceTags($text, $textManager->getConvertToWhatsApp());   
+            $text = $textManager->replaceTags($text, $textManager->getConvertSmileys());   
             // si c est arrivée
             if ($typeTransfer == 1) {
-                $text = $textManager->replaceTVariables($text, ["%client%" => $client, "%meetingHour%" => $meetingAt, "%meetingPoint%" => $meetingPoint]);
+                $text = $textManager->replaceVariables($text, [
+                    "%client%" => $client, 
+                    "%meetingHour%" => $meetingAt, 
+                    "%meetingPoint%" => $meetingPointLower, 
+                    "%MeetingPoint%" => $meetingPointUcfirst, 
+                    "%meetingAtPoint%" => $meetingAtPoint, 
+                    "%dayInLetter%" => $dayInLetterLower,
+                    "%DayInLetter%" => $dayInLetterUcfirst,
+                ]);
             } else if ($typeTransfer == 2) {// si c'est interhotel
-
+                $text = $textManager->replaceVariables($text, [ 
+                    "%client%" => $client,
+                    "%pickupHour%" => $pickupHour,
+                    "%toHotel%" => $hotel,
+                ]);
             } else { // si c'est départ
-
+                $text = $textManager->replaceVariables($text, [ 
+                    "%client%" => $client,
+                    "%pickupHour%" => $pickupHour,
+                    "%flightHour%" => $flightHour,
+                    "%flightNumber%" => $flightNumber,
+                    "%toAirport%" => $airport,
+                ]);
             }
 
         } else {
@@ -89,12 +120,12 @@ class WhatsAppController extends AbstractController
 
         
 
-        if ($arrival) {
+       
             return $this->render('whats_app/client_arrival.html.twig', [
                 'transferObject' =>  $transferObject,
                 'text' => $text,
             ]);
-        }
+        
 
         return $this->render('whats_app/client_interHotel_departure.html.twig', [
             'transferObject' =>  $transferObject,

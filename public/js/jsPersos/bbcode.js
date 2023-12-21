@@ -5,6 +5,7 @@ let bbCode = {
      tableauBbcode : {
          'sourire' :'[:)]',
          'palmier' :'[-!-]',
+         'sunglasses' : '[00]',
 
      }
     ,
@@ -15,9 +16,7 @@ let bbCode = {
         const bbCodeButtons = document.getElementsByClassName('bbcode');
         bbCodeButtons.forEach(bbCodeButton => {
             bbCodeButton.addEventListener('click', bbCode.handleChange);
-            
         });
-        
     },
 
      handleChange: function(event) {
