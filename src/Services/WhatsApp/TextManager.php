@@ -24,19 +24,19 @@ class TextManager {
 
     // conversion de base de donnée => zone de deescription en php
     private array $exampleVariables = [
-        "%client%" => "John Do" ,
-        "%meetingHour%" => "10:00",
-        "%pickupHour%" => "12:00", 
-        "%pickupNumber%" => "????",  
-        "%meetingPoint%" => "theatre",
-        "%MeetingPoint%" => "Theatre",
-        "%meetingAtPoint%" => "at theatre" ,
-        "%flightNumber%" => "CM109", 
-        "%flyHour%" => "14:00",
-        "%toHotel%" => "Hotel Riu Bambu", 
-        "%toAirport%" => "Punta Cana International (PUJ)",
-        "%dayInLetter%" => "monday",
-        "%DayInLetter%" => "Monday",
+        "%client%" => "<u>John Do</u>",
+        "%meetingHour%" => "<u>10:00</u>",
+        "%pickupHour%" => "<u>12:00</u>", 
+        "%pickupNumber%" => "<u>????</u>",  
+        "%meetingPoint%" => "<u>reception</u>",
+        "%MeetingPoint%" => "<u>Reception</u>",
+        "%meetingAtPoint%" => "<u>at the reception</u>",
+        "%flightNumber%" => "<u>CM109</u>", 
+        "%flyHour%" => "<u>14:00</u>",
+        "%toHotel%" => "<u>Hotel Riu Bambu</u>", 
+        "%toAirport%" => "<u>Punta Cana International (PUJ)</u>",
+        "%dayInLetter%" => "<u>monday</u>",
+        "%DayInLetter%" => "<u>Monday</u>",
     ];
 
     private array $convertSmileys = [
