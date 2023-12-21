@@ -20,7 +20,7 @@
                                     
                             <label for="variable-select">{% trans %}Insert variables in your message{% endtrans %}: <a type="button" data-bs-toggle="modal" data-bs-target="#myModalVariables"><i class="uil-question-circle fs-4 text-success"></i></a></label><br>
 
-                                <button class="variable badge btn-dark p-1 fs-6 mb-1" title="Client" id="client">{# <i class="uil-user-plus"></i> #}{% trans %}Client</button>	
+                                <button class="variable badge btn-dark p-1 fs-6 mb-1" title="Client" id="client">{# <i class="uil-user-plus"></i> #}{% trans %}Client{% endtrans %}</button>	
 
                                 {% if app.request.get('transfer') == 1 %}
 {#                                     <button class="variable btn btn-outline-primary fs-4" title="Meeting point" id="meetingPoint"><i class="uil-map-marker"></i></button>
