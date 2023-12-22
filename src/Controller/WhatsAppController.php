@@ -8,6 +8,7 @@ use App\Repository\TransferInterHotelRepository;
 use App\Repository\WhatsAppMessageRepository;
 use App\Services\DaysConversions;
 use App\Services\WhatsApp\TextManager;
+use App\Services\WhatsApp\TimeOfDay;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,23 +23,21 @@ class WhatsAppController extends AbstractController
                                     TransferDepartureRepository $transferDepartureRepository,
                                     WhatsAppMessageRepository $whatsAppMessageRepository,    
                                     TextManager $textManager,
-                                    DaysConversions $daysConversions                           
+                                    DaysConversions $daysConversions, TimeOfDay $timeOfDay                         
                                     ): Response
     {
         
-        /*arrival, interhotel, departure, */
-        $arrival = false;
+        $textTimeOfDay = false;
+        $meetingAtPoint = false;
 
-
-        
         switch ($natureTransfer) {
             case 'arrival':
                 $transferRepo = $transferArrivalRepository;
-                $arrival = true;
                 $typeTransfer = 1;
                 $transferObject = $transferRepo->find($transferId);
                 $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
                 $meetingAt = $transferObject->getMeetingAt()->format('H:i');
+                $textTimeOfDay = $timeOfDay->timeOfDay($transferObject->getMeetingAt()->format('H'), $langue) ;
                 $whatsAppLang = 'getWhatsApp'.$langue;
                 $meetingpointLang = 'get'.$langue;
                 $meetingPointLower = strtolower($transferObject->getMeetingPoint()->$meetingpointLang());
@@ -71,9 +70,8 @@ class WhatsAppController extends AbstractController
                 break;
         }
         $client = ucwords($transferObject->getCustomerCard()->getHolder());
-        
-        
 
+             
         $whatsAppMessage = $whatsAppMessageRepository->findOneBy([
             'user' => $this->getUser(),
             'typeTransfer' => $typeTransfer,
@@ -94,6 +92,8 @@ class WhatsAppController extends AbstractController
                     "%meetingAtPoint%" => $meetingAtPoint, 
                     "%dayInLetter%" => $dayInLetterLower,
                     "%DayInLetter%" => $dayInLetterUcfirst,
+                    "%timeOfDay%" => $textTimeOfDay,
+                
                 ]);
             } else if ($typeTransfer == 2) {// si c'est interhotel
                 $text = $textManager->replaceVariables($text, [ 
@@ -114,23 +114,15 @@ class WhatsAppController extends AbstractController
         } else {
             $text = false;
         }
-        // sinon on lui donne false
-//        dd($whatsAppMessage); 
-     
-
-        
-
        
             return $this->render('whats_app/client_arrival.html.twig', [
                 'transferObject' =>  $transferObject,
                 'text' => $text,
+                'natureTransfer' => $natureTransfer,
+                "textTimeOfDay" => $textTimeOfDay,
+                "meetingAtPoint" => $meetingAtPoint,
             ]);
         
-
-        return $this->render('whats_app/client_interHotel_departure.html.twig', [
-            'transferObject' =>  $transferObject,
-            'text' => $text,
-        ]);
     }
 
 
