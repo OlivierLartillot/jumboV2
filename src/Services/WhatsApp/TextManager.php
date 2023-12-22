@@ -24,7 +24,7 @@ class TextManager {
 
     // conversion de base de donnée => zone de deescription en php
     private array $exampleVariables = [
-        "%client%" => "<u>John Do</u>",
+        "%client%" => "<u>John Doe</u>",
         "%meetingHour%" => "<u>10:00</u>",
         "%pickupHour%" => "<u>12:00</u>", 
         "%pickupNumber%" => "<u>????</u>",  
@@ -37,6 +37,7 @@ class TextManager {
         "%toAirport%" => "<u>Punta Cana International (PUJ)</u>",
         "%dayInLetter%" => "<u>monday</u>",
         "%DayInLetter%" => "<u>Monday</u>",
+        "%timeOfDay%" => "<u>morning</u>",
     ];
 
     private array $convertSmileys = [

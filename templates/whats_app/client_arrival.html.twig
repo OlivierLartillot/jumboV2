@@ -45,23 +45,21 @@
 %}
 
 
-{% set trans_day_french = { 
-        "Monday": "Lundi", 
-        "Tuesday": "Mardi", 
-        "Wednesday": "Mercredi", 
-        "Thursday": "Jeudi", 
-        "Friday": "Vendredi", 
-        "Saturday": "Samedi", 
-        "Sunday": "Dimanche" 
+{% set trans_day = { 
+  'fr': ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+  'es': ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+  'en': ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  'it': ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"],
+  'po': ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"] 
     } 
 %}
 
 {# {{ dump(transferObject) }} #}
 
-{# {{ transferObject.customerCard.agency.language}} #}
+{{ transferObject.customerCard.agency.language}}
 
 {# eg: fr #}
-{# {% set language = transferObject.customerCard.agency.language  %} 
+{% set language = transferObject.customerCard.agency.language  %} 
 
 {% if language == 'en' %}
     {% set date = transferObject.date|date('Y-m-d') %}
@@ -70,22 +68,122 @@
 {% endif %}
 
 
-{% set textBrute =  transferObject.meetingPoint %} #}
 
 
+{% if text %}
 
-{# bonjour transferObject.staff #}
-    {# {{ textBrute|replace({'transferObject.staff': 'blablabalblb', 'hihih':'hahah'}) }} #}
 <div id="message">
 {{ text|raw }}
 </div>
+
+{% else %}
+
+    {% if natureTransfer == "arrival" %}
+
+        {% if language == 'fr' %}
+<div id="message">
+Bonjour {{transferObject.customerCard.holder|title}}! Bienvenue à Punta Cana! 🌴
+
+*Je suis {{ transferObject.staff }} votre représentant Jumbo Tours.*
+
+Vous pouvez me joindre à ce numéro en cas de besoin. 
+
+*N’oubliez pas notre rendez-vous de demain {% if textTimeOfDay %}{{textTimeOfDay}}{% endif %} ({{ trans_day[language][transferObject.date|date('w')] }}) à {{ transferObject.meetingAt|date('H:i') }} {% if meetingAtPoint %}{{meetingAtPoint}}{% else %}à la {{ transferObject.meetingPoint }}{% endif %} de l'hôtel* durant lequel je vous donnerai toutes les informations concernant votre séjour ( infos sur l’hôtel, sur le pays, horaire de retour, test PCR si besoin etc) 
+
+Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre retour*. Je vous demanderai donc s’il vous plaît de venir *munis de vos documents de voyage*.
+
+*A demain !*
+</div>
+        {% elseif language == 'es' %}
+<div id="message">
+¡Hola {{transferObject.customerCard.holder|title}}! ¡Bienvenido a Punta Cana! 🌴
+
+*Soy {{ transferObject.staff }}, tu representante de Jumbo Tours.*
+
+Puedes contactarme en este número en caso de necesitar ayuda.
+
+*No olvides nuestra cita de mañana {% if textTimeOfDay %}{{textTimeOfDay}}{% endif %} ({{ trans_day[language][transferObject.date|date('w')] }}) a las {{ transferObject.meetingAt|date('H:i') }} {% if meetingAtPoint %}{{meetingAtPoint}}{% else %}en {{ transferObject.meetingPoint }}{% endif %} del hotel*, durante la cual te proporcionaré toda la información sobre tu estancia (información sobre el hotel, sobre el país, horario de regreso, prueba PCR si es necesario, etc.).
+
+También aprovecharemos para planificar tus *excursiones* y *confirmar tu regreso*. Te pediré que vengas *con tus documentos de viaje*.
+
+*¡Hasta mañana!*
+</div>
+        {% elseif language == 'en' %}
+<div id="message">
+Hello {{transferObject.customerCard.holder|title}}! Welcome to Punta Cana! 🌴
+
+*I am {{ transferObject.staff }}, your Jumbo Tours representative.*
+
+You can reach me at this number in case you need assistance.
+
+*Don't forget our appointment tomorrow {% if textTimeOfDay %}{{textTimeOfDay}}{% endif %} ({{ trans_day[language][transferObject.date|date('w')] }}) at {{ transferObject.meetingAt|date('H:i') }} {% if meetingAtPoint %}{{meetingAtPoint}}{% else %}at the {{ transferObject.meetingPoint }}{% endif %} of the hotel*, during which I will provide you with all the information about your stay (hotel information, country information, return schedule, PCR test if necessary, etc.).
+
+We will also take the opportunity to plan your *excursions* and *confirm your return*. I will ask you to please come *with your travel documents*.
+
+*See you tomorrow!*
+</div>
+        {% elseif language == 'it' %}
+<div id="message">
+Ciao {{transferObject.customerCard.holder|title}}! Benvenuto a Punta Cana! 🌴
+
+*Sono {{ transferObject.staff }}, il tuo rappresentante di Jumbo Tours.*
+
+Puoi contattarmi a questo numero in caso di bisogno.
+
+*Non dimenticare il nostro appuntamento domani {% if textTimeOfDay %}{{textTimeOfDay}}{% endif %} ({{ trans_day[language][transferObject.date|date('w')] }}) alle {{ transferObject.meetingAt|date('H:i') }} {% if meetingAtPoint %}{{meetingAtPoint}}{% else %}presso il {{ transferObject.meetingPoint }}{% endif %} dell'hotel*, durante il quale ti fornirò tutte le informazioni sul tuo soggiorno (informazioni sull'hotel, informazioni sul paese, orario di ritorno, test PCR se necessario, ecc.).
+
+Ne approfitteremo anche per pianificare le tue *escursioni* e *confermare il tuo ritorno*. Ti chiederò quindi di venire *con i tuoi documenti di viaggio*.
+
+*A domani!*
+</div>
+        {% elseif language == 'po' %}
+<div id="message">
+Olá {{transferObject.customerCard.holder|title}}! Bem-vindo a Punta Cana! 🌴
+
+*Eu sou {{ transferObject.staff }}, seu representante da Jumbo Tours.*
+
+Você pode me contatar neste número caso precise de assistência.
+
+*Não se esqueça da nossa reunião amanhã {% if textTimeOfDay %}{{textTimeOfDay}}{% endif %} ({{ trans_day[language][transferObject.date|date('w')] }}) às {{ transferObject.meetingAt|date('H:i') }} {% if meetingAtPoint %}{{meetingAtPoint}}{% else %}no {{ transferObject.meetingPoint }}{% endif %} do hotel*, durante a qual fornecerei todas as informações sobre a sua estadia (informações sobre o hotel, informações sobre o país, horário de retorno, teste PCR se necessário, etc.).
+
+Aproveitaremos também para planejar suas *excursões* e *confirmar seu retorno*. Peço que venha *com seus documentos de viagem*.
+
+*Até amanhã!*
+</div>        
+        {% endif %}{# endif language #}
+
+    {% elseif natureTransfer == "interhotel" %}
+        {% if language == 'fr' %}
+<div id="message">
+COucou, tu es dans l'interHotel !!!
+</div>
+        {% elseif language == 'es' %}
+        {% elseif language == 'en' %}
+        {% elseif language == 'it' %}
+        {% elseif language == 'po' %}
+        {% endif %}{# endif language #}
+        
+    {% elseif natureTransfer == "departure" %}
+        {% if language == 'fr' %}
+<div id="message">
+COucou, tu es dans les départs !!!
+</div>
+        {% elseif language == 'es' %}
+        {% elseif language == 'en' %}
+        {% elseif language == 'it' %}
+        {% elseif language == 'po' %}
+        {% endif %}{# endif language #}
+    {% endif %}{# nature transfer #}
+{% endif %}{# endif text false #}
+
+    {# {{ textBrute|replace({'transferObject.staff': 'blablabalblb', 'hihih':'hahah'}) }} #}
 {# Salut! Bienvenue à Punta Cana! 🌴 
 
 *Je suis {{ transferObject.staff }} votre représentant Jumbo Tours.*
 
 Vous pouvez me joindre à ce numéro en cas de besoin. 
 
-*N’oubliez pas notre rendez-vous de demain matin ({{ trans_day_french[transferObject.date|date('l')] }})  à  {{ transferObject.meetingAt|date('H:i') }} à la {{ transferObject.meetingPoint }} de l'hôtel* durant lequel je vous donnerai toutes les informations concernant votre séjour ( infos sur l’hôtel, sur le pays, horaire de retour, test PCR si besoin etc) 
+*N’oubliez pas notre rendez-vous de demain matin ({{ trans_day_french[transferObject.date|date('w')] }})  à  {{ transferObject.meetingAt|date('H:i') }} à la {{ transferObject.meetingPoint }} de l'hôtel* durant lequel je vous donnerai toutes les informations concernant votre séjour ( infos sur l’hôtel, sur le pays, horaire de retour, test PCR si besoin etc) 
 
 Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre retour*. Je vous demanderai donc s’il vous plaît de venir *munis de vos documents de voyage*.
 
@@ -150,7 +248,7 @@ Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre re
             /* let phone = document.querySelector('#tel').textContent */
 
             console.log(message)
-             window.location.href = encodeURI('https://api.whatsapp.com/send?phone=&text=' + message); 
+        window.location.href = encodeURI('https://api.whatsapp.com/send?phone=&text=' + message); 
         </script>
 
     </body>
