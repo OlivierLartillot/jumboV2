@@ -29,6 +29,7 @@ class WhatsAppController extends AbstractController
         
         $textTimeOfDay = false;
         $meetingAtPoint = false;
+        $textVariableToDisplay = false;
 
         switch ($natureTransfer) {
             case 'arrival':
@@ -37,7 +38,7 @@ class WhatsAppController extends AbstractController
                 $transferObject = $transferRepo->find($transferId);
                 $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
                 $meetingAt = $transferObject->getMeetingAt()->format('H:i');
-                $textTimeOfDay = $timeOfDay->timeOfDay($transferObject->getMeetingAt()->format('H'), $langue) ;
+                $textTimeOfDay = $timeOfDay->timeOfDay($transferObject->getMeetingAt()->format('H'), $langue);
                 $whatsAppLang = 'getWhatsApp'.$langue;
                 $meetingpointLang = 'get'.$langue;
                 $meetingPointLower = strtolower($transferObject->getMeetingPoint()->$meetingpointLang());
@@ -67,6 +68,9 @@ class WhatsAppController extends AbstractController
                 $airport = $transferObject->getToArrival();
                 $flightHour = $transferObject->getHour()->format('H:i');
                 $flightNumber = $transferObject->getFlightNumber();
+                //
+                $textVariableToDisplay = $timeOfDay->textInterHotelDeparture($langue, $pickupHour );
+                
                 break;
         }
         $client = ucwords($transferObject->getCustomerCard()->getHolder());
@@ -108,6 +112,8 @@ class WhatsAppController extends AbstractController
                     "%flightHour%" => $flightHour,
                     "%flightNumber%" => $flightNumber,
                     "%toAirport%" => $airport,
+                    "textVariableToDisplay" => $textVariableToDisplay,
+
                 ]);
             }
 
@@ -121,6 +127,7 @@ class WhatsAppController extends AbstractController
                 'natureTransfer' => $natureTransfer,
                 "textTimeOfDay" => $textTimeOfDay,
                 "meetingAtPoint" => $meetingAtPoint,
+                "textVariableToDisplay" => $textVariableToDisplay
             ]);
         
     }

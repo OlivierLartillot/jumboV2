@@ -211,9 +211,10 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        
+        {% set explanationsTextArea = false %}
+        <div id="explanations">{{explanationsTextArea}}</div>
         <!-- sample modal Bbcode Explications -->
-        <div id="myModalBbcode" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+        <div id="myModalBbcode" class="modal fade" tabindex="-1" data-show="true" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -288,5 +289,13 @@
         <script src="/js/app.js"></script>
         <script src="/js/jsPersos/whatsApp/variableToInsert.js"></script>
         <script src="/js/jsPersos/bbcode.js"></script>
+        <script>
+            let test = document.getElementById('explanations').textContent;
+            console.log(test);
+            if (test) {
+                $(document).ready(function () {
+                $('#myModalBbcode').modal('show')});
+            }
+        </script>
 
     </body>
