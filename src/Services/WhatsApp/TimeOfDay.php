@@ -23,7 +23,9 @@ class TimeOfDay {
     
     /**
      * Renvoie le texte à afficher si c est le matin pour 
-     */
+     * !!! Le code est préparé pour que l'on puisse utiliser le message des bagagistes dans le message custom au besoin
+     * !!! changer le return en else {return $this->$getTextLangue();}
+     */ 
     public function textInterHotelDeparture($langue, $pickup,$natureTransfer, $toArrival, $isDefaultMessage=true) {
 
         $getTextBaseLangue = 'getTextBase'.$langue;
@@ -32,14 +34,14 @@ class TimeOfDay {
         $textBase = $this->$getTextBaseLangue($natureTransfer, $toArrival, $pickup);
         
         $hour = substr($pickup,0,2);
-        $textToDisplay = ($hour < 12) ? true : false;
+        $textToDisplay = ($hour > 12) ? true : false;
         
         if ($textToDisplay) {
             if ($isDefaultMessage) {
                 return $textBase . ' ' .$this->$getTextLangue();
-            } else {
-                return $this->$getTextLangue();
-            }
+            } 
+            return ; 
+            //else {return $this->$getTextLangue();}
         } else {
             if ($isDefaultMessage) {
                 return $textBase;
