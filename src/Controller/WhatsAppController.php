@@ -58,6 +58,9 @@ class WhatsAppController extends AbstractController
                 $langue = $transferObject->getCustomerCard()->getAgency()->getLanguage();
                 $pickupHour = $transferObject->getPickUp()->format('H:i');
                 $hotel = $transferObject->getToArrival();
+                $textTimeOfDay = $timeOfDay->timeOfDay($transferObject->getPickUp()->format('H'), $langue);
+                // texte a afficher
+                $textVariableToDisplay = $timeOfDay->textInterHotelDeparture($langue, $pickupHour,$natureTransfer,$hotel);
                 break;
             case 'departure':
                 $transferRepo = $transferDepartureRepository;
@@ -67,14 +70,13 @@ class WhatsAppController extends AbstractController
                 $pickupHour = $transferObject->getPickUp()->format('H:i');
                 $airport = $transferObject->getToArrival();
                 $flightHour = $transferObject->getHour()->format('H:i');
-                $flightNumber = $transferObject->getFlightNumber();
-                //
-                $textVariableToDisplay = $timeOfDay->textInterHotelDeparture($langue, $pickupHour );
-                
+                $flightNumber = strtoupper($transferObject->getFlightNumber());
+                $textTimeOfDay = $timeOfDay->timeOfDay($transferObject->getPickUp()->format('H'), $langue);
+                // texte a afficher
+                $textVariableToDisplay = $timeOfDay->textInterHotelDeparture($langue, $pickupHour,$natureTransfer,$airport);
                 break;
         }
         $client = ucwords($transferObject->getCustomerCard()->getHolder());
-
              
         $whatsAppMessage = $whatsAppMessageRepository->findOneBy([
             'user' => $this->getUser(),
@@ -97,14 +99,16 @@ class WhatsAppController extends AbstractController
                     "%dayInLetter%" => $dayInLetterLower,
                     "%DayInLetter%" => $dayInLetterUcfirst,
                     "%timeOfDay%" => $textTimeOfDay,
-                
                 ]);
             } else if ($typeTransfer == 2) {// si c'est interhotel
                 $text = $textManager->replaceVariables($text, [ 
                     "%client%" => $client,
                     "%pickupHour%" => $pickupHour,
                     "%toHotel%" => $hotel,
+                    "%timeOfDay%" => $textTimeOfDay,
                 ]);
+                $text .='
+                '. $timeOfDay->textInterHotelDeparture($langue, $pickupHour,$natureTransfer,$hotel, false);
             } else { // si c'est départ
                 $text = $textManager->replaceVariables($text, [ 
                     "%client%" => $client,
@@ -113,8 +117,10 @@ class WhatsAppController extends AbstractController
                     "%flightNumber%" => $flightNumber,
                     "%toAirport%" => $airport,
                     "textVariableToDisplay" => $textVariableToDisplay,
-
+                    "%timeOfDay%" => $textTimeOfDay,
                 ]);
+                $text .='
+                '. $timeOfDay->textInterHotelDeparture($langue, $pickupHour,$natureTransfer,$airport, false);
             }
 
         } else {
