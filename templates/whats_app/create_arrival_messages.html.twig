@@ -39,7 +39,7 @@
                                 {% if app.request.get('transfer') == 2 or app.request.get('transfer') == 3 %}
 {#                                     <button class="variable btn btn-outline-success fs-4" title="Pickup Number" id="pickupNumber"><i class="uil-bus-school"></i></button>	
                                     <button class="variable btn btn-outline-success fs-4" title="Pickup Hour" id="pickupHour"><i class="uil-clock-ten"></i></button> #}	
-                                    <button class="variable badge btn-success p-1 fs-6 fs-6" title="Pickup Number" id="pickupNumber">{% trans %}Pickup Number{% endtrans %}</button>	
+                                    {# <button class="variable badge btn-success p-1 fs-6 fs-6" title="Pickup Number" id="pickupNumber">{% trans %}Pickup Number{% endtrans %}</button> #}	
                                     <button class="variable badge btn-success p-1 fs-6 fs-6" title="Pickup Hour" id="pickupHour">{% trans %}Pickup Time{% endtrans %}</button>
                                 {% endif %}
                                 {% if app.request.get('transfer') == 2 %}   
@@ -156,14 +156,7 @@
                                     </div> 
                                     {% endif %}
 
-                                    {% if app.request.get('transfer') == 2 or app.request.get('transfer') == 3%}
-                                    <div>
-                                        <h6>The Pickup Number </h6>
-                                        <button class="btn btn-outline-success fs-4"><i class="uil-bus-school"></i></button> %pickupNumber%:
-                                        The Pickup Number
-                                        <p>Example: "????"</p>
-                                    </div>
-                                    <hr/>	
+                                    {% if app.request.get('transfer') == 2 or app.request.get('transfer') == 3%}	
                                     <div>
                                         <h6>The Pickup Hour </h6>
                                         <button class="btn btn-outline-success fs-4"><i class="uil-clock-ten"></i></button> %pickupHour%: 
