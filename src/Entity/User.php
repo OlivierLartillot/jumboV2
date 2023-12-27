@@ -73,6 +73,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WhatsAppMessage::class)]
     private Collection $whatsAppMessages;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?AirportHotel $airport = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -346,6 +349,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $whatsAppMessage->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAirport(): ?AirportHotel
+    {
+        return $this->airport;
+    }
+
+    public function setAirport(?AirportHotel $airport): static
+    {
+        $this->airport = $airport;
 
         return $this;
     }

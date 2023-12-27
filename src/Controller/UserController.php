@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserEditPasswordType;
 use App\Form\UserEditType;
 use App\Form\UserType;
+use App\Repository\AirportHotelRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class UserController extends AbstractController
     }
 
     #[Route('team-manager/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $hasher): Response
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $hasher, AirportHotelRepository $airportHotelRepository): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -58,8 +59,6 @@ class UserController extends AbstractController
                 $user->getPassword()
             );
             $user->setPassword($hashedPassword);
-   
-
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_list', [], Response::HTTP_SEE_OTHER);

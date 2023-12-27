@@ -155,6 +155,13 @@
                             <span>{% trans %}Clients Arrivals{% endtrans %}</span>
                         </a>
                     </li>
+                    
+                    <li>
+                        <a href="{{ path('app_user_airport_edit', {'id': app.user.id}) }}">
+                            <i class="uil-print"></i>
+                            <span>{% trans %}Default Airport{% endtrans %}</span>
+                        </a>
+                    </li>
                 {% endif %}
 
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_TRANSFERS" in app.user.roles)) %} 

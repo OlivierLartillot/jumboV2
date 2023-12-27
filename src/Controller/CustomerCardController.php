@@ -456,56 +456,6 @@ class CustomerCardController extends AbstractController
         ]);
     }
 
-
-    #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET'])]
-    public function airport(Request $request, TransferArrivalRepository $transferArrivalRepository, AirportHotelRepository $airportHotelRepository, StatusRepository $statusRepository): Response
-    {
-        
-        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
-        $status = $statusRepository->findAll();
-
-        //dd($request->query);
-        // si on a cliqué sur envoyé
-        if (count($request->query) > 0) {
-            $empty = true;
-            //on vérifie si on a envoyé au moins un élément de tri
-            foreach ($request->query as $param) {
-                if ($param != null) {
-                    $empty = false;
-                    break;
-                }
-                
-            }
-            // si y a au moins un élément envoyé au tri
-            if ($empty == false) { 
-                $date= htmlspecialchars($request->query->get('date'));
-                $date = new DateTimeImmutable($date);
-                $airport= trim(htmlspecialchars($request->query->get('airports')));
-                $flightNumber =  trim(htmlspecialchars($request->query->get('flightNumber')));
-                $voucherNumber =  trim(htmlspecialchars($request->query->get('voucherNumber')));
-                
-
-                $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
-                return $this->render('customer_card/airport.html.twig', [
-                    'results' => $results,
-                    'airports' => $airports,
-                    'airport' => $airport,
-                    'status' =>  $status
-                ]);                
-            }
-        }
-
-        $date = new DateTimeImmutable('now');
-        $results = $transferArrivalRepository->findBy(['date' => $date]);
-        return $this->render('customer_card/airport.html.twig', [
-            'results' => $results,
-            'airports' => $airports,
-            'status' =>  $status
-        ]);
-
-    }
-
-
     #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
     public function new(Request $request, 
                         CustomerCardRepository $customerCardRepository,

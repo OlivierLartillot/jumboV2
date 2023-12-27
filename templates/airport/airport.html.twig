@@ -27,9 +27,24 @@
                                     <div class="= mb-3">
                                     <label class="form-label">{% trans %}Search Airport{% endtrans %}</label>
                                         <select name="airports" class="form-select" id="airport" >
-                                            <option value="all" selected>All airports</option>
+                                            <option value="all">All airports</option>
                                             {% for airport in airports|sort((a, b) => a.name <=> b.name) %} 
-                                                <option value="{{ airport.id }}" {{ (app.request.query.get('airports') == airport.id ) ? 'selected' : '' }} >{{ airport }}  </option>
+                                                <option value="{{ airport.id }}" 
+                                                    {% if app.request.query.get('airports') is defined and app.request.query.get('airports') != null%}
+                                                        {% if (app.request.query.get('airports') == airport.id ) %}
+                                                            selected
+                                                        {% endif %}
+                                                    {% elseif app.user.airport is defined %}
+                                                    okokokokko
+                                                        {% if app.user.airport.id == airport.id %}
+                                                            selected
+                                                        {% endif %}
+                                                    {% else %}
+                                                        ''
+                                                    {% endif %}
+                                                
+                                                
+                                                 >{{ airport }} {{app.user.airport.id}} </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -56,13 +71,14 @@
 
                         </form>
 
-                        <div class="row mt-3">
 
-                            {% for result in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
+                         <div class="row mt-3">
+
+                            {% for transferArrival in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
 
                                 <div class="col-xl-4 col-sm-6">
                                     <div class="card">
-                                        {% if result.customerCard.staff is not null %}<div class="ribbon ribbon-top-right"><span>{{ result.customerCard.staff }}</span></div>{% endif %}
+                                        {% if transferArrival.staff is not null %}<div class="ribbon ribbon-top-right"><span>{{ transferArrival.staff }}</span></div>{% endif %}
                                         <div class="card-body">
                                             <div class="d-flex align-items-start">
                                                 <div class="d-none d-md-block flex-shrink-0 me-4">
@@ -75,38 +91,31 @@
                                                 <div class="flex-grow-1 align-self-center">
                                                     <div class="border-bottom pb-1">
                                                         <p class="text-muted">
-                                                            <i class="me-1">#</i> {{ result.customerCard.reservationNumber }}
+                                                            <i class="me-1">#</i> {{ transferArrival.customerCard.reservationNumber }}
                                                         </p>
-                                                        <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:result.customerCard.id}) }}" class="text-dark text-wrap">{{ result.customerCard.holder|title }}</a></h5>
+                                                        <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:transferArrival.customerCard.id}) }}" class="text-dark text-wrap">{{ transferArrival.customerCard.holder|title }}</a></h5>
                                                         <p>
-                                                        {% if result.customerCard.status == "No Show" %}
-                                                            <span class="badge rounded-pill bg-danger">{{ result.customerCard.status }}</span>
+                                                        {% if transferArrival.status == "No Show" %}
+                                                            <span class="badge rounded-pill bg-danger">{{ transferArrival.status }}</span>
                                                         {% else %}
-                                                            <span class="badge rounded-pill bg-success">{{ result.customerCard.status }}</span>
+                                                            <span class="badge rounded-pill bg-success">{{ transferArrival.status }}</span>
                                                         {% endif %}
 
-                                                        <form method="GET">
-                                                            <select name="changeStatus" class="form-select-perso text-light {% if result.customerCard.status == 'No Show' %} bg-danger {% else %} bg-success {% endif %} " id="changeStatus" aria-label="Floating label select example">                                                                
-                                                                {% for statu in status %}
-                                                                    <option value="{{ statu }}" {{ (result.customerCard.status == statu ) ? 'selected' : '' }} class="{% if statu == 'No Show' %} bg-danger {% else %} bg-success {% endif %} ">{{ statu }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                            <input type="submit">
-                                                        </form>
+
 
 
 
 
                                                         </p>
                                                         <p class="text-muted">
-                                                            {{ result.customerCard.agency|title }}
+                                                            {{ transferArrival.customerCard.agency|title }}
                                                         </p>
                                                     </div>
 
         
                                                     <div class="border-bottom mt-3 pt-1 pb-1">
                                                         <p>
-                                                            <i class="fas fa-hotel"></i> Arrival: {{ result.fromStart|title }} - {{ result.toArrival|title }}
+                                                            <i class="fas fa-hotel"></i> Arrival: {{ transferArrival.fromStart|title }} - {{ transferArrival.toArrival|title }}
                                                         </p>
                                                     </div>
 
@@ -114,18 +123,18 @@
                                                         <div class="col-4">
                                                             <div class="mt-3">
                                                                 <p class="text-muted mb-2">{% trans %}Adults{% endtrans %}</p>
-                                                                <h5 class="font-size-16 mb-0">{{ result.customerCard.adultsNumber }}</h5>
+                                                                <h5 class="font-size-16 mb-0">{{ transferArrival.adultsNumber }}</h5>
                                                             </div>
                                                         </div>
                                                         <div class="col-4">
                                                             <div class="mt-3">
                                                                 <p class="text-muted mb-2">{% trans %}Children{% endtrans %}</p>
-                                                                <h5 class="font-size-16 mb-0">{{ result.customerCard.childrenNumber }}</h5>
+                                                                <h5 class="font-size-16 mb-0">{{ transferArrival.childrenNumber }}</h5>
                                                             </div>
                                                         </div>                                                    
                                                         <div class="col-4">
                                                             <div class="mt-3">{% trans %}Babies{% endtrans %}</p>
-                                                                <h5 class="font-size-16 mb-0">{{ result.customerCard.babiesNumber }}</h5>
+                                                                <h5 class="font-size-16 mb-0">{{ transferArrival.babiesNumber }}</h5>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -135,19 +144,19 @@
                                                         <div class="col-4">
                                                             <div class="mt-3">
                                                                 <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
-                                                                <h5 class="font-size-16 mb-0">{{ result.date | date('d-m-Y') }}</h5>
+                                                                <h5 class="font-size-16 mb-0">{{ transferArrival.date | date('d-m-Y') }}</h5>
                                                             </div>
                                                         </div>
                                                     <div class="col-4">
                                                             <div class="mt-3">
                                                                 <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
-                                                                <h5 class="font-size-16 mb-0">{{ result.hour | date('h:i')}}</h5>
+                                                                <h5 class="font-size-16 mb-0">{{ transferArrival.hour | date('h:i')}}</h5>
                                                             </div>
                                                         </div>            
                                                         <div class="col-4">
                                                             <div class="mt-3">
                                                                 <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
-                                                                <h5 class="font-size-16 mb-0">{{ result.flightNumber }}</h5>
+                                                                <h5 class="font-size-16 mb-0">{{ transferArrival.flightNumber }}</h5>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -164,41 +173,6 @@
 
                         </div>
 
-                        <div class="">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Colored Bordered table</h4>
-                                    <p class="card-title-desc">Add <code>.table-bordered</code> for borders on all sides of 
-                                        the table and cells.</p>    
-                                    
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered border-primary mb-0">
-    
-                                            <thead class="bg-primary bg-gradient text-light border-end-light">
-                                                <tr>
-                                                    <th>{% trans %}Client{% endtrans %}</th>
-                                                    <th>{% trans %}Airport{% endtrans %}</th>
-                                                    <th>{% trans %}Flight Number{% endtrans %}</th>
-                                                    <th>{% trans %}Agency{% endtrans %}</th>
-                                                    <th>{% trans %}No Show / Go Show Airport{% endtrans %}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for result in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
-                                                <tr {{ (result.customerCard.status == 'No Show') ? 'class="text-danger"' : ''}} >
-                                                    <td>{{ result.customerCard.holder|title}}</td>
-                                                    <td>{{ result.fromStart|title}}</td>
-                                                    <td>{{ result.flightNumber }}</td>
-                                                    <td>{{ result.customerCard.agency|title}}</td>
-                                                    <td>{{ result.customerCard.status }}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div> <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
