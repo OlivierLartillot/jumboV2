@@ -88,7 +88,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
     {
             
         $requete = $this->createQueryBuilder('ta')
-                        ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'ta.customerCard = transferVehicleArrival.customerCard');
+                        ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'ta.customerCard = transferArrival.customerCard');
 
         $requete = $requete->andWhere('ta.date = :date')->setParameter('date', $date); 
         if ($airport != 'all') {
@@ -98,7 +98,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
         $requete = $requete->andWhere('ta.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
         }
         if ($voucherNumber != '') {
-            $requete = $requete->andWhere('transferVehicleArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
+            $requete = $requete->andWhere('transferArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
         }
         
         $requete = $requete->orderBy('ta.id', 'ASC')
@@ -508,7 +508,33 @@ class TransferArrivalRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @return TransferArrival[] , personnels AIRPORT
+     * Retourne un tableau d'arrivées du jour et de l'aéroport
+     */
+/*     public function arrivalsByDteAndAirport($date, $airport):array
+    { 
 
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-m-d");
+
+
+
+        return $this->createQueryBuilder('t')
+        ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+        ->select('customerCard.id')
+
+        ->andwhere('t.date < :dateInterHotel')
+        ->andWhere('t.date > :minusTwoMonth')
+        ->andwhere('t.staff = :staff')
+        ->setParameter('dateInterHotel', $dateInterHotel)
+        ->setParameter('minusTwoMonth', $MoinsUnMoiEtDemie)
+        ->setParameter('staff', $staff)
+        ->getQuery()
+        ->getResult()
+;
+
+    } */
 
 //    /**
 //     * @return TransferArrival[] Returns an array of TransferArrival objects

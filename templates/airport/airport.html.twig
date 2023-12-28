@@ -1,0 +1,323 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Minible', title: 'Client Cards'|trans}) }}
+
+
+        <form method="GET" class="mb-3">
+            <div class="row">
+                <div class="col-lg-3">
+                        {% set now = "now"|date("Y-m-d") %}
+                        <div class="mb-3">
+                            <label class="form-label">{% trans %}Search date{% endtrans %}</label>
+                            <input class="form-control" name="date" placeholder="Date" type="date" value="{{ (app.request.query.get('date') != '') ? app.request.query.get('date') : now }}" id="date">
+                        </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="= mb-3">
+                    <label class="form-label">{% trans %}Search Airport{% endtrans %}</label>
+                        <select name="airports" class="form-select" id="airport" >
+                            <option value="all">All airports</option>
+                            {% for airport in airports|sort((a, b) => a.name <=> b.name) %} 
+                                <option value="{{ airport.id }}" 
+                                    {% if app.request.query.get('airports') is defined and app.request.query.get('airports') != null %}
+                                        {% if (app.request.query.get('airports') == airport.id ) %}
+                                            selected
+                                        {% endif %}
+                                    {% elseif app.user.airport is defined %}
+                                        {% if app.user.airport.id == airport.id %}
+                                            selected
+                                        {% endif %}
+                                    {% else %}
+                                        ''
+                                    {% endif %}
+                                
+                                
+                                    >{{ airport }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {#  <div class="col-lg-3">
+                    <div class="= mb-3">
+                        <label for="flightNumber">{% trans %}Flight Number{% endtrans %}</label>
+                        <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Flight Numbers" value="{{ (app.request.query.get('flightNumber')) }}">
+                    </div>
+                </div> #}
+                {#
+                 <div class="col-lg-3">
+                    <div class="= mb-3">
+                        <label for="voucherNumber">{% trans %}Voucher Number{% endtrans %}</label>
+                        <input name="voucherNumber" type="text" class="form-control" id="voucherNumber" placeholder="Voucher Number" value="{{ (app.request.query.get('voucherNumber')) }}">
+                    </div>
+                </div> #}
+            </div>
+            <div class="row">
+                <div class="text-center text-md-start col-md-2 ">
+                    <input type="submit" class="btn btn-primary">
+                </div>
+
+            </div>
+
+        </form>
+        {# !!! tu si tu changes par exemple btn-outline-primary en btn-outline-success tu dois mettre a jour le js#}
+        <div class="d-flex flex-wrap">
+            {% for flightNumber in flightNumbers %}
+                    <button type="button" class="airport-flightNumber-btn btn btn-outline-primary mx-1 mb-2" id="{{ flightNumber }}">{{ flightNumber }}</button>
+            {% endfor %}
+        </div>
+
+
+
+    <div class="row mt-3">
+
+        {% for transferArrival in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
+
+        {%  set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
+        <div class="col-lg-4 d-none" data-group="{{ transferArrival.flightNumber }}">
+            <div class="card border {{ statusClass }}" data-group="group-{{ transferArrival.id }}">
+
+           
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row bd-highlight mb-3">
+                                
+                                <div class="me-2">
+                                    <i class="uil uil-arrow-circle-right"></i>
+                                </div>
+                                <div>
+                                    <p><a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> <b>{{ transferArrival.customerCard.holder|title }}</span></b> </a><br>
+                                       {{ transferArrival.hour|date('H:i') }} - {{ transferArrival.flightNumber }}  
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <div data-group="group-{{transferArrival.id}}" class="btn-current-status cursor currentStatus" class="text-end">
+                                    {# <a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> #}
+                                        {% if transferArrival.status|lower == "no show" %}
+                                            <span class="badge rounded-pill bg-danger" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
+                                        {% else %}
+                                            <span class="badge rounded-pill bg-success" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
+                                        {% endif %}
+                                    {# </a> #}
+                                </div>
+
+                                <div id="changeArea" class="d-none" data-group="group-{{transferArrival.id}}">
+                                    <form action="{{ path('app_customer_card_change_status', {id: transferArrival.id }) }}" method="POST">
+                                                
+                                        <div class="">
+                                            <div>
+                                                <select name="status" id="changeStatus" class="form-select" data-group="group-{{transferArrival.id}}">
+                                                    <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                    <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                    <option value="Go show (hotel)"   {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                    <option value="No Show"  {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                </select>
+                                            </div>
+                                            <div class="ms-2">
+                                                <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-check"></i></button>
+                                                <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-close"></i></button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                    <span id="transferArrivalId" data-group="group-{{transferArrival.id}}" class="d-none">{{ transferArrival.id }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }}  
+                        </div>{# 
+                            <div class="row mb-3">
+                            <div class="col-6 ps-4">
+                                <div class="mb-1">
+                                    Adultes: <b>{{ transferArrival.adultsNumber }}</b>
+                                </div>
+                                <div class="mb-1">
+                                    Children: <b>{{ transferArrival.childrenNumber }}</b>
+                                </div>
+                                <div class="mb-1">
+                                    Bébés: <b>{{ transferArrival.babiesNumber }}</b>
+                                </div>
+                            </div>
+                        </div> #}
+
+                        <div class="row justify-content-around">
+                            <div class="col-3">
+                                {# <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div> #}
+                                <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">   
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }}                             
+                                        {# {{ transferArrival.customerCard.reservationNumber }} #}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">                      
+                                <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                       {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleType|trans : '-') }}  
+                                    </span>
+                                </div>           
+                            </div>
+                            <div class="col-3 text-center">                      
+                                <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                       {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }}  
+                                    </span>
+                                </div>           
+                            </div>
+                            <div class="col-3 text-end">
+                                <div>
+                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : '-')}}
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+        {% endfor %}
+    </diV>
+
+
+        {# <div class="row mt-3">
+
+        {% for transferArrival in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
+
+            <div class="col-xl-4 col-sm-6 d-none" data-group="group-{{ transferArrival.flightNumber }}">
+                <div class="card">
+                    {% if transferArrival.staff is not null %}<div class="ribbon ribbon-top-right"><span>{{ transferArrival.staff }}</span></div>{% endif %}
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="d-none d-md-block flex-shrink-0 me-4">
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-soft-primary text-primary font-size-16 rounded-circle">
+                                        <i class="fas fa-id-card text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 align-self-center">
+                                <div class="border-bottom pb-1">
+                                    <p class="text-muted">
+                                        <i class="me-1">#</i> {{ transferArrival.customerCard.reservationNumber }}
+                                    </p>
+                                    <h5 class="text-truncate font-size-16 mb-1"><a href="{{ path('app_customer_card_show', {id:transferArrival.customerCard.id}) }}" class="text-dark text-wrap">{{ transferArrival.customerCard.holder|title }}</a></h5>
+                                    <p>
+                                    {% if transferArrival.status == "No Show" %}
+                                        <span class="badge rounded-pill bg-danger">{{ transferArrival.status }}</span>
+                                    {% else %}
+                                        <span class="badge rounded-pill bg-success">{{ transferArrival.status }}</span>
+                                    {% endif %}
+
+                                    </p>
+                                    <p class="text-muted">
+                                        {{ transferArrival.customerCard.agency|title }}
+                                    </p>
+                                </div>
+
+
+                                <div class="border-bottom mt-3 pt-1 pb-1">
+                                    <p>
+                                        <i class="fas fa-hotel"></i> Arrival: {{ transferArrival.fromStart|title }} - {{ transferArrival.toArrival|title }}
+                                    </p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">{% trans %}Adults{% endtrans %}</p>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.adultsNumber }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">{% trans %}Children{% endtrans %}</p>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.childrenNumber }}</h5>
+                                        </div>
+                                    </div>                                                    
+                                    <div class="col-4">
+                                        <div class="mt-3">{% trans %}Babies{% endtrans %}</p>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.babiesNumber }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3 p-3 shadow-lg border border-1 border-primary rounded">
+                                    <h6><i class="mdi mdi-airplane-landing"></i> Arrival</h6>
+                                    <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">{% trans %}Date{% endtrans %}</p>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.date | date('d-m-Y') }}</h5>
+                                        </div>
+                                    </div>
+                                <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">{% trans %}Hour{% endtrans %}</p>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.hour | date('h:i')}}</h5>
+                                        </div>
+                                    </div>            
+                                    <div class="col-4">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">{% trans %}Flight{% endtrans %} #</p>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.flightNumber }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+
+        </div> #}
+
+    </div> <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+
+
+
+
+
+                    {# {{ include('partials/footer-regroupement.html.twig') }} #}
+                    <!--******************** footer ********************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        {# <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> #}
+        {#  <script src="/js/pages/dashboard.init.js"></script> #}
+       
+
+        <!-- App js --> 
+        <script src="/js/app.js"></script>
+
+        <script src="/js/jsPersos/changementStatusSelectAjax.js"></script>
+        <script src="/js/jsPersos/airportCheckbox.js"></script>
+
+    </body>
+
+</html>
