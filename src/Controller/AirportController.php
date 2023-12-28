@@ -8,6 +8,7 @@ use App\Repository\AirportHotelRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\UserRepository;
+use App\Services\DefineQueryDate;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,11 +20,23 @@ class AirportController extends AbstractController
 {
 
     #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET'])]
-    public function airport(Request $request, TransferArrivalRepository $transferArrivalRepository, AirportHotelRepository $airportHotelRepository, StatusRepository $statusRepository): Response
+    public function airport(Request $request, 
+                            TransferArrivalRepository $transferArrivalRepository, 
+                            AirportHotelRepository $airportHotelRepository, 
+                            StatusRepository $statusRepository,
+                            DefineQueryDate $defineQueryDate): Response
     {
 
         $airports = $airportHotelRepository->findBy(['isAirport' => true]);
         $status = $statusRepository->findAll();
+
+        
+        // récupère tous les arrivées du jour et de l'aéroport par défaut
+        $day =  $defineQueryDate->returnDay($request);
+
+        $date = new DateTimeImmutable($day);
+        $defaultAirport = $this->getUser()->getAirport();
+        $flightNumbers = [];
 
         //dd($request->query);
         // si on a cliqué sur envoyé
@@ -47,21 +60,37 @@ class AirportController extends AbstractController
                 
 
                 $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
+                foreach ($results as $arrival) {
+                    if (!in_array($arrival->getFlightNumber(), $flightNumbers)) {
+                        $flightNumbers[] = $arrival->getFlightNumber();
+                    }
+                }
                 return $this->render('airport/airport.html.twig', [
                     'results' => $results,
                     'airports' => $airports,
                     'airport' => $airport,
-                    'status' =>  $status
+                    'status' =>  $status,
+                    'flightNumbers' => $flightNumbers
                 ]);                
             }
         }
 
         $date = new DateTimeImmutable('now');
-        $results = $transferArrivalRepository->findBy(['date' => $date]);
+        $results = $transferArrivalRepository->findBy([
+            'date' => $date,
+            'fromStart' =>  $defaultAirport
+        ]);
+        foreach ($results as $arrival) {
+            if (!in_array($arrival->getFlightNumber(), $flightNumbers)) {
+                $flightNumbers[] = $arrival->getFlightNumber();
+            }
+        }
+
         return $this->render('airport/airport.html.twig', [
             'results' => $results,
             'airports' => $airports,
-            'status' =>  $status
+            'status' =>  $status,
+            'flightNumbers' => $flightNumbers
         ]);
 
     }

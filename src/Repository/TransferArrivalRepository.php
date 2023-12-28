@@ -508,7 +508,33 @@ class TransferArrivalRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @return TransferArrival[] , personnels AIRPORT
+     * Retourne un tableau d'arrivées du jour et de l'aéroport
+     */
+/*     public function arrivalsByDteAndAirport($date, $airport):array
+    { 
 
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-m-d");
+
+
+
+        return $this->createQueryBuilder('t')
+        ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+        ->select('customerCard.id')
+
+        ->andwhere('t.date < :dateInterHotel')
+        ->andWhere('t.date > :minusTwoMonth')
+        ->andwhere('t.staff = :staff')
+        ->setParameter('dateInterHotel', $dateInterHotel)
+        ->setParameter('minusTwoMonth', $MoinsUnMoiEtDemie)
+        ->setParameter('staff', $staff)
+        ->getQuery()
+        ->getResult()
+;
+
+    } */
 
 //    /**
 //     * @return TransferArrival[] Returns an array of TransferArrival objects
