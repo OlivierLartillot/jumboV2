@@ -18,7 +18,10 @@ use App\Repository\MeetingPointRepository;
 use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferDepartureRepository;
+use App\Repository\TransferInterHotelRepository;
 use App\Repository\TransferVehicleArrivalRepository;
+use App\Repository\TransportCompanyRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -194,6 +197,7 @@ class CustomerCardController extends AbstractController
     { 
      
         $users = $userRepository->findBy([],['username' => 'ASC']);
+        $rep = false;
         $reps = [];
         foreach ($users as $user) {
             if (in_array("ROLE_REP", $user->getRoles() )) {
@@ -219,11 +223,11 @@ class CustomerCardController extends AbstractController
             if ($empty == false) {
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
-                $rep = $request->query->get('reps');
+                $rep = ($request->query->get('reps') != "all") ? $userRepository->find($request->query->get('reps')) : "all";    
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-            $dateStart = $dateStart->format('Y-m-d');
+            $dateStart = $dateStart->format('Y-m-01');
             $dateEnd = new DateTimeImmutable('now');
             $dateEnd = $dateEnd->format('Y-m-d');
             $rep="all";
@@ -291,6 +295,7 @@ class CustomerCardController extends AbstractController
 
         return $this->render('customer_card/calcul_pax_rep.html.twig', [
             'reps' => $reps,
+            'rep' => $rep,
             'results' => $results,
             'tabDetailsRep' => $tabDetails
         ]); 
@@ -326,7 +331,7 @@ class CustomerCardController extends AbstractController
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-            $dateStart = $dateStart->format('Y-m-d');
+            $dateStart = $dateStart->format('Y-m-01');
             $dateEnd = new DateTimeImmutable('now');
             $dateEnd = $dateEnd->format('Y-m-d');
         }
@@ -363,32 +368,16 @@ class CustomerCardController extends AbstractController
     #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
     public function transportationManagement(Request $request, 
                                              TransferVehicleArrivalRepository $transferVehicleArrivalRepository, 
-                                             CustomerCardRepository $customerCardRepository, 
-                                             UserRepository $userRepository): Response
+                                             TransferInterHotelRepository $transferInterHotelRepository, 
+                                             TransferDepartureRepository $transferDepartureRepository, 
+                                             TransportCompanyRepository $transportCompanyRepository,
+                                            ): Response
     {
 
         // TODO refaire les compagnies a partir du repos vehicleArrival
 
-        $transportCompaniesArr = $transferVehicleArrivalRepository->transportCompanyList();
-/*         $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
-        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyLis t();*/
-
-        $transportCompanies = [];
-        foreach ($transportCompaniesArr as $company) {
-            if (!in_Array($company, $transportCompanies) ) {
-                $transportCompanies[] = $company ;
-            }
-        }
-        foreach ($transportCompaniesInt as $company) {
-            if (!in_Array($company, $transportCompanies) ) {
-                $transportCompanies[] = $company ;
-            }
-        }
-        foreach ($transportCompaniesDep as $company) {
-            if (!in_Array($company, $transportCompanies) ) {
-                $transportCompanies[] = $company ;
-            }
-        }
+        $companies = $transportCompanyRepository->findBy([],['name' => 'ASC']);
+      
 
         // si on recoit le formulaire
         // si on a cliqué sur envoyé
@@ -407,49 +396,66 @@ class CustomerCardController extends AbstractController
                 // todo  : alors on peut récupérer les données et les filtrer
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
-                $company= $request->query->get('company');
+                $company = ($request->query->get('company') != 'all') 
+                            ? $transportCompanyRepository->findOneBy(['name' => $request->query->get('company')]) 
+                            : $request->query->get('company')
+                            ;    
             } 
         } else {
                 $dateStart = new DateTime();
-                $dateStart = $dateStart->format('Y-m-d');
+                $dateStart = $dateStart->format('Y-m-01');
                 $dateEnd = new DateTime();
                 $dateEnd = $dateEnd->format('Y-m-d');
                 $company="all";
         }
 
+        $transferVehicleArrivals = $transferVehicleArrivalRepository->findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company);
+        $transferInterHotels = $transferInterHotelRepository->findInterHotelsBydatesAndCompanies($dateStart, $dateEnd, $company);
+        $transferDepartures = $transferDepartureRepository->findDeparturesBydatesAndCompanies($dateStart, $dateEnd, $company); 
 
-        $transferArrivals = $transferVehicleArrivalRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
-        $transferInterHotels = $transferVehicleInterHotelRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
-        $transferDepartures = $transferVehicleDepartureRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
-
-        $results = [];
+        $allTransfers = [];
         $adultsNumber = 0;
         $childrenNumber = 0;
         $babiesNumber = 0;
 
-        foreach ($transferArrivals as $transferArrival) {
-            $results[] = $transferArrival; 
-            $adultsNumber +=  $transferArrival->getCustomerCard()->getAdultsNumber();
-            $childrenNumber +=  $transferArrival->getCustomerCard()->getChildrenNumber();
-            $babiesNumber +=  $transferArrival->getCustomerCard()->getBabiesNumber();
+        $iKey = 0;
+        foreach ($transferVehicleArrivals as $transferVehicleArrival) {
+            $allTransfers[$iKey]['object'] = $transferVehicleArrival;
+            $allTransfers[$iKey]['instance'] = 'arrival';
+            $allTransfers[$iKey]['date'] = $transferVehicleArrival->getDate()->format('Y-m-d');
+            $allTransfers[$iKey]['hour'] = $transferVehicleArrival->getDate()->format('H:i');
+            $adultsNumber +=  $transferVehicleArrival->getTransferArrival()->getAdultsNumber();
+            $childrenNumber +=  $transferVehicleArrival->getTransferArrival()->getChildrenNumber();
+            $babiesNumber +=  $transferVehicleArrival->getTransferArrival()->getBabiesNumber();
+            $iKey++;
         }
-        foreach ($transferInterHotels as $transferInterHotel) {
-            $results[] = $transferInterHotel;
-            $adultsNumber += $transferInterHotel->getCustomerCard()->getAdultsNumber();
-            $childrenNumber += $transferInterHotel->getCustomerCard()->getChildrenNumber();
-            $babiesNumber += $transferInterHotel->getCustomerCard()->getBabiesNumber();
 
+        //dd($allTransfers);
+        foreach ($transferInterHotels as $transferInterHotel) {
+            $allTransfers[$iKey]['object'] = $transferInterHotel;
+            $allTransfers[$iKey]['instance'] = 'interhotel';
+            $allTransfers[$iKey]['date'] = $transferInterHotel->getDate()->format('Y-m-d');
+            $allTransfers[$iKey]['hour'] = $transferInterHotel->getPickUp()->format(('H:i'));
+            $adultsNumber += $transferInterHotel->getAdultsNumber();
+            $childrenNumber += $transferInterHotel->getChildrenNumber();
+            $babiesNumber += $transferInterHotel->getBabiesNumber();
+            $iKey++;
         }
         foreach ($transferDepartures as $transferDeparture) {
-            $results[] = $transferDeparture; 
-            $adultsNumber += $transferDeparture->getCustomerCard()->getAdultsNumber();
-            $childrenNumber += $transferDeparture->getCustomerCard()->getChildrenNumber();
-            $babiesNumber += $transferDeparture->getCustomerCard()->getBabiesNumber();
-        }
+            $allTransfers[$iKey]['object'] = $transferDeparture;
+            $allTransfers[$iKey]['instance'] = 'departure';
+            $allTransfers[$iKey]['date'] = $transferDeparture->getDate()->format('Y-m-d');
+            $allTransfers[$iKey]['hour'] = $transferDeparture->getPickUp()->format('H:i');
+            $adultsNumber += $transferDeparture->getAdultsNumber();
+            $childrenNumber += $transferDeparture->getChildrenNumber();
+            $babiesNumber += $transferDeparture->getBabiesNumber();
+            $iKey++;
+        } 
 
         return $this->render('customer_card/transportation_management.html.twig', [
-            'transportCompanies' => $transportCompanies,
-            'results' => $results,
+            'transportCompanies' => $companies,
+            'allTransfers' => $allTransfers,
+            'transferVehicleArrivals' => $transferVehicleArrivals,
             'adultsNumber' => $adultsNumber,
             'childrenNumber' => $childrenNumber,
             'babiesNumber' => $babiesNumber

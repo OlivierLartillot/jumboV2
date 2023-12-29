@@ -140,7 +140,37 @@ class TransferDepartureRepository extends ServiceEntityRepository
                     ->getResult()
         ;
     }
+    
+    /**
+     * @return TransferDeparture[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
+     * Attribution des représentants
+     */
+    public function findDeparturesBydatesAndCompanies($dateStart, $dateEnd, $company): array
+    {
 
+        $dateStart = new DateTimeImmutable($dateStart);
+        $dateEnd = new DateTimeImmutable($dateEnd);
+
+        $requete = $this->createQueryBuilder('t')
+            ->andWhere('t.date >= :dateStart and t.date <= :dateEnd')
+            ->setParameter('dateStart', $dateStart->format('Y-m-d 00:00:00'))
+            ->setParameter('dateEnd', $dateEnd->format('Y-m-d 23:59:59'));
+
+        if ($company != 'all') {
+            $requete = $requete
+            ->andWhere('t.transportCompany = :company') 
+            ->setParameter('company', $company);
+
+        }
+
+        $requete = $requete
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $requete;
+
+    }
 //    public function findOneBySomeField($value): ?TransferDeparture
 //    {
 //        return $this->createQueryBuilder('t')

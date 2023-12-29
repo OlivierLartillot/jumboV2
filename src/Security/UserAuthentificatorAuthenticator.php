@@ -52,12 +52,9 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $this->userRepository->findOneBy([
             'username' => $request->request->get('username', '') 
-
         ]);
 
         $request->getSession()->set('_locale', $user->getLanguage());
-
-
 
         if ($user->isDeactivate()) {
             return new RedirectResponse($this->urlGenerator->generate('app_logout'));
@@ -66,7 +63,11 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
         // For example:
         if ((in_array('ROLE_HULK', $user->getRoles())) or (in_array('ROLE_SUPERMAN', $user->getRoles())) or (in_array('ROLE_AIRPORT_SUPERVISOR', $user->getRoles())) ) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
-        }
+        } elseif (in_array('ROLE_AIRPORT', $user->getRoles())){
+            return new RedirectResponse($this->urlGenerator->generate('app_customer_card_airport'));
+        } elseif (in_array('ROLE_REP', $user->getRoles())){
+            return new RedirectResponse($this->urlGenerator->generate('app_admin_rep_replist'));
+        } 
         return new RedirectResponse($this->urlGenerator->generate('app_customer_card_index'));
         
     }

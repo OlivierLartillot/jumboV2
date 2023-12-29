@@ -151,14 +151,14 @@
 
                     <li>
                         <a href="{{ path('app_customer_card_airport') }}">
-                            <i class="uil-print"></i>
+                            <i class="uil-plane-arrival"></i>
                             <span>{% trans %}Clients Arrivals{% endtrans %}</span>
                         </a>
                     </li>
                     
                     <li>
                         <a href="{{ path('app_user_airport_edit', {'id': app.user.id}) }}">
-                            <i class="uil-print"></i>
+                            <i class="uil-plane-departure"></i>
                             <span>{% trans %}Default Airport{% endtrans %}</span>
                         </a>
                     </li>
@@ -168,7 +168,7 @@
                     <li class="menu-title">{% trans %}Accounting{% endtrans %}</li>
 
                     <li>
-                        <a href="{{ path('app_customer_card_transportation_management', {'id': 1 }) }}">
+                        <a href="{{ path('app_customer_card_transportation_management') }}">
                             <i class="uil-bus"></i>
                             <span>{% trans %}Transfer calculation{% endtrans %}</span>
                         </a>

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\TransferVehicleArrival;
+use App\Entity\TransportCompany;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,21 +40,6 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    /**
-     * @return TransferJoan[] Returns an array of distinct transport_company  
-     */
-    public function transportCompanyList(): array
-    {
-
-        return $this->createQueryBuilder('t')
-            ->select('t.transportCompany')->distinct()
-            ->orderBy('t.transportCompany', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
 
 
 
@@ -98,10 +84,10 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
     } */
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
-     * Attribution des représentants
+     * @return TransferVehicleArrival[] Returns an array 
+     * 
      */
-        public function findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company): array
+        public function findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company): array
     {
 
         $dateStart = new DateTimeImmutable($dateStart);
@@ -114,10 +100,8 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
 
         if ($company != 'all') {
             $requete = $requete
-                ->andWhere('ta.transportCompany = :company') 
-            ->setParameter('company', $company)
-                
-                ;
+            ->andWhere('ta.transportCompany = :company') 
+            ->setParameter('company', $company);
 
         }
 

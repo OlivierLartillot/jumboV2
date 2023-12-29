@@ -48,9 +48,10 @@
                             <form method="GET">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     {% set now = "now"|date("Y-m-d") %}
+                                    {% set firstDay = "now"|date("Y-m-01") %}
                                     <div class="col-md-3 mb-3">
                                         {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
-                                        <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
+                                        <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : firstDay }}" id="dateStart">
                                         <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
                                     </div>
                                 

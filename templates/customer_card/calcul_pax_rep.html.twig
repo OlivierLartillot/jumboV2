@@ -18,6 +18,43 @@
 
         {{ include('partials/head-css.html.twig') }}
 
+
+    <style>
+         .just-for-print {
+            display: none;
+         }
+            @page{
+                margin: 2cm 1.5cm;
+            }
+        @media print{
+            /* Je cache le header footer*/
+            .menu,
+            .footer, .no-print{display:none}
+            /* je supprime le fond  et je change la couleur de police */
+            #background{
+                background-image :  none; 
+                color:#000;  
+                display:inline-block;
+            }
+            .just-for-print {
+                display:block;
+            }
+            /* Je supprimme les bordures */
+            p{border:0;}
+            .table-responsive {
+                width:100%;
+                margin:auto;
+            }
+
+        }
+    </style> 
+
+
+
+
+
+
+
     </head>
 
     {{ include('partials/body.html.twig') }}
@@ -41,16 +78,17 @@
     {#     NB: "No Show" status must be called exactly like this to retrieve user pax unless they are no show. The Admin can check this in in "general settings->clients Status" #}     
 
     <form method="GET">
-        <div class="row">
+        <div class="row no-print">
             {% set now = "now"|date("Y-m-d") %}
+            {% set firstDay = "now"|date("Y-m-01") %}
             <div class="col-md-3">
                 {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
-                <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : now }}" id="dateStart">
+                <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : firstDay }}" id="dateStart">
                 <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
             </div>
         </div>
 
-        <div class="row">
+        <div class="row no-print">
             <div class="col-md-2">
                 <div class="form-floating mb-3">
                     <select name="reps" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
@@ -76,6 +114,22 @@
         <div class="card">
             <div class="card-body">
                     
+
+                <div class="text-center my-3 no-print">
+                    <form>
+                        <input class="btn btn-success .btn-soft-success  waves-effect waves-light btn-sm" id="impression" name="impression" type="button" onclick="imprimer_page()" value="{% trans %}Print{% endtrans %}" />
+                    </form>
+                </div>
+                <div class="text-center my-3  just-for-print">
+
+                    From: {{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart')|date('d-m-Y') : now|date('d-m-Y') }}  To:{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd')|date('d-m-Y') : now|date('d-m-Y') }}
+                </div>
+               
+
+                {% if ( (app.request.get('reps') is defined) and (app.request.get('reps') != 'all') and (app.request.get('reps') is not null) ) %}
+                    <h3 class="ms-3 mb-3">{{ rep }}</h3>
+                {% endif %}
+
                 <div class="table-responsive">
                     <table class="table table-bordered border-primary mb-0 text-center">
 
@@ -361,6 +415,12 @@
 
         <!-- App js -->
         <script src="/js/app.js"></script>
+
+        <script type="text/javascript">
+              function imprimer_page(){
+              window.print();
+              }
+        </script>
 
     </body>
 </html>
