@@ -61,8 +61,9 @@ class AirportController extends AbstractController
 
                 $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
                 foreach ($results as $arrival) {
-                    if (!in_array($arrival->getFlightNumber(), $flightNumbers)) {
-                        $flightNumbers[] = $arrival->getFlightNumber();
+                    $flightNumber = strtoupper($arrival->getFlightNumber());
+                    if (!in_array($flightNumber, $flightNumbers)) {
+                        $flightNumbers[] = $flightNumber;
                     }
                 }
                 return $this->render('airport/airport.html.twig', [
@@ -81,8 +82,9 @@ class AirportController extends AbstractController
             'fromStart' =>  $defaultAirport
         ]);
         foreach ($results as $arrival) {
-            if (!in_array($arrival->getFlightNumber(), $flightNumbers)) {
-                $flightNumbers[] = $arrival->getFlightNumber();
+            $flightNumber = strtoupper($arrival->getFlightNumber());
+            if (!in_array($flightNumber, $flightNumbers)) {
+                $flightNumbers[] = $flightNumber;
             }
         }
 

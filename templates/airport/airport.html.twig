@@ -25,7 +25,7 @@
                                             selected
                                         {% endif %}
                                     {% elseif app.user.airport is defined %}
-                                        {% if app.user.airport.id == airport.id %}
+                                        {% if app.user.airport is not null and app.user.airport.id == airport.id %}
                                             selected
                                         {% endif %}
                                     {% else %}
