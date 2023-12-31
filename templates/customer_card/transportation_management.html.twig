@@ -61,19 +61,15 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Transportation', title: 'Transfer calculation'|trans}) }}
 
 <form method="GET">
-    <div class="row no-print">
-        <div class="col-lg-6">
-                <div class="mb-3">
-                    <label class="form-label">{% trans %}Search date{% endtrans %}</label>
+    <label class="form-label">{% trans %}Search date{% endtrans %}</label>
+    <div class="row no-print mb-3">
+        <div class="col-md-3 col-lg-2">
                     {% set now = "now"|date("Y-m-d") %}
                     {% set firstDay = "now"|date("Y-m-01") %}
-                    <div class="col-md-3">
-                        {# <div><label for="dateStart" class=" col-form-label">Date Start</label></div> #}
-                        <input class="form-control mt-3" name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : firstDay }}" id="dateStart">
-                        <input class="form-control" name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
-                    </div>
-                </div>
-            </div>
+                    <input class="form-control " name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : firstDay }}" id="dateStart">
+        </div>
+        <div class="col-md-3 col-lg-2">
+                <input class="form-control " name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
         </div>
     </div>
 
@@ -89,8 +85,6 @@
                 <label for="floatingSelectGrid">{% trans %}Select a transport company{% endtrans %}</label>
             </div>
         </div>
-    </div>
-     <div class="row no-print">
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="area" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
@@ -102,8 +96,6 @@
                 <label for="floatingSelectGrid">{% trans %}Select an area{% endtrans %}</label>
             </div>
         </div>
-    </div>
-    <div class="row no-print">
         <div class="col-md-2">
             <div class="form-floating mb-3">
                 <select name="type" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
@@ -116,8 +108,8 @@
         </div>
     </div>
     <div class="row no-print">
-        <div class="text-center text-md-start col-md-2 ">
-            <input type="submit" class="btn btn-primary px-5 py-3">
+        <div class="text-md-start col-md-2 ">
+            <input type="submit" class="btn btn-primary mb-3">
         </div>
     </div>
 
@@ -130,7 +122,6 @@
             <p class="no-print"> {% trans %}Adults{% endtrans %}: {{ adultsNumber }} / 
             {% trans %}Children{% endtrans %}: {{ childrenNumber }} / 
             {% trans %}Babies{% endtrans %}: {{ babiesNumber }}</p>
-
 
             <div class="text-center my-3 no-print">
                 <form>
@@ -195,6 +186,8 @@
                         <tfooter>
                             <tr>
                                 <th>Total</th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th>{{ adultsNumber }}</th>
                                 <th>{{ childrenNumber }}</th>
