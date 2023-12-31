@@ -70,113 +70,109 @@
 
 
     <div class="row mt-3">
-
-        {% for transferArrival in results|sort((a, b) => a.customerCard.holder <=> b.customerCard.holder)  %}
+        {% for transferArrival in results  %}
 
         {%  set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
         <div class="col-lg-4 d-none" data-group="{{ transferArrival.flightNumber }}">
             <div class="card border {{ statusClass }}" data-group="group-{{ transferArrival.id }}">
-
-           
-
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row bd-highlight mb-3">
-                                
-                                <div class="me-2">
-                                    <i class="uil uil-arrow-circle-right"></i>
-                                </div>
-                                <div>
-                                    <p><a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> <b>{{ transferArrival.customerCard.holder|title }}</span></b> </a><br>
-                                       {{ transferArrival.hour|date('H:i') }} - {{ transferArrival.flightNumber }}  
-                                    </p>
-                                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row bd-highlight mb-3">
+                            
+                            <div class="me-2">
+                                <i class="uil uil-arrow-circle-right"></i>
                             </div>
                             <div>
-                                <div data-group="group-{{transferArrival.id}}" class="btn-current-status cursor currentStatus" class="text-end">
-                                    {# <a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> #}
-                                        {% if transferArrival.status|lower == "no show" %}
-                                            <span class="badge rounded-pill bg-danger" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
-                                        {% else %}
-                                            <span class="badge rounded-pill bg-success" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
-                                        {% endif %}
-                                    {# </a> #}
-                                </div>
-
-                                <div id="changeArea" class="d-none" data-group="group-{{transferArrival.id}}">
-                                    <form action="{{ path('app_customer_card_change_status', {id: transferArrival.id }) }}" method="POST">
-                                                
-                                        <div class="">
-                                            <div>
-                                                <select name="status" id="changeStatus" class="form-select" data-group="group-{{transferArrival.id}}">
-                                                    <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
-                                                    <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
-                                                    <option value="Go show (hotel)"   {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
-                                                    <option value="No Show"  {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
-                                                </select>
-                                            </div>
-                                            <div class="ms-2">
-                                                <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-check"></i></button>
-                                                <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-close"></i></button>
-                                            </div>
-
-                                        </div>
-                                    </form>
-                                    <span id="transferArrivalId" data-group="group-{{transferArrival.id}}" class="d-none">{{ transferArrival.id }}</span>
-                                </div>
+                                <p><a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> <b>{{ transferArrival.customerCard.holder|title }}</span></b> </a><br>
+                                    {{ transferArrival.hour|date('H:i') }} - {{ transferArrival.flightNumber }}  
+                                </p>
                             </div>
                         </div>
                         <div>
-                            {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }}  
-                        </div>{# 
-                            <div class="row mb-3">
-                            <div class="col-6 ps-4">
-                                <div class="mb-1">
-                                    Adultes: <b>{{ transferArrival.adultsNumber }}</b>
-                                </div>
-                                <div class="mb-1">
-                                    Children: <b>{{ transferArrival.childrenNumber }}</b>
-                                </div>
-                                <div class="mb-1">
-                                    Bébés: <b>{{ transferArrival.babiesNumber }}</b>
-                                </div>
+                            <div data-group="group-{{transferArrival.id}}" class="btn-current-status cursor currentStatus" class="text-end">
+                                {# <a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> #}
+                                    {% if transferArrival.status|lower == "no show" %}
+                                        <span class="badge rounded-pill bg-danger" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
+                                    {% else %}
+                                        <span class="badge rounded-pill bg-success" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
+                                    {% endif %}
+                                {# </a> #}
                             </div>
-                        </div> #}
 
-                        <div class="row justify-content-around">
-                            <div class="col-3">
-                                {# <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div> #}
-                                <div>
-                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">   
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }}                             
-                                        {# {{ transferArrival.customerCard.reservationNumber }} #}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-3 text-center">                      
-                                <div>
-                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
-                                       {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleType|trans : '-') }}  
-                                    </span>
-                                </div>           
-                            </div>
-                            <div class="col-3 text-center">                      
-                                <div>
-                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
-                                       {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }}  
-                                    </span>
-                                </div>           
-                            </div>
-                            <div class="col-3 text-end">
-                                <div>
-                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : '-')}}
-                                        </span>
-                                </div>
+                            <div id="changeArea" class="d-none" data-group="group-{{transferArrival.id}}">
+                                <form action="{{ path('app_customer_card_change_status', {id: transferArrival.id }) }}" method="POST">
+                                            
+                                    <div class="">
+                                        <div>
+                                            <select name="status" id="changeStatus" class="form-select" data-group="group-{{transferArrival.id}}">
+                                                <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                <option value="Go show (hotel)"   {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                <option value="No Show"  {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                            </select>
+                                        </div>
+                                        <div class="ms-2">
+                                            <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-check"></i></button>
+                                            <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-close"></i></button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                                <span id="transferArrivalId" data-group="group-{{transferArrival.id}}" class="d-none">{{ transferArrival.id }}</span>
                             </div>
                         </div>
-
                     </div>
+                    <div>
+                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }}  
+                    </div>{# 
+                        <div class="row mb-3">
+                        <div class="col-6 ps-4">
+                            <div class="mb-1">
+                                Adultes: <b>{{ transferArrival.adultsNumber }}</b>
+                            </div>
+                            <div class="mb-1">
+                                Children: <b>{{ transferArrival.childrenNumber }}</b>
+                            </div>
+                            <div class="mb-1">
+                                Bébés: <b>{{ transferArrival.babiesNumber }}</b>
+                            </div>
+                        </div>
+                    </div> #}
+
+                    <div class="row justify-content-around">
+                        <div class="col-3">
+                            {# <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div> #}
+                            <div>
+                                <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">   
+                                    {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }}                             
+                                    {# {{ transferArrival.customerCard.reservationNumber }} #}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">                      
+                            <div>
+                                <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                    {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleType|trans : '-') }}  
+                                </span>
+                            </div>           
+                        </div>
+                        <div class="col-3 text-center">                      
+                            <div>
+                                <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                    {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }}  
+                                </span>
+                            </div>           
+                        </div>
+                        <div class="col-3 text-end">
+                            <div>
+                                <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">
+                                    {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : '-')}}
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
         {% endfor %}

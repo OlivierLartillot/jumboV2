@@ -79,8 +79,6 @@ class TransferArrivalRepository extends ServiceEntityRepository
         return $tableauFinalDesDoublons;
     }
 
-
-
     /**
      * @return TransferArrival[] Returns an array of TransferArrival objects
      */
@@ -88,7 +86,8 @@ class TransferArrivalRepository extends ServiceEntityRepository
     {
             
         $requete = $this->createQueryBuilder('ta')
-                        ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'ta.customerCard = transferArrival.customerCard');
+                        ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'ta.customerCard = transferArrival.customerCard')
+                        ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'ta.customerCard = c.id');
 
         $requete = $requete->andWhere('ta.date = :date')->setParameter('date', $date); 
         if ($airport != 'all') {
@@ -101,7 +100,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
             $requete = $requete->andWhere('transferArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
         }
         
-        $requete = $requete->orderBy('ta.id', 'ASC')
+        $requete = $requete->orderBy('ta.hour', 'ASC')->addOrderBy('c.holder', 'ASC')
         ->getQuery()
         ->getResult()
         ;

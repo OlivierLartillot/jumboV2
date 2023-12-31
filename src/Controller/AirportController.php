@@ -48,7 +48,6 @@ class AirportController extends AbstractController
                     $empty = false;
                     break;
                 }
-                
             }
             // si y a au moins un élément envoyé au tri
             if ($empty == false) { 
@@ -58,8 +57,8 @@ class AirportController extends AbstractController
                 $flightNumber =  trim(htmlspecialchars($request->query->get('flightNumber')));
                 $voucherNumber =  trim(htmlspecialchars($request->query->get('voucherNumber')));
                 
-
                 $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
+           
                 foreach ($results as $arrival) {
                     $flightNumber = strtoupper($arrival->getFlightNumber());
                     if (!in_array($flightNumber, $flightNumbers)) {
@@ -80,7 +79,7 @@ class AirportController extends AbstractController
         $results = $transferArrivalRepository->findBy([
             'date' => $date,
             'fromStart' =>  $defaultAirport
-        ]);
+        ], ['hour' => 'ASC']);
         foreach ($results as $arrival) {
             $flightNumber = strtoupper($arrival->getFlightNumber());
             if (!in_array($flightNumber, $flightNumbers)) {
