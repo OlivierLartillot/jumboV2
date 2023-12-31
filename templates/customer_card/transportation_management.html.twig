@@ -147,6 +147,7 @@
                     <thead class="bg-primary bg-gradient text-light border-end-light">
                         <tr>
                             <th>P/C</th>
+                            <th>Type</th>
                             <th># reserva / # Jumbo</th>
                             <th>area</th>
                             <th>{% trans %}A{% endtrans %}</th>
@@ -164,9 +165,18 @@
                             {% else %}
                                 {% set base =  transfer["object"] %}
                             {% endif %}
-                        
+
                             <tr>
                                 <td>{{ (transfer["object"].isCollective) ? '<i title="collective" class="fas fa-users fs-5"></i>' : '<i title="private" class="fas fa-user-alt" ></i>'}}</td>
+                                <td>
+                                    {% if transfer['instance'] == "arrival" %}
+                                            <i title="arrival" class="mdi mdi-airplane-landing fs-5"></i>
+                                        {% elseif transfer['instance'] == "interhotel" %}
+                                            <i title="interhotel" class="mdi mdi-car fs-5"></i>
+                                        {% else %}
+                                            <i title="departure" class="mdi mdi-airplane-takeoff fs-5"></i>
+                                    {% endif %}
+                                </td> 
                                 <td>{{ (base) ? base.customerCard.reservationNumber : '?'}} / {{ (base) ? base.customerCard.jumboNumber : '-' }} </td>
                                 <td> {{ transfer["object"].area }} </td>
                                 <td>{{ (base) ? base.adultsNumber : '-' }} </td>
