@@ -399,19 +399,35 @@ class CustomerCardController extends AbstractController
                 $company = ($request->query->get('company') != 'all') 
                             ? $transportCompanyRepository->findOneBy(['name' => $request->query->get('company')]) 
                             : $request->query->get('company')
-                            ;    
+                            ;  
+                $area = $request->query->get('area');
+                $type = ($request->query->get('type') == 2)? false: $request->query->get('type');
             } 
         } else {
                 $dateStart = new DateTime();
                 $dateStart = $dateStart->format('Y-m-01');
                 $dateEnd = new DateTime();
                 $dateEnd = $dateEnd->format('Y-m-d');
-                $company="all";
+                $company ="all";
+                $area = "all";
+                $type = "all";
         }
 
-        $transferVehicleArrivals = $transferVehicleArrivalRepository->findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company);
-        $transferInterHotels = $transferInterHotelRepository->findInterHotelsBydatesAndCompanies($dateStart, $dateEnd, $company);
-        $transferDepartures = $transferDepartureRepository->findDeparturesBydatesAndCompanies($dateStart, $dateEnd, $company); 
+        $transferVehicleArrivals = $transferVehicleArrivalRepository->findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type);
+        $transferInterHotels = $transferInterHotelRepository->findInterHotelsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type);
+        $transferDepartures = $transferDepartureRepository->findDeparturesBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type); 
+
+        // récupération des zones pour chaque transfer et array unique 
+        
+        $transferArrivalsAreas = $transferVehicleArrivalRepository->findTransferVehicleArrivalAreas();
+        $transferInterhotelsAreas = $transferInterHotelRepository->findTransferInterhotelAreas();
+        $transferDeparturesAreas = $transferDepartureRepository->findTransferDepartureAreas();
+        $mergeTransferAreas = array_merge($transferArrivalsAreas,$transferInterhotelsAreas,$transferDeparturesAreas);
+        $uniqueAreas = [];
+        foreach ($mergeTransferAreas as $area) {
+            if (!in_array($area,$uniqueAreas)) { $uniqueAreas[] = $area; }
+        }
+
 
         $allTransfers = [];
         $adultsNumber = 0;
@@ -458,7 +474,8 @@ class CustomerCardController extends AbstractController
             'transferVehicleArrivals' => $transferVehicleArrivals,
             'adultsNumber' => $adultsNumber,
             'childrenNumber' => $childrenNumber,
-            'babiesNumber' => $babiesNumber
+            'babiesNumber' => $babiesNumber,
+            'uniqueAreas' => $uniqueAreas
         ]);
     }
 

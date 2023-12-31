@@ -87,7 +87,7 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
      * @return TransferVehicleArrival[] Returns an array 
      * 
      */
-        public function findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company): array
+    public function findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type): array
     {
 
         $dateStart = new DateTimeImmutable($dateStart);
@@ -102,9 +102,17 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
             $requete = $requete
             ->andWhere('ta.transportCompany = :company') 
             ->setParameter('company', $company);
-
         }
-
+        if ($area != 'all') {
+            $requete = $requete
+            ->andWhere('ta.area = :area') 
+            ->setParameter('area', $area);
+        }
+        if ($type != 'all') {
+            $requete = $requete
+            ->andWhere('ta.isCollective = :isCollective') 
+            ->setParameter('isCollective', $type);
+        }
         $requete = $requete
             ->getQuery()
             ->getResult()
@@ -114,6 +122,18 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * zones unique pour le transferVehicule
+     */
+    public function findTransferVehicleArrivalAreas(): array
+    {
+        return $this->createQueryBuilder('ta')
+                    ->select('ta.area')
+                    ->distinct()
+                    ->getQuery()
+                    ->getResult()
+                ;
+    }
 
 
 

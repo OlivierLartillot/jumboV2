@@ -125,7 +125,7 @@ class TransferInterHotelRepository extends ServiceEntityRepository
      * @return TransferInterHotel[] Returns an array of TransferInterHotels 
      * 
      */
-    public function findInterHotelsBydatesAndCompanies($dateStart, $dateEnd, $company): array
+    public function findInterHotelsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type): array
     {
 
         $dateStart = new DateTimeImmutable($dateStart);
@@ -140,8 +140,18 @@ class TransferInterHotelRepository extends ServiceEntityRepository
             $requete = $requete
             ->andWhere('t.transportCompany = :company') 
             ->setParameter('company', $company);
-
         }
+        if ($area != 'all') {
+            $requete = $requete
+            ->andWhere('t.area = :area') 
+            ->setParameter('area', $area);
+        } 
+        if ($type != 'all') {
+            $requete = $requete
+            ->andWhere('t.isCollective = :isCollective') 
+            ->setParameter('isCollective', $type);
+        }
+           
 
         $requete = $requete
             ->getQuery()
@@ -152,7 +162,18 @@ class TransferInterHotelRepository extends ServiceEntityRepository
 
     }
 
-
+    /**
+     * zones unique pour le transferVehicule
+     */
+    public function findTransferInterhotelAreas(): array
+    {
+        return $this->createQueryBuilder('t')
+                    ->select('t.area')
+                    ->distinct()
+                    ->getQuery()
+                    ->getResult()
+                ;
+    }
 
 //    /**
 //     * @return TransferInterHotel[] Returns an array of TransferInterHotel objects

@@ -89,11 +89,36 @@
                 <label for="floatingSelectGrid">{% trans %}Select a transport company{% endtrans %}</label>
             </div>
         </div>
-
+    </div>
+     <div class="row no-print">
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="area" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All areas{% endtrans %}</option>
+                    {% for uniqueArea in uniqueAreas|sort((a,b) => a.area <=> b.area) %} 
+                        <option value="{{ uniqueArea.area }}" {{ (app.request.query.get('area') == uniqueArea.area) ? 'selected' : '' }}>{{ uniqueArea.area }}</option>
+                    {% endfor %}
+                </select>
+                <label for="floatingSelectGrid">{% trans %}Select an area{% endtrans %}</label>
+            </div>
+        </div>
+    </div>
+    <div class="row no-print">
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="type" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All types{% endtrans %}</option>                  
+                    <option value="1" {{ (app.request.query.get('type') == 1) ? 'selected' : '' }}>{% trans %}Collective{% endtrans %}</option>
+                    <option value="2" {{ (app.request.query.get('type') == 2) ? 'selected' : '' }}>{% trans %}Private{% endtrans %}</option>
+                </select>
+                <label for="floatingSelectGrid">{% trans %}Select a type{% endtrans %}</label>
+            </div>
+        </div>
+    </div>
+    <div class="row no-print">
         <div class="text-center text-md-start col-md-2 ">
             <input type="submit" class="btn btn-primary px-5 py-3">
         </div>
-
     </div>
 
 </form>
@@ -121,11 +146,12 @@
 
                     <thead class="bg-primary bg-gradient text-light border-end-light">
                         <tr>
-                            <th>#</th>
-                            <th># Jumbo</th>
-                            <th>{% trans %}Adults{% endtrans %}</th>
-                            <th>{% trans %}Children{% endtrans %}</th>
-                            <th>{% trans %}Babies{% endtrans %}</th>
+                            <th>P/C</th>
+                            <th># reserva / # Jumbo</th>
+                            <th>area</th>
+                            <th>{% trans %}A{% endtrans %}</th>
+                            <th>{% trans %}C{% endtrans %}</th>
+                            <th>{% trans %}B{% endtrans %}</th>
                             <th>{% trans %}Voucher{% endtrans %}</th>
                             <th>{% trans %}Date{% endtrans %}</th>
                             <th>{% trans %}Hour{% endtrans %}</th>
@@ -140,8 +166,9 @@
                             {% endif %}
                         
                             <tr>
-                                <td>{{ (base) ? base.customerCard.reservationNumber : 'pas de fiche client associée'}} </td>
-                                <td>{{ (base) ? base.customerCard.jumboNumber : '-' }} </td>
+                                <td>{{ (transfer["object"].isCollective) ? '<i title="collective" class="fas fa-users fs-5"></i>' : '<i title="private" class="fas fa-user-alt" ></i>'}}</td>
+                                <td>{{ (base) ? base.customerCard.reservationNumber : '?'}} / {{ (base) ? base.customerCard.jumboNumber : '-' }} </td>
+                                <td> {{ transfer["object"].area }} </td>
                                 <td>{{ (base) ? base.adultsNumber : '-' }} </td>
                                 <td>{{ (base) ? base.childrenNumber }} </td>
                                 <td>{{ (base) ? base.babiesNumber : '-' }} </td>
