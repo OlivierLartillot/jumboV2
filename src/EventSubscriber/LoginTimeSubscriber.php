@@ -28,8 +28,6 @@ class LoginTimeSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event)
     {
         $token = $this->tokenStorage->getToken();
-        
-
         // Vérifiez si l'utilisateur est connecté
         if ($token && $token->getUser()) {
             $user = $token->getUser();
@@ -56,11 +54,9 @@ class LoginTimeSubscriber implements EventSubscriberInterface
                         $response = new RedirectResponse($redirectUrl);
 
                         // Assignez la réponse à l'événement
-                        $event->setResponse($response);
-                        
+                        $event->setResponse($response);                
                     }
                 }
-
             }
         }
     }
