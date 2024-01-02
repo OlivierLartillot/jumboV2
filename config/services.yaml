@@ -22,6 +22,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\EventListener\LoginTimeCustomListener:
+    App\EventSubscriber\LoginTimeSubscriber:
+        arguments:
+            $tokenStorage: '@security.token_storage'
+            $container: '@service_container'
         tags:
-            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+            - { name: 'kernel.event_subscriber' }
