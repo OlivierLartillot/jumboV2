@@ -42,7 +42,7 @@ class LoginTimeSubscriber implements EventSubscriberInterface
                     $token->setAttribute('_security_admin_login_time', time());
                 } else {
                     // Si oui, vérifiez si la durée maximale est écoulée (30 secondes dans cet exemple)
-                    $maxDuration = 1200; // Durée en secondes
+                    $maxDuration = 64800; // Durée en secondes
                     $loginTime = $token->getAttribute('_security_admin_login_time');
                     $currentTime = time();
 
