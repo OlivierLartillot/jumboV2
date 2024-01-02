@@ -27,9 +27,12 @@ class LoginTimeSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event)
     {
+        $route = $event->getRequest()->get('_route');
+
         $token = $this->tokenStorage->getToken();
         // Vérifiez si l'utilisateur est connecté
         if ($token && $token->getUser()) {
+
             $user = $token->getUser();
             // Vérifiez les rôles de l'utilisateur
             if ((in_array('ROLE_REP', $user->getRoles(), true)) or (in_array('ROLE_AIRPORT', $user->getRoles(), true))) {
@@ -58,6 +61,17 @@ class LoginTimeSubscriber implements EventSubscriberInterface
                     }
                 }
             }
+        } else {
+
+            if ($route != 'app_login') {
+            $redirectUrl = $this->router->generate('app_login');
+            // Créez une réponse de redirection vers l'URL générée
+            $response = new RedirectResponse($redirectUrl);
+
+            // Assignez la réponse à l'événement
+            $event->setResponse($response);  
+            }
+              
         }
     }
 
