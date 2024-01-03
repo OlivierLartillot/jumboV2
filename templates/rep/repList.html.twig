@@ -60,10 +60,10 @@
                                     {% endif %}
                                 
                                 {% endif %}
-
-                                    <!-- Button Modal -->
-{#                                     <button type="button" class="badge btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">Show More</button>
- #}                                
+                                    {# 
+                                        <!-- Button Modal -->
+                                        <button type="button" class="badge btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">Show More</button>
+                                     #}                                
                         
                                     <!-- sample modal content -->
                                     <div id="myModal-{{i}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
@@ -108,85 +108,81 @@
                                                                                         {% endif %}
                                                                                     {# </a> #}
                                                                                 </div>
-                                                                               
-
-
-                                                                                    <div id="changeArea" class="d-none" data-group="group-{{client.id}}">
-                                                                                        <form action="{{ path('app_customer_card_change_status', {id: client.id }) }}" method="POST">
-                                                                                                    
-                                                                                            <div class="">
-                                                                                                <div>
-                                                                                                    <select name="status" id="changeStatus" class="form-select" data-group="group-{{client.id}}">
-                                                                                                        <option value="Arrived" {{client.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
-                                                                                                        <option value="Go show (airport)" {{client.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
-                                                                                                        <option value="Go show (hotel)"   {{client.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
-                                                                                                        <option value="No Show"  {{client.status|lower == "no show" ? "selected": ""}}  >No Show</option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="ms-2">
-                                                                                                    <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{client.id}}"><i class="mdi mdi-check"></i></button>
-                                                                                                    <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{client.id}}"><i class="mdi mdi-close"></i></button>
-                                                                                                </div>
-
+                
+                                                                                <div id="changeArea" class="d-none" data-group="group-{{client.id}}">
+                                                                                    <form action="{{ path('app_customer_card_change_status', {id: client.id }) }}" method="POST">
+                                                                                                
+                                                                                        <div class="">
+                                                                                            <div>
+                                                                                                <select name="status" id="changeStatus" class="form-select" data-group="group-{{client.id}}">
+                                                                                                    <option value="Arrived" {{client.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                                                                    <option value="Go show (airport)" {{client.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                                                                    <option value="Go show (hotel)"   {{client.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                                                                    <option value="No Show"  {{client.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                                                                </select>
                                                                                             </div>
-                                                                                        </form>
-                                                                                        <span id="transferArrivalId" data-group="group-{{client.id}}" class="d-none">{{ client.id }}</span>
-                                                                                    </div>
-
-
+                                                                                            <div class="ms-2">
+                                                                                                <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{client.id}}"><i class="mdi mdi-check"></i></button>
+                                                                                                <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{client.id}}"><i class="mdi mdi-close"></i></button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                    <span id="transferArrivalId" data-group="group-{{client.id}}" class="d-none">{{ client.id }}</span>
                                                                                 </div>
+
                                                                             </div>
-
-                                                                            <div class="row mb-3 justify-content-around align-items-center">
-
-                                                                                <div class="col-6 ps-4">
-                                                                                    <div class="mb-1">
-                                                                                        Adultes: <b>{{ client.adultsNumber }}</b>
-                                                                                    </div>
-                                                                                    <div class="mb-1">
-                                                                                        Children: <b>{{ client.childrenNumber }}</b>
-                                                                                    </div>
-                                                                                    <div class="mb-1">
-                                                                                        Bébés: <b>{{ client.babiesNumber }}</b>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="col-3 text-end">
-                                                                                    <p class="pt-1">
-                                                                                        <img src="{{ asset("images/brands/copier.png")}}" id="{{client.id}}" class="cursor w-60 bontonCopier" title="copier" value="copier"/><br>
-                                                                                        <span id="thumb-{{client.id}}" class="thumb d-none">👍</span>
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div class="col-3 text-end">
-                                                                                    <p>
-                                                                                        <a href="{{ path('app_whats_app_client', {'natureTransfer': 'arrival','transferId': client.id}) }}" target="blank" class="linkButton "><img src="{{ asset("images/brands/whatsApp.png")}}" class="w-75"/></a>
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="row justify-content-around">
-                                                                                <div class="col-4">
-                                                                                    <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ client.customerCard.reservationNumber }}</span></div>
-                                                                                </div>
-                                                                                <div class="col-4 text-center">                     
-                                                                                    {% if client.fromStart == "Punta cana international (puj)" %}
-                                                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
-                                                                                    {% elseif client.fromStart == "Santo domingo (sdq)" %}
-                                                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
-                                                                                    {% elseif client.fromStart == "La romana international (lrm)" %}
-                                                                                        <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
-                                                                                    {% else %}
-                                                                                        <div><span>{{ client.fromStart }}</div>
-                                                                                    {% endif %} 
-                                                                                </div>
-                                                                                <div class="col-4 text-end">
-                                                                                    <div>
-                                                                                        <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ client.hour|date('H:i') }}</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
                                                                         </div>
+
+                                                                        <div class="row mb-3 justify-content-around align-items-center">
+
+                                                                            <div class="col-6 ps-4">
+                                                                                <div class="mb-1">
+                                                                                    Adultes: <b>{{ client.adultsNumber }}</b>
+                                                                                </div>
+                                                                                <div class="mb-1">
+                                                                                    Children: <b>{{ client.childrenNumber }}</b>
+                                                                                </div>
+                                                                                <div class="mb-1">
+                                                                                    Bébés: <b>{{ client.babiesNumber }}</b>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-3 text-end">
+                                                                                <p class="pt-1">
+                                                                                    <img src="{{ asset("images/brands/copier.png")}}" id="{{client.id}}" class="cursor w-60 bontonCopier" title="copier" value="copier"/><br>
+                                                                                    <span id="thumb-{{client.id}}" class="thumb d-none">👍</span>
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-3 text-end">
+                                                                                <p>
+                                                                                    <a href="{{ path('app_whats_app_client', {'natureTransfer': 'arrival','transferId': client.id}) }}" target="blank" class="linkButton "><img src="{{ asset("images/brands/whatsApp.png")}}" class="w-75"/></a>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row justify-content-around">
+                                                                            <div class="col-4">
+                                                                                <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ client.customerCard.reservationNumber }}</span></div>
+                                                                            </div>
+                                                                            <div class="col-4 text-center">                     
+                                                                                {% if client.fromStart == "Punta cana international (puj)" %}
+                                                                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
+                                                                                {% elseif client.fromStart == "Santo domingo (sdq)" %}
+                                                                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
+                                                                                {% elseif client.fromStart == "La romana international (lrm)" %}
+                                                                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
+                                                                                {% else %}
+                                                                                    <div><span>{{ client.fromStart }}</div>
+                                                                                {% endif %} 
+                                                                            </div>
+                                                                            <div class="col-4 text-end">
+                                                                                <div>
+                                                                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ client.hour|date('H:i') }}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
 
                                                                     </div>
                                                                 </div>
