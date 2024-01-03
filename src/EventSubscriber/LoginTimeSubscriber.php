@@ -27,9 +27,16 @@ class LoginTimeSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event)
     {
+        $request = $event->getRequest();
         $route = $event->getRequest()->get('_route');
-
         $token = $this->tokenStorage->getToken();
+
+        // Exclure certaines routes du traitement
+        $excludedRoutes = ['_wdt', '_profiler'];
+        if (in_array($request->attributes->get('_route'), $excludedRoutes)) {
+            return;
+        }
+
         // Vérifiez si l'utilisateur est connecté
         if ($token && $token->getUser()) {
 
