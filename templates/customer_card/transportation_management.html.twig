@@ -61,7 +61,7 @@
     {{ include('partials/page-title.html.twig', {pagetitle: 'Transportation', title: 'Transfer calculation'|trans}) }}
 
 <form method="GET">
-    <label class="form-label">{% trans %}Search date{% endtrans %}</label>
+    <label class="form-label no-print">{% trans %}Search date{% endtrans %}</label>
     <div class="row no-print mb-3">
         <div class="col-md-3 col-lg-2">
                     {% set now = "now"|date("Y-m-d") %}
