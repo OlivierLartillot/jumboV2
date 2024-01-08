@@ -2113,6 +2113,42 @@
         <source>First and last name</source>
         <target>Apellido y Nombre</target>
       </trans-unit>
+      <trans-unit id="OnhpU4i" resname="Home">
+        <source>Home</source>
+        <target>Home</target>
+      </trans-unit>
+      <trans-unit id="IZdZCks" resname="Be careful, you have problems to resolve.">
+        <source>Be careful, you have problems to resolve.</source>
+        <target>Ten cuidado, tienes problemas que resolver.</target>
+      </trans-unit>
+      <trans-unit id="thUKXFn" resname="Nothing to do.">
+        <source>Nothing to do.</source>
+        <target>Nada que hacer.</target>
+      </trans-unit>
+      <trans-unit id="j67eJHU" resname="Transfer Management">
+        <source>Transfer Management</source>
+        <target>Gestión de transferencias</target>
+      </trans-unit>
+      <trans-unit id="2Gl870H" resname="InterHotels">
+        <source>InterHotels</source>
+        <target>InterHotels</target>
+      </trans-unit>
+      <trans-unit id="tYdvc9i" resname="Departures">
+        <source>Departures</source>
+        <target>Salidas</target>
+      </trans-unit>
+      <trans-unit id="FTzarsV" resname="Assignment">
+        <source>Assignment</source>
+        <target>Asignación</target>
+      </trans-unit>
+      <trans-unit id="O2z8Q1T" resname="You have unassigned clients">
+        <source>You have unassigned clients</source>
+        <target>Tienes clientes no asignados.</target>
+      </trans-unit>
+      <trans-unit id="w7jT8QG" resname="&quot;Skip&quot; still has assigned clients. Please remember to assign them to their representative or assign them to the &quot;Alpitour&quot; representative.">
+        <source>"Skip" still has assigned clients. Please remember to assign them to their representative or assign them to the "Alpitour" representative.</source>
+        <target>"Skip" todavía tiene clientes asignados. Recuerde asignarlos a su representante o asignarlos al representante de "No Rep".</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
