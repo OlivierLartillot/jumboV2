@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -16,13 +17,15 @@ class LoginTimeSubscriber implements EventSubscriberInterface
 {
     private TokenStorageInterface $tokenStorage;
     private ContainerInterface $container;
+    private KernelInterface $kernel;
     private UrlGeneratorInterface $router;
 
-        public function __construct(TokenStorageInterface $tokenStorage, ContainerInterface $container, UrlGeneratorInterface $router)
+        public function __construct(TokenStorageInterface $tokenStorage, ContainerInterface $container, UrlGeneratorInterface $router, KernelInterface $kernel)
     {
         $this->tokenStorage = $tokenStorage;
         $this->container = $container;
         $this->router = $router;
+        $this->kernel = $kernel;
     }
 
     public function onKernelRequest(RequestEvent $event)
@@ -31,11 +34,20 @@ class LoginTimeSubscriber implements EventSubscriberInterface
         $route = $event->getRequest()->get('_route');
         $token = $this->tokenStorage->getToken();
 
+
         // Exclure certaines routes du traitement
+        /*         
         $excludedRoutes = ['_wdt', '_profiler'];
         if (in_array($request->attributes->get('_route'), $excludedRoutes)) {
             return;
-        }
+        } */
+
+        $environment = $this->kernel->getEnvironment();
+
+        if ($environment === 'dev') {
+            return;
+        } 
+
 
         // Vérifiez si l'utilisateur est connecté
         if ($token && $token->getUser()) {

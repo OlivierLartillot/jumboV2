@@ -247,11 +247,11 @@
       </trans-unit>
       <trans-unit id="FUNbMRy" resname="View More">
         <source>View More</source>
-        <target>__View More</target>
+        <target>Voir +</target>
       </trans-unit>
       <trans-unit id="QaY0vtN" resname="View Profile">
         <source>View Profile</source>
-        <target>__View Profile</target>
+        <target>Voir profil</target>
       </trans-unit>
       <trans-unit id="RtitIQ0" resname="My Wallet">
         <source>My Wallet</source>
@@ -267,7 +267,7 @@
       </trans-unit>
       <trans-unit id="SPDT05f" resname="Sign out">
         <source>Sign out</source>
-        <target>__Sign out</target>
+        <target>Se déconnecter</target>
       </trans-unit>
       <trans-unit id="Z7aWRoY" resname="Dashboard">
         <source>Dashboard</source>
@@ -1433,15 +1433,15 @@
           <source>InterHotel</source>
           <target>InterHôtel</target>
       </trans-unit>
-      <trans-unit id="_NCVcMZ" resname="Créer un nouveau message d'arrivée">
+      <trans-unit id="_NCVcMZ" resname="Create new Arrival message">
           <source>Create new Arrival message</source>
           <target>Créer un nouveau message d'arrivée</target>
       </trans-unit>
-      <trans-unit id="Y7n85de" resname="Créer un nouveau message InterHôtel">
+      <trans-unit id="Y7n85de" resname="Create new InterHotel message">
           <source>Create new InterHotel message</source>
           <target>Créer un nouveau message InterHôtel</target>
       </trans-unit>
-      <trans-unit id="wUZrfng" resname="Créer un nouveau message de départ">
+      <trans-unit id="wUZrfng" resname="Create new Departure message">
           <source>Create new Departure message</source>
           <target>Créer un nouveau message de départ</target>
       </trans-unit>
