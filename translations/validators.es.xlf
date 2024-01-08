@@ -405,6 +405,30 @@
         <source>The value of the netmask should be between {{ min }} and {{ max }}.</source>
         <target>El valor de la máscara de red debería estar entre {{ min }} y {{ max }}.</target>
       </trans-unit>
+      <trans-unit id="O5pay9e" resname="The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.">
+        <source>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</source>
+        <target>El nombre del archivo es demasido largo. Debe tener {{ filename_max_length }} carácter o menos.|El nombre del archivo es demasido largo. Debe tener {{ filename_max_length }} caracteres o menos.</target>
+      </trans-unit>
+      <trans-unit id="f_lviDt" resname="The password strength is too low. Please use a stronger password.">
+        <source>The password strength is too low. Please use a stronger password.</source>
+        <target>La seguridad de la contraseña es demasiado baja. Por favor, utilice una contraseña más segura.</target>
+      </trans-unit>
+      <trans-unit id="xfCh6.k" resname="This value contains characters that are not allowed by the current restriction-level.">
+        <source>This value contains characters that are not allowed by the current restriction-level.</source>
+        <target>Este valor contiene caracteres que no están permitidos según el nivel de restricción actual.</target>
+      </trans-unit>
+      <trans-unit id="x15dlan" resname="Using invisible characters is not allowed.">
+        <source>Using invisible characters is not allowed.</source>
+        <target>No se permite el uso de caracteres invisibles.</target>
+      </trans-unit>
+      <trans-unit id="2NiS4YC" resname="Mixing numbers from different scripts is not allowed.">
+        <source>Mixing numbers from different scripts is not allowed.</source>
+        <target>No está permitido mezclar números de diferentes scripts.</target>
+      </trans-unit>
+      <trans-unit id="W8N1HuG" resname="Using hidden overlay characters is not allowed.">
+        <source>Using hidden overlay characters is not allowed.</source>
+        <target>No está permitido el uso de caracteres superpuestos ocultos.</target>
+      </trans-unit>
       <trans-unit id=".SEaaBa" resname="This form should not contain extra fields.">
         <source>This form should not contain extra fields.</source>
         <target>Este formulario no debería contener campos adicionales.</target>
@@ -539,35 +563,31 @@
       </trans-unit>
       <trans-unit id="Td7A4JK" resname="There is already an account with this username">
         <source>There is already an account with this username</source>
-        <target>__There is already an account with this username</target>
+        <target>Ya existe una cuenta con este nombre de usuario</target>
       </trans-unit>
       <trans-unit id="IaE5GBl" resname="You should agree to our terms.">
         <source>You should agree to our terms.</source>
-        <target>__You should agree to our terms.</target>
+        <target>Deberías aceptar nuestros términos.</target>
       </trans-unit>
       <trans-unit id="YXZ26gK" resname="Please enter a password">
         <source>Please enter a password</source>
-        <target>__Please enter a password</target>
+        <target>Por favor, introduce una contraseña</target>
       </trans-unit>
       <trans-unit id=".esazsm" resname="Your password should be at least {{ limit }} characters">
         <source>Your password should be at least {{ limit }} characters</source>
-        <target>__Your password should be at least {{ limit }} characters</target>
+        <target>Tu contraseña debe tener al menos {{ limit }} caracteres</target>
       </trans-unit>
       <trans-unit id="eurhQSS" resname="Password is required">
         <source>Password is required</source>
-        <target>__Password is required</target>
+        <target>Se requiere contraseña</target>
+      </trans-unit>
+      <trans-unit id="lRnkTBu" resname="Select at least one choice.">
+        <source>Select at least one choice.</source>
+        <target>Seleccione al menos una opción.</target>
       </trans-unit>
       <trans-unit id="FWPYE87" resname="Your password must contain at least {{ limit }} characters">
         <source>Your password must contain at least {{ limit }} characters</source>
-        <target>__Your password must contain at least {{ limit }} characters</target>
-      </trans-unit>
-      <trans-unit id="FhkPdkH" resname="Un mot de passe est nécessaire">
-        <source>Un mot de passe est nécessaire</source>
-        <target>__Un mot de passe est nécessaire</target>
-      </trans-unit>
-      <trans-unit id="V9lfDl7" resname="Votre mot de passe doit contenir au moins {{ limit }} caractères">
-        <source>Votre mot de passe doit contenir au moins {{ limit }} caractères</source>
-        <target>__Votre mot de passe doit contenir au moins {{ limit }} caractères</target>
+        <target>Su contraseña debe contener al menos {{ limit }} caracteres</target>
       </trans-unit>
     </body>
   </file>

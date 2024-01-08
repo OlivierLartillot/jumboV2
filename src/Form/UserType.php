@@ -32,11 +32,11 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Confirmez le mot de passe*'],
                 'constraints' => [
                         new NotBlank([
-                            'message' => 'Un mot de passe est nécessaire',
+                            'message' => 'Password is required',
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                            'minMessage' => 'Your password must contain at least {{ limit }} characters',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),

@@ -1745,6 +1745,326 @@
         <source>Back to client</source>
         <target>Volver a clientes</target>
       </trans-unit>
+      <trans-unit id="TJN3bd5" resname="Expression that appears when a representative uses the variable for WhatsApp text in English">
+        <source>Expression that appears when a representative uses the variable for WhatsApp text in English</source>
+        <target>Expresión que aparece cuando un representante utiliza la variable para el texto de WhatsApp en inglés</target>
+      </trans-unit>
+      <trans-unit id="8oSpEj2" resname="Expression that appears when a representative uses the variable for WhatsApp text in Spanish">
+        <source>Expression that appears when a representative uses the variable for WhatsApp text in Spanish</source>
+        <target>Expresión que aparece cuando un representante utiliza la variable para el texto de WhatsApp en español</target>
+      </trans-unit>
+      <trans-unit id="xAEJIUl" resname="Expression that appears when a representative uses the variable for WhatsApp text in French">
+        <source>Expression that appears when a representative uses the variable for WhatsApp text in French</source>
+        <target>Expresión que aparece cuando un representante utiliza la variable para el texto de WhatsApp en francés</target>
+      </trans-unit>
+      <trans-unit id="tD3PQ0U" resname="Expression that appears when a representative uses the variable for WhatsApp text in Italian">
+        <source>Expression that appears when a representative uses the variable for WhatsApp text in Italian</source>
+        <target>Espressione che appare quando un rappresentante utilizza la variabile per il testo di WhatsApp in italiano</target>
+      </trans-unit>
+      <trans-unit id="mLAbiQa" resname="Portuguese">
+        <source>Portuguese</source>
+        <target>Portugués</target>
+      </trans-unit>
+      <trans-unit id="zJeEt59" resname="Expression that appears when a representative uses the variable for WhatsApp text in Portuguese">
+        <source>Expression that appears when a representative uses the variable for WhatsApp text in Portuguese</source>
+        <target>Expressão que aparece quando um representante utiliza a variável para o texto do WhatsApp em português</target>
+      </trans-unit>
+      <trans-unit id="3um6wUy" resname="Arrivals">
+        <source>Arrivals</source>
+        <target>Llegadas</target>
+      </trans-unit>
+      <trans-unit id="OuNcARC" resname="Date/Hour">
+        <source>Date/Hour</source>
+        <target>Fecha/Hora</target>
+      </trans-unit>
+      <trans-unit id="V8gXesH" resname="Vehicle Number">
+        <source>Vehicle Number</source>
+        <target>Número de vehículo</target>
+      </trans-unit>
+      <trans-unit id="qurUq.X" resname="Transport">
+        <source>Transport</source>
+        <target>Transporte</target>
+      </trans-unit>
+      <trans-unit id="Ak3CBNe" resname="Area">
+        <source>Area</source>
+        <target>Zona</target>
+      </trans-unit>
+      <trans-unit id="i4uIcbv" resname="Meeting">
+        <source>Meeting</source>
+        <target>Reunión</target>
+      </trans-unit>
+      <trans-unit id="qOvapvR" resname="Edit Default Airport">
+        <source>Edit Default Airport</source>
+        <target>Editar Aeropuerto Predeterminado</target>
+      </trans-unit>
+      <trans-unit id="qaFrIJM" resname="Reservations backup">
+        <source>Reservations backup</source>
+        <target>Copia de seguridad de Reservas</target>
+      </trans-unit>
+      <trans-unit id="Y.kQgmS" resname="There are no arrivals created on">
+        <source>There are no arrivals created on</source>
+        <target>No hay llegadas creadas en</target>
+      </trans-unit>
+      <trans-unit id="Q39T0Vs" resname="Delete everything created on">
+        <source>Delete everything created on</source>
+        <target>Eliminar todo creado en</target>
+      </trans-unit>
+      <trans-unit id="KSEZulR" resname="Please select a date first">
+        <source>Please select a date first</source>
+        <target>Por favor, seleccione una fecha primero</target>
+      </trans-unit>
+      <trans-unit id="IkY6gXu" resname="Client informations">
+        <source>Client informations</source>
+        <target>Información del Cliente</target>
+      </trans-unit>
+      <trans-unit id="toUHamB" resname="Pickup">
+        <source>Pickup</source>
+        <target>Recogida</target>
+      </trans-unit>
+      <trans-unit id="G4m0yYE" resname="arrivals">
+        <source>arrivals</source>
+        <target>llegadas</target>
+      </trans-unit>
+      <trans-unit id="K6E3uj3" resname="arrival">
+        <source>arrival</source>
+        <target>llegada</target>
+      </trans-unit>
+      <trans-unit id="IZogR1f" resname="Be careful">
+        <source>Be careful</source>
+        <target>Tenga cuidado</target>
+      </trans-unit>
+      <trans-unit id="C3ZCBq8" resname="Collective">
+        <source>Collective</source>
+        <target>Colectivo</target>
+      </trans-unit>
+      <trans-unit id="AQ3XuU9" resname="Individual">
+        <source>Individual</source>
+        <target>Individual</target>
+      </trans-unit>
+      <trans-unit id="xzqRqs8" resname="To avoid pax errors compare with the pax in the client file">
+        <source>To avoid pax errors compare with the pax in the client file</source>
+        <target>Para evitar errores de pax, compárelos con el pax en el archivo del cliente</target>
+      </trans-unit>
+      <trans-unit id="bLImbB1" resname="departures">
+        <source>departures</source>
+        <target>salidas</target>
+      </trans-unit>
+      <trans-unit id="pwcS9J1" resname="departure">
+        <source>departure</source>
+        <target>salida</target>
+      </trans-unit>
+      <trans-unit id="yS16IOs" resname="All zones">
+        <source>All zones</source>
+        <target>Todas las zonas</target>
+      </trans-unit>
+      <trans-unit id="wutKkVH" resname="Select a zone">
+        <source>Select a zone</source>
+        <target>Seleccionar una zona</target>
+      </trans-unit>
+      <trans-unit id="8QmI556" resname="All types">
+        <source>All types</source>
+        <target>Todos los tipos</target>
+      </trans-unit>
+      <trans-unit id="xj62cgx" resname="Private">
+        <source>Private</source>
+        <target>Privado</target>
+      </trans-unit>
+      <trans-unit id="STUyZ9p" resname="Select a type">
+        <source>Select a type</source>
+        <target>Seleccionar un tipo</target>
+      </trans-unit>
+      <trans-unit id="uCndZg7" resname="Summary of transfers">
+        <source>Summary of transfers</source>
+        <target>Resumen de traslados</target>
+      </trans-unit>
+      <trans-unit id="VZrq0IJ" resname="A">
+        <source>A</source>
+        <target>A</target>
+      </trans-unit>
+      <trans-unit id="ayPA1fN" resname="C">
+        <source>C</source>
+        <target>C</target>
+      </trans-unit>
+      <trans-unit id="335w5QI" resname="B">
+        <source>B</source>
+        <target>B</target>
+      </trans-unit>
+      <trans-unit id="WiNESCj" resname="Manage">
+        <source>Manage</source>
+        <target>Administrar</target>
+      </trans-unit>
+      <trans-unit id="g3HFgY0" resname="This is the most logical way to handle the situation. If the duplicate should not exist, delete the bad transfer in the client file.">
+        <source>This is the most logical way to handle the situation. If the duplicate should not exist, delete the bad transfer in the client file.</source>
+        <target>Esta es la forma más lógica de manejar la situación. Si el duplicado no debería existir, elimine la transferencia incorrecta en el archivo del cliente.</target>
+      </trans-unit>
+      <trans-unit id="8uQKI6q" resname="Ignore Duplicate">
+        <source>Ignore Duplicate</source>
+        <target>Ignorar duplicado</target>
+      </trans-unit>
+      <trans-unit id="Yf1q9WM" resname="Make sure the duplicate is normal before choosing this option.">
+        <source>Make sure the duplicate is normal before choosing this option.</source>
+        <target>Asegúrese de que el duplicado sea normal antes de elegir esta opción.</target>
+      </trans-unit>
+      <trans-unit id="a69ox71" resname="A problem has occurred">
+        <source>A problem has occurred</source>
+        <target>Se ha producido un problema</target>
+      </trans-unit>
+      <trans-unit id="xBfLiOP" resname="Transfers">
+        <source>Transfers</source>
+        <target>Traslados</target>
+      </trans-unit>
+      <trans-unit id="Oj5bcYM" resname="Default Airport">
+        <source>Default Airport</source>
+        <target>Aeropuerto predeterminado</target>
+      </trans-unit>
+      <trans-unit id="g4VXkkp" resname="Backup">
+        <source>Backup</source>
+        <target>Copia de seguridad</target>
+      </trans-unit>
+      <trans-unit id="XCELJ7C" resname="Reservations">
+        <source>Reservations</source>
+        <target>Reservas</target>
+      </trans-unit>
+      <trans-unit id="aJxfsH2" resname="Whats App Messages">
+        <source>Whats App Messages</source>
+        <target>Mensajes de WhatsApp</target>
+      </trans-unit>
+      <trans-unit id="0TU1bM." resname="You just changed the status">
+        <source>You just changed the status</source>
+        <target>Acabas de cambiar el estado</target>
+      </trans-unit>
+      <trans-unit id="W2yYl5N" resname="hotels">
+        <source>hotels</source>
+        <target>hoteles</target>
+      </trans-unit>
+      <trans-unit id="jVOj42c" resname="hotel">
+        <source>hotel</source>
+        <target>hotel</target>
+      </trans-unit>
+      <trans-unit id="GJA1Mia" resname="You don't have any client today">
+        <source>You don't have any client today</source>
+        <target>No tienes ningún cliente hoy</target>
+      </trans-unit>
+      <trans-unit id="FKF23Gr" resname="You don't have any Transfer">
+        <source>You don't have any Transfer</source>
+        <target>No tienes ninguna transferencia</target>
+      </trans-unit>
+      <trans-unit id="_TJnqhH" resname="Remember me">
+        <source>Remember me</source>
+        <target>Recuérdame</target>
+      </trans-unit>
+      <trans-unit id="H_Pz8l2" resname="Skipped Clients">
+        <source>Skipped Clients</source>
+        <target>Clientes omitidos</target>
+      </trans-unit>
+      <trans-unit id="aikfGgy" resname="Choose the briefing date">
+        <source>Choose the briefing date</source>
+        <target>Elige la fecha de la reunión</target>
+      </trans-unit>
+      <trans-unit id="s27z4Th" resname="Inserted Lines">
+        <source>Inserted Lines</source>
+        <target>Líneas insertadas</target>
+      </trans-unit>
+      <trans-unit id="06rf5Pz" resname="Errors Lines">
+        <source>Errors Lines</source>
+        <target>Líneas de errores</target>
+      </trans-unit>
+      <trans-unit id="aiZIcVW" resname="All clients have been imported successfully.">
+        <source>All clients have been imported successfully.</source>
+        <target>Todos los clientes se han importado correctamente.</target>
+      </trans-unit>
+      <trans-unit id="jLUyyg0" resname="Back to message list">
+        <source>Back to message list</source>
+        <target>Volver a la lista de mensajes</target>
+      </trans-unit>
+      <trans-unit id="q1MKE_R" resname="message">
+        <source>message</source>
+        <target>mensaje</target>
+      </trans-unit>
+      <trans-unit id="bgXRTMz" resname="Insert variables in your message">
+        <source>Insert variables in your message</source>
+        <target>Insertar variables en tu mensaje</target>
+      </trans-unit>
+      <trans-unit id="X4vsQf8" resname="Meeting Point">
+        <source>Meeting Point</source>
+        <target>Punto de encuentro</target>
+      </trans-unit>
+      <trans-unit id="M6DfXwB" resname="At meeting point">
+        <source>At meeting point</source>
+        <target>En el punto de encuentro</target>
+      </trans-unit>
+      <trans-unit id="J2mWg7L" resname="Meeting Time">
+        <source>Meeting Time</source>
+        <target>Hora de la reunión</target>
+      </trans-unit>
+      <trans-unit id="jyNk4Ru" resname="Day">
+        <source>Day</source>
+        <target>Día</target>
+      </trans-unit>
+      <trans-unit id="PIi.WGs" resname="Pickup Time">
+        <source>Pickup Time</source>
+        <target>Hora de recogida</target>
+      </trans-unit>
+      <trans-unit id="9QyaEps" resname="Arrival Hotel">
+        <source>Arrival Hotel</source>
+        <target>Llegada al hotel</target>
+      </trans-unit>
+      <trans-unit id="Vw9CjYK" resname="Flight Time">
+        <source>Flight Time</source>
+        <target>Hora del vuelo</target>
+      </trans-unit>
+      <trans-unit id="qY_OJ9p" resname="Time Of Day">
+        <source>Time Of Day</source>
+        <target>Hora del día</target>
+      </trans-unit>
+      <trans-unit id="5MLUtr0" resname="Your message language">
+        <source>Your message language</source>
+        <target>Tu idioma de mensaje</target>
+      </trans-unit>
+      <trans-unit id="r_FMpSY" resname="Please choose the message language">
+        <source>Please choose the message language</source>
+        <target>Por favor, elige el idioma del mensaje</target>
+      </trans-unit>
+      <trans-unit id="L1J.tiz" resname="Example result">
+        <source>Example result</source>
+        <target>Ejemplo de resultado</target>
+      </trans-unit>
+      <trans-unit id="t0I73Yb" resname="WhatsApp Messages">
+        <source>WhatsApp Messages</source>
+        <target>Mensajes de WhatsApp</target>
+      </trans-unit>
+      <trans-unit id="rDpGLDU" resname="Type transfer">
+        <source>Type transfer</source>
+        <target>Tipo de transferencia</target>
+      </trans-unit>
+      <trans-unit id="eo.pGLJ" resname="InterHotel">
+        <source>InterHotel</source>
+        <target>InterHotel</target>
+      </trans-unit>
+      <trans-unit id="_NCVcMZ" resname="Create new Arrival message">
+        <source>Create new Arrival message</source>
+        <target>Crear nuevo mensaje de llegada</target>
+      </trans-unit>
+      <trans-unit id="Y7n85de" resname="Create new InterHotel message">
+        <source>Create new InterHotel message</source>
+        <target>Crear nuevo mensaje de InterHotel</target>
+      </trans-unit>
+      <trans-unit id="wUZrfng" resname="Create new Departure message">
+        <source>Create new Departure message</source>
+        <target>Crear nuevo mensaje de salida</target>
+      </trans-unit>
+      <trans-unit id="RJ8khFC" resname="Be carefull">
+        <source>Be carefull</source>
+        <target>__Be carefull</target>
+      </trans-unit>
+      <trans-unit id="4njX445" resname="All areas">
+        <source>All areas</source>
+        <target>__All areas</target>
+      </trans-unit>
+      <trans-unit id="SxRJF5d" resname="Select an area">
+        <source>Select an area</source>
+        <target>__Select an area</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

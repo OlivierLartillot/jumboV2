@@ -12,7 +12,9 @@
 - "No Rep" et "Skip" ne sont pas imprimables dans les étiquettes. 
 - Définition de nouveaux status et droits pour les représentants ex: opérations devient Reservations/Transfers 
 - Fix: MAJ des affichages de ces nouveaux status dans la liste des utilisateurs ou encore dans les modifications utilisateurs etc.
-- Mise à jour mdp dans les utilsateurs.
+- Mise à jour mdp dans les utilisateurs.
 
 ## 2.0.2
 - "No Rep" et "Skip" ne seront plus visibles ou modifiables (a définir) dans la liste des Utilisateurs.
+
+##
