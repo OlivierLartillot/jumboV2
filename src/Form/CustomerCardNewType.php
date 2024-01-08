@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class CustomerCardNewType extends AbstractType
 {
@@ -29,14 +30,14 @@ class CustomerCardNewType extends AbstractType
             ->add('jumboNumber', null, [
             ])
             ->add('holder', null, [
-                'label' => 'Full Name',
+                'label' => new TranslatableMessage('Full Name'),
             ])
             ->add('agency', EntityType::class, [
                 'class' => Agency::class,
                 'choices'=> $agencies,
                 ])
             ->add('adultsNumber', null, [
-                'label' => 'Adults quantity',
+                'label' => new TranslatableMessage('Adults quantity'),
             ])
             ->add('childrenNumber', null, [
                 'label' => 'Children quantity',

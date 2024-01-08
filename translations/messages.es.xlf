@@ -2055,15 +2055,63 @@
       </trans-unit>
       <trans-unit id="RJ8khFC" resname="Be carefull">
         <source>Be carefull</source>
-        <target>__Be carefull</target>
+        <target>Atención</target>
       </trans-unit>
       <trans-unit id="4njX445" resname="All areas">
         <source>All areas</source>
-        <target>__All areas</target>
+        <target>Todas las zonas</target>
       </trans-unit>
       <trans-unit id="SxRJF5d" resname="Select an area">
         <source>Select an area</source>
-        <target>__Select an area</target>
+        <target>Seleccione una zona</target>
+      </trans-unit>
+      <trans-unit id="pP5lJk7" resname="Language">
+        <source>Language</source>
+        <target>Idioma</target>
+      </trans-unit>
+      <trans-unit id="jgDN9x_" resname="Full Name">
+        <source>Full Name</source>
+        <target>Nombre completo</target>
+      </trans-unit>
+      <trans-unit id="qHPqzME" resname="Adults quantity">
+        <source>Adults quantity</source>
+        <target>Cantidad de Adultos</target>
+      </trans-unit>
+      <trans-unit id="HjW7Far" resname="Jumbo Number">
+        <source>Jumbo Number</source>
+        <target>Numero Jumbo</target>
+      </trans-unit>
+      <trans-unit id="KgpONFk" resname="Choose an agency">
+        <source>Choose an agency</source>
+        <target>Elige una agencia</target>
+      </trans-unit>
+      <trans-unit id="Cz73Mrk" resname="Adults Number">
+        <source>Adults Number</source>
+        <target>Número de Adultos</target>
+      </trans-unit>
+      <trans-unit id="NgA3BpZ" resname="Children Number">
+        <source>Children Number</source>
+        <target>Número de niños</target>
+      </trans-unit>
+      <trans-unit id="VSMy4XT" resname="Babies Number">
+        <source>Babies Number</source>
+        <target>Número de bebes</target>
+      </trans-unit>
+      <trans-unit id="eZtWYVf" resname="Choose an Airport">
+        <source>Choose an Airport</source>
+        <target>Elige un aeropuerto</target>
+      </trans-unit>
+      <trans-unit id="n7iJynt" resname="Hotels">
+        <source>Hotels</source>
+        <target>Hotels</target>
+      </trans-unit>
+      <trans-unit id="Iapp64z" resname="Choose an Hotel">
+        <source>Choose an Hotel</source>
+        <target>Elige un aeropuerto</target>
+      </trans-unit>
+      <trans-unit id="JcWg.Li" resname="First and last name">
+        <source>First and last name</source>
+        <target>Apellido y Nombre</target>
       </trans-unit>
     </body>
   </file>

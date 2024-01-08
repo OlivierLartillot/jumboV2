@@ -1222,7 +1222,7 @@
         <target>arrivée</target>
       </trans-unit>
       <trans-unit id="RJ8khFC" resname="Be carefull">
-        <source>Be careful</source>
+        <source>Be carefull</source>
         <target>Soyez prudent</target>
       </trans-unit>
       <trans-unit id="C3ZCBq8" resname="Collective">
@@ -1346,106 +1346,189 @@
         <target>Souvenez-vous de moi</target>
       </trans-unit>
       <trans-unit id="H_Pz8l2" resname="Skipped Clients">
-          <source>Skipped Clients</source>
-          <target>Clients sautés</target>
+        <source>Skipped Clients</source>
+        <target>Clients sautés</target>
       </trans-unit>
       <trans-unit id="aikfGgy" resname="Choose the briefing date">
-          <source>Choose the briefing date</source>
-          <target>Choisissez la date du briefing</target>
+        <source>Choose the briefing date</source>
+        <target>Choisissez la date du briefing</target>
       </trans-unit>
       <trans-unit id="s27z4Th" resname="Inserted Lines">
-          <source>Inserted Lines</source>
-          <target>Lignes insérées</target>
+        <source>Inserted Lines</source>
+        <target>Lignes insérées</target>
       </trans-unit>
       <trans-unit id="06rf5Pz" resname="Errors Lines">
-          <source>Errors Lines</source>
-          <target>Lignes d'erreurs</target>
+        <source>Errors Lines</source>
+        <target>Lignes d'erreurs</target>
       </trans-unit>
       <trans-unit id="aiZIcVW" resname="All clients have been imported successfully.">
-          <source>All clients have been imported successfully.</source>
-          <target>Tous les clients ont été importés avec succès.</target>
+        <source>All clients have been imported successfully.</source>
+        <target>Tous les clients ont été importés avec succès.</target>
       </trans-unit>
       <trans-unit id="jLUyyg0" resname="Back to message list">
-          <source>Back to message list</source>
-          <target>Retour à la liste des messages</target>
+        <source>Back to message list</source>
+        <target>Retour à la liste des messages</target>
       </trans-unit>
       <trans-unit id="q1MKE_R" resname="message">
-          <source>message</source>
-          <target>message</target>
+        <source>message</source>
+        <target>message</target>
       </trans-unit>
       <trans-unit id="bgXRTMz" resname="Insert variables in your message">
-          <source>Insert variables in your message</source>
-          <target>Insérez des variables dans votre message</target>
+        <source>Insert variables in your message</source>
+        <target>Insérez des variables dans votre message</target>
       </trans-unit>
       <trans-unit id="X4vsQf8" resname="Meeting Point">
-          <source>Meeting Point</source>
-          <target>Point de rencontre</target>
+        <source>Meeting Point</source>
+        <target>Point de rencontre</target>
       </trans-unit>
       <trans-unit id="M6DfXwB" resname="At meeting point">
-          <source>At meeting point</source>
-          <target>Au point de rencontre</target>
+        <source>At meeting point</source>
+        <target>Au point de rencontre</target>
       </trans-unit>
       <trans-unit id="J2mWg7L" resname="Meeting Time">
-          <source>Meeting Time</source>
-          <target>Heure de réunion</target>
+        <source>Meeting Time</source>
+        <target>Heure de réunion</target>
       </trans-unit>
       <trans-unit id="jyNk4Ru" resname="Day">
-          <source>Day</source>
-          <target>Jour</target>
+        <source>Day</source>
+        <target>Jour</target>
       </trans-unit>
       <trans-unit id="PIi.WGs" resname="Pickup Time">
-          <source>Pickup Time</source>
-          <target>Heure de prise en charge</target>
+        <source>Pickup Time</source>
+        <target>Heure de prise en charge</target>
       </trans-unit>
-      <trans-unit id="9QyaEps" resname="Hôtel d'arrivée">
-          <source>Arrival Hotel</source>
-          <target>Hôtel d'arrivée</target>
+      <trans-unit id="FbOAThd" resname="Hôtel d'arrivée">
+        <source>Hôtel d'arrivée</source>
+        <target>Hôtel d'arrivée</target>
       </trans-unit>
-      <trans-unit id="Vw9CjYK" resname="Heure de vol">
-          <source>Flight Time</source>
-          <target>Heure de vol</target>
+      <trans-unit id="jTRThav" resname="Heure de vol">
+        <source>Heure de vol</source>
+        <target>Heure de vol</target>
       </trans-unit>
-      <trans-unit id="qY_OJ9p" resname="Moment de la journée">
-          <source>Time Of Day</source>
-          <target>Moment de la journée</target>
+      <trans-unit id="Gi9t33." resname="Moment de la journée">
+        <source>Moment de la journée</source>
+        <target>Moment de la journée</target>
       </trans-unit>
-      <trans-unit id="5MLUtr0" resname="Langue de votre message">
-          <source>Your message language</source>
-          <target>Langue de votre message</target>
+      <trans-unit id="SDk3obi" resname="Langue de votre message">
+        <source>Langue de votre message</source>
+        <target>Langue de votre message</target>
       </trans-unit>
-      <trans-unit id="r_FMpSY" resname="Veuillez choisir la langue du message">
-          <source>Please choose the message language</source>
-          <target>Veuillez choisir la langue du message</target>
+      <trans-unit id="7KkZU9b" resname="Veuillez choisir la langue du message">
+        <source>Veuillez choisir la langue du message</source>
+        <target>Veuillez choisir la langue du message</target>
       </trans-unit>
-      <trans-unit id="L1J.tiz" resname="Résultat d'exemple">
-          <source>Example result</source>
-          <target>Résultat d'exemple</target>
+      <trans-unit id="Gipr5vR" resname="Résultat d'exemple">
+        <source>Résultat d'exemple</source>
+        <target>Résultat d'exemple</target>
       </trans-unit>
-      <trans-unit id="t0I73Yb" resname="Messages WhatsApp">
-          <source>WhatsApp Messages</source>
-          <target>Messages WhatsApp</target>
+      <trans-unit id="ga_z3Pp" resname="Messages WhatsApp">
+        <source>Messages WhatsApp</source>
+        <target>Messages WhatsApp</target>
       </trans-unit>
-      <trans-unit id="rDpGLDU" resname="Type de transfert">
-          <source>Type transfer</source>
-          <target>Type de transfert</target>
+      <trans-unit id="oN66TFd" resname="Type de transfert">
+        <source>Type de transfert</source>
+        <target>Type de transfert</target>
       </trans-unit>
-      <trans-unit id="eo.pGLJ" resname="InterHôtel">
-          <source>InterHotel</source>
-          <target>InterHôtel</target>
+      <trans-unit id="uZWfy1W" resname="InterHôtel">
+        <source>InterHôtel</source>
+        <target>InterHôtel</target>
       </trans-unit>
       <trans-unit id="_NCVcMZ" resname="Create new Arrival message">
-          <source>Create new Arrival message</source>
-          <target>Créer un nouveau message d'arrivée</target>
+        <source>Create new Arrival message</source>
+        <target>Créer un nouveau message d'arrivée</target>
       </trans-unit>
       <trans-unit id="Y7n85de" resname="Create new InterHotel message">
-          <source>Create new InterHotel message</source>
-          <target>Créer un nouveau message InterHôtel</target>
+        <source>Create new InterHotel message</source>
+        <target>Créer un nouveau message InterHôtel</target>
       </trans-unit>
       <trans-unit id="wUZrfng" resname="Create new Departure message">
-          <source>Create new Departure message</source>
-          <target>Créer un nouveau message de départ</target>
+        <source>Create new Departure message</source>
+        <target>Créer un nouveau message de départ</target>
       </trans-unit>
-
+      <trans-unit id="9QyaEps" resname="Arrival Hotel">
+        <source>Arrival Hotel</source>
+        <target>Hôtel d'arrivée</target>
+      </trans-unit>
+      <trans-unit id="Vw9CjYK" resname="Flight Time">
+        <source>Flight Time</source>
+        <target>Heure de vol</target>
+      </trans-unit>
+      <trans-unit id="qY_OJ9p" resname="Time Of Day">
+        <source>Time Of Day</source>
+        <target>Moment de la journée</target>
+      </trans-unit>
+      <trans-unit id="5MLUtr0" resname="Your message language">
+        <source>Your message language</source>
+        <target>La langue de votre message</target>
+      </trans-unit>
+      <trans-unit id="r_FMpSY" resname="Please choose the message language">
+        <source>Please choose the message language</source>
+        <target>Choisissez la langue de votre message</target>
+      </trans-unit>
+      <trans-unit id="L1J.tiz" resname="Example result">
+        <source>Example result</source>
+        <target>Exemple de résultat</target>
+      </trans-unit>
+      <trans-unit id="t0I73Yb" resname="WhatsApp Messages">
+        <source>WhatsApp Messages</source>
+        <target>Messages WhatsApp</target>
+      </trans-unit>
+      <trans-unit id="rDpGLDU" resname="Type transfer">
+        <source>Type transfer</source>
+        <target>Type de transfert</target>
+      </trans-unit>
+      <trans-unit id="pP5lJk7" resname="Language">
+        <source>Language</source>
+        <target>Langue</target>
+      </trans-unit>
+      <trans-unit id="eo.pGLJ" resname="InterHotel">
+        <source>InterHotel</source>
+        <target>InterHotel</target>
+      </trans-unit>
+      <trans-unit id="jgDN9x_" resname="Full Name">
+        <source>Full Name</source>
+        <target>Nom et Prénom</target>
+      </trans-unit>
+      <trans-unit id="qHPqzME" resname="Adults quantity">
+        <source>Adults quantity</source>
+        <target>__Adults quantity</target>
+      </trans-unit>
+      <trans-unit id="Cz73Mrk" resname="Adults Number">
+        <source>Adults Number</source>
+        <target>Nombre d'adultes</target>
+      </trans-unit>
+      <trans-unit id="NgA3BpZ" resname="Children Number">
+        <source>Children Number</source>
+        <target>Nombre d'enfants</target>
+      </trans-unit>
+      <trans-unit id="VSMy4XT" resname="Babies Number">
+        <source>Babies Number</source>
+        <target>Nombre de bébés</target>
+      </trans-unit>
+      <trans-unit id="n7iJynt" resname="Hotels">
+        <source>Hotels</source>
+        <target>Hôtels</target>
+      </trans-unit>
+      <trans-unit id="Iapp64z" resname="Choose an Hotel">
+        <source>Choose an Hotel</source>
+        <target>Choisissez un hôtel</target>
+      </trans-unit>
+      <trans-unit id="KgpONFk" resname="Choose an agency">
+        <source>Choose an agency</source>
+        <target>Choisissez une agence</target>
+      </trans-unit>
+      <trans-unit id="eZtWYVf" resname="Choose an Airport">
+        <source>Choose an Airport</source>
+        <target>Choisissez un aéroport</target>
+      </trans-unit>
+      <trans-unit id="HjW7Far" resname="Jumbo Number">
+        <source>Jumbo Number</source>
+        <target>Numéro Jumbo</target>
+      </trans-unit>
+      <trans-unit id="JcWg.Li" resname="First and last name">
+        <source>First and last name</source>
+        <target>Nom et Prénom</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

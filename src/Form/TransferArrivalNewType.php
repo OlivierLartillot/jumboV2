@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class TransferArrivalNewType extends AbstractType
 {
@@ -36,43 +37,56 @@ class TransferArrivalNewType extends AbstractType
 
         $builder    
             ->add('fullName', TextType::class,[
+                'label' => new TranslatableMessage('First and last name'),
                 'mapped' => false
             ])
             ->add('reservationNumber', TextType::class,[
                 'mapped' => false
             ])
             ->add('jumboNumber', TextType::class,[
-                'mapped' => false
+                'mapped' => false,
+                'label' => new TranslatableMessage('Jumbo Number')
             ])
             ->add('agency', EntityType::class, [
                 'mapped' => false,
                 'label' => "Agencies",
-                'placeholder' => 'Choose an agency',
+                'placeholder' =>  new TranslatableMessage('Choose an agency'),
                 'class' => Agency::class,
                 'autocomplete' =>false,
                 'choices' => $agencies,
             ] )    
-            ->add('adultsNumber')   
-            ->add('childrenNumber')   
-            ->add('babiesNumber')   
-            ->add('serviceNumber')
-            ->add('flightNumber')
+            ->add('adultsNumber', null, [
+                'label' => new TranslatableMessage('Adults Number')
+            ])   
+            ->add('childrenNumber', null, [
+                'label' => new TranslatableMessage('Children Number')
+            ])   
+            ->add('babiesNumber', null, [
+                'label' => new TranslatableMessage('Babies Number')
+            ])   
+            ->add('serviceNumber', null, [
+                'label' => new TranslatableMessage('Service Number')
+            ])
+            ->add('flightNumber', null, [
+                'label' => new TranslatableMessage('Flight Number')
+            ])
             ->add('date',  DateType::class, [
                 'widget' => 'single_text',
-                'input'  => 'datetime_immutable'
+                'input'  => 'datetime_immutable',
+                'label' => new TranslatableMessage('Arrival Date')
             ])
                 
             ->add('hour')
             ->add('fromStart', EntityType::class,[
-            'label' => "Airports",
-            'placeholder' => 'Choose an Airport',
+            'label' =>  new TranslatableMessage('Airports'),
+            'placeholder' =>  new TranslatableMessage('Choose an Airport'),
             'class' => AirportHotel::class,
             'autocomplete' =>false,
             'choices' => $airports,
             ])
             ->add('toArrival', EntityType::class,[
-                'label' => "Hotels",
-                'placeholder' => 'Choose an Hotel',
+                'label' =>  new TranslatableMessage('Hotels'),
+                'placeholder' => new TranslatableMessage('Choose an Hotel'),
                 'class' => AirportHotel::class,
                 'autocomplete' =>false,
                 'choices' => $hotels,

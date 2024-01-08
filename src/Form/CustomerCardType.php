@@ -35,7 +35,7 @@ class CustomerCardType extends AbstractType
                 'disabled' => true,
             ])
             ->add('holder', null, [
-                'label' => 'Full Name',
+                'label' => 'First and last name',
             ])
             ->add('agency', EntityType::class, [
                 'class' => Agency::class,
