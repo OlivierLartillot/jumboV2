@@ -140,7 +140,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return int the Sum of paxes by regroupment 
      * Attribution des représentants
      */
-    public function paxForRegroupementHotelAndAgencies($hotel, $agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null):int
+    public function paxForRegroupementHotelAndAgencies($hotel, $agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
     {
 
         $requete = $this->createQueryBuilder('t');
@@ -178,7 +178,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return int the Sum of paxes by regroupment 
      * Attribution des représentants
      */
-    public function paxForRegroupementMeetingAt($staff, $age, $meetingAt, $meetingPoint, $flightNumber = null):int
+    public function paxForRegroupementMeetingAt($staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
     {
 
         $requete = $this->createQueryBuilder('t');
@@ -356,10 +356,10 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
     }
 
-        /**
-     * @return TransferArrival[] Returns a int, countnumber of items
+    /**
+     *  Returns a int, countnumber of items
      */
-    public function countNumberNonAttributedMeetingsByDate($date): int
+    public function countNumberNonAttributedMeetingsByDate($date)
     {
 
         return $this->createQueryBuilder('t')
@@ -372,13 +372,11 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
     }
 
-
-
     /**
      *
      * nombre de pax attribués pour un rep à ce jour
      */
-    public function staffPaxByDate($staff,$date, $age):int
+    public function staffPaxByDate($staff,$date, $age)
     {
         //$date = $date->format('Y-m-d');
         $requete = $this->createQueryBuilder('t');
@@ -457,10 +455,10 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return TransferArrival[] counts number of time arrival exist EXCEPT TODAY
+     *  counts number of time arrival exist EXCEPT TODAY
      * Cette requête sert à des vérifications pendant l import du csv
      */
-    public function CheckIfArrivalExistAnotherDay($reservationNumber, $date): int
+    public function CheckIfArrivalExistAnotherDay($reservationNumber, $date)
     { 
 
         $dateTimeImmutable = new DateTimeImmutable($date);
