@@ -21,7 +21,7 @@ class RepController extends AbstractController
 {
 
     #[Route('/rep/replist', name: 'app_admin_rep_replist',methods:["GET"])]
-    public function repList(CustomerCardRepository $customerCardRepository, UserRepository $userRepository,TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
+    public function repList(TransferArrivalRepository $transferArrivalRepository, Request $request,DefineQueryDate $defineQueryDate): Response 
     {
 
         // utilisation du service qui définit si on utilise la query ou la session
@@ -51,9 +51,9 @@ class RepController extends AbstractController
                     $agency = $transferArrival->getCustomerCard()->getAgency();
                     $hotel = $transferArrival->getToArrival();
                     
-                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementMeetingAt($agency, $user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementMeetingAt($agency, $user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
-                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementMeetingAt($agency, $user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupAdults = $transferArrivalRepository->paxForRegroupementMeetingAt($user, 'adults', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupChildren = $transferArrivalRepository->paxForRegroupementMeetingAt($user, 'children', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
+                        $paxRegroupBabies = $transferArrivalRepository->paxForRegroupementMeetingAt($user, 'babies', $transferArrival->getMeetingAt(), $transferArrival->getMeetingPoint());
 
                         $paxPerHotelAgency[$user->getUsername().'_adults'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupAdults;
                         $paxPerHotelAgency[$user->getUsername().'_children'][$agency->getId() . '_'.$hotel->getId() .'_'. $transferArrival->getMeetingAt()->format('H:i') . '_'. $transferArrival->getMeetingPoint()] =  $paxRegroupChildren;

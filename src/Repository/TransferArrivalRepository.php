@@ -140,7 +140,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return int the Sum of paxes by regroupment 
      * Attribution des représentants
      */
-    public function paxForRegroupementHotelAndAgencies($hotel, $agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
+    public function paxForRegroupementHotelAndAgencies($hotel, $agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null):int
     {
 
         $requete = $this->createQueryBuilder('t');
@@ -178,7 +178,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return int the Sum of paxes by regroupment 
      * Attribution des représentants
      */
-    public function paxForRegroupementMeetingAt($agency, $staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
+    public function paxForRegroupementMeetingAt($staff, $age, $meetingAt, $meetingPoint, $flightNumber = null):int
     {
 
         $requete = $this->createQueryBuilder('t');
@@ -187,15 +187,13 @@ class TransferArrivalRepository extends ServiceEntityRepository
         elseif ($age == "children") { $requete = $requete->select('sum(t.childrenNumber)');} 
         else { $requete = $requete->select('sum(t.babiesNumber)') ;}
 
-     $requete = $requete
+        $requete = $requete
             ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.staff = :staff')
             ->andWhere('t.meetingAt = :meetingAt')
             ->andWhere('t.meetingPoint = :meetingPoint')
-            ->andWhere('c.agency = :agency')
             ->setParameter('meetingAt', $meetingAt) 
             ->setParameter('meetingPoint', $meetingPoint) 
-            ->setParameter('agency', $agency)
             ->setParameter('staff', $staff);
 
             if ($flightNumber != null) {
@@ -380,7 +378,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
      *
      * nombre de pax attribués pour un rep à ce jour
      */
-    public function staffPaxByDate($staff,$date, $age)
+    public function staffPaxByDate($staff,$date, $age):int
     {
         //$date = $date->format('Y-m-d');
         $requete = $this->createQueryBuilder('t');
