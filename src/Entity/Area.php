@@ -27,6 +27,11 @@ class Area
         $this->users = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return strtoupper($this->name);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,11 +77,6 @@ class Area
         }
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->getName();
     }
     
 }

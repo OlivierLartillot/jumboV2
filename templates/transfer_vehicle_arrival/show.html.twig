@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<title>TransferVehicleArrival</title>
+
+{% block body %}
+    <h1>TransferVehicleArrival</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ transfer_vehicle_arrival.id }}</td>
+            </tr>
+            <tr>
+                <th>IsCollective</th>
+                <td>{{ transfer_vehicle_arrival.isCollective ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>VehicleNumber</th>
+                <td>{{ transfer_vehicle_arrival.vehicleNumber }}</td>
+            </tr>
+            <tr>
+                <th>VehicleType</th>
+                <td>{{ transfer_vehicle_arrival.vehicleType }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ transfer_vehicle_arrival.date ? transfer_vehicle_arrival.date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>VoucherNumber</th>
+                <td>{{ transfer_vehicle_arrival.voucherNumber }}</td>
+            </tr>
+            <tr>
+                <th>Area</th>
+                <td>{{ transfer_vehicle_arrival.area }}</td>
+            </tr>
+            <tr>
+                <th>AdultsNumber</th>
+                <td>{{ transfer_vehicle_arrival.adultsNumber }}</td>
+            </tr>
+            <tr>
+                <th>ChildrenNumber</th>
+                <td>{{ transfer_vehicle_arrival.childrenNumber }}</td>
+            </tr>
+            <tr>
+                <th>BabiesNumber</th>
+                <td>{{ transfer_vehicle_arrival.babiesNumber }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_vehicle_arrival_index') }}">back to list</a>
+
+    <a href="{{ path('app_transfer_vehicle_arrival_edit', {'id': transfer_vehicle_arrival.id}) }}">edit</a>
+
+    {{ include('transfer_vehicle_arrival/_delete_form.html.twig') }}
+{% endblock %}

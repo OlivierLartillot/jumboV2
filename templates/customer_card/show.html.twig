@@ -25,7 +25,7 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
                                         <a class="dropdown-item" href="{{ path('app_customer_card_edit', {id:customer_card.id}|merge(app.request.query.all) )}}">{% trans %}Edit{% endtrans %}</a>
-
+                                        
                                         <a class="dropdown-item" href="{{ path('app_transfer_inter_hotel_new', {id:customer_card.id}|merge(app.request.query.all) )}}">{% trans %}Add Inter Hotel{% endtrans %}</a>
 
                                         <a class="dropdown-item" href="{{ path('app_transfer_departure_new', {id:customer_card.id}|merge(app.request.query.all) )}}">{% trans %}Add Departure{% endtrans %}</a>
@@ -72,8 +72,8 @@
                                                         <select name="status" id="changeStatus" class="form-select">
                                                             <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
                                                             <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
-                                                            <option value="Go show (hotel)"   {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
-                                                            <option value="No Show"  {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                            <option value="Go show (hotel)" {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                            <option value="No Show" {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
                                                         </select>
                                                     </div>
                                                     <div class="ms-2">
@@ -85,31 +85,6 @@
                                             </form>
                                                 
                                         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                                         {# 
                                             {% set i = 1 %}
@@ -251,6 +226,13 @@
                                 <div class="col-lg-10">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
                                         <a href="{{ path('app_transfer_arrival_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >{% trans %}Edit arrival{% endtrans %} #{{ transfer.id}}</a>
+                                                {# si il existe pas add #}
+                                    {% if transfer.transferVehicleArrival is not defined or transfer.transferVehicleArrival == null %}
+                                        <a  href="{{ path('app_transfer_vehicle_arrival_new', {id:transfer.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Add transfer Arrival{% endtrans %}</a> 
+                                    {% else %}
+                                    
+                                        <a  href="{{ path('app_transfer_vehicle_arrival_edit', {id:transfer.transferVehicleArrival.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Edit Transfer Arrival{% endtrans %}</a> 
+                                     {% endif %}
                                     {% endif %}
                                     {#  previent des similarité ou différences de pax #}
                                     {% if transfer.transferVehicleArrival %}

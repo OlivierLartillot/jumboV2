@@ -1,7 +1,6 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'Add Arrival'|trans}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Client Card'|trans, title: 'Add Transfer Arrival'|trans}) }}
         <a href="{{ app.request.server.get('HTTP_REFERER') }}" <a class="btn btn-secondary btn-sm my-3">back to client</a>
         <div class="row">
             <div class="col-lg-12">
@@ -9,8 +8,8 @@
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-4">
-                                <h3 class="mb-3">{% trans %}Add Arrival{% endtrans %}</h3>
-                                {{ include('transfer_arrival/_form.html.twig') }}
+                                <h3 class="mb-3">{% trans %}Add transfer Arrival{% endtrans %}</h3>
+                                {{ include('transfer_vehicle_arrival/_form.html.twig') }}
                             </div>
                         </div>
                     </div>
@@ -19,8 +18,3 @@
         </div>                                        
 
 {{ include('partials/footer-regroupement.html.twig') }}
-
-
-
-
-

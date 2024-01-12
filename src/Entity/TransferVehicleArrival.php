@@ -119,8 +119,7 @@ class TransferVehicleArrival
 
     public function setArea(?string $area): self
     {
-        $this->area = $area;
-
+        $this->area = strtoupper($area);
         return $this;
     }
 
@@ -136,7 +135,6 @@ class TransferVehicleArrival
     public function setTransportCompany(?TransportCompany $transportCompany): static
     {
         $this->transportCompany = $transportCompany;
-
         return $this;
     }
 

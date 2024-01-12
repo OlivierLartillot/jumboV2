@@ -9,6 +9,7 @@ use App\Form\TransferArrivalType;
 use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferVehicleArrivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,14 +71,16 @@ class TransferArrivalController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-
             return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard], Response::HTTP_SEE_OTHER);
         }
 
+        // Y a t il deja un transfer vehicule associé ? 
+        $isTransferVehicleExist = $transferArrival->getTransferVehicleArrival();
+       
         return $this->render('transfer_arrival/edit.html.twig', [
             'transfer_arrival' => $transferArrival,
             'form' => $form,
+            'isTransferVehicleExist' => $isTransferVehicleExist
         ]);
     }
 

@@ -537,7 +537,7 @@ class CustomerCardController extends AbstractController
 
 
     #[Route('customer/card/{id}', name: 'app_customer_card_show', methods: ['GET' , 'POST'])]
-    public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
+    public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository): Response
     {
 
 
