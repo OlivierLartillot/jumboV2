@@ -48,7 +48,7 @@ class TransferVehicleArrivalType extends AbstractType
                 'label' => $this->translator->trans('Vehicle Type'),
             ])
             ->add('isCollective', null, [
-                'label' => $this->translator->trans('Is Collective ?'),
+                'label' => $this->translator->trans('Collective'),
             ])
             ->add('date', null, [
                 'label' => $this->translator->trans('Transfer date'),
