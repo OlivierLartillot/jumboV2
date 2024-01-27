@@ -393,9 +393,9 @@ class TransferJoanController extends AbstractController
                         $insertedLine++;
                     }                       
                 }
-            }
+            
                 /************ !!!  A ce stade ca existe en bdd !!!  **************/
-                /*
+                
                 else {
                 
                     
@@ -456,6 +456,7 @@ class TransferJoanController extends AbstractController
                             $insertedLine++;  
                         }
                     }
+                }/* !!! le } est à faire sauter !!! 
                     else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
                         
                         // si c est une arrivée = del transferVehicle   
@@ -539,8 +540,8 @@ class TransferJoanController extends AbstractController
 
 
                 }
+                */
             } 
-            */
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
                 $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
