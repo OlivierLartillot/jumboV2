@@ -540,11 +540,11 @@ class TransferJoanController extends AbstractController
 
                 }
             } 
+            */
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
                 $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
             } 
-            /*/
 
 
 
