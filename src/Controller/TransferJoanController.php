@@ -501,7 +501,7 @@ class TransferJoanController extends AbstractController
                                 $errorClients[] = 'The combination of flight number, date and customer card does not match for this day. ' . ucfirst($nombre) . ', reservation number: ' . $reservaId . ', flight number: ' . $vuelo   ;
                             }
                         }
-                        /*
+                        
                         // sinon del transfer
                         else {
     
@@ -535,7 +535,7 @@ class TransferJoanController extends AbstractController
                             
                             $manager->persist($newTransfer);
                             $insertedLine++;
-                        }*/
+                        }
                     }
 
 
