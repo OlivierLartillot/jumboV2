@@ -352,7 +352,7 @@ class TransferJoanController extends AbstractController
             /*******************  TODO: ************************************ */
             
             
-/*             
+             
             if ($customerCard) {
                 //dd($customerCard);
                
@@ -393,7 +393,7 @@ class TransferJoanController extends AbstractController
                         $insertedLine++;
                     }                       
                 }
-            */
+            }
                 /************ !!!  A ce stade ca existe en bdd !!!  **************/
                 /*
                 else {
