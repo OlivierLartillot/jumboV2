@@ -350,6 +350,9 @@ class TransferJoanController extends AbstractController
             $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
 
             /*******************  TODO: ************************************ */
+            
+            
+/*             
             if ($customerCard) {
                 //dd($customerCard);
                
@@ -390,8 +393,9 @@ class TransferJoanController extends AbstractController
                         $insertedLine++;
                     }                       
                 }
-           
+            */
                 /************ !!!  A ce stade ca existe en bdd !!!  **************/
+                /*
                 else {
                 
                     
@@ -539,7 +543,12 @@ class TransferJoanController extends AbstractController
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
                 $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
-            }
+            } 
+            /*/
+
+
+
+
         }
 
 
