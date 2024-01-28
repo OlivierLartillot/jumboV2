@@ -37,6 +37,7 @@ class TransferJoanController extends AbstractController
         $numberOfRows = $request->get('numberOfRows');
         $insertedLine = $request->get('insertedLine') ? $request->get('insertedLine') : 0;
         
+        dump($numberOfRows);
         $numberOfRowsType = gettype($numberOfRows);
 
 
@@ -658,9 +659,9 @@ class TransferJoanController extends AbstractController
         //****************************************************************************************************************************************//
 
         return $this->redirectToRoute('app_transfer_import', [
-            'errorClients' => $errorClients,
             'numberOfRows' => $numberOfRows,
-            'insertedLine' => $insertedLine
+            'insertedLine' => $insertedLine,
+            'errorClients' => $errorClients,
         ]);
 /*         return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients
