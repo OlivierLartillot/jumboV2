@@ -34,9 +34,11 @@ class TransferJoanController extends AbstractController
     {
 
         $errorClients = $request->get('errorClients');
-        $numberOfRows = $request->get('numberOfRows');
+        $numberOfRows = ($request->get('numberOfRows')) ? $request->get('numberOfRows') : 'null';
         $insertedLine = $request->get('insertedLine');
         
+        dd($numberOfRows);
+
         return $this->render('transfer/import.html.twig', [
             'transfer_joans' => $transferJoanRepository->findAll(),
             'errorClients' => $errorClients,
