@@ -5,7 +5,7 @@
         <div class="page-content">
             <div class="container-fluid">
 
-            {% if numberOfRows is defined and insertedLine is defined and numberOfRows != 'null' %}
+            {% if numberOfRows != 'null' %}
                     <div class="alert alert-success" role="alert">
                     <p class="m-3 p-3">
                         {% trans %}Inserted Lines{% endtrans %}: {{ insertedLine }} / {{ numberOfRows}} 
@@ -33,7 +33,7 @@
                 
                 
                 {% else %} 
-                    {% if numberOfRows is defined and insertedLine is defined and numberOfRows != 'null' %}
+                    {% if numberOfRows != 'null' %}
                         <div class="alert alert-success" role="alert">       
                             {% trans %}All clients have been imported successfully.{% endtrans %}
                         </div>
