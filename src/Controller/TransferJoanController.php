@@ -658,10 +658,17 @@ class TransferJoanController extends AbstractController
         //***************************************************************** fin  *****************************************************************//
         //****************************************************************************************************************************************//
 
+        if (count($errorClients) > 5) {
+            $newerrorClientsTab = [];
+            for ($i=0; $i<5; $i++) {
+                $newerrorClientsTab[] = $errorClients[$i];
+            }
+            $errorClients = $newerrorClientsTab;
+        }
         return $this->redirectToRoute('app_transfer_import', [
             'numberOfRows' => $numberOfRows,
             'insertedLine' => $insertedLine,
-            /* 'errorClients' => $errorClients, */
+            'errorClients' => $errorClients,
         ]);
 /*         return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients
