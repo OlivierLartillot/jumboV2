@@ -661,7 +661,7 @@ class TransferJoanController extends AbstractController
         return $this->redirectToRoute('app_transfer_import', [
             'numberOfRows' => $numberOfRows,
             'insertedLine' => $insertedLine,
-            'errorClients' => $errorClients,
+            /* 'errorClients' => $errorClients, */
         ]);
 /*         return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients
