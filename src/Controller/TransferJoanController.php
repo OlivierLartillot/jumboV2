@@ -30,11 +30,18 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class TransferJoanController extends AbstractController
 {
     #[Route('/import/transfer', name: 'app_transfer_import', methods: ['GET'])]
-    public function import(TransferJoanRepository $transferJoanRepository): Response
+    public function import(TransferJoanRepository $transferJoanRepository, Request $request): Response
     {
 
+        $errorClients = $request->get('errorClients');
+        $numberOfRows = $request->get('numberOfRows');
+        $insertedLine = $request->get('insertedLine');
+        
         return $this->render('transfer/import.html.twig', [
             'transfer_joans' => $transferJoanRepository->findAll(),
+            'errorClients' => $errorClients,
+            'numberOfRows' => $numberOfRows,
+            'insertedLine' => $insertedLine
         ]);
     }
 
@@ -646,7 +653,7 @@ class TransferJoanController extends AbstractController
         //***************************************************************** fin  *****************************************************************//
         //****************************************************************************************************************************************//
 
-        return $this->render('transfer/import.html.twig', [
+        return $this->redirectToRoute('app_transfer_import', [
             'errorClients' => $errorClients,
             'numberOfRows' => $numberOfRows,
             'insertedLine' => $insertedLine
