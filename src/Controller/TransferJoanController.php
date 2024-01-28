@@ -37,7 +37,7 @@ class TransferJoanController extends AbstractController
         $numberOfRows = $request->get('numberOfRows');
         $insertedLine = $request->get('insertedLine') ? $request->get('insertedLine') : 0;
         
-        dump($numberOfRows);
+        dump($request);
         $numberOfRowsType = gettype($numberOfRows);
 
 
