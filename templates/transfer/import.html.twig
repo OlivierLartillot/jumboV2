@@ -5,7 +5,9 @@
         <div class="page-content">
             <div class="container-fluid">
 
-            {% if numberOfRowsType is same as ('string') %}
+            {{ dump(numberOfRowsType) }}
+
+            {% if numberOfRowsType is not same as ('NULL') %}
                     <div class="alert alert-success" role="alert">
                     <p class="m-3 p-3">
                         {% trans %}Inserted Lines{% endtrans %}: {{ insertedLine }} / {{ numberOfRows}} 
@@ -33,7 +35,7 @@
                 
                 
                 {% else %} 
-                    {% if numberOfRowsType is same as ('string') %}
+                    {% if numberOfRowsType is not same as ('NULL') %}
                         <div class="alert alert-success" role="alert">       
                             {% trans %}All clients have been imported successfully.{% endtrans %}
                         </div>
