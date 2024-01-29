@@ -30,7 +30,7 @@ Lorsque je repasse en dev sur le serveur de prod (bluehost) cette erreur apparai
 
 Changer le php ini temporaire => "session.save_path"
 j'ai ajouté un dossier tmp dans var et fait pointé le session.save.path vers /var/tmp
-Dans Bluehost on le trouve dans cpanel=>PHP=>php ini
+Dans Bluehost on le trouve dans cpanel=>PHP=>php ini (MultiPHP INI Editor)
 
 ## Debug bar ne s'affiche pas
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AirportHotel;
 use App\Entity\TransferArrival;
 use App\Entity\TransferDeparture;
 use App\Entity\TransferInterHotel;
@@ -59,7 +60,7 @@ class TransferJoanController extends AbstractController
                           TransferDepartureRepository $transferDepartureRepository,
                           TransportCompanyRepository $transportCompanyRepository, 
                           ErrorsImportManager $errorsImportManager,
-                          AirportHotelRepository $AirportHotelRepository,
+                          AirportHotelRepository $airportHotelRepository,
                           ): Response
     {
 
@@ -273,6 +274,7 @@ class TransferJoanController extends AbstractController
 
                 $numberOfRows++;
 
+                // On définit la nature du transfert en fonction de ce qui est écrit dans le fichier 
                 if (in_array($natureTransfer,$ecrituresDeLlegada)) { 
                     $natureTransferRepository = $transferArrivalRepository;
                     $newTransfer = new TransferArrival ;
@@ -286,8 +288,8 @@ class TransferJoanController extends AbstractController
                     $natureTransferRepository = $transferDepartureRepository;
                     $newTransfer = new TransferDeparture();
                 }
-
-
+        
+                // on extrait les cellules pour initialiser les variables
                 $reservaId= trim($row[0]); 
                 $agencia = trim(strtolower($row[1])); 
                 $nombre = trim(strtolower($row[2])); 
@@ -360,6 +362,34 @@ class TransferJoanController extends AbstractController
             $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservaId, 'holder' => $nombre]);
             $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
 
+            // on regarde si cet aéroport et cet hotel existe dans la liste sinon on l'ajoute !!!
+            //Aéroport ou hotel
+            $checkAirportHotelDesde = $airportHotelRepository->findOneBy(['name' => $desde]);
+            $checkAirportHotelHasta = $airportHotelRepository->findOneBy(['name' => $hasta]);
+
+            // si desde n 'existe pas on va regarder la nature et l insérer comme il faut
+            if (!$checkAirportHotelDesde){
+                // si c est arrivée alors c est un aéroport sinon c est un hotel 
+                $isAirport = in_array($natureTransfer, $ecrituresDeLlegada);
+                $newAirportHotel = new AirportHotel();
+                $newAirportHotel->setName($desde);
+                $newAirportHotel->setIsAirport($isAirport);
+                $manager->persist($newAirportHotel);
+                $manager->flush();
+            }
+            // si hasta n 'existe pas on va regarder la nature et l insérer comme il faut
+            if (!$checkAirportHotelHasta){
+                // si c est départ alors c est un aéroport sinon c est un hotel 
+                $isAirport = in_array($natureTransfer, $ecrituresDeSalidas);
+                $newAirportHotel = new AirportHotel();
+                $newAirportHotel->setName($hasta);
+                $newAirportHotel->setIsAirport($isAirport);
+                $manager->persist($newAirportHotel);
+                $manager->flush();
+            }
+
+
+
             /*******************  TODO: ************************************ */
             
             
@@ -368,11 +398,11 @@ class TransferJoanController extends AbstractController
                 //dd($customerCard);
                
                 $transfersExistent =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo]);
-               
                 
                 // si dans la bdd ce n est pas présent, il faut ajouter 
-                // (si l arrivée n existe pas ce jour il faut le signaler !! on ne créé pas une nouvelle arrivée !!!)
-                if (!$transfersExistent) {       
+                // (si le transfert n existe pas ce jour il faut le signaler !! on ne créé pas un nouveau transfert !!!)
+                if (!$transfersExistent) {  
+                    // dd('Le transfert n existe pas');     
                     // l'arrivée (transferArrival doit etre uniquement créé par ivan ou son fichier)
                     // par conséquent si y a une fiche client mais pas d'arrivée ce jour, on ne peut pas l'importer
                     if (in_array($natureTransfer,$ecrituresDeLlegada)) {
@@ -380,8 +410,8 @@ class TransferJoanController extends AbstractController
                         continue;
                     } else {
                         $newTransfer->setCustomerCard($customerCard);
-                        $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                        $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
+                        $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
+                        $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
                         $newTransfer->setFromStart($from);
                         $newTransfer->setToArrival($to);
                         $newTransfer->setTransportCompany($transportCompany);
@@ -408,19 +438,19 @@ class TransferJoanController extends AbstractController
                 /************ !!!  A ce stade ca existe en bdd !!!  **************/
                 
                 else {
-                
-                    
+                   
                     // si dans le csv c est présent qu une fois et dans la bdd présent une fois juste MAJ
                     if ( ($countEachServiceNumbersInCSV[$reservaId] == 1) and (count($transfersExistent) == 1) ) {
                         
                         // si c est une arrivée 
                         if (in_array($natureTransfer,$ecrituresDeLlegada)) {
+                           
                             // il y a un vehicule pour une arrivée et 1 SEUL PRESENT EN BDD 
                             // si le transfer vehicle existe MAJ sinon NEW
                             $transferVehicleArrivalexiste = $transfersExistent[0]->getTransferVehicleArrival();
                             $transferVehicleArrival = ($transferVehicleArrivalexiste == null) ? new TransferVehicleArrival() : $transferVehicleArrivalexiste;
-                            $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                            $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
+                            $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
+                            $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
                             $transfersExistent[0]->setFromStart($from);
                             $transfersExistent[0]->setToArrival($to);
                             $transferVehicleArrival->setTransferArrival($transfersExistent[0]);
@@ -442,10 +472,10 @@ class TransferJoanController extends AbstractController
                         }
 
                         else {
-                            // sinon
+                            // sinon c'est un inter hotel ou depart
                             $transfersExistent[0]->setCustomerCard($customerCard);
-                            $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                            $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
+                            $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
+                            $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
                             $transfersExistent[0]->setFromStart($from);
                             $transfersExistent[0]->setToArrival($to);
                             $transfersExistent[0]->setTransportCompany($transportCompany);
@@ -468,28 +498,44 @@ class TransferJoanController extends AbstractController
                         }
                     }
                     else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
-                        
+                        // dd('c est present plusieurs fois');
+                        // dd($customerCard);
                         // si c est une arrivée = del transferVehicle   
                         if (in_array($natureTransfer,$ecrituresDeLlegada)) {                            
                             // si dans le csv c'est présent plusieurs fois on supprime tous dans la bdd 
-                            
+                            // dd('c est bien une arrivée !pour une carte cliente préente deux fois');
                             // rechercher l'arrivée par le flight number
-                            $transfersaMaj =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
+                            // Liste des customercards avec ce numéro
+                            $customerCards = $customerCardRepository->findBy(['reservationNumber' => $reservaId ]);
+                            // on cherche le bon grace au numéro de vol et date
+                            // seulement si y en a plusieurs
+                            if (count($customerCards) >  1) {
+                                foreach ($customerCards as $currentCustomerCard) {
+                                    $checkCustommerArrival = $natureTransferRepository->findOneBy(['customerCard'=> $currentCustomerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
+                                    if ($checkCustommerArrival) {
+                                        $transfersaMaj = $checkCustommerArrival;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                $transfersaMaj =  $natureTransferRepository->findOneBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
+                            }
                             // si le transferMaj est reconnu (== a 1) on met a jour
-                            if (count($transfersaMaj) == 1) {
+                            if ($transfersaMaj) {
                                 
                                 // si transfer vehicleArrival existe on maj sinon crée
-                                $newTransferVehicleArrival = ($transfersaMaj[0]->getTransferVehicleArrival() == null) ? new TransferVehicleArrival(): $transfersaMaj[0]->getTransferVehicleArrival();
-                                $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                                $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
-                                $transfersaMaj[0]->setFromStart($from);
-                                $transfersaMaj[0]->setToArrival($to);
+                                $newTransferVehicleArrival = ($transfersaMaj->getTransferVehicleArrival() == null) ? new TransferVehicleArrival(): $transfersaMaj->getTransferVehicleArrival();
+                                $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
+                                $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
+                                $transfersaMaj->setFromStart($from);
+                                $transfersaMaj->setToArrival($to);
 
-                                if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
-
-                                    $newTransferVehicleArrival->setTransferArrival($transfersaMaj[0]);
+                                
+                                if ($transfersaMaj->getTransferVehicleArrival() == null) {
+                                    
+                                    $newTransferVehicleArrival->setTransferArrival($transfersaMaj);
                                 }
-
+                                
                                 $newTransferVehicleArrival->setIsCollective($tipo_trf);
                                 $newTransferVehicleArrival->setVehicleNumber($n_veh);
                                 $newTransferVehicleArrival->setVehicleType($t_veh);
@@ -500,11 +546,11 @@ class TransferJoanController extends AbstractController
                                 $newTransferVehicleArrival->setAdultsNumber($ad);
                                 $newTransferVehicleArrival->setChildrenNumber($ni);
                                 $newTransferVehicleArrival->setBabiesNumber($bb);
-                            
-                                if ($transfersaMaj[0]->getTransferVehicleArrival() == null) {
+                                
+                                if ($transfersaMaj->getTransferVehicleArrival() == null) {
                                     $manager->persist($newTransferVehicleArrival);
                                 }
-
+                                
                                 $insertedLine++;
                             }
                             // sinon on prévient avec une erreur
@@ -523,8 +569,8 @@ class TransferJoanController extends AbstractController
 
                             // on recré le transfer courant, (les autres seront des nouveaux pour la boucle car 0 en bdd)
                             $newTransfer->setCustomerCard($customerCard);
-                            $from = $AirportHotelRepository->findOneBy(['name'=> $desde]);
-                            $to = $AirportHotelRepository->findOneBy(['name'=> $hasta]);
+                            $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
+                            $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
                             $newTransfer->setFromStart($from);
                             $newTransfer->setToArrival($to);
                             $newTransfer->setTransportCompany($transportCompany);
@@ -558,11 +604,7 @@ class TransferJoanController extends AbstractController
                 $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
             } 
 
-
-
-
         }
-
 
         $manager->flush();
         
