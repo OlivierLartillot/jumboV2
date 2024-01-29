@@ -738,12 +738,12 @@
                                 <li class="feed-item">
                                     <div class="feed-item-list">
                                         <p class="text-muted mb-1">{{ timeline.name }} {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}</p>
-                                        <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour }}</p>
+                                        <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour | date('H:i') }}</p>
                                         {# si c est meeting #}
                                         {% if timeline.name == 'Meeting' %} 
-                                            <p> {% trans %}with{% endtrans %} {{ timeline.staff }} {% trans %}to{% endtrans %} 
+                                            <p> {% trans %}with{% endtrans %} {{ timeline.staff }} @
                                                 {% if timeline.meetingPoint != null %}
-                                                {{ (timeline.meetingPoint.checkLanguage(app.user.language) != null) ? timeline.meetingPoint.checkLanguage(app.user.language) : timeline.meetingPoint.en }}
+                                                    {{ (timeline.meetingPoint.checkLanguage(app.user.language) != null) ? timeline.meetingPoint.checkLanguage(app.user.language) : timeline.meetingPoint.en }}
                                                 {% endif %}
                                             </p>
                                         {% endif %}
