@@ -5,11 +5,11 @@
         <form method="GET" class="mb-3">
             <div class="row">
                 <div class="col-lg-3">
-                        {% set now = "now"|date("Y-m-d") %}
-                        <div class="mb-3">
-                            <label class="form-label">{% trans %}Search date{% endtrans %}</label>
-                            <input class="form-control" name="date" placeholder="Date" type="date" value="{{ (app.request.query.get('date') != '') ? app.request.query.get('date') : now }}" id="date">
-                        </div>
+                    {% set now = "now"|date("Y-m-d") %}
+                    <div class="mb-3">
+                        <label class="form-label">{% trans %}Search date{% endtrans %}</label>
+                        <input class="form-control" name="date" placeholder="Date" type="date" value="{{ (app.request.query.get('date') != '') ? app.request.query.get('date') : now }}" id="date">
+                    </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="= mb-3">
@@ -81,10 +81,16 @@
                                 </div>
                                 <div>
                                     <p>
-                                    
-                                    <a  class="cursor" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
-                                     <b>{{ transferArrival.customerCard.holder|title }}</span></b> </a><br>
-                                        {{ transferArrival.hour|date('H:i') }} - {{ transferArrival.flightNumber }}  
+                                        <a  class="cursor" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
+                                            <b>{{ transferArrival.customerCard.holder|title }}</span></b> 
+                                        </a><br/>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.adultsNumber ~'A '  : '?A ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.childrenNumber ~'C '  : '?C ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.babiesNumber ~'B '  : '?B ') }} 
+                                        <br/>
+                                        <b>{{ transferArrival.customerCard.agency|title }}</span></b> 
+
+                                        {{ transferArrival.hour|date('H:i') }}
                                     </p>
                                 </div>
                             </div>
@@ -122,16 +128,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }}  
-                        </div>
 
                         <div class="row justify-content-around">
                             <div class="col-3">
                                 {# <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div> #}
                                 <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">            
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }}  
+                                    </span>
                                     <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">   
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }}                             
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }} 
+                                        {# {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }} #}                             
                                         {# {{ transferArrival.customerCard.reservationNumber }} #}
                                     </span>
                                 </div>
@@ -139,14 +146,14 @@
                             <div class="col-3 text-center">                      
                                 <div>
                                     <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleType|trans : '-') }}  
+                                        {{ (transferArrival.transferVehicleArrival.isCollective ? 'Collective'|trans : 'Individual'|trans) }}  
                                     </span>
                                 </div>           
                             </div>
                             <div class="col-3 text-center">                      
                                 <div>
                                     <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }}  
+                                        {{ transferArrival.flightNumber }}  
                                     </span>
                                 </div>           
                             </div>
