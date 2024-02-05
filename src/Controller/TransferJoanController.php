@@ -319,6 +319,8 @@ class TransferJoanController extends AbstractController
                     $hour = explode(':', $hora_v);
                     $dateTimeFormat = $hour[0] .':'. $hour[1];
                     $hour = new DateTimeImmutable($dateTimeFormat);
+                    $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0] . ' ' .  $dateTimeFormat;
+                    $dia_vuelo = new DateTimeImmutable($dateFormat);
                 }
                 
                 if ($pickup != "") {
