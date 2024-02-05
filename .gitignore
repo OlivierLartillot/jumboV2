@@ -18,3 +18,4 @@ yarn-error.log
 php.ini.save.txt
 
 /public/.htaccess
+/public/clients/
