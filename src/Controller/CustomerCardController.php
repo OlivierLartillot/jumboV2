@@ -45,6 +45,24 @@ class CustomerCardController extends AbstractController
                           AirportHotelRepository $airportHotelRepository, 
                           PaginatorInterface $paginator): Response
     {
+        /*
+        $path = $this->getParameter('fiches_clients_folder');
+        $nom_fichier = $path . date('d-m-Y-h_i_s').'.csv';
+        fopen($nom_fichier, 'w');
+        $records = [
+            [1, 2, 5],
+            ['foo', 'bar', 'baz'],
+            ['john', 'doe', 'john.doe@example.com'],
+        ];
+        
+        try {
+            $writer = Writer::createFromPath($nom_fichier, 'w+');
+            $writer->insertAll($records);
+        } catch (CannotInsertRecord $e) {
+            $e->getRecord(); //returns [1, 2, 3]
+        } 
+        */
+
 
         //Listes des informations a afficher dans les tris
         $agencies = $agencyRepository->findAllAsc();
