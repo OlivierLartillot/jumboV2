@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.locales: [en, fr, es, ru]
+    fiches_clients_folder: '%kernel.project_dir%/public/clients/'
+
 services:
     # default configuration for services in *this* file
     _defaults:
