@@ -39,10 +39,10 @@ let airportCheckbox = {
 
     handleClic: function(event) {
         // cible le groupe de boutons sur lequel on a cliqué (ex: group-2)
-        console.log(event.target.id);
+        console.log(event.target);
         airportCheckbox.switchButon(event.target)
         let butonState = airportCheckbox.butonState(event.target)
-        const group = document.querySelectorAll('[data-group=' + event.target.id + ' ]');
+        const group = document.querySelectorAll('[data-group="' + event.target.id + '" ]');
         console.log(group)
         group.forEach(element => {
             if (butonState == "inactive") {
