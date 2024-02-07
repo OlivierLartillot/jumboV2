@@ -69,10 +69,23 @@
         <div class="row mt-3">
             {% for transferArrival in results  %}
 
-            {%  set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
-            <div class="col-lg-4 d-none" data-group="{{ transferArrival.flightNumber }}">
+                {% set isChecked =  "" %}
+                {% set isCheckedBgClass = "" %}
+                {% set isCheckedInputClass = "" %}    
+
+            {% if transferArrival.transferVehicleArrival is defined %}
+                {% set isChecked = transferArrival.transferVehicleArrival.isChecked is defined and transferArrival.transferVehicleArrival.isChecked ? 'checked' : '' %}
+                {% set isCheckedBgClass = isChecked ? "" : "airport-background-no-checked" %}
+                {% set isCheckedInputClass = isChecked ? "bg-success border border-success" : "" %}    
+            {% endif %}
+
+            {% set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
+
+            <!-- On met l'id en UpperCase pour éviter les problèmes entre la bdd, le bouton et le Js-->
+            <div class="col-lg-4 d-none" data-group="{{ transferArrival.flightNumber|upper }}">
                 <div class="card border {{ statusClass }}" data-group="group-{{ transferArrival.id }}">
-                    <div class="card-body">
+
+                    <div class="card-body {{ isCheckedBgClass }}" id="card-body-{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.id : ""}}">
                         <div class="d-flex justify-content-between">
                             <div class="d-flex flex-row bd-highlight mb-3">
                                 
@@ -82,15 +95,15 @@
                                 <div>
                                     <p>
                                         <a  class="cursor" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
-                                            <b>{{ transferArrival.customerCard.holder|title }}</span></b> 
+                                            <b>{{ transferArrival.customerCard.holder|title }}</b> 
                                         </a><br/>
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.adultsNumber ~'A '  : '?A ') }} 
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.childrenNumber ~'C '  : '?C ') }} 
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.babiesNumber ~'B '  : '?B ') }} 
                                         <br/>
-                                        <b>{{ transferArrival.customerCard.agency|title }}</span></b> 
+                                        <span class="text-primary"> {{ transferArrival.customerCard.agency|title }}</span>
 
-                                        {{ transferArrival.hour|date('H:i') }}
+                                        {# {{ transferArrival.hour|date('H:i') }} #}
                                     </p>
                                 </div>
                             </div>
@@ -129,24 +142,25 @@
                             </div>
                         </div>
 
-                        <div class="row justify-content-around">
-                            <div class="col-3">
+                        <div class="d-flex flex-wrap justify-content-around">
+                            <div class="col-3 col-md-6 col-lg-3 text-start">
                                 {# <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div> #}
                                 <div>
                                     <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">            
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }}  
-                                    </span>
-                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">   
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }} 
-                                        {# {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }} #}                             
-                                        {# {{ transferArrival.customerCard.reservationNumber }} #}
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '?') }} 
+                                        <br/> 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '') }}  
                                     </span>
                                 </div>
                             </div>
                             <div class="col-3 text-center">                      
                                 <div>
                                     <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
-                                        {{ (transferArrival.transferVehicleArrival.isCollective ? 'Collective'|trans : 'Individual'|trans) }}  
+                                        {% if transferArrival.transferVehicleArrival  %}
+                                            {{ (transferArrival.transferVehicleArrival.isCollective ? 'Collective'|trans : 'Individual'|trans) }} 
+                                        {% else %}
+                                        ?
+                                        {% endif %}
                                     </span>
                                 </div>           
                             </div>
@@ -160,12 +174,19 @@
                             <div class="col-3 text-end">
                                 <div>
                                     <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : '-')}}
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : '?')}}
                                         </span>
                                 </div>
                             </div>
                         </div>
-
+                        {% if transferArrival.transferVehicleArrival  %}
+                            <div class="d-flex justify-content-center">
+                                <div class=" form-switch form-switch-lg">
+                                    <input type="checkbox" class="form-check-input airport-isChecked-btn {{ isCheckedInputClass }}"  id="{{ transferArrival.transferVehicleArrival.id}}" {{isChecked}} >
+                                    {# <label class="form-check-label text-danger" for="customSwitchsizelg">Not Checked</label> #}
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
            
@@ -180,14 +201,12 @@
                             </div>
                             <div class="modal-body ">
                                <div class="row justify-content-around text-center">
+                                    {# 
                                     <div class="col-10 border border-secondary rounded mb-3">
                                         <b>{% trans %}Date/Hour{% endtrans %}</b><br>
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('d-m-Y H:i') : '-') }} 
                                     </div>
-                                    <div class="col-5 border border-secondary rounded mb-3">
-                                        <b>{% trans %}Vehicle Number{% endtrans %}</b><br>
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }} 
-                                    </div>
+                                     #}
                                     <div class="col-5 border border-secondary rounded mb-3">
                                         <b>{% trans %}Vehicle Type{% endtrans %}</b><br>
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleType : '-') }} 
@@ -200,14 +219,22 @@
                                         -
                                         {% endif %} 
                                     </div>
+                                    {# 
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Vehicle Number{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }} 
+                                    </div>
+                                     #}
                                     <div class="col-5 border border-secondary rounded mb-3">
                                         <b>{% trans %}Voucher Number{% endtrans %}</b><br>
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }} 
                                     </div>
+                                    {# 
                                     <div class="col-5 border border-secondary rounded mb-3">
                                         <b>{% trans %}Area{% endtrans %}</b><br>
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.area : '-') }} 
                                     </div>
+                                     #}
                                     <div class="col-5 border border-secondary rounded mb-3">
                                         <b>{% trans %}Transport Company{% endtrans %}</b><br>
                                         {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }} 

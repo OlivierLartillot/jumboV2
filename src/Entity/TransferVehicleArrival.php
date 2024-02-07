@@ -47,6 +47,9 @@ class TransferVehicleArrival
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $babiesNumber = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isChecked = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -182,6 +185,18 @@ class TransferVehicleArrival
     public function setBabiesNumber(?int $babiesNumber): static
     {
         $this->babiesNumber = $babiesNumber;
+
+        return $this;
+    }
+
+    public function isIsChecked(): ?bool
+    {
+        return $this->isChecked;
+    }
+
+    public function setIsChecked(?bool $isChecked): static
+    {
+        $this->isChecked = $isChecked;
 
         return $this;
     }

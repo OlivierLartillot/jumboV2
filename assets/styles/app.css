@@ -352,3 +352,8 @@
 .verticaltext{
   transform: rotate(-90deg);
 }
+
+.airport-background-no-checked {
+  background-color: #ffe5ec;
+  border-radius: 0.2rem;
+}

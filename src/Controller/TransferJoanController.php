@@ -243,7 +243,7 @@ class TransferJoanController extends AbstractController
 
                 $reservationNumber = trim($row[0]);
                 $serviceNumbersInCSV[] = $reservationNumber;
-                $vuelo = trim(strtolower($row[3])); 
+                $vuelo = trim(strtoupper($row[3])); 
                 $reservationNumberFlightNumberIncsv[] = $reservationNumber .'-'. $vuelo ;
             }
         }
@@ -293,7 +293,7 @@ class TransferJoanController extends AbstractController
                 $reservaId= trim($row[0]); 
                 $agencia = trim(strtolower($row[1])); 
                 $nombre = trim(strtolower($row[2])); 
-                $vuelo = trim(strtolower($row[3])); 
+                $vuelo = trim(strtoupper($row[3])); 
                 $dia_vuelo = $row[4]; 
                 $hora_v = $row[5]; 
                 $desde = trim(strtolower($row[6])); 
@@ -429,7 +429,7 @@ class TransferJoanController extends AbstractController
                         $newTransfer->setBabiesNumber($bb);                    
                         
                         if (in_array($natureTransfer,$ecrituresDeSalidas)) {
-                            $newTransfer->setFlightNumber($vuelo);
+                            $newTransfer->setFlightNumber(strtoupper($vuelo));
                             $newTransfer->setHour($hour);
                         }
                         $manager->persist($newTransfer);      
@@ -440,7 +440,6 @@ class TransferJoanController extends AbstractController
                 /************ !!!  A ce stade ca existe en bdd !!!  **************/
                 
                 else {
-                   
                     // si dans le csv c est présent qu une fois et dans la bdd présent une fois juste MAJ
                     if ( ($countEachServiceNumbersInCSV[$reservaId] == 1) and (count($transfersExistent) == 1) ) {
                         
@@ -449,6 +448,11 @@ class TransferJoanController extends AbstractController
                            
                             // il y a un vehicule pour une arrivée et 1 SEUL PRESENT EN BDD 
                             // si le transfer vehicle existe MAJ sinon NEW
+                            // si les deux numéros de vol ne match pas il faut remplacer celui d'ivan par celui de Joan
+                            if (strtoupper($transfersExistent[0]->getFlightNumber()) !== strtoupper($vuelo)){
+                                $transfersExistent[0]->setFlightNumber(strtoupper($vuelo));
+                            };
+
                             $transferVehicleArrivalexiste = $transfersExistent[0]->getTransferVehicleArrival();
                             $transferVehicleArrival = ($transferVehicleArrivalexiste == null) ? new TransferVehicleArrival() : $transferVehicleArrivalexiste;
                             $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
@@ -493,15 +497,14 @@ class TransferJoanController extends AbstractController
                             $transfersExistent[0]->setBabiesNumber($bb);                    
                             
                             if (in_array($natureTransfer,$ecrituresDeSalidas)) {
-                                $transfersExistent[0]->setFlightNumber($vuelo);
+                                $transfersExistent[0]->setFlightNumber(strtoupper($vuelo));
                                 $transfersExistent[0]->setHour($hour);
                             }
                             $insertedLine++;  
                         }
                     }
                     else if (($countEachServiceNumbersInCSV[$reservaId] > 1) or (count($transfersExistent) > 1)) {  
-                        // dd('c est present plusieurs fois');
-                        // dd($customerCard);
+
                         // si c est une arrivée = del transferVehicle   
                         if (in_array($natureTransfer,$ecrituresDeLlegada)) {                            
                             // si dans le csv c'est présent plusieurs fois on supprime tous dans la bdd 
@@ -513,28 +516,30 @@ class TransferJoanController extends AbstractController
                             // seulement si y en a plusieurs
                             if (count($customerCards) >  1) {
                                 foreach ($customerCards as $currentCustomerCard) {
-                                    $checkCustommerArrival = $natureTransferRepository->findOneBy(['customerCard'=> $currentCustomerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
+                                    $checkCustommerArrival = $natureTransferRepository->findOneBy(['customerCard'=> $currentCustomerCard, 'date'=> $dia_vuelo, 'flightNumber' => strtoupper($vuelo)]);
                                     if ($checkCustommerArrival) {
                                         $transfersaMaj = $checkCustommerArrival;
                                         break;
                                     }
                                 }
                             } else {
-                                $transfersaMaj =  $natureTransferRepository->findOneBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo, 'flightNumber' => $vuelo]);
+                                $transfersaMaj =  $natureTransferRepository->findOneBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo, 'flightNumber' => strtoupper($vuelo)]);
                             }
                             // si le transferMaj est reconnu (== a 1) on met a jour
                             if ($transfersaMaj) {
-                                
+
+                                // dans le cas ou les deux numéros de vols sont différents on remplace par celui de Joan
+                                if (strtoupper($transfersExistent[0]->getFlightNumber()) !== strtoupper($vuelo)){
+                                    $transfersExistent[0]->setFlightNumber(strtoupper($vuelo));
+                                };
                                 // si transfer vehicleArrival existe on maj sinon crée
                                 $newTransferVehicleArrival = ($transfersaMaj->getTransferVehicleArrival() == null) ? new TransferVehicleArrival(): $transfersaMaj->getTransferVehicleArrival();
                                 $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
                                 $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
                                 $transfersaMaj->setFromStart($from);
                                 $transfersaMaj->setToArrival($to);
-
                                 
                                 if ($transfersaMaj->getTransferVehicleArrival() == null) {
-                                    
                                     $newTransferVehicleArrival->setTransferArrival($transfersaMaj);
                                 }
                                 
@@ -560,10 +565,10 @@ class TransferJoanController extends AbstractController
                                 $errorClients[] = 'The combination of flight number, date and customer card does not match for this day. ' . ucfirst($nombre) . ', reservation number: ' . $reservaId . ', flight number: ' . $vuelo   ;
                             }
                         }
-                        
-                        // sinon del transfer
+                        // sinon c'est inter ou départ => del transfer
                         else {
-    
+
+
                             foreach ($transfersExistent as $transfer) {
                                 $manager->remove($transfer);
                                 $manager->flush();
@@ -588,7 +593,7 @@ class TransferJoanController extends AbstractController
                             $newTransfer->setBabiesNumber($bb);                    
                             
                             if (in_array($natureTransfer,$ecrituresDeSalidas)) {
-                                $newTransfer->setFlightNumber($vuelo);
+                                $newTransfer->setFlightNumber(strtoupper($vuelo));
                                 $newTransfer->setHour($hour);
                             }
                             
@@ -596,10 +601,7 @@ class TransferJoanController extends AbstractController
                             $insertedLine++;
                         }
                     }
-
-
                 }
-                
             } 
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {

@@ -100,7 +100,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
             $requete = $requete->andWhere('transferArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
         }
         
-        $requete = $requete->orderBy('ta.hour', 'ASC')->addOrderBy('c.holder', 'ASC')
+        $requete = $requete->orderBy('ta.flightNumber', 'ASC')->addOrderBy('c.holder', 'ASC')
         ->getQuery()
         ->getResult()
         ;

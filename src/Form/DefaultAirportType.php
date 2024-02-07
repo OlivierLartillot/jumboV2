@@ -10,28 +10,30 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
 class DefaultAirportType extends AbstractType
 {
-
     private AirportHotelRepository $airportHotelRepository;
-    public function __construct(AirportHotelRepository $airportHotelRepository) {
+    public function __construct(AirportHotelRepository $airportHotelRepository,) {
         $this->airportHotelRepository = $airportHotelRepository;
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+ 
         $airports = $this->airportHotelRepository->findBy(['isAirport' => true],['name'=> 'ASC']);
-
-
         $builder
-        ->add('airport', EntityType::class,[
+         ->add('airport', EntityType::class,[
             'label' => "Airports",
-            'placeholder' => 'Choose an Airport',
+            'placeholder' => 'All Airports',
             'class' => AirportHotel::class,
             'autocomplete' =>false,
             'choices' => $airports,
-            ])
+            'attr' => [
+                'novalidate' => 'novalidate'
+            ],
+            'required' => false
+        ]) 
         ;
     }
 

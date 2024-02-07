@@ -100,12 +100,15 @@ class AirportController extends AbstractController
     #[Route('/airport/default/{id}/edit', name: 'app_user_airport_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $hasher): Response
     {
+
         $form = $this->createForm(DefaultAirportType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+     
             $user = $form->getData();
+            //$user->setAirport(null);
+            //dd($user);
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_customer_card_airport', [], Response::HTTP_SEE_OTHER);
