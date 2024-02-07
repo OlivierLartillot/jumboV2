@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('team-transfer')]
 class TransferJoanController extends AbstractController
@@ -61,6 +62,7 @@ class TransferJoanController extends AbstractController
                           TransportCompanyRepository $transportCompanyRepository, 
                           ErrorsImportManager $errorsImportManager,
                           AirportHotelRepository $airportHotelRepository,
+                          TranslatorInterface $translator
                           ): Response
     {
 
@@ -605,7 +607,9 @@ class TransferJoanController extends AbstractController
             } 
             // on va prévenir l'utilisateur que ces lignes n'ont pas étéaient importées car il n'y pas de carte client associées
             else {
-                $errorClients[] = 'The reservation number ' . $reservaId . ' and the fullname of the client ' . ucfirst($nombre) . ' are not present in the database';
+
+                // The reservation number {reservaId} and the fullname of the client {fullName} are not present in the database';
+                $errorClients[] = $translator->trans('error_message_transfer_joan', ['reservaId' => $reservaId, 'fullName' => ucwords($nombre) ]);
             } 
 
         }

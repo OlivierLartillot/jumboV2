@@ -1403,7 +1403,7 @@
       </trans-unit>
       <trans-unit id="4830dh3" resname="Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again">
         <source>Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again</source>
-        <target>__Please note that these clients have not been imported because they do not have a file. Please create the client file corresponding to the Client Number of the file before starting again</target>
+        <target>Por favor, tenga en cuenta que estos clientes no han sido importados porque no tienen un perfil de cliente asociado. Por favor, cree el perfil de cliente correspondiente al número de cliente del archivo que acaba de enviar antes de intentarlo de nuevo</target>
       </trans-unit>
       <trans-unit id="jutl_Ka" resname="Tous les clients ont bien été importés">
         <source>Tous les clients ont bien été importés</source>
@@ -2148,6 +2148,18 @@
       <trans-unit id="w7jT8QG" resname="&quot;Skip&quot; still has assigned clients. Please remember to assign them to their representative or assign them to the &quot;Alpitour&quot; representative.">
         <source>"Skip" still has assigned clients. Please remember to assign them to their representative or assign them to the "Alpitour" representative.</source>
         <target>"Skip" todavía tiene clientes asignados. Recuerde asignarlos a su representante o asignarlos al representante de "No Rep".</target>
+      </trans-unit>
+      <trans-unit id="zkoMLjq" resname="error_message_transfer_joan">
+        <source>error_message_transfer_joan</source>
+        <target>El par número de reserva (reservaId) - nombre completo del cliente (fullName) no coincide con ningún registro en la base de datos.</target>
+      </trans-unit>
+      <trans-unit id="78FROTr" resname="Transfer date">
+        <source>Transfer date</source>
+        <target>Fecha de transferencia</target>
+      </trans-unit>
+      <trans-unit id="u4qeqYm" resname="*Please note that only the first 5 errors will be displayed">
+        <source>*Please note that only the first 5 errors will be displayed</source>
+        <target>*Solo se muestran los primeros 5 errores.</target>
       </trans-unit>
     </body>
   </file>

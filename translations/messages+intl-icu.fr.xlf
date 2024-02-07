@@ -1558,12 +1558,24 @@
         <target>Vous avez des clients non assignés</target>
       </trans-unit>
       <trans-unit id="w7jT8QG" resname="&quot;Skip&quot; still has assigned clients. Please remember to assign them to their representative or assign them to the &quot;Alpitour&quot; representative.">
-        <source>"Skip" still has assigned clients. Pensez à les attribuer à leur représentant ou à les attribuer au représentant "No Rep".</source>
+        <source>"Skip" still has assigned clients. Please remember to assign them to their representative or assign them to the "Alpitour" representative.</source>
         <target>Skip a encore des clients non assignés. </target>
       </trans-unit>
       <trans-unit id="OnhpU4i" resname="Home">
         <source>Home</source>
         <target>Accueil</target>
+      </trans-unit>
+      <trans-unit id="zkoMLjq" resname="error_message_transfer_joan">
+        <source>error_message_transfer_joan</source>
+        <target>Le couple numéro de réservation (reservaId) - nom complet du Client (fullName) n'est pas présent dans la base de donnée.</target>
+      </trans-unit>
+      <trans-unit id="78FROTr" resname="Transfer date">
+        <source>Transfer date</source>
+        <target>Date de transfert</target>
+      </trans-unit>
+      <trans-unit id="u4qeqYm" resname="*Please note that only the first 5 errors will be displayed">
+        <source>*Please note that only the first 5 errors will be displayed</source>
+        <target>*Seules les 5 premières erreurs sont afichées.</target>
       </trans-unit>
     </body>
   </file>
