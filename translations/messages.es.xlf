@@ -2151,7 +2151,7 @@
       </trans-unit>
       <trans-unit id="zkoMLjq" resname="error_message_transfer_joan">
         <source>error_message_transfer_joan</source>
-        <target>El par número de reserva (reservaId) - nombre completo del cliente (fullName) no coincide con ningún registro en la base de datos.</target>
+        <target>El par número de reserva ({reservaId}) - nombre completo del cliente ({fullName}) no coincide con ningún registro en la base de datos.</target>
       </trans-unit>
       <trans-unit id="78FROTr" resname="Transfer date">
         <source>Transfer date</source>

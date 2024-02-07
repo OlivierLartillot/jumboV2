@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="zkoMLjq" resname="error_message_transfer_joan">
         <source>error_message_transfer_joan</source>
-        <target>The reservation ID (reservaId) - client's full name (fullName) pair does not match any record in the database.</target>
+        <target>The reservation ID ({reservaId}) - client's full name ({fullName}) pair does not match any record in the database.</target>
       </trans-unit>
     </body>
   </file>
