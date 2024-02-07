@@ -1567,7 +1567,7 @@
       </trans-unit>
       <trans-unit id="zkoMLjq" resname="error_message_transfer_joan">
         <source>error_message_transfer_joan</source>
-        <target>Le couple numéro de réservation (reservaId) - nom complet du Client (fullName) n'est pas présent dans la base de donnée.</target>
+        <target>Le couple numéro de réservation ({reservaId}) - nom complet du Client ({fullName}) n'est pas présent dans la base de donnée.</target>
       </trans-unit>
       <trans-unit id="78FROTr" resname="Transfer date">
         <source>Transfer date</source>
