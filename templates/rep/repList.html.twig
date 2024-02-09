@@ -51,9 +51,7 @@
                                                         {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
                                                             B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
                                                         {% endif %}                                           
-                            
                                                     </p>
-
                                                 </div>
                                             </li>
                                         </a>
@@ -93,7 +91,8 @@
                                                                                     </div>
                                                                                     <div>
                                                                                         <p><a href="{{ path('app_customer_card_show', {id: client.customerCard.id  }) }}"> <b><span id="textToCopy-{{client.id}}">{{ client.customerCard.holder|title }}</span></b> </a><br>
-                                                                                            {{ client.customerCard.agency|title }}
+                                                                                            {{ client.customerCard.agency|title }}<br/>
+                                                                                            <b><i>{{client.toArrival|title}}</i></b>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>

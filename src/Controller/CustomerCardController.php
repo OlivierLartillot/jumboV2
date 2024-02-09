@@ -562,8 +562,8 @@ class CustomerCardController extends AbstractController
         $user = $this->getUser();
         $comments = $commentRepository->findby(['customerCard' => $customerCard]);
 
-        // enregistre les date
-
+        // enregistrement de la timeline:
+        // les dates seront rendues par ASC dans twig
         $tableauTimeline = [];
         $i = 0;
         // date d'arrivée
@@ -571,17 +571,13 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['name'] = 'Arrival';
             $tableauTimeline[$i]['date'] = $arrival->getDate();
             $tableauTimeline[$i]['hour'] = $arrival->getHour()->format('H:i');
-            
+            $i++;  
+
             $tableauTimeline[$i]['name'] = 'Meeting';
             $tableauTimeline[$i]['date'] = $arrival->getMeetingAt();
             $tableauTimeline[$i]['hour'] = $arrival->getMeetingAt()->format('H:i');
             $tableauTimeline[$i]['staff'] = $arrival->getStaff();
             $tableauTimeline[$i]['meetingPoint'] = $arrival->getMeetingPoint();
-            $i++;            
-            
-            
-            
-            
             $i++;
         }
 
@@ -597,30 +593,21 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
             $i++;
         }
-/*         if ($customerCard->getMeetingAt()) {
-            $tableauTimeline[$i]['name'] = 'Meeting';
-            $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt();
-            $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
-            $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
-            $tableauTimeline[$i]['meetingPoint'] = $customerCard->getMeetingPoint();
-            $i++;
-        } */
 
+        // l'historique du changement de status
+        if (count($customerCard->getStatusHistories())  > 0 ) {
+            foreach ($customerCard->getStatusHistories() as $modifiedStatus) {
+                $tableauTimeline[$i]['name'] = 'Status';
+                $tableauTimeline[$i]['title'] = $modifiedStatus->getStatus();
+                $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt();
+                $tableauTimeline[$i]['hour'] = $modifiedStatus->getCreatedAt()->format('H:i');
+                $tableauTimeline[$i]['updatedBy'] = $modifiedStatus->getUpdatedBy();
+                $i++;
+            }
+        }    
+        // TODO: l'historique du changement de checked !! ---------------------------------------------------------------------    
 
-
-            if (count($customerCard->getStatusHistories())  > 0 ) {
-                foreach ($customerCard->getStatusHistories() as $modifiedStatus) {
-                    $tableauTimeline[$i]['name'] = 'Status';
-                    $tableauTimeline[$i]['title'] = $modifiedStatus->getStatus();
-                    $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt();
-                    $tableauTimeline[$i]['hour'] = $modifiedStatus->getCreatedAt()->format('H:i');
-                    $tableauTimeline[$i]['updatedBy'] = $modifiedStatus->getUpdatedBy();
-                    $i++;
-                }
-
-            }         
-
-        /*  dd($tableauTimeline); */
+        //dd($tableauTimeline); 
         // date des inter hotels
         // date de départ 
         $comment = new Comment();
