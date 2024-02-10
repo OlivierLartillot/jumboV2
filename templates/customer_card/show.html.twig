@@ -737,7 +737,11 @@
 
                                 <li class="feed-item">
                                     <div class="feed-item-list">
-                                        <p class="text-muted mb-1">{{ timeline.name }} {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}</p>
+                                        <p class="text-muted mb-1">
+                                            {{ timeline.name }} 
+                                            {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}
+                                            {% if timeline.name == 'Checked' %} {{ timeline.title == 1 ? 'Airport'|trans : 'Briefing'|trans }} {% endif %}
+                                        </p>
                                         <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour | date('H:i') }}</p>
                                         {# si c est meeting #}
                                         {% if timeline.name == 'Meeting' %} 
@@ -747,8 +751,19 @@
                                                 {% endif %}
                                             </p>
                                         {% endif %}
-                                        {% if timeline.name == 'Status' %}
+                                        {% if (timeline.name == 'Status')  %}
                                             <p>{% trans %}Updated by{% endtrans %}: {{ timeline.updatedBy }} </p>
+                                        {% endif %}
+                                        {% if (timeline.name == 'Checked')  %}
+                                        {# si c est check true, alors recu par ben sinon c est juste non recu est update by #}
+                                            {% if timeline.isChecked %}
+                                                <p>received by {{ timeline.updatedBy }}</p>
+                                            {% else %}
+                                                <p>
+                                                    Not received<br/>                                   
+                                                    {% trans %}Updated by{% endtrans %}: {{ timeline.updatedBy }} 
+                                                </p>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </li>

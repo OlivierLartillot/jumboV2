@@ -605,6 +605,18 @@ class CustomerCardController extends AbstractController
                 $i++;
             }
         }    
+        if (count($customerCard->getCheckedHistories())  > 0 ) {
+            foreach ($customerCard->getCheckedHistories() as $modifiedChecked) {
+                $tableauTimeline[$i]['name'] = 'Checked';
+                $tableauTimeline[$i]['title'] = $modifiedChecked->getType();
+                $tableauTimeline[$i]['date'] = $modifiedChecked->getCreatedAt();
+                $tableauTimeline[$i]['hour'] = $modifiedChecked->getCreatedAt()->format('H:i');
+                $tableauTimeline[$i]['updatedBy'] = $modifiedChecked->getUpdatedBy();
+                $tableauTimeline[$i]['isChecked'] = $modifiedChecked->isIsChecked();
+                $i++;
+            }
+        }    
+
         // TODO: l'historique du changement de checked !! ---------------------------------------------------------------------    
 
         //dd($tableauTimeline); 

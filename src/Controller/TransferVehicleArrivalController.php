@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CheckedHistory;
 use App\Entity\TransferVehicleArrival;
 use App\Form\TransferVehicleArrivalType;
 use App\Repository\TransferArrivalRepository;
@@ -90,10 +91,19 @@ class TransferVehicleArrivalController extends AbstractController
     }
 
     #[Route('/airport/isChecked/{id}', name: 'app_transfer_vehicle_arrival_isChecked', methods: ['POST'])]
-    public function isChecked(Request $request, TransferVehicleArrival $transferVehicleArrival, EntityManagerInterface $entityManager): Response
+    public function isChecked(TransferVehicleArrival $transferVehicleArrival, EntityManagerInterface $entityManager): Response
     {
 
         $transferVehicleArrival->setIsChecked(!$transferVehicleArrival->isIsChecked());
+
+        $checkedHistory = new CheckedHistory();
+        $checkedHistory->setCustomerCard($transferVehicleArrival->getTransferArrival()->getCustomerCard());
+        $checkedHistory->setUpdatedBy($this->getUser());
+        $checkedHistory->setIsChecked($transferVehicleArrival->isIsChecked());
+        $checkedHistory->setType(1);
+        $entityManager->persist($checkedHistory);
+
+
         $entityManager->flush();
 
         try {

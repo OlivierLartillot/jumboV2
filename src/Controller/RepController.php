@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\CheckedHistory;
 use App\Entity\CustomerCard;
 use App\Entity\User;
-use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
@@ -12,7 +12,10 @@ use App\Repository\TransferInterHotelRepository;
 use App\Repository\UserRepository;
 use App\Services\DefineQueryDate;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -217,4 +220,44 @@ class RepController extends AbstractController
             
         ]);
     }
+
+    #[Route('/client/isChecked/{id}', name: 'app_client_isChecked', methods: ['POST'])]
+    public function isChecked(CustomerCard $customerCard, EntityManagerInterface $entityManager): Response
+    {
+
+        $customerCard->setIsChecked(!$customerCard->isIsChecked());
+        
+        $checkedHistory = new CheckedHistory();
+        $checkedHistory->setCustomerCard($customerCard);
+        $checkedHistory->setUpdatedBy($this->getUser());
+        $checkedHistory->setIsChecked($customerCard->isIsChecked());
+        $checkedHistory->setType(2);
+        $entityManager->persist($checkedHistory);
+        
+        $entityManager->flush();
+
+        try {
+            return $this->json(
+                    // les données à transformer en JSON
+                    [
+                        'id' => $customerCard->getId(), 
+                        'isChecked' => $customerCard->isIsChecked()
+                    ], 
+                    // HTTP STATUS CODE
+                    200,
+                    // HTTP headers supplémentaires, dans notre cas : aucune
+                    [],
+                    // Contexte de serialisation, les groups de propriété que l'on veux serialise
+                   
+            );
+    
+         } catch (Exception $e){ // si une erreur est LANCE, je l'attrape
+            // je gère l'erreur
+            // par exemple si tu me file un genre ['3000'] qui n existe pas...
+             return new JsonResponse("Hoouuu !! Ce qui vient d'arriver est de votre faute : JSON invalide", Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+    }
+
+
 }

@@ -49,6 +49,12 @@ class CustomerCard
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferDeparture::class)]
     private Collection $transferDepartures;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isChecked = null;
+
+    #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: CheckedHistory::class)]
+    private Collection $checkedHistories;
+
     public function __construct()
     {
         $this->customerReports = new ArrayCollection();
@@ -56,6 +62,7 @@ class CustomerCard
         $this->comments = new ArrayCollection();
         $this->transferInterHotels = new ArrayCollection(); 
         $this->transferDepartures = new ArrayCollection();
+        $this->checkedHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -303,6 +310,48 @@ class CustomerCard
             // set the owning side to null (unless already changed)
             if ($transferDeparture->getCustomerCard() === $this) {
                 $transferDeparture->setCustomerCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isIsChecked(): ?bool
+    {
+        return $this->isChecked;
+    }
+
+    public function setIsChecked(?bool $isChecked): static
+    {
+        $this->isChecked = $isChecked;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CheckedHistory>
+     */
+    public function getCheckedHistories(): Collection
+    {
+        return $this->checkedHistories;
+    }
+
+    public function addCheckedHistory(CheckedHistory $checkedHistory): static
+    {
+        if (!$this->checkedHistories->contains($checkedHistory)) {
+            $this->checkedHistories->add($checkedHistory);
+            $checkedHistory->setCustomerCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCheckedHistory(CheckedHistory $checkedHistory): static
+    {
+        if ($this->checkedHistories->removeElement($checkedHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($checkedHistory->getCustomerCard() === $this) {
+                $checkedHistory->setCustomerCard(null);
             }
         }
 

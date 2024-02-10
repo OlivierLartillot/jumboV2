@@ -76,12 +76,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?AirportHotel $airport = null;
 
+    #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: CheckedHistory::class)]
+    private Collection $checkedHistories;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->statusHistories = new ArrayCollection();
         $this->transferArrivals = new ArrayCollection();
         $this->whatsAppMessages = new ArrayCollection();
+        $this->checkedHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -361,6 +365,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAirport(?AirportHotel $airport): static
     {
         $this->airport = $airport;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CheckedHistory>
+     */
+    public function getCheckedHistories(): Collection
+    {
+        return $this->checkedHistories;
+    }
+
+    public function addCheckedHistory(CheckedHistory $checkedHistory): static
+    {
+        if (!$this->checkedHistories->contains($checkedHistory)) {
+            $this->checkedHistories->add($checkedHistory);
+            $checkedHistory->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCheckedHistory(CheckedHistory $checkedHistory): static
+    {
+        if ($this->checkedHistories->removeElement($checkedHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($checkedHistory->getUpdatedBy() === $this) {
+                $checkedHistory->setUpdatedBy(null);
+            }
+        }
 
         return $this;
     }
