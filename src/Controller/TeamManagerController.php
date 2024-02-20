@@ -508,59 +508,62 @@ class TeamManagerController extends AbstractController
             }
         }
         
-
+        
 
         // si y a le parametre clientArrival dans l adresse alors le tableau des meetings (transferArrival)
         // n'aura que le transferArrival de ce client
-        if (true) {
-
+        if ($request->get("ta")) {
+            $meetings = [];
+            $meetings =  $transferArrivalRepository->findBy(['id' => $request->get("ta")]);
+            $date = $meetings[0]->getDate();
+            /* dump("on a le param d url");
+            dd($meetings); */
         } else {
-
-        }
-        //sinon
-        // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $transferArrivalRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
-    
-        $checkFormAgencies = $request->request->get("form_check_agencies");
-        if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
-            foreach ($agencies as $agency) {
-                
-                $data = $request->request->get("agence_". $agency->getId());
-                
-                $test = ($data == "on") ? true : false;
-                
-                // si non, la créer
-                
-                if ($printingOptionsUser == null) {
-                    $printingOptionsUser = new PrintingOptions();
-                    $printingOptionsUser->setUser($user);
-                } 
-                
-                if($test) {
-                    $printingOptionsUser->addAgency($agency);
-                } else {
-                    $printingOptionsUser->removeAgency($agency);
-                }
-              
-                foreach ($airports as $airport) { 
-                    $data = $request->request->get("airport_". $airport->getId());
+            //sinon
+            // récupérer les cutomerCard correspondant à la meeting date
+            $meetings = $transferArrivalRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
+        
+            $checkFormAgencies = $request->request->get("form_check_agencies");
+            if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
+                foreach ($agencies as $agency) {
+                    
+                    $data = $request->request->get("agence_". $agency->getId());
+                    
                     $test = ($data == "on") ? true : false;
                     
-                    // si c est on on rajoute
+                    // si non, la créer
+                    
+                    if ($printingOptionsUser == null) {
+                        $printingOptionsUser = new PrintingOptions();
+                        $printingOptionsUser->setUser($user);
+                    } 
+                    
                     if($test) {
-                        $printingOptionsUser->addAirport($airport);
+                        $printingOptionsUser->addAgency($agency);
                     } else {
-                        $printingOptionsUser->removeAirport($airport);
+                        $printingOptionsUser->removeAgency($agency);
                     }
-                    $manager->persist($printingOptionsUser);
-                    $manager->flush();                   
+                
+                    foreach ($airports as $airport) { 
+                        $data = $request->request->get("airport_". $airport->getId());
+                        $test = ($data == "on") ? true : false;
+                        
+                        // si c est on on rajoute
+                        if($test) {
+                            $printingOptionsUser->addAirport($airport);
+                        } else {
+                            $printingOptionsUser->removeAirport($airport);
+                        }
+                        $manager->persist($printingOptionsUser);
+                        $manager->flush();                   
+                    }
                 }
+                $this->addFlash(
+                    'danger',
+                    'Warning: To update the labels to be printed, please send back the date selection form'
+                );
+                $formAgencySend = true;
             }
-            $this->addFlash(
-                'danger',
-                'Warning: To update the labels to be printed, please send back the date selection form'
-            );
-            $formAgencySend = true;
         }
 
         return $this->render('team_manager/stickers.html.twig', [

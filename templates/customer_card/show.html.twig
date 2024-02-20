@@ -226,15 +226,17 @@
                                 <div class="col-lg-10">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
                                         <a href="{{ path('app_transfer_arrival_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >{% trans %}Edit arrival{% endtrans %} #{{ transfer.id}}</a>
-                                                {# si il existe pas add #}
-                                    {% if transfer.transferVehicleArrival is not defined or transfer.transferVehicleArrival == null %}
-                                        <a  href="{{ path('app_transfer_vehicle_arrival_new', {id:transfer.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Add Transfer Arrival{% endtrans %}</a> 
-                                    {% else %}
-                                    
-                                        <a  href="{{ path('app_transfer_vehicle_arrival_edit', {id:transfer.transferVehicleArrival.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Edit Transfer Arrival{% endtrans %}</a> 
-                                     {% endif %}
+                                        {# si il existe pas add #}
+                                        {% if transfer.transferVehicleArrival is not defined or transfer.transferVehicleArrival == null %}
+                                            <a  href="{{ path('app_transfer_vehicle_arrival_new', {id:transfer.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Add Transfer Arrival{% endtrans %}</a> 
+                                        {% else %}
+                                            <a  href="{{ path('app_transfer_vehicle_arrival_edit', {id:transfer.transferVehicleArrival.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Edit Transfer Arrival{% endtrans %}</a> 
+                                        {% endif %}
                                     {% endif %}
-                                    {#  previent des similarité ou différences de pax #}
+                                        {# Impression de l'étiquette #}
+                                        <a class="btn btn-secondary mb-3" href="{{ path('app_admin_stickers_par_date', {ta:transfer.id} )}}">{% trans %}Print Label{% endtrans %}</a>
+
+                                    {#  previent des similarités ou différences de pax #}
                                     {% if transfer.transferVehicleArrival %}
                                         {% if (transfer.adultsNumber != transfer.transferVehicleArrival.adultsNumber) or 
                                             (transfer.childrenNumber != transfer.transferVehicleArrival.childrenNumber) or 

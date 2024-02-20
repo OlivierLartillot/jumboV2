@@ -127,13 +127,17 @@
             <!-- Start right Content here -->
             <!-- ============================================================== -->
             <div class="main-content">
-
+				
+				{% set pageTitleText = app.request.query.get("ta") ? 'Print Unique Label' : 'Labels Printing' %}
+				 
                 <div class="page-content">
                     <div class="container-fluid">
-			    		{{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Labels printing'}) }}
+			    		{{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: pageTitleText}) }}
 
 						<div class="notImpressed">
-
+							{% if app.request.query.get("ta") %}
+								<a class="btn btn-secondary btn-sm my-3" href="{{ path('app_admin_stickers_par_date')}}">Back To Multiple Labels</a>
+							{% endif %}
 
 							<div class="text-center mb-3">
 
@@ -209,6 +213,14 @@
 														<label for="date">{% trans %}Arrival Date{% endtrans %}</label>
 														<input class="form-control" id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
 													</div>
+													{# Si on est sur l'impresssion d une seule étiquette #}
+													{# on a le parametre TA dans l'url (transferArrival) #}
+													{% if app.request.query.get("ta") %}
+														<div class="my-3 hidden">
+															<label for="ta">{% trans %}Transfer Arrival{% endtrans %}</label>
+															<input class="form-control" id="ta" name="ta" type="ta" value="{{ app.request.query.get("ta")}}">
+														</div>
+													{% endif %}
 													<div class="my-3">
 														<label for="labelNumber">{% trans %}Print from{% endtrans %}
 															<!-- Button trigger modal -->
