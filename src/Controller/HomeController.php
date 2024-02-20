@@ -16,6 +16,7 @@ use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
 use App\Repository\TransferDepartureRepository;
 use App\Repository\TransferInterHotelRepository;
+use App\Repository\TransferVehicleArrivalRepository;
 use App\Repository\UserRepository;
 use App\Services\ErrorsImportManager;
 use DateTime;
@@ -34,6 +35,7 @@ class HomeController extends AbstractController
 
     #[Route('/admin', name: 'home' )]
     public function accueil(TransferArrivalRepository $transferArrivalRepository, 
+                            TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
                             TransferInterHotelRepository $transferInterHotelRepository, 
                             TransferDepartureRepository $transferDepartureRepository,
                             UserRepository $userRepository
@@ -52,12 +54,20 @@ class HomeController extends AbstractController
         $rep = $userRepository->findBy(['username' => 'skip']);
         $datesWithSkippedClients = $transferArrivalRepository->findDatesWithSkippedClients($rep);
 
+        /***** si le transfert vehicle arrival existe Vérifie si la date du transfer.arrival.meeting est bien > a la date de transfer.vehiclearrival.date  ******/
+        $erreursDatesArriveesEtMeeting = $transferVehicleArrivalRepository->findErrorArrivalDateANdMeetingDate();
+
+        /***** regarde si il existe des différences entre les données de transfer team et import booking ******/
+        $differencies = $transferVehicleArrivalRepository->findDifferencesWithtransferArrival();
+
         return $this->render('index.html.twig', [
             'doublonsArrivee' => $doublonsArrivee,
             'doublonsInterHotel' => $doublonsInterHotel,
             'doublonsDepart' => $doublonsDepart,
             'dateRestantes' => $dateRestantes,
-            'datesWithSkippedClients' => $datesWithSkippedClients
+            'datesWithSkippedClients' => $datesWithSkippedClients,
+            'erreursDatesArriveesEtMeeting' => $erreursDatesArriveesEtMeeting,
+            'differencies' => $differencies,
         ]); 
     }
     
@@ -88,7 +98,28 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/errors-dates', name: 'errors_dates' )]
+    public function errorsBetweenArrivalAndMeetingDates(TransferVehicleArrivalRepository $transferVehicleArrivalRepository, EntityManagerInterface $entityManager)
+    {
+        /** Peu importe le jour !!! **/
+        //******************** SECURITY *************************** */
+        $this->denyAccessUnlessGranted('ROLE_SUPERMAN');
+        //********************************************************* */
 
+        $erreursDatesArriveesEtMeeting = $transferVehicleArrivalRepository->findErrorArrivalDateANdMeetingDate();
+        //dd($erreursDatesArriveesEtMeeting);
+        $entityManager->clear();
+        $errors = [];
+        foreach ($erreursDatesArriveesEtMeeting as $transferVehicleArrival) {
+            //dd($transferVehicleArrival->getId());
+            $error = $transferVehicleArrivalRepository->find($transferVehicleArrival->getId());
+            //dd($error->isIsCollective());
+            $errors[] = $error;
+        }
+        return $this->render('dashboard/errors_dates.html.twig', [
+            'erreursDatesArriveesEtMeeting' => $errors,
+        ]);
+    }
 
 
     #[Route('/ignore-duplicate/transfers/{id}/{param}', name: 'ignore_duplicate_transfers' )]
@@ -128,6 +159,9 @@ class HomeController extends AbstractController
 
         return $this->redirectToRoute('duplicate_transfers', ['param' => $param]);
     }
+
+
+
 
     #[Route('/team-manager/import', name: 'app_import', methods: ['GET', 'POST'] )]
     public function import(Request $request)

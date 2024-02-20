@@ -60,7 +60,8 @@ class AirportController extends AbstractController
                 $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
            
                 foreach ($results as $arrival) {
-                    $flightNumber = strtoupper($arrival->getFlightNumber());
+                    $flightNumber = ($arrival->getTransferVehicleArrival()) ? strtoupper($arrival->getTransferVehicleArrival()->getFlightNumber()) : strtoupper($arrival->getFlightNumber()); 
+
                     if (!in_array($flightNumber, $flightNumbers)) {
                         $flightNumbers[] = $flightNumber;
                     }

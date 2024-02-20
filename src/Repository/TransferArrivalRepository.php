@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\TransferArrival;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -502,6 +503,32 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
 
     }
+
+    /**
+     * @return TransferArrival[] Returns an array 
+     * 
+     */
+    public function findErrorArrivalDateANdMeetingDate(): array
+    {
+   
+        $entityManager = $this->getEntityManager();
+        
+        $sql = '
+            SELECT *
+            FROM transfer_arrival AS arrival
+            WHERE DATE(arrival.meeting_at) <= DATE(arrival.date) 
+        '; 
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('App\Entity\TransferArrival', 'arrival');
+
+        // Définir les champs à mapper
+        $rsm->addFieldResult('arrival', 'id', 'id');
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $result = $query->getResult();
+        return $result;
+
+    }
+
 
     /**
      * @return TransferArrival[] , personnels AIRPORT

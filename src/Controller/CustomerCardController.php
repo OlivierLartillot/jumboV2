@@ -357,7 +357,7 @@ class CustomerCardController extends AbstractController
         $noShow = $statusRepository->findOneBy(["name"=> "No Show"]);
 
         //pax adults de tel date à tel date
-        $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
+/*         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
         $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children");
         $results['nbrTotalChildren'] = intval($results['nbrTotalChildren']);
@@ -365,7 +365,7 @@ class CustomerCardController extends AbstractController
         $results['nbrTotalbabies'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies");
         $results['nbrTotalbabies'] = intval($results['nbrTotalbabies']);
         $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
-        $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
+        $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren']; */
         // pax adults sans no show
         $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", $noShow);
         $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
@@ -579,6 +579,14 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['staff'] = $arrival->getStaff();
             $tableauTimeline[$i]['meetingPoint'] = $arrival->getMeetingPoint();
             $i++;
+            
+            if ($arrival->getTransferVehicleArrival()) {
+                // si y a une arrivée ajouté par la team transfert
+                $tableauTimeline[$i]['name'] = 'Arrival (Transfer team)';
+                $tableauTimeline[$i]['date'] = $arrival->getTransferVehicleArrival()->getDate();
+                $tableauTimeline[$i]['hour'] = $arrival->getTransferVehicleArrival()->getDate()->format('H:i');
+                $i++;
+            }
         }
 
         foreach ($customerCard->getTransferInterHotels() as $interHotel) {

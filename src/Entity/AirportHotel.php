@@ -45,6 +45,12 @@ class AirportHotel
     #[ORM\OneToMany(mappedBy: 'airport', targetEntity: User::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'fromStart', targetEntity: TransferVehicleArrival::class)]
+    private Collection $transferVehicleArrivals;
+
+    #[ORM\OneToMany(mappedBy: 'toArrival', targetEntity: TransferVehicleArrival::class)]
+    private Collection $transferVehicleArrivalsToArrival;
+
     public function __construct()
     {
         $this->transferArrivals = new ArrayCollection();
@@ -55,6 +61,8 @@ class AirportHotel
         $this->transferToDepartures = new ArrayCollection();
         $this->printingOptions = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->transferVehicleArrivals = new ArrayCollection();
+        $this->transferVehicleArrivalsToArrival = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -326,6 +334,66 @@ class AirportHotel
             // set the owning side to null (unless already changed)
             if ($user->getAirport() === $this) {
                 $user->setAirport(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransferVehicleArrival>
+     */
+    public function getTransferVehicleArrivals(): Collection
+    {
+        return $this->transferVehicleArrivals;
+    }
+
+    public function addTransferVehicleArrival(TransferVehicleArrival $transferVehicleArrival): static
+    {
+        if (!$this->transferVehicleArrivals->contains($transferVehicleArrival)) {
+            $this->transferVehicleArrivals->add($transferVehicleArrival);
+            $transferVehicleArrival->setFromStart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferVehicleArrival(TransferVehicleArrival $transferVehicleArrival): static
+    {
+        if ($this->transferVehicleArrivals->removeElement($transferVehicleArrival)) {
+            // set the owning side to null (unless already changed)
+            if ($transferVehicleArrival->getFromStart() === $this) {
+                $transferVehicleArrival->setFromStart(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TransferVehicleArrival>
+     */
+    public function getTransferVehicleArrivalsToArrival(): Collection
+    {
+        return $this->transferVehicleArrivalsToArrival;
+    }
+
+    public function addTransferVehicleArrivalsToArrival(TransferVehicleArrival $transferVehicleArrivalsToArrival): static
+    {
+        if (!$this->transferVehicleArrivalsToArrival->contains($transferVehicleArrivalsToArrival)) {
+            $this->transferVehicleArrivalsToArrival->add($transferVehicleArrivalsToArrival);
+            $transferVehicleArrivalsToArrival->setToArrival($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransferVehicleArrivalsToArrival(TransferVehicleArrival $transferVehicleArrivalsToArrival): static
+    {
+        if ($this->transferVehicleArrivalsToArrival->removeElement($transferVehicleArrivalsToArrival)) {
+            // set the owning side to null (unless already changed)
+            if ($transferVehicleArrivalsToArrival->getToArrival() === $this) {
+                $transferVehicleArrivalsToArrival->setToArrival(null);
             }
         }
 

@@ -82,7 +82,7 @@
             {% set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
 
             <!-- On met l'id en UpperCase pour éviter les problèmes entre la bdd, le bouton et le Js-->
-            <div class="col-lg-4 d-none" data-group="{{ transferArrival.flightNumber|upper }}">
+            <div class="col-lg-4 d-none" data-group="{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.flightNumber|upper : transferArrival.flightNumber|upper }}">
                 <div class="card border {{ statusClass }}" data-group="group-{{ transferArrival.id }}">
 
                     <div class="card-body {{ isCheckedBgClass }}" id="card-body-{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.id : ""}}">
@@ -97,9 +97,9 @@
                                         <a  class="cursor" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
                                             <b>{{ transferArrival.customerCard.holder|title }}</b> 
                                         </a><br/>
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.adultsNumber ~'A '  : '?A ') }} 
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.childrenNumber ~'C '  : '?C ') }} 
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.babiesNumber ~'B '  : '?B ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.adultsNumber ~'A '  :  transferArrival.adultsNumber ~'A ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.childrenNumber ~'C '  : transferArrival.childrenNumber ~'C ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.babiesNumber ~'B '  : transferArrival.babiesNumber ~'B ') }} 
                                         <br/>
                                         <span class="text-primary"> {{ transferArrival.customerCard.agency|title }}</span>
 
@@ -167,14 +167,14 @@
                             <div class="text-center">                      
                                 <div>
                                     <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
-                                        {{ transferArrival.flightNumber }}  
+                                     {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.flightNumber : transferArrival.flightNumber)}}
                                     </span>
                                 </div>           
                             </div>
                             <div class="text-end">
                                 <div>
                                     <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">
-                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : '?')}}
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : transferArrival.hour|date('H:i'))}}
                                         </span>
                                 </div>
                             </div>

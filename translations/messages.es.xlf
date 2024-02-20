@@ -1547,7 +1547,7 @@
       </trans-unit>
       <trans-unit id="IPDEcp3" resname="Updated by">
         <source>Updated by</source>
-        <target>Actualizado po</target>
+        <target>Actualizado por</target>
       </trans-unit>
       <trans-unit id="NV958p1" resname="Comments">
         <source>Comments</source>
@@ -2160,6 +2160,22 @@
       <trans-unit id="u4qeqYm" resname="*Please note that only the first 5 errors will be displayed">
         <source>*Please note that only the first 5 errors will be displayed</source>
         <target>*Solo se muestran los primeros 5 errores.</target>
+      </trans-unit>
+      <trans-unit id="p3KxRi_" resname="error_message_transfer_joan_there_is_no_arrival_on_this_day">
+        <source>error_message_transfer_joan_there_is_no_arrival_on_this_day</source>
+        <target>No puedes crear un traslado de llegada si no hay llegada ese día. {fullName}, número de reserva {reservaId}, tiene una tarjeta de cliente pero no hay llegada hoy. Crea primero la llegada asociada o pide a un administrador que lo haga antes de importar el traslado de esta llegada. También puedes modificar la fecha de llegada originalmente prevista.</target>
+      </trans-unit>
+      <trans-unit id="UYv0V1n" resname="error_message_transfer_joan_combination_flight_date_card">
+        <source>error_message_transfer_joan_combination_flight_date_card</source>
+        <target>La combinación de número de vuelo, fecha y tarjeta de cliente no coincide para hoy. {fullName}, número de reserva: {reservaId}, número de vuelo: {flightNumber}</target>
+      </trans-unit>
+      <trans-unit id="Uy.a4ko" resname="Briefing">
+        <source>Briefing</source>
+        <target>Briefing</target>
+      </trans-unit>
+      <trans-unit id="UivX72K" resname="Please note that the meeting date does not coincide with the arrival date.">
+        <source>Please note that the meeting date does not coincide with the arrival date.</source>
+        <target>La fecha de la reunión no coincide con la fecha de llegada.</target>
       </trans-unit>
     </body>
   </file>

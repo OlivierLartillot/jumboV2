@@ -1577,6 +1577,22 @@
         <source>*Please note that only the first 5 errors will be displayed</source>
         <target>*Seules les 5 premières erreurs sont afichées.</target>
       </trans-unit>
+      <trans-unit id="p3KxRi_" resname="error_message_transfer_joan_there_is_no_arrival_on_this_day">
+        <source>error_message_transfer_joan_there_is_no_arrival_on_this_day</source>
+        <target>Vous ne pouvez pas créer un transfert d'arrivée s'il n'y a pas d'arrivée ce jour-là. {fullName} , numéro de réservation {reservaId} possède une fiche client mais aucune arrivée aujourd'hui. Créez d'abord l'arrivée associée ou demandez à un administrateur de le faire avant d'importer le transfert de cette arrivée. Vous pouvez également modifier la date d'arrivée initialement prévue.</target>
+      </trans-unit>
+      <trans-unit id="UYv0V1n" resname="error_message_transfer_joan_combination_flight_date_card">
+        <source>error_message_transfer_joan_combination_flight_date_card</source>
+        <target>La combinaison numéro de vol, date aet carte client ne match pas pour ce jour. {fullName}, numéro de réservation: {reservaId}, numéro de vol: {flightNumber}</target>
+      </trans-unit>
+      <trans-unit id="Uy.a4ko" resname="Briefing">
+        <source>Briefing</source>
+        <target>Briefing</target>
+      </trans-unit>
+      <trans-unit id="UivX72K" resname="Please note that the meeting date does not coincide with the arrival date.">
+        <source>Please note that the meeting date does not coincide with the arrival date.</source>
+        <target>La date du meeting ne coïncide pas avec la date d'arrivée.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

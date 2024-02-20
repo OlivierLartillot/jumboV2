@@ -491,6 +491,7 @@ class CustomerCardRepository extends ServiceEntityRepository
         $requete = $requete->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard');
 
         if ($status != null)  { 
+            // on récupère tous les status sauf NO SHOW  (voir plus bas) / (si no show défini dans le controlleur)
             $requete = $requete->innerJoin('App\Entity\Status', 'status', 'WITH', 'transferArrival.status = status.id');
         }        
         

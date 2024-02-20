@@ -9,6 +9,14 @@
         <source>error_message_transfer_joan</source>
         <target>The reservation ID ({reservaId}) - client's full name ({fullName}) pair does not match any record in the database.</target>
       </trans-unit>
+      <trans-unit id="p3KxRi_" resname="error_message_transfer_joan_there_is_no_arrival_on_this_day">
+        <source>error_message_transfer_joan_there_is_no_arrival_on_this_day</source>
+        <target>You cannot create an arrival transfer if there is no arrival on this day. {fullName}, reservation number {reservaId}  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival. You can also change the originally scheduled arrival date.</target>
+      </trans-unit>   
+      <trans-unit id="UYv0V1n" resname="error_message_transfer_joan_combination_flight_date_card">
+        <source>error_message_transfer_joan_combination_flight_date_card</source>
+        <target>The combination of flight number, date and customer card does not match for this day. {fullName}, reservation number: {reservaId}, flight number: {flightNumber}</target>
+      </trans-unit>   
     </body>
   </file>
 </xliff>

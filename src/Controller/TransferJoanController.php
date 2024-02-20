@@ -41,6 +41,7 @@ class TransferJoanController extends AbstractController
         
         $numberOfRowsType = gettype($numberOfRows);
 
+        //dd($errorClients);
 
         return $this->render('transfer/import.html.twig', [
             'transfer_joans' => $transferJoanRepository->findAll(),
@@ -363,6 +364,7 @@ class TransferJoanController extends AbstractController
             }
             
             // Normalement ce numéro de reservation existe dans le customer card
+            
             $customerCard = $customerCardRepository->findOneBy(['reservationNumber' => $reservaId, 'holder' => $nombre]);
             $transportCompany = $transportCompanyRepository->findOneBy(['name' => $suplidor]);
 
@@ -400,7 +402,6 @@ class TransferJoanController extends AbstractController
              
             if ($customerCard) {
                 //dd($customerCard);
-               
                 $transfersExistent =  $natureTransferRepository->findBy(['customerCard'=> $customerCard, 'date'=> $dia_vuelo]);
                 
                 // si dans la bdd ce n est pas présent, il faut ajouter 
@@ -410,9 +411,15 @@ class TransferJoanController extends AbstractController
                     // l'arrivée (transferArrival doit etre uniquement créé par ivan ou son fichier)
                     // par conséquent si y a une fiche client mais pas d'arrivée ce jour, on ne peut pas l'importer
                     if (in_array($natureTransfer,$ecrituresDeLlegada)) {
-                        $errorClients[] = 'You cannot create an arrival transfer if there is no arrival on this day. ' . ucfirst($nombre) . ', reservation number ' . $reservaId.'  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival.';
+                        $myObject = [
+                            'translation' => $translator->trans('error_message_transfer_joan_there_is_no_arrival_on_this_day', ['reservaId' => $reservaId, 'fullName' => ucwords($nombre) ]),
+                            'link' => $customerCard->getId()
+                        ];
+                        $errorClients[] = $myObject;
+                        //'You cannot create an arrival transfer if there is no arrival on this day. ' . ucfirst($nombre) . ', reservation number ' . $reservaId.'  has a client card but no arrival today. Create the associated arrival first or ask an administrator to do it before importing the transfer of this arrival. You can also change the originally scheduled arrival date';
                         continue;
                     } else {
+                        // on a donc ici interHotel ou départ
                         $newTransfer->setCustomerCard($customerCard);
                         $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
                         $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
@@ -450,17 +457,15 @@ class TransferJoanController extends AbstractController
                            
                             // il y a un vehicule pour une arrivée et 1 SEUL PRESENT EN BDD 
                             // si le transfer vehicle existe MAJ sinon NEW
-                            // si les deux numéros de vol ne match pas il faut remplacer celui d'ivan par celui de Joan
-                            if (strtoupper($transfersExistent[0]->getFlightNumber()) !== strtoupper($vuelo)){
-                                $transfersExistent[0]->setFlightNumber(strtoupper($vuelo));
-                            };
-
+ 
                             $transferVehicleArrivalexiste = $transfersExistent[0]->getTransferVehicleArrival();
                             $transferVehicleArrival = ($transferVehicleArrivalexiste == null) ? new TransferVehicleArrival() : $transferVehicleArrivalexiste;
                             $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
                             $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
-                            $transfersExistent[0]->setFromStart($from);
-                            $transfersExistent[0]->setToArrival($to);
+                            /* On ne met pas a jour les données d'ivan !!!                       
+                                $transfersExistent[0]->setFromStart($from);
+                                $transfersExistent[0]->setToArrival($to); 
+                            */
                             $transferVehicleArrival->setTransferArrival($transfersExistent[0]);
                             $transferVehicleArrival->setIsCollective($tipo_trf);
                             $transferVehicleArrival->setVehicleNumber($n_veh);
@@ -472,6 +477,9 @@ class TransferJoanController extends AbstractController
                             $transferVehicleArrival->setAdultsNumber($ad);
                             $transferVehicleArrival->setChildrenNumber($ni);
                             $transferVehicleArrival->setBabiesNumber($bb);
+                            $transferVehicleArrival->setFlightNumber(strtoupper($vuelo));
+                            $transferVehicleArrival->setFromStart($from);
+                            $transferVehicleArrival->setToArrival($to);
                                   
                             if($transferVehicleArrivalexiste == null){
                                 $manager->persist($transferVehicleArrival);
@@ -479,8 +487,8 @@ class TransferJoanController extends AbstractController
                             $insertedLine++;
                         }
 
+                        // sinon c'est un inter hotel ou depart
                         else {
-                            // sinon c'est un inter hotel ou depart
                             $transfersExistent[0]->setCustomerCard($customerCard);
                             $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
                             $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
@@ -531,15 +539,14 @@ class TransferJoanController extends AbstractController
                             if ($transfersaMaj) {
 
                                 // dans le cas ou les deux numéros de vols sont différents on remplace par celui de Joan
-                                if (strtoupper($transfersExistent[0]->getFlightNumber()) !== strtoupper($vuelo)){
-                                    $transfersExistent[0]->setFlightNumber(strtoupper($vuelo));
-                                };
                                 // si transfer vehicleArrival existe on maj sinon crée
                                 $newTransferVehicleArrival = ($transfersaMaj->getTransferVehicleArrival() == null) ? new TransferVehicleArrival(): $transfersaMaj->getTransferVehicleArrival();
                                 $from = $airportHotelRepository->findOneBy(['name'=> $desde]);
                                 $to = $airportHotelRepository->findOneBy(['name'=> $hasta]);
-                                $transfersaMaj->setFromStart($from);
-                                $transfersaMaj->setToArrival($to);
+                                /* on ne met plus a jour les données d ivan !
+                                    $transfersaMaj->setFromStart($from);
+                                    $transfersaMaj->setToArrival($to);
+                                */
                                 
                                 if ($transfersaMaj->getTransferVehicleArrival() == null) {
                                     $newTransferVehicleArrival->setTransferArrival($transfersaMaj);
@@ -555,6 +562,9 @@ class TransferJoanController extends AbstractController
                                 $newTransferVehicleArrival->setAdultsNumber($ad);
                                 $newTransferVehicleArrival->setChildrenNumber($ni);
                                 $newTransferVehicleArrival->setBabiesNumber($bb);
+                                $newTransferVehicleArrival->setFlightNumber(strtoupper($vuelo));
+                                $newTransferVehicleArrival->setFromStart($from);
+                                $newTransferVehicleArrival->setToArrival($to);
                                 
                                 if ($transfersaMaj->getTransferVehicleArrival() == null) {
                                     $manager->persist($newTransferVehicleArrival);
@@ -564,13 +574,17 @@ class TransferJoanController extends AbstractController
                             }
                             // sinon on prévient avec une erreur
                             else{
-                                $errorClients[] = 'The combination of flight number, date and customer card does not match for this day. ' . ucfirst($nombre) . ', reservation number: ' . $reservaId . ', flight number: ' . $vuelo   ;
+                                $myObject = [
+                                    'translation' => $translator->trans('error_message_transfer_joan_combination_flight_date_card', ['reservaId' => $reservaId, 'fullName' => ucwords($nombre), 'flightNumber' =>  $vuelo ]),
+                                    'link' => $customerCard->getId()
+                                ];
+                                $errorClients[] = $myObject;
+
+                                //'The combination of flight number, date and customer card does not match for this day. ' . ucfirst($nombre) . ', reservation number: ' . $reservaId . ', flight number: ' . $vuelo   ;
                             }
                         }
                         // sinon c'est inter ou départ => del transfer
                         else {
-
-
                             foreach ($transfersExistent as $transfer) {
                                 $manager->remove($transfer);
                                 $manager->flush();
@@ -609,7 +623,11 @@ class TransferJoanController extends AbstractController
             else {
 
                 // The reservation number {reservaId} and the fullname of the client {fullName} are not present in the database';
-                $errorClients[] = $translator->trans('error_message_transfer_joan', ['reservaId' => $reservaId, 'fullName' => ucwords($nombre) ]);
+                $myObject = [
+                    'translation' => $translator->trans('error_message_transfer_joan', ['reservaId' => $reservaId, 'fullName' => ucwords($nombre) ]),
+                    'link' => ""
+                ];
+                $errorClients[] = $myObject;
             } 
 
         }

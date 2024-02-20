@@ -79,7 +79,7 @@ class RepController extends AbstractController
             'date' => $date,
             'user' => $user,
             'regroupementsClients' => $regroupementsClients,   
-            'paxTab' => $paxTab,
+            //'paxTab' => $paxTab,
             'paxPerHotelAgency' => $paxPerHotelAgency,
             'briefingsMenu' => true,
             'meetingsClients'=> $meetingsClients

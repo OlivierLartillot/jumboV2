@@ -17,4 +17,10 @@
 ## 2.0.2
 - "No Rep" et "Skip" ne seront plus visibles ou modifiables (a définir) dans la liste des Utilisateurs.
 
-##
+## 3.0.0
+ - Possibilité pour les airports de choisir la liste des clients d'un vol 
+ - Possibilité pour les reps et airports de cliquer les gens comme présents
+
+# 3.1.0
+ - Possibilité d'imprimer une seule étiquette
+ 

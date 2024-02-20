@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransferVehicleArrivalRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class TransferVehicleArrival
 {
     #[ORM\Id]
@@ -49,6 +50,26 @@ class TransferVehicleArrival
 
     #[ORM\Column(nullable: true)]
     private ?bool $isChecked = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $flightNumber = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferVehicleArrivals')]
+    private ?airportHotel $fromStart = null;
+
+    #[ORM\ManyToOne(inversedBy: 'transferVehicleArrivalsToArrival')]
+    private ?airportHotel $toArrival = null;
+
+    public function __construct(){
+        $this->createdAt = new \DateTimeImmutable('now');
+        $this->updatedAt = new \DateTimeImmutable('now');
+    }
 
     public function getId(): ?int
     {
@@ -197,6 +218,67 @@ class TransferVehicleArrival
     public function setIsChecked(?bool $isChecked): static
     {
         $this->isChecked = $isChecked;
+
+        return $this;
+    }
+
+    public function getFlightNumber(): ?string
+    {
+        return $this->flightNumber;
+    }
+
+    public function setFlightNumber(?string $flightNumber): static
+    {
+        $this->flightNumber = $flightNumber;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): static
+    {
+        $this->updatedAt = new \DateTimeImmutable('now');
+
+        return $this;
+    }
+
+    public function getFromStart(): ?airportHotel
+    {
+        return $this->fromStart;
+    }
+
+    public function setFromStart(?airportHotel $fromStart): static
+    {
+        $this->fromStart = $fromStart;
+
+        return $this;
+    }
+
+    public function getToArrival(): ?airportHotel
+    {
+        return $this->toArrival;
+    }
+
+    public function setToArrival(?airportHotel $toArrival): static
+    {
+        $this->toArrival = $toArrival;
 
         return $this;
     }

@@ -26,7 +26,12 @@
                         <p><i>{% trans %}*Please note that only the first 5 errors will be displayed{% endtrans %}</i></p>
                         {% for error in errorClients %} 
                             <ul>
-                                <li>{{ error }}</li>
+                                <li>
+                                    {% if error.link %}
+                                        <a href="{{ path('app_customer_card_show', {'id': error.link}) }}" >{% trans %}Manage Client Card{% endtrans %}</a><br/>                 
+                                    {% endif %}
+                                    {{ error.translation }}
+                                </li>
                             </ul>
                         {% endfor %}
 

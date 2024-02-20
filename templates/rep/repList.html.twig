@@ -2,8 +2,28 @@
 
 {#     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }} #}
 
-
-
+{# CALCUL
+    {% set monTableau = {} %}
+#}
+{# CALCUL
+    Méthode pour calculer en fonctions des résultats récupérés dans la page
+    A:4 E:2 B:0
+    Pour le moment c'est calculé avec les imports booking, meeting at, pax avec les TransferArrival
+    Si besoin :
+    1. passer par tous les endroits Notés CALCUL
+    2. afficher les résultast dans des spans en finde page 
+    3. les injecter en js dans les résultats
+    la méthode 
+    // debut de la boucle avec iindexTab = 0
+    {% set nbreDadultes = 0 %}
+    // debut de la boucle du premier regroupement
+        // calcul 
+        {% set sumNbreDadultes = sumNbreDadultes + nbreAdultes %}
+    {% endfor %}
+        {% set keynbreDadultes = 'nbreAdultes' + 1 %}
+        {% set monTableau = monTableau|merge({ (keynbreDadultes): nbreDadultes }) %}
+    {{ dump(monTableau) }}
+ #}
         <div class="row justify-content-center">
             <div class="col-xl-4 col-sm-6">
                 <div class="card">
@@ -29,9 +49,29 @@
                     <div class="card-body">
 
                         {% if regroupementsClients|length > 0 %}
-                        {% set i = 0 %}
+                            {% set i = 0 %}
+                            {# CALCUL
+                                Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert     
+                                faire pareil pour enfants et bébés                   
+                                {% set indexTab = 0 %}
+                                {% set keynbreAdultes = 'nbreAdultes' ~ indexTab %} 
+                            #}
+
+                            
+
                         <ul class="activity-feed  mb-0 ps-2">
                             {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                {# CALCUL
+                                    Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert
+                                    {% set nbreAdultes = 0 %}
+                                    {% set sumNbreAdultes = 0 %}
+                                    {% set nbreEnfants = 0 %}
+                                    {% set sumNbreEnfants = 0 %}
+                                    {% set nbreBb = 0 %}
+                                    {% set sumNbreBb = 0 %}
+                                #}
+                                
+
                                 {% if (regroupement is not empty) %}                                                        
                                     {% if regroupement.staff == user %}
                                         {% set hotel =  regroupement.toArrival %}
@@ -62,7 +102,8 @@
                                         <!-- Button Modal -->
                                         <button type="button" class="badge btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">Show More</button>
                                      #}                                
-                        
+
+                                
                                     <!-- sample modal content -->
                                     <div id="myModal-{{i}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -75,11 +116,11 @@
                                                 <div class="modal-body">
             
                                                     {% for currentMeeting in meetingsClients %}
+                                                    
                                                         {% for client in currentMeeting %}
-
-                {% set isChecked = client.customerCard.isChecked is defined and client.customerCard.isChecked ? 'checked' : '' %}
-                {% set isCheckedBgClass = isChecked ? "" : "airport-background-no-checked" %}
-                {% set isCheckedInputClass = isChecked ? "bg-success border border-success" : "" %}   
+                                                            {% set isChecked = client.customerCard.isChecked is defined and client.customerCard.isChecked ? 'checked' : '' %}
+                                                            {% set isCheckedBgClass = isChecked ? "" : "airport-background-no-checked" %}
+                                                            {% set isCheckedInputClass = isChecked ? "bg-success border border-success" : "" %}   
                  
 
                                                             {% if client.meetingAt ==  regroupement.getMeetingAt  %}
@@ -141,13 +182,19 @@
 
                                                                             <div class="col-6 ps-4">
                                                                                 <div class="mb-1">
-                                                                                    Adultes: <b>{{ client.adultsNumber }}</b>
+                                                                                {% set nbreAdultes = client.transferVehicleArrival ? client.transferVehicleArrival.adultsNumber : client.adultsNumber %}
+                                                                                {# CALCUL
+                                                                                    Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert
+                                                                                    faire de meme pour les enfants et bébés
+                                                                                    {% set sumNbreAdultes = sumNbreAdultes + nbreAdultes  %}
+                                                                                #}
+                                                                                    Adultes: <b>{{ nbreAdultes  }}</b>
                                                                                 </div>
                                                                                 <div class="mb-1">
-                                                                                    Children: <b>{{ client.childrenNumber }}</b>
+                                                                                    Children: <b>{{ client.transferVehicleArrival ? client.transferVehicleArrival.childrenNumber : client.childrenNumber }}</b>
                                                                                 </div>
                                                                                 <div class="mb-1">
-                                                                                    Bébés: <b>{{ client.babiesNumber }}</b>
+                                                                                    Bébés: <b>{{ client.transferVehicleArrival ? client.transferVehicleArrival.babiesNumber : client.babiesNumber }}</b>
                                                                                 </div>
                                                                             </div>
 
@@ -183,7 +230,7 @@
                                                                             </div>
                                                                             <div class="col-4 text-end">
                                                                                 <div>
-                                                                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{ client.hour|date('H:i') }}</span>
+                                                                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{  client.transferVehicleArrival ? client.transferVehicleArrival.date|date('H:i') : client.hour|date('H:i') }}</span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -203,7 +250,6 @@
                                                             {% set i = i+1 %}  
                                                         {% endfor %}
                                                     {% endfor %}
-                                                        
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
@@ -212,8 +258,23 @@
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
 
-                             
-                            {% endfor %}
+
+                            {# CALCUL
+                                Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert                    
+                                {% set keynbreAdultes = 'nbreAdultes' ~ indexTab %}
+                                {% set monTableau = monTableau|merge({ (keynbreAdultes): sumNbreAdultes }) %}
+                                {{ dump(monTableau) }}
+                                {% set indexTab = indexTab + 1 %}
+                             #}
+                                {% endfor %}
+                            {# CALCUL
+                                {% for item in monTableau %}
+                                    adultes : {{ item }}
+                            
+                                {% endfor %}
+                                {% set testKey = 0 %}
+                                {{ dump(monTableau['nbreAdultes'~testKey]) }} 
+                            #}
                         </ul>
                         {% else %}
                         {% trans  %}You don't have any client today{% endtrans %}

@@ -508,6 +508,16 @@ class TeamManagerController extends AbstractController
             }
         }
         
+
+
+        // si y a le parametre clientArrival dans l adresse alors le tableau des meetings (transferArrival)
+        // n'aura que le transferArrival de ce client
+        if (true) {
+
+        } else {
+
+        }
+        //sinon
         // récupérer les cutomerCard correspondant à la meeting date
         $meetings = $transferArrivalRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
     

@@ -12,7 +12,6 @@
                             <div class="row">
                                 <h5>{% trans %}Transfer Management{% endtrans %}</h5>
                                 
-
                                 {% if doublonsArrivee %}
                                     <div class="col-md-4">
                                         <a href="{{ path('duplicate_transfers', { param: 'arrival'})}}" class="text-danger">
@@ -86,6 +85,28 @@
                             <div class="row">
                                 <h5>{% trans %}Rep Assignment{% endtrans %}</h5>
 
+                                {% if erreursDatesArriveesEtMeeting %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('errors_dates')}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase image-clignote"><i class="uil-exclamation-triangle"></i> Errors !!!</h5>
+                                                    <p class="mb-0">{% trans %}Please note that the meeting date does not coincide with the arrival date.{% endtrans %}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="uil-exclamation-triangle"></i> No Error </h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
                                 {% if dateRestantes %}
                                     <div class="col-md-4">
                                         <a href="{{ path('app_admin_team_manager')}}" class="text-danger">
@@ -129,10 +150,37 @@
                                         </div>
                                     </div>
                                 {% endif %}
+                                
                             </div>
+                            <hr class="border border-2 text-black"/>
                             <!-- end row-->
                         {% endif %}
 
+
+                            <div class="row">
+                                <h5>{% trans %}Differencies{% endtrans %}</h5>
+
+                                {% if differencies %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('errors_dates')}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="uil-file-exclamation"></i> Differencies !!!</h5>
+                                                    <p class="mb-0">{% trans %}There are differences between the import booking file and the import transfers file.{% endtrans %}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="uil-file-exclamation"></i> No Error </h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
 
 
                     </div>
