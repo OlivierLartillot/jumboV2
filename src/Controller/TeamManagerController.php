@@ -482,9 +482,9 @@ class TeamManagerController extends AbstractController
                                     AirportHotelRepository $airportHotelRepository,
                                     PrintingOptionsRepository $printingOptionsRepository,
                                     Request $request,
-                                    DefineQueryDate $defineQueryDate): Response 
+                                    DefineQueryDate $defineQueryDate,
+                                    ): Response 
     {
-
         $day =  $defineQueryDate->returnDay($request);
        
         $date = new DateTimeImmutable($day . '00:01:00');

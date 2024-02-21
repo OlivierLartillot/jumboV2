@@ -23,4 +23,7 @@
 
 # 3.1.0
  - Possibilité d'imprimer une seule étiquette
+
+# 3.2.0
+ - Statistiques
  
