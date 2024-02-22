@@ -42,11 +42,16 @@ class TransferArrivalNewType extends AbstractType
             ])
             ->add('reservationNumber', TextType::class,[
                 'mapped' => false
-            ])
-            ->add('jumboNumber', TextType::class,[
-                'mapped' => false,
-                'label' => new TranslatableMessage('Jumbo Number')
-            ])
+            ]);
+
+        if ($_ENV['ENTREPRISE'] == 'jumbo') { 
+            $builder
+                ->add('jumboNumber', TextType::class,[
+                    'mapped' => false,
+                    'label' => new TranslatableMessage('Jumbo Number')
+            ]);
+        }
+        $builder
             ->add('agency', EntityType::class, [
                 'mapped' => false,
                 'label' => "Agencies",
