@@ -21,8 +21,16 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div>
-
-                                            <form name="drag_and_drop" method="post" action="{{ path('admin_traitement_csv')}}" enctype="multipart/form-data" class="dropzone dz-clickable">
+                                            {% set formPath = 'admin_traitement_csv_jumbo' %}
+                                            {% if app.request.server.get('ENTREPRISE') == 'jumbo' %}
+                                                    {% set formPath = 'admin_traitement_csv_jumbo' %}
+                                            {% elseif app.request.server.get('ENTREPRISE') == 'meetingPoint' %}
+                                                    {% set formPath = 'admin_traitement_csv_meetingPoint' %}
+                                            {% endif %}
+                                            <form name="drag_and_drop" method="post" action="{{ path(formPath)}}" enctype="multipart/form-data" class="dropzone dz-clickable">
+                                                
+            
+                                                
                                                 <div class="dz-message needsclick">
                                                     
 
@@ -47,7 +55,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <small>        </small>
 
                                                         <div class="form-error">
 

@@ -55,10 +55,8 @@
                 {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) or 
                         ("ROLE_RESERVATIONS" in app.user.roles)) %} 
                 <li>
-                {% if app.request.server.get('ENTREPRISE') == 'jumbo' %}
-                    {% set importLink = 'app_import' %}
-                {% endif %}
-                    <a href="{{ path(importLink) }}">
+
+                    <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
                         <span>{% trans %}Import Booking{% endtrans %}</span>
                     </a>

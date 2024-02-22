@@ -44,6 +44,7 @@ class TransferVehicleArrivalType extends AbstractType
             ->add('vehicleNumber', null, [
                 'label' => $this->translator->trans('Vehicle Number'),
             ])
+ 
             ->add('vehicleType', null, [
                 'label' => $this->translator->trans('Vehicle Type'),
             ])

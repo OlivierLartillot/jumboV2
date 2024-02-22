@@ -18,7 +18,7 @@ class CustomerCard
     #[ORM\Column(length: 24)]
     private ?string $reservationNumber = null;
 
-    #[ORM\Column(length: 24)]
+    #[ORM\Column(length: 24, nullable: true)]
     private ?string $jumboNumber = null;
 
     #[ORM\Column(length: 255)]
@@ -54,6 +54,9 @@ class CustomerCard
 
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: CheckedHistory::class)]
     private Collection $checkedHistories;
+
+    #[ORM\Column(length: 24, nullable: true)]
+    private ?string $clientLanguage = null;
 
     public function __construct()
     {
@@ -354,6 +357,18 @@ class CustomerCard
                 $checkedHistory->setCustomerCard(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClientLanguage(): ?string
+    {
+        return $this->clientLanguage;
+    }
+
+    public function setClientLanguage(?string $clientLanguage): static
+    {
+        $this->clientLanguage = $clientLanguage;
 
         return $this;
     }

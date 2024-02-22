@@ -23,7 +23,6 @@ class CustomerCardNewType extends AbstractType
 
         $agencies = $this->agencyRepository->findBy([], ['name'=> 'ASC']);
 
-
         $builder
             ->add('reservationNumber', null, [
             ] )

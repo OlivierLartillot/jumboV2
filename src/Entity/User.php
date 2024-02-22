@@ -30,6 +30,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min:2, max:180)]
     private ?string $username = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $usageName = null;
+
     #[ORM\Column]
     private array $roles = [];
 
@@ -395,6 +398,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $checkedHistory->setUpdatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUsageName(): ?string
+    {
+        return $this->usageName;
+    }
+
+    public function setUsageName(?string $usageName): static
+    {
+        $this->usageName = $usageName;
 
         return $this;
     }

@@ -14,7 +14,7 @@ class TransferArrival
     #[ORM\Column]
     private ?int $id = null;
     
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $serviceNumber = null;
 
 /*     #[ORM\Column(nullable: true)]
@@ -38,7 +38,7 @@ class TransferArrival
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $hour = null;
 
     #[ORM\OneToOne(mappedBy: 'transferArrival', cascade: ['persist', 'remove'])]

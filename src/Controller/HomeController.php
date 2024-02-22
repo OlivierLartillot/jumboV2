@@ -23,6 +23,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -166,9 +167,12 @@ class HomeController extends AbstractController
     #[Route('/team-manager/import', name: 'app_import', methods: ['GET', 'POST'] )]
     public function import(Request $request)
     {
+
+       $entreprise = $_ENV["ENTREPRISE"];
+
         $dragAndDrop = new DragAndDrop();
         $form = $this->createForm(DragAndDropType::class, $dragAndDrop, [
-            'action' => $this->generateUrl('admin_traitement_csv'),
+            'action' => $this->generateUrl('admin_traitement_csv_'.$entreprise),
             ] );
             $form->handleRequest($request);
         
@@ -179,7 +183,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('team-manager/traitement_csv', name: 'admin_traitement_csv')]
+    #[Route('team-manager/traitement-csv-jumbo', name: 'admin_traitement_csv_jumbo')]
     public function traitement_csv(Request $request, EntityManagerInterface $manager, 
                                     StatusRepository $statusRepository, 
                                     MeetingPointRepository $meetingPointRepository, 
@@ -796,4 +800,324 @@ class HomeController extends AbstractController
         
                 return $this->redirectToRoute('app_import', ['row'=> $row]);
     }
+
+    #[Route('team-manager/traitement-csv-meetingPoint', name: 'admin_traitement_csv_meetingPoint')]
+    public function traitement_csv_meetingPoint(Request $request, EntityManagerInterface $manager, 
+                                    StatusRepository $statusRepository, 
+                                    MeetingPointRepository $meetingPointRepository, 
+                                    UserRepository $userRepository,
+                                    CustomerCardRepository $customerCardRepository,
+                                    AirportHotelRepository $airportHotelRepository,
+                                    AgencyRepository $agencyRepository,
+                                    TransferArrivalRepository $transferArrivalRepository,
+                                    ErrorsImportManager $errorsImportManager
+                                    ): Response
+    {
+
+        dump('on est chez meeting point');
+
+        $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
+        $mimeType = $fileToUpload->getMimeType();
+        $error = $fileToUpload->getError();
+       
+        // récupération du token
+        $submittedToken = $request->request->get('token');
+                    
+        $errorDetails = [];
+        // 'delete-item' is the same value used in the template to generate the token
+        if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
+           $errorDetails[] = 'Code import 1 - Token error, please refresh the page and start again.';
+        }
+
+        // test des données recues
+        // infos sur le csv
+        if ( $error > 0) {
+            $errorDetails[] = 'Code import 2 - Error uploading the file. Error code :' . $error;
+        }
+    
+        // Vérifier si le fichier a été correctement téléchargé
+        if (!file_exists($fileToUpload)) {
+            $errorDetails[] = "Code import 3 - File not found.";
+        }
+        
+        // Vérifier le type de fichier
+        if (($mimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            $errorDetails[] = "Code import 4 - The file extension is not correct !";
+        }
+        
+        if (count($errorDetails) > 0) {
+            
+            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorDetails]);
+
+        }
+            // a faire dans le traitement
+            //load the CSV document from a stream
+            /*  $stream = fopen('csv/servicios.csv', 'r'); */
+            // Charger le fichier Excel
+            $spreadsheet = IOFactory::load($fileToUpload);
+            //$spreadsheet->setActiveSheetIndexByName('OPERATIVA');
+            $worksheet = $spreadsheet->getActiveSheet();
+            $rows = $worksheet->toArray();
+            
+            // les entités par défaut
+            $status = $statusRepository->find(1);
+            $user = $userRepository->find(1);
+            $meetingsPoints = $meetingPointRepository->findAll();
+            // Le meeting point va etre le premier de la liste !
+            $meetingPoint = $meetingsPoints[0];
+        
+
+            // constituer le tableau des imports, enregistre les numéros de services, cela va servir
+            // 1. a voir si plusieurs groupes sont présents sur la même fiche dans ce fichier: utile surtout si on renvoit le fichier et que la carte existe deja mais qu'un groupe se rajoute
+            // 2. a voir à la fin si une entrée a été supprimée 
+
+            $serviceNumbersInCSV = [];
+
+
+            //**************************************************************************//
+            //**************** DEBUT PREMIER TESTS ET GESTION ERREURS  ****************//
+            
+            $row = 0;
+            // bloquer a une seule date possible par import
+            $daysTab = []; // le tableau qui va enregistrer les dates
+/*             foreach ($csv as $record) {
+                $row++;
+
+                if (!isset($record['Nº Vuelo/Transporte Origen']) ){
+                    $errorsImportManager->addErrors('Three possibilities: 
+                    <br>Delimiter: In your csv file, the delimiter must be "' . $csv->getDelimiter() .'"
+                    <br>Is the title row is present ?
+                    <br>Is Nº Vuelo/Transporte Origen is present and written like that ? ');
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);    
+                }
+
+                if ($record['Nº Vuelo/Transporte Origen'] != NULL) {
+                    $numbers = explode(", ", $record['Localizadores']);
+                    // si il manque un des deux on sort et annonce l'erreur !
+                    if ( (!isset($numbers[0])) or (!isset($numbers[1])) ) {
+                        if ($record['Titular'] != null){
+                            $errorsImportManager->addErrors('Code import 10 - Warning near row '.$row.' <br>Error in your csv file on the <b>"location" cell</b>. <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                        } else {
+                            $errorsImportManager->addErrors('Code import 11 - Warning near row '.$row.' <br>Error in your csv file on a <b>"location" cell</b>. <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                        }
+
+                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                    }
+                    $jumboNumber = trim($numbers[0]);
+                    $reservationNumber = trim($numbers[1]);
+                    $serviceNumbersInCSV[] =  $reservationNumber;
+                    // récupère le jour et l heure de l'arrivée 
+                    if ($record['Fecha/Hora Origen']  != NULL ) { 
+                        $record['Fecha/Hora Origen'] = trim($record['Fecha/Hora Origen']);
+                        $dateTime = explode(" ", $record['Fecha/Hora Origen']);
+
+                         // Gestion des erreurs 
+                        if ( (!isset($dateTime[0])) or (!isset($dateTime[1])) ) {
+                            if ($record['Titular'] != null){
+                                $errorsImportManager->addErrors('Code import 12 - Warning near row '.$row.' <br>Error in your csv file on the "Fecha/Hora Origen" cell: <b>Wrong date formatting</b> <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                            } else {
+                                $errorsImportManager->addErrors('Code import 13 - Warning near row '.$row.' <br>Error in your csv file on a "Fecha/Hora Origen" cell: <b>Wrong date formatting</b> <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                            }
+                            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                        }    
+                    } // fecha origen null !! error 
+                    else {
+                        if ($record['Titular'] != null){
+                            $errorsImportManager->addErrors('Code import 14 - Warning near row '.$row.' <br>Error in your csv file on the "Fecha/Hora Origen" cell: <b>Can not be null</b>. <br>The client is ' . $record['Titular'] . '.<br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                        } else {
+                            $errorsImportManager->addErrors('Code import 15 - Warning near row '.$row.' <br>Error in your csv file on a "Fecha/Hora Origen" cell: <b>Can not be null</b>. <br>This client does not have a name in the csv file. <br>Flight number: ' . $record['Nº Vuelo/Transporte Origen']);
+                        }
+                        return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                    }
+                    // si il n'y a pas d'erreur
+                    $date = explode("/", $dateTime[0]);
+                    $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
+                    $dateTime = new DateTimeImmutable($dateFormat . ' ' .$dateTime[1]);
+
+                    // enregsitrement des dates (on utilise la row pour différencier les clés plutot que d initialiser un $i)
+                    if (!in_array ($dateFormat, $daysTab)) {
+                        $daysTab[]= $dateFormat;
+                        $errorsImportManager->addErrors('Code import 16 - There are several arrival dates in this csv file. Make sure all arrival dates are on the same day! <br>
+                                                        Flight number:'.  $record['Nº Vuelo/Transporte Origen'].' <br>
+                                                        Row: '.$row.'<br>
+                                                        Date: '. $date[1] . '-' . $date[0] .'-'. $date[2]
+                                                        );
+                    }
+                }
+
+                $numeroPasajeros = explode(" ", $record['Número pasajeros']);
+                // si la case 0 est nulle == la cellule dans csv est nulle
+                if ($numeroPasajeros[0] == null) {
+                    $errorsImportManager->removeErrors();
+                    $errorsImportManager->addErrors('Code import <b>18.bis</b>: There is a formatting error on the number of passengers. <br>
+                    Row: '.$row.'<br>
+                    Number of passengers: <b> is NULL </b> must be in the format: <b>A: 2 N: 1 B: 1</b>'); 
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                }
+                // si le formattage est mauvais le [5] == au nombre de Bébé(derniere entrée de la cellule) sera absent !
+                if (!isset($numeroPasajeros[5])) {
+                    $errorsImportManager->removeErrors();
+                    $errorsImportManager->addErrors('Code import 18: There is a formatting error on the number of passengers. <br>
+                                                    Row: '.$row.'<br>
+                                                    Number of passengers: <b>'. $record['Número pasajeros']. '</b> must be in the format: <b>A: 2 N: 1 B: 1</b>'); 
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                }
+                
+                if ( ($record['Traslado desde'] == null) or ($record['Traslado hasta'] == null)) {
+                    $errorsImportManager->removeErrors();
+                    $airportTest = ($record['Traslado desde'] == null) ? 'must contain data but is equal to NULL' : $record['Traslado desde'];
+                    $hotelTest = ($record['Traslado hasta'] == null) ? 'must contain data but is equal to NULL' : $record['Traslado hasta'];
+                    $errorsImportManager->addErrors('Code import 19: There is a formatting error on Airport or Hotel. Both cells must contain data while one is null.<br>
+                                                    Row: '.$row.'<br>
+                                                    Airport: '. $airportTest .'<br>
+                                                    Hotel: '. $hotelTest); 
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+
+                }
+
+
+                
+            } 
+
+             if (count($daysTab) > 1) {
+                return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+            } else {
+                // on supprime parceque sinon on va afficher dans les erreurs 'there are several arrival ... alors qu il n y en a qu une
+                $errorsImportManager->removeErrors();
+            }
+            // si il n y a qu'une date on regarde qu'elle ne soit pas plus de 15 jours par rapport a aujourd'hui
+            // aujourd'hui plus 15 jours 
+            $now = new DateTimeImmutable('now');
+            $maxDay = 15;
+            $interval = $now->diff($dateTime);
+            if ($interval->format("%a") > $maxDay) {
+                if ($now<$dateTime) {
+                    $errorsImportManager->addErrors('Code import 17 - You cannot import a date older than 15 days.<br>  Date in csv file: '. $date[1] . '-' . $date[0] .'-'. $date[2]);
+                    return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
+                }
+            } */
+
+            //**************** FIN PREMIER TESTS ET GESTION DES ERREURS ****************//
+            //**************************************************************************//
+            
+            //$serviceNumbersInCSV[] = 1611603;
+            // return [1611603 => 1 , 1611604 => 2 ]
+            $serviceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
+            $incrementDeleteCustomerCard = 0;
+
+            //***********************************************************************************************************************//
+            //********************************* début de l'extraction de la LIGNE de données du csv *********************************//
+
+            // traitement de la première entrée, puis de la deuxième etc ...
+            $rowNumber = 0;
+            foreach ($rows as $row) {  
+                if ($rowNumber == 0) {$rowNumber++; continue;}
+                if (trim($row[0]) == "") {break;}
+
+                $transferDate = trim($row[0]); 
+                $agencyName = trim(strtolower($row[1]));
+                $tipoTransfert = trim($row[2]);
+                $flightNumber = trim(strtolower($row[3]));
+                $airportName = trim(strtolower($row[4]));
+                $reservationNumber = trim(strtolower($row[5]));
+                $clientName = trim(strtolower($row[6]));
+                $adult = trim($row[7]);
+                $children = trim($row[8]);
+                $bb = trim($row[9]);
+                $pax = trim($row[10]);
+                $hotelName = trim(strtolower($row[11]));
+                $clientLanguage = trim(strtolower($row[12]));
+                $remarque = trim(strtolower($row[13]));
+                $rep = trim($row[14]);
+                
+
+                $date= explode("/", $transferDate);
+                
+/*                 if (strlen($date[0]) < 2) { $date[0] = '0'.$date[0]; }
+                if (strlen($date[1]) < 2) { $date[1] = '0'.$date[1]; } */
+
+                $dateFormat = $date[2] . '-' . $date[0] .'-'. $date[1];
+                //dump('date2: ' . $date[2] . ' date0: ' . $date[0] .' date1: '. $date[1] . '---' . $dateFormat . ' ' . $clientName);             
+                $arrivalDate = new DateTimeImmutable($dateFormat);
+                
+                // regarde si cette agence existe sinon tu la crée
+                $agency = $agencyRepository->findOneBy(['name' => $agencyName]);
+                if (!$agency) {
+                    $agency = new Agency();
+                    $agency->setName($agencyName);
+                    $manager->persist($agency);
+                    $manager->flush();
+                }
+                
+                // regarde si l'aéroport existe sinon on le crée
+                $airport = $airportHotelRepository->findOneBy(['name' => $airportName]);
+                if (!$airport) {
+                    $airport = new AirportHotel();
+                    $airport->setName($airportName);
+                    $airport->setIsAirport(1);
+                    $manager->persist($airport);
+                    $manager->flush();
+                }                
+                
+                // regarde si l'hotel existe sinon on le crée
+                $hotel = $airportHotelRepository->findOneBy(['name' => $hotelName]);
+                if (!$hotel) {
+                    $hotel = new AirportHotel();
+                    $hotel->setName($hotelName);
+                    $hotel->setIsAirport(0);
+                    $manager->persist($hotel);
+                    $manager->flush();
+                }
+                
+                // regarde si une carte client avec numéro client et nom existe
+                
+                // sinon on la cré !
+                
+                $newClient = new CustomerCard();
+                $newClient->setAgency($agency);
+                $newClient->setReservationNumber($reservationNumber);
+                $newClient->setHolder($clientName);
+                $newClient->setClientLanguage($clientLanguage);
+                $manager->persist($newClient);
+                
+                $newTransferArrival = new TransferArrival();
+                $newTransferArrival->setCustomerCard($newClient);
+                $newTransferArrival->setFlightNumber($flightNumber);
+                $newTransferArrival->setFromStart($airport);
+                $newTransferArrival->setToArrival($hotel);
+                $newTransferArrival->setAdultsNumber($adult);
+                $newTransferArrival->setBabiesNumber($bb);
+                $newTransferArrival->setChildrenNumber($children);
+                
+                
+                //dd($transferDate);
+                $newTransferArrival->setDate($arrivalDate);
+                $manager->persist($newTransferArrival);
+
+            
+                
+/*                 $record['Agencia'] = trim(strtolower($record['Customer']));
+                $record['Tipo traslado'] = trim($record['Sale Type Code']); // shuttle/private/collective
+                $record['flight'] = trim(strtolower($record['Flight'])); */
+                
+                
+                // on met privée au debut car si c est pas privé, c a peut etre shuttle ou colectivo
+                //$record['Tipo traslado'] = ((preg_match("/pri/i", $record['Tipo traslado']) ? false : true));
+                
+                
+                /*             $numbers = explode(", ", $record['Localizadores']);
+                $jumboNumber = trim($numbers[0]);
+                $reservationNumber = trim($numbers[1]); */
+                $rowNumber++;
+                //dump($newTransferArrival->getToArrival());
+            }
+           
+            $manager->flush();
+        
+
+
+            return $this->redirectToRoute('app_import', ['row'=> $rowNumber]);
+    }
+
+    
 }
