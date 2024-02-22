@@ -23,100 +23,109 @@
 
                     <div class="table-responsive mb-4">
                         <form action="" method="POST">
-                        <table class="table table-centered table-striped table-nowrap mb-0">
-                        {# <table class="table table-striped border shadow"> #}
-                            <thead>
-                                <tr>
-                                    <th scope="col">{% trans %}Informations{% endtrans %}</th>
-                                    <th scope="col">{% trans %}Time{% endtrans %}</th>
-                                    <th scope="col">{% trans %}Rep{% endtrans %}</th>
-                                    <th scope="col">{% trans %}Place{% endtrans %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                                    {% for transferArrival in regroupements|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
-                                        {% set agency = transferArrival.customerCard.agency.id %}
-                                        {% set hotel = transferArrival.toArrival.id %}
-                                        {% set flightNumber = transferArrival.flightNumber %}
+                        {# Ancienne vue table
+                            <table class="table table-centered table-striped table-nowrap mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{% trans %}Informations{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Time{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Rep{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Place{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                        <tr>
-                                            <td>
-                                                <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
-                                                <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
-                                                <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}<hr>
-                                               {#  {{  dump(infosTransfer) }} #}
-                                                    Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
-                                                    {{ transferArrival.toArrival|title}} 
-                                                <br>{{ transferArrival.customerCard.agency|title }}
-                                            </td>
-                                            <td> <input type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/></td> 
-                                            <td> 
-                                                <select name="staff_{{ transferArrival.id }}" title="Rep">
-                                                    {% for user in users %}
-                                                        {% if "ROLE_REP" in user.roles %}
-                                                            <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                            <td>
-                                                <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
-                                                    {% for meetingPoint in meetingPoints %}
-                                                        {% if (meetingPoint is not null)  %}
-                                                            <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
-                                                        {% else %}
-                                                            <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                        </tr>
-                                
-                                    {% endfor %}
+                                        {% for transferArrival in regroupements|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                            {% set agency = transferArrival.customerCard.agency.id %}
+                                            {% set hotel = transferArrival.toArrival.id %}
+                                            {% set flightNumber = transferArrival.flightNumber %}
 
+                                            <tr>
+                                                <td>
+                                                    <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                    <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                                    <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}<hr>
+                                                        Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
+                                                        {{ transferArrival.toArrival|title}} 
+                                                    <br>{{ transferArrival.customerCard.agency|title }}
+                                                </td>
+                                                <td> <input class="form-control" type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/></td> 
+                                                <td> 
+                                                    <select class="form-select" name="staff_{{ transferArrival.id }}" title="Rep">
+                                                        {% for user in users %}
+                                                            {% if "ROLE_REP" in user.roles %}
+                                                                <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </td> 
+                                                <td>
+                                                    <select class="form-select" name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
+                                                        {% for meetingPoint in meetingPoints %}
+                                                            {% if (meetingPoint is not null)  %}
+                                                                <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                            {% else %}
+                                                                <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </td> 
+                                            </tr>
+                                    
+                                        {% endfor %}
+                                </tbody>
+                            </table> 
+                        #}
 
+                        {% for transferArrival in regroupements|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                            {% set agency = transferArrival.customerCard.agency.id %}
+                            {% set hotel = transferArrival.toArrival.id %}
+                            {% set flightNumber = transferArrival.flightNumber %}          
+                            
+                            <div class="card my-3 p-3 bg-light shadow"> 
+                                <div class="d-flex flex-column flex-lg-row">
+                                    <div class="col-lg-4">
+                                        <b>A:</b> {{ paxPerHotelAgency['adults'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                        <b>C:</b> {{ paxPerHotelAgency['children'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}, 
+                                        <b>B:</b> {{ paxPerHotelAgency['babies'][agency~'_'~hotel~'_'~transferArrival.meetingAt|date('H:i')~'_'~transferArrival.meetingPoint] }}
+                                        <hr class="me-5">
+                                            Arrival: {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} <br>
+                                            {{ transferArrival.toArrival|title}} 
+                                        <br>{{ transferArrival.customerCard.agency|title }}
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="d-flex flex-column flex-lg-row">
+                                            <input class="form-control mt-3" type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/>
+                                        
+                                            <select class="form-select mt-3" name="staff_{{ transferArrival.id }}" title="Rep">
+                                                {% for user in users %}
+                                                    {% if "ROLE_REP" in user.roles %}
+                                                        <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <select class="form-select mt-3" name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
+                                                {% for meetingPoint in meetingPoints %}
+                                                    {% if (meetingPoint is not null)  %}
+                                                        <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                    {% else %}
+                                                        <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
 
+                                </div>
+                            </div>
+                        {% endfor %}
 
-                                    {# {% for client in attributionClientsByRepAndDate %}
-                                        <tr>
-                                            <td>
-                                            {% for infosTransfer in client.transferAryrivals %}
-                                                {{ infosTransfer.toArrival}}
-                                            {% endfor %}
-                                            </td>
-                                            <td>{{ client.holder }}</td> 
-                                            <td> <input type="time" value="{{ client.getMeetingAtTime}}" name="hour_{{ client.id }}"/></td> 
-                                            <td> 
-                                                <select name="staff_{{ client.id }}">
-                                                    {% for user in users %}
-                                                        {% if "ROLE_REP" in user.roles %}
-                                                            <option value="{{user.id}}" {{ user.id == client.staff.id ? "selected" : ""}}  >{{user.username}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                            <td>
-                                                <select name="meetingPoint_{{ client.id }}">
-                                                    {% for meetingPoint in meetingPoints %}
-
-                                                        {% if  client.meetingPoint is not null %}
-                                                            <option value="{{meetingPoint.id}}" {{ meetingPoint.id == client.meetingPoint.id ? "selected" : ""}}  >{{meetingPoint.name}}</option>
-                                                        {% else %}
-                                                            <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
-                                            </td> 
-                                        </tr>
-                                
-                                    {% endfor %}
-    #}
-                            </tbody>
-                        </table>
-               
-
-                        <input type="submit" value="{% trans %}Submit{% endtrans %}">
+                        <input 
+                            type="submit"
+                            value="{% trans %}Submit{% endtrans %}" 
+                            class="btn btn-success waves-effect waves-light"
+                        >
                     </form>
                 </div>
             </div>

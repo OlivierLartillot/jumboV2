@@ -7,9 +7,11 @@ use App\Entity\AirportHotel;
 use App\Entity\CustomerCard;
 use App\Entity\DragAndDrop;
 use App\Entity\TransferArrival;
+use App\Entity\User;
 use App\Form\DragAndDropType;
 use App\Repository\AgencyRepository;
 use App\Repository\AirportHotelRepository;
+use App\Repository\AreaRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\MeetingPointRepository;
 use App\Repository\StatusRepository;
@@ -810,7 +812,8 @@ class HomeController extends AbstractController
                                     AirportHotelRepository $airportHotelRepository,
                                     AgencyRepository $agencyRepository,
                                     TransferArrivalRepository $transferArrivalRepository,
-                                    ErrorsImportManager $errorsImportManager
+                                    ErrorsImportManager $errorsImportManager,
+                                    AreaRepository $areaRepository
                                     ): Response
     {
 
@@ -1028,18 +1031,37 @@ class HomeController extends AbstractController
                 $hotelName = trim(strtolower($row[11]));
                 $clientLanguage = trim(strtolower($row[12]));
                 $remarque = trim(strtolower($row[13]));
-                $rep = trim($row[14]);
+                $repName = trim(strtolower($row[14]));
                 
-
+                // traitement des dates
                 $date= explode("/", $transferDate);
-                
 /*                 if (strlen($date[0]) < 2) { $date[0] = '0'.$date[0]; }
                 if (strlen($date[1]) < 2) { $date[1] = '0'.$date[1]; } */
-
                 $dateFormat = $date[2] . '-' . $date[0] .'-'. $date[1];
                 //dump('date2: ' . $date[2] . ' date0: ' . $date[0] .' date1: '. $date[1] . '---' . $dateFormat . ' ' . $clientName);             
                 $arrivalDate = new DateTimeImmutable($dateFormat);
+                $arrivalhour = new DateTimeImmutable($dateFormat . ' 00:00' );
+                $meetingAtDay =  $arrivalhour->modify('+1 day');
+                $meetingAtDay =  $meetingAtDay->format('d-m-Y 00:01');
+                $meetingAt = new DateTimeImmutable($meetingAtDay);
                 
+                // TODO: est ce que on laisse des parametres forcés ?
+                $area = $areaRepository->find(1);
+                $status = $statusRepository->find(1);
+                // TODO: VIRER CETTE PARTIE SUR LES REPS ? ************************************************************************************
+                // regarde si cette agence existe sinon tu la crée
+                $rep = $userRepository->findOneBy(['username' => $repName]);
+                if (!$rep) {
+                    $rep = new User();
+                    $rep->setArea($area);
+                    $rep->setUsername($repName);
+                    $rep->setRoles(['ROLE_REP']);
+                    $rep->setPassword('$2y$13$esUOkXdEI6y6hYwoSghTI.kLdfI5BQ5CnBNgB2gw4dCtEc3./c/32');
+                    $manager->persist($rep);
+                    $manager->flush();
+                }
+                // TODO: FIN ******************************************************************************************************************************
+
                 // regarde si cette agence existe sinon tu la crée
                 $agency = $agencyRepository->findOneBy(['name' => $agencyName]);
                 if (!$agency) {
@@ -1081,6 +1103,11 @@ class HomeController extends AbstractController
                 $manager->persist($newClient);
                 
                 $newTransferArrival = new TransferArrival();
+                // TODO: a conserver ? *************************** 
+                $newTransferArrival->setStaff($rep);
+                // TODO: a conserver ? *************************** 
+                
+                $newTransferArrival->setStatus($status);
                 $newTransferArrival->setCustomerCard($newClient);
                 $newTransferArrival->setFlightNumber($flightNumber);
                 $newTransferArrival->setFromStart($airport);
@@ -1088,10 +1115,9 @@ class HomeController extends AbstractController
                 $newTransferArrival->setAdultsNumber($adult);
                 $newTransferArrival->setBabiesNumber($bb);
                 $newTransferArrival->setChildrenNumber($children);
-                
-                
-                //dd($transferDate);
                 $newTransferArrival->setDate($arrivalDate);
+                $newTransferArrival->setHour($arrivalhour);
+                $newTransferArrival->setMeetingAt($meetingAt);
                 $manager->persist($newTransferArrival);
 
             
