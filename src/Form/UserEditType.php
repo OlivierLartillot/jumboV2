@@ -11,17 +11,25 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserEditType extends AbstractType
 {
+    public $translator;
+    
+    // 3. Autowire the translator interface and update the local value with the injected one
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder
             ->add('username')
+            ->add('usageName')
             ->add('roles', ChoiceType::class, [
                 'label' => 'Role',
                 'choices' => [

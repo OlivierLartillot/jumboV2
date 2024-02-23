@@ -536,7 +536,9 @@ class CustomerCardController extends AbstractController
             $customerCard = new CustomerCard();
             $customerCard->setHolder($post['fullName']);
             $customerCard->setReservationNumber($post['reservationNumber']);
-            $customerCard->setJumboNumber($post['jumboNumber']);
+            if (isset($post['jumboNumber'])) {
+                $customerCard->setJumboNumber($post['jumboNumber']);
+            }
             $agencyObject = $agencyRepository->find($post['agency']);
             $customerCard->setAgency($agencyObject);
 

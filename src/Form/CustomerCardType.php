@@ -30,10 +30,15 @@ class CustomerCardType extends AbstractType
         $builder
             ->add('reservationNumber', null, [
                 'disabled' => true,
-            ] )
+            ]);
+        
+        if ($_ENV['ENTREPRISE'] == 'jumbo') { 
+            $builder
             ->add('jumboNumber', null, [
                 'disabled' => true,
-            ])
+            ]);
+        }
+        $builder
             ->add('holder', null, [
                 'label' => 'First and last name',
             ])

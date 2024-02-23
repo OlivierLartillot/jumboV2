@@ -75,4 +75,5 @@ class AreaController extends AbstractController
 
         return $this->redirectToRoute('app_area_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }

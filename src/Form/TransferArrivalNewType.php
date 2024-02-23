@@ -51,6 +51,7 @@ class TransferArrivalNewType extends AbstractType
                     'label' => new TranslatableMessage('Jumbo Number')
             ]);
         }
+        
         $builder
             ->add('agency', EntityType::class, [
                 'mapped' => false,

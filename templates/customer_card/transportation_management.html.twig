@@ -136,7 +136,7 @@
                         <tr>
                             <th>P/C</th>
                             <th>Type</th>
-                            <th># reserva / # Jumbo</th>
+                            <th># reserva {% if app.request.server.get('ENTREPRISE') == 'jumbo' %}/ # Jumbo{% endif %}</th>
                             <th>area</th>
                             <th>{% trans %}A{% endtrans %}</th>
                             <th>{% trans %}C{% endtrans %}</th>
@@ -165,7 +165,7 @@
                                             <i title="departure" class="mdi mdi-airplane-takeoff fs-5"></i>
                                     {% endif %}
                                 </td> 
-                                <td>{{ (base) ? base.customerCard.reservationNumber : '?'}} / {{ (base) ? base.customerCard.jumboNumber : '-' }} </td>
+                                <td>{{ (base) ? base.customerCard.reservationNumber : '?'}} {% if app.request.server.get('ENTREPRISE') == 'jumbo' %}/ {{ (base) ? base.customerCard.jumboNumber : '-' }} {% endif %} </td>
                                 <td> {{ transfer["object"].area }} </td>
                                 <td>{{ (base) ? base.adultsNumber : '-' }} </td>
                                 <td>{{ (base) ? base.childrenNumber }} </td>

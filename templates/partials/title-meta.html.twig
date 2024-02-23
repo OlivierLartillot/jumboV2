@@ -1,5 +1,5 @@
 <meta charset="utf-8" />
-<title>{{ (title) ? title|trans : '' }} | Jumbo - Admin & Dashboard </title>
+<title>{{ (title) ? title|trans : '' }} | {% if app.request.server.get('ENTREPRISE') == 'jumbo' %}Jumbo{% endif %} - Admin & Dashboard </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta content="TO Admin solution" name="description" />
 <!-- !!! On essaie de ne pas indexé ce site !!! -->
