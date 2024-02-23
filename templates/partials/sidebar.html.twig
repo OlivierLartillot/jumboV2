@@ -31,14 +31,31 @@
         <!--- Sidemenu -->
         <div id="sidebar-menu">
 
+
+     
+
             <!-- Left Menu Start -->
-            <ul class="metismenu list-unstyled" id="side-menu">
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
+            <ul class="metismenu list-unstyled" id="side-menu">       
+                <li>
+                    <a href="{{ path('home') }}">
+                        <i class="mdi mdi-monitor-dashboard"></i>
+                        <span>{% trans %}Dashboard{% endtrans %}</span>
+                    </a>
+                </li>
+                {% if ( ("ROLE_HULK" in app.user.roles) or 
+                        ("ROLE_SUPERMAN" in app.user.roles) or 
+                        ("ROLE_OPERATIONS" in app.user.roles) or 
+                        ("ROLE_IMPORT" in app.user.roles)  or 
+                        ("ROLE_RESERVATIONS" in app.user.roles) or
+                        ("ROLE_TRANSFERS" in app.user.roles) )
+                %} 
                 <li class="menu-title">{% trans %}Import File{% endtrans %}</li>
                 {% endif %} 
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) or 
+                        ("ROLE_RESERVATIONS" in app.user.roles)) %} 
                 <li>
+
                     <a href="{{ path('app_import') }}">
                         <i class="uil-import"></i>
                         <span>{% trans %}Import Booking{% endtrans %}</span>
@@ -46,7 +63,7 @@
                 </li>
                 {% endif %}
                 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_IMPORT" in app.user.roles) or ("ROLE_TRANSFERS" in app.user.roles)) %} 
                 <li>
                     <a href="{{ path('app_transfer_import') }}">
                         <i class="uil-import"></i>
@@ -81,10 +98,15 @@
                             <span>{% trans %}My briefings{% endtrans %}</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path('app_admin_rep_transfers')}}" {{ (transfersMenu is defined) ? 'class="active"' }}>
+                            <i class="uil-arrows-h-alt"></i>
+                            <span>{% trans %}Transfers{% endtrans %}</span>
+                        </a>
+                    </li>
                 {% endif %}
 
-                
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles)) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles)) %} 
                     <li class="menu-title">{% trans %}Briefing Manager{% endtrans %}</li>
 
                     <li>
@@ -125,22 +147,29 @@
                     </li>
                 {% endif %}
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) or ("ROLE_AIRPORT" in app.user.roles) ) %} 
                     <li class="menu-title">{% trans %}Airport Team{% endtrans %}</li>
 
                     <li>
                         <a href="{{ path('app_customer_card_airport') }}">
-                            <i class="uil-print"></i>
+                            <i class="uil-plane-arrival"></i>
                             <span>{% trans %}Clients Arrivals{% endtrans %}</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ path('app_user_airport_edit', {'id': app.user.id}) }}">
+                            <i class="uil-plane-departure"></i>
+                            <span>{% trans %}Default Airport{% endtrans %}</span>
                         </a>
                     </li>
                 {% endif %}
 
-                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_OPERATIONS" in app.user.roles) ) %} 
+                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_TRANSFERS" in app.user.roles)) %} 
                     <li class="menu-title">{% trans %}Accounting{% endtrans %}</li>
 
                     <li>
-                        <a href="{{ path('app_customer_card_transportation_management', {'id': 1 }) }}">
+                        <a href="{{ path('app_customer_card_transportation_management') }}">
                             <i class="uil-bus"></i>
                             <span>{% trans %}Transfer calculation{% endtrans %}</span>
                         </a>

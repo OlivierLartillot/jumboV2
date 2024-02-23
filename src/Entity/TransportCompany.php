@@ -43,7 +43,8 @@ class TransportCompany
 
     public function __toString(): string
     {
-        return (string) ucfirst($this->name);
+
+        return (string) ucfirst(strtolower($this->name));
     }
 
     public function getName(): ?string

@@ -30,12 +30,17 @@ class CustomerCardType extends AbstractType
         $builder
             ->add('reservationNumber', null, [
                 'disabled' => true,
-            ] )
+            ]);
+        
+        if ($_ENV['ENTREPRISE'] == 'jumbo') { 
+            $builder
             ->add('jumboNumber', null, [
                 'disabled' => true,
-            ])
+            ]);
+        }
+        $builder
             ->add('holder', null, [
-                'label' => 'Full Name',
+                'label' => 'First and last name',
             ])
             ->add('agency', EntityType::class, [
                 'class' => Agency::class,

@@ -25,7 +25,7 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
                                         <a class="dropdown-item" href="{{ path('app_customer_card_edit', {id:customer_card.id}|merge(app.request.query.all) )}}">{% trans %}Edit{% endtrans %}</a>
-
+                                        
                                         <a class="dropdown-item" href="{{ path('app_transfer_inter_hotel_new', {id:customer_card.id}|merge(app.request.query.all) )}}">{% trans %}Add Inter Hotel{% endtrans %}</a>
 
                                         <a class="dropdown-item" href="{{ path('app_transfer_departure_new', {id:customer_card.id}|merge(app.request.query.all) )}}">{% trans %}Add Departure{% endtrans %}</a>
@@ -57,14 +57,71 @@
                                         <i class="me-1">#</i> {{ customer_card.reservationNumber }}
                                     </p>
                                     {% for transferArrival in customer_card.transferArrivals %}
-                                        <p>
+                                        <p id="currentStatus" class="cursor">
                                             {% if transferArrival.status|lower == "no show" %}
                                                 <span class="badge rounded-pill bg-danger">{{ transferArrival.status }}</span>
                                             {% else %}
                                                 <span class="badge rounded-pill bg-success">{{ transferArrival.status }}</span>
                                             {% endif %}
                                         </p>
+                                        <div id="changeArea" class="d-none">
+                                            <form action="{{ path('app_customer_card_change_status', {id: transferArrival.id }) }}" method="POST">
+                                                        
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <select name="status" id="changeStatus" class="form-select">
+                                                            <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                            <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                            <option value="Go show (hotel)" {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                            <option value="No Show" {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="ms-2">
+                                                        <button id="button-submit-status" type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light"><i class="mdi mdi-check"></i></button>
+                                                        <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light"><i class="mdi mdi-close"></i></button>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                                
+                                        </div>
+
+                                        {# 
+                                            {% set i = 1 %}
+                                            <div data-group="group-{{i}}" >
+                                            
+                                                    <!-- Message d'alerte : vous avez bien changez le status -->
+                                                    <div data-group="group-{{i}}" class="alert alert-danger alert-dismissible fade show px-4 mb-0 text-center d-none" role="alert">
+                                                        <i class="uil uil-exclamation-octagon d-block display-4 mt-2 mb-3 text-danger"></i>
+                                                        <h5 class="text-danger">Be carrefulle</h5>
+                                                        <p>{% trans %}You just changed the status{% endtrans %}<br/> 
+                                                            <span id="oldStatus">{{ transferArrival.status.name }}</span> <i class="uil-arrow-right"></i> <span id="newStatus"></span>
+                                                        </p>
+                                                    </div>
+
+
+                                                    <div class="d-flex flex-row justify-content-around bd-highlight mb-3">
+                                                        <button type="button" id="arrived" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "arrived") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1 ">Arrived</button>
+                                                        <button type="button" id="go show (airport)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (airport)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show A.</button>
+                                                        <button type="button" id="go show (hotel)" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "go show (hotel)") ? 'btn-success' : 'btn-outline-success' }} btn-sm p-1">Go Show H.</button>
+                                                        <button type="button" id="no show" data-group="group-{{i}}" class="btn btn-status {{ (transferArrival.status.name|lower == "no show") ? 'btn-danger' : 'btn-outline-danger' }} btn-sm p-1">No Show</button>
+                                                        <span id="transferArrivalId" data-group="group-{{i}}" class="d-none">{{ transferArrival.id }}</span>
+                                                        <span id="staffId" data-group="group-{{i}}" class="d-none">{{ app.user.id }}</span>
+                                                        <span id="group-{{i}}" data-group="group-{{i}}" class="d-none">group-{{i}}</span>
+                                                    </div>
+                                            </div>
+                                        #}
+
                                     {% endfor %}
+
+
+
+
+
+
+
+
+
                                     <hr class="my-4">
                                     <h5>{% trans %}Agency{% endtrans %}:</h5>
                                     <p class="text-muted">
@@ -101,18 +158,18 @@
                                     <div class="col-4">
                                         <div class="mt-3">
                                             <p class="text-muted mb-2">{% trans %}Adults{% endtrans %}</p>
-                                            <h5 class="font-size-16 mb-0">{{ transferArrival.adultsNumber }}</h5>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.adultsNumber : transferArrival.adultsNumber }}</h5>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="mt-3">
                                             <p class="text-muted mb-2">{% trans %}Children{% endtrans %}</p>
-                                            <h5 class="font-size-16 mb-0">{{ transferArrival.childrenNumber }}</h5>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.childrenNumber : transferArrival.childrenNumber }}</h5>
                                         </div>
                                     </div>                                                    
                                     <div class="col-4">
                                         <div class="mt-3">{% trans %}Babies{% endtrans %}</p>
-                                            <h5 class="font-size-16 mb-0">{{ transferArrival.babiesNumber }}</h5>
+                                            <h5 class="font-size-16 mb-0">{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.babiesNumber : transferArrival.babiesNumber }}</h5>
                                         </div>
                                     </div>
                                     <hr>
@@ -169,8 +226,17 @@
                                 <div class="col-lg-10">
                                     {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
                                         <a href="{{ path('app_transfer_arrival_edit', {id:transfer.id}) }}" class="btn btn-primary mb-3" >{% trans %}Edit arrival{% endtrans %} #{{ transfer.id}}</a>
+                                        {# si il existe pas add #}
+                                        {% if transfer.transferVehicleArrival is not defined or transfer.transferVehicleArrival == null %}
+                                            <a  href="{{ path('app_transfer_vehicle_arrival_new', {id:transfer.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Add Transfer Arrival{% endtrans %}</a> 
+                                        {% else %}
+                                            <a  href="{{ path('app_transfer_vehicle_arrival_edit', {id:transfer.transferVehicleArrival.id}|merge(app.request.query.all) )}}" class="btn btn-success mb-3" >{% trans %}Edit Transfer Arrival{% endtrans %}</a> 
+                                        {% endif %}
+                                        {# Impression de l'étiquette #}
+                                        <a class="btn btn-secondary mb-3" href="{{ path('app_admin_stickers_par_date', {ta:transfer.id} )}}">{% trans %}Print Label{% endtrans %}</a>
                                     {% endif %}
-                                    {#  previent des similarité ou différences de pax #}
+                                    
+                                    {#  previent des similarités ou différences de pax #}
                                     {% if transfer.transferVehicleArrival %}
                                         {% if (transfer.adultsNumber != transfer.transferVehicleArrival.adultsNumber) or 
                                             (transfer.childrenNumber != transfer.transferVehicleArrival.childrenNumber) or 
@@ -212,15 +278,14 @@
                                         </div>
                                     {% endif %}                                    
                                 </div>
+                                {# Affiche les infos #}
                                 <div class="col-lg-4">
                                     <div class="card border border-primary">
                                         <div class="card-header bg-transparent border-primary">
                                             <h5 class="my-0 text-primary"><i class="uil uil-calendar-alt me-3"></i>{% trans %}Date{% endtrans %}</h5>
                                         </div><!-- end card-header -->
-                                        <div class="card-body">
-                                                 
-                                                <h5 class="card-title">{{ transfer.date | date('d-m-Y') }}</h5>
-                                                 
+                                        <div class="card-body">   
+                                            <h5 class="card-title">{{ transfer.transferVehicleArrival ? transfer.transferVehicleArrival.date| date('d-m-Y') : transfer.date| date('d-m-Y') }}</h5>                                        
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
                                 </div><!-- end col-md-4 -->
@@ -231,9 +296,7 @@
                                             <h5 class="my-0 text-primary"><i class="uil uil-clock me-3"></i>{% trans %}Hour{% endtrans %}</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                       
-                                                    <h5 class="card-title">{{ transfer.hour | date('H:i') }}</h5>
-                                    
+                                            <h5 class="card-title">{{ transfer.transferVehicleArrival ? transfer.transferVehicleArrival.date| date('H:i') : transfer.hour| date('H:i') }}</h5>
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
                                 </div><!-- end col-md-4 -->
@@ -244,9 +307,7 @@
                                             <h5 class="my-0 text-primary"><i class="fas fa-plane me-3"></i>{% trans %}Flight{% endtrans %} #</h5>
                                         </div><!-- end card-header -->
                                         <div class="card-body">
-                                        
-                                                    <h5 class="card-title">{{ transfer.flightNumber }}</h5>
-                                    
+                                            <h5 class="card-title">{{ transfer.transferVehicleArrival ? transfer.transferVehicleArrival.flightNumber : transfer.flightNumber }}</h5>              
                                         </div><!-- end card-body -->
                                     </div><!-- end card -->
                                 </div><!-- end col-md-4 -->
@@ -661,10 +722,7 @@
         </div>
         <!-- end row -->
 
-
-
-
-        <div class="row">
+        <div class="row mb-5 mb-lg-2">
             <div class="col-xl-4 col-sm-6">
                 <div class="card">
                     <div class="card-body">
@@ -676,77 +734,39 @@
 
                                 <li class="feed-item">
                                     <div class="feed-item-list">
-                                        <p class="text-muted mb-1">{{ timeline.name }} {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}</p>
-                                        <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour }}</p>
+                                        <p class="text-muted mb-1">
+                                            {{ timeline.name }} 
+                                            {% if timeline.name == 'Status' %} {{ timeline.title }} {% endif %}
+                                            {% if timeline.name == 'Checked' %} {{ timeline.title == 1 ? 'Airport'|trans : 'Briefing'|trans }} {% endif %}
+                                        </p>
+                                        <p class="text-muted mb-1">{{ timeline.date|date('d-m-Y') }} at {{ timeline.hour | date('H:i') }}</p>
                                         {# si c est meeting #}
                                         {% if timeline.name == 'Meeting' %} 
-                                            <p> {% trans %}with{% endtrans %} {{ timeline.staff }} {% trans %}to{% endtrans %} 
+                                            <p> {% trans %}with{% endtrans %} {{ timeline.staff }} @
                                                 {% if timeline.meetingPoint != null %}
-                                                {{ (timeline.meetingPoint.checkLanguage(app.user.language) != null) ? timeline.meetingPoint.checkLanguage(app.user.language) : timeline.meetingPoint.en }}
+                                                    {{ (timeline.meetingPoint.checkLanguage(app.user.language) != null) ? timeline.meetingPoint.checkLanguage(app.user.language) : timeline.meetingPoint.en }}
                                                 {% endif %}
                                             </p>
                                         {% endif %}
-                                        {% if timeline.name == 'Status' %}
+                                        {% if (timeline.name == 'Status')  %}
                                             <p>{% trans %}Updated by{% endtrans %}: {{ timeline.updatedBy }} </p>
+                                        {% endif %}
+                                        {% if (timeline.name == 'Checked')  %}
+                                        {# si c est check true, alors recu par ben sinon c est juste non recu est update by #}
+                                            {% if timeline.isChecked %}
+                                                <p>received by {{ timeline.updatedBy }}</p>
+                                            {% else %}
+                                                <p>
+                                                    Not received<br/>                                   
+                                                    {% trans %}Updated by{% endtrans %}: {{ timeline.updatedBy }} 
+                                                </p>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </li>
 
                                 {% endfor %}
                             </ul>
-
-
-
-
-
-
-{#                         <ul class="activity-feed mb-0 ps-2">
-
-                            {% for transfer in customer_card.transferDeparture %} 
-                                    <li class="feed-item">
-                                        <div class="feed-item-list">
-                                            <p class="text-muted mb-1">Arrival: {{ transfer.dateHour | date('d-m-Y') }}</p>
-    
-                                        </div>
-                                    </li>
-                            {% endfor %}
-
-                            <li class="feed-item">
-                                <div class="feed-item-list">
-                                    <p class="text-muted mb-1">Status: No show</p>
-                                    <p class="text-muted">By ben at 10:00 le 05-10-2023</p>
-                                </div>
-                            </li>
-
-                            <li class="feed-item">
-                                <div class="feed-item-list">
-                                    <p class="text-muted mb-1">Meeting: {{ customer_card.meetingAt | date('d-m-Y')}}</p>
-                                    <p class="text-muted">with {{ customer_card.staff }} at  {{ customer_card.meetingAt| date('H:i')}}  à {{ customer_card.meetingPoint }} </p>
-                                </div>
-                            </li>
-
-
-                            {% for transfer in customer_card.transferInterHotels %} 
-                                    <li class="feed-item">
-                                        <div class="feed-item-list">
-                                            <p class="text-muted mb-1">Inter Hotel: {{ transfer.dateHour | date('d-m-Y') }}</p>
-                                        </div>
-                                    </li>
-                            {% endfor %}        
-                            {% for transfer in customer_card.transferArrivals %} 
-                                    <li class="feed-item">
-                                        <div class="feed-item-list">
-                                            <p class="text-muted mb-1">Departure: {{ transfer.dateHour | date('d-m-Y') }}</p>
-                                        </div>
-                                    </li>
-                            {% endfor %}
-
-                        </ul> #}
-
-
-
-
-
 
                         
                     </div>
@@ -831,64 +851,33 @@
         </div><!-- END ROW-->
 
 
-{{ include('partials/footer-regroupement.html.twig') }}
+
+        <!--************************* FOOTER **************************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
 
 
+        <!-- App js --> 
+        <script src="/js/app.js"></script>
+        <script src="/js/jsPersos/changementStatus.js"></script>
 
-{#     <h1>CustomerCard</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ customer_card.id }}</td>
-            </tr>
-            <tr>
-                <th>ReservationNumber</th>
-                <td>{{ customer_card.reservationNumber }}</td>
-            </tr>
-            <tr>
-                <th>JumboNumber</th>
-                <td>{{ customer_card.jumboNumber }}</td>
-            </tr>
-            <tr>
-                <th>Holder</th>
-                <td>{{ customer_card.holder }}</td>
-            </tr>
-            <tr>
-                <th>Agency</th>
-                <td>{{ customer_card.agency }}</td>
-            </tr>
-            <tr>
-                <th>AdultsNumber</th>
-                <td>{{ customer_card.adultsNumber }}</td>
-            </tr>
-            <tr>
-                <th>ChildrenNumber</th>
-                <td>{{ customer_card.childrenNumber }}</td>
-            </tr>
-            <tr>
-                <th>BabiesNumber</th>
-                <td>{{ customer_card.babiesNumber }}</td>
-            </tr>
-            <tr>
-                <th>StatusUpdatedAt</th>
-                <td>{{ customer_card.statusUpdatedAt ? customer_card.statusUpdatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>MeetingAt</th>
-                <td>{{ customer_card.meetingAt ? customer_card.meetingAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>ReservationCancelled</th>
-                <td>{{ customer_card.reservationCancelled ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    </body>
 
-    <a href="{{ path('app_customer_card_index') }}">back to list</a>
-
-    <a href="{{ path('app_customer_card_edit', {'id': customer_card.id}) }}">edit</a>
-
-    {{ include('customer_card/_delete_form.html.twig') }}
- #}
+</html>

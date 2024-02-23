@@ -12,7 +12,12 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_BRIEFING" in app.user.roles)) %}
+                                {% if ( 
+                                    ("ROLE_HULK" in app.user.roles) or 
+                                    ("ROLE_SUPERMAN" in app.user.roles) or 
+                                    ("ROLE_BRIEFING" in app.user.roles) or 
+                                    ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles)) 
+                                %}
                                     <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
                                     <a href="{{ path('app_admin_team_manager_fiche_par_date',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Update{% endtrans %}</a>
                                 {% else %}
@@ -24,58 +29,128 @@
                     </div>
                     <i>{% trans %}*Number total of pax{% endtrans %}: {% trans %}Adults{% endtrans %}:{{paxTab['adults']}}, {% trans %}Children{% endtrans %}:{{paxTab['children']}} ,{% trans %}Babies{% endtrans %}:{{paxTab['babies']}} = {{ countPax}} pax</i> 
                     <div class="table-responsive mb-4">
-                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}
+                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %}
                     <form action="" method="POST">
-                    {% endif %}
-                        <table class="table table-centered table-striped table-nowrap border shadow mb-0">
-                            {# <table class="table table-striped border shadow"> #}
-                            <thead>
-                                <tr>
-                                    <th scope="col">{% trans %}Informations{% endtrans %}</th>
-                                    <th scope="col">{% trans %}Time{% endtrans %}</th>
-                                    <th scope="col">{% trans %}Rep{% endtrans %}</th>
-                                    <th scope="col">{% trans %}Place{% endtrans %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for transferArrival in attributionClientsByRepAndDate|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                    {% endif %}                      
+                        {# Ancienne vue table
+                            <table class="table table-centered table-striped table-nowrap border shadow mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{% trans %}Informations{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Time{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Rep{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Place{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transferArrival in attributionClientsByRepAndDate|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                    
+                                        <tr class="border-x border-info">
+                                            <td class="pt-3">
+                                                <b>{{ transferArrival.toArrival|title}}</b> <br>                            
+                                                <b>{{ transferArrival.getMeetingAtTime}}</b> -
+                                                {% if  transferArrival.meetingPoint is not null %}
+                                                <b>{{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}</b>
+                                                {% endif %}
+                                                <hr>
+                    
+                                                <a href="{{ path('app_customer_card_show', { 'id':transferArrival.customerCard.id  })   }}   "> {{ transferArrival.customerCard.holder|title }} - {{ transferArrival.customerCard.reservationNumber }}</a><br>
+                                                
+                                                <ul>
+                                                    <li>
+                                                        <u>{% trans %}Arrival{% endtrans %}:</u> {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} 
+                                                    </li>
+                                                    <li>
+                                                        <u>{% trans %}Agency{% endtrans %}:</u>{{ transferArrival.customerCard.agency|title }}
+                                                    </li>
+                                                    <li>
+                                                        <u>{% trans %}Pax{% endtrans %}:</u>                           
+                                                        A: {{ transferArrival.adultsNumber }}, 
+                                                        C: {{ transferArrival.childrenNumber  }}, 
+                                                        B: {{ transferArrival.babiesNumber  }}
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
+                                                    <input type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/>
+                                                {% else %}
+                                                    {{ transferArrival.getMeetingAtTime}}
+                                                {% endif %}
+                                            </td> 
+                                            <td> 
+                                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
+                                                    <select name="staff_{{ transferArrival.id }}" title="Rep">
+                                                        {% for user in users %}
+                                                            {% if "ROLE_REP" in user.roles %}
+                                                                <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                {% else %}
+                                                    {{ transferArrival.staff.username|title }}
+                                                {% endif %}
+                                            </td> 
+                                            <td>
+                                                {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
+                                                <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
+                                                    {% for meetingPoint in meetingPoints %}
+                                                        {% if (meetingPoint is not null)  %}
+                                                            <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
+                                                        {% else %}
+                                                            <option value="{{meetingPoint.id}}" >{{meetingPoint.name}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                                {% else %}
+                                                    {{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}
+                                                {% endif %}
+                                            </td> 
+                                        </tr>
                                 
-                                    <tr class="border-x border-info">
-                                        <td class="pt-3">
-                                            <b>{{ transferArrival.toArrival|title}}</b> <br>                            
-                                             <b>{{ transferArrival.getMeetingAtTime}}</b> -
-                                             {% if  transferArrival.meetingPoint is not null %}
-                                             <b>{{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}</b>
-                                            {% endif %}
-                                            <hr>
-                
-                                            <a href="{{ path('app_customer_card_show', { 'id':transferArrival.customerCard.id  })   }}   "> {{ transferArrival.customerCard.holder|title }} - {{ transferArrival.customerCard.reservationNumber }}</a><br>
-                                               
-                                            <ul>
-                                                <li>
-                                                    <u>{% trans %}Arrival{% endtrans %}:</u> {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} 
-                                                </li>
-                                                <li>
-                                                    <u>{% trans %}Agency{% endtrans %}:</u>{{ transferArrival.customerCard.agency|title }}
-                                                </li>
-                                                <li>
-                                                    <u>{% trans %}Pax{% endtrans %}:</u>                           
-                                                    A: {{ transferArrival.adultsNumber }}, 
-                                                    C: {{ transferArrival.childrenNumber  }}, 
-                                                    B: {{ transferArrival.babiesNumber  }}
-                                                </li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
-                                                <input type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/>
+                                    {% endfor %}
+                                </tbody>
+                            </table> 
+                        #}
+                        {% for transferArrival in attributionClientsByRepAndDate|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                                    
+                            <div class="card my-3 p-3 bg-light shadow"> 
+                                <div class="d-flex flex-column flex-lg-row">
+                                    <div class="col-lg-4">
+                                        <b>{{ transferArrival.toArrival|title}}</b> <br>                            
+                                            <b>{{ transferArrival.getMeetingAtTime}}</b> -
+                                            {% if  transferArrival.meetingPoint is not null %}
+                                            <b>{{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}</b>
+                                        {% endif %}
+                                        <hr class="mx-5">
+
+                                        <a href="{{ path('app_customer_card_show', { 'id':transferArrival.customerCard.id  })   }}   "> {{ transferArrival.customerCard.holder|title }} - {{ transferArrival.customerCard.reservationNumber }}</a><br>
+                                            
+                                        <ul>
+                                            <li>
+                                                <u>{% trans %}Arrival{% endtrans %}:</u> {{ transferArrival.fromStart|title }} at {{ transferArrival.hour|date('H:i') }} 
+                                            </li>
+                                            <li>
+                                                <u>{% trans %}Agency{% endtrans %}:</u>{{ transferArrival.customerCard.agency|title }}
+                                            </li>
+                                            <li>
+                                                <u>{% trans %}Pax{% endtrans %}:</u>                           
+                                                A: {{ transferArrival.adultsNumber }}, 
+                                                C: {{ transferArrival.childrenNumber  }}, 
+                                                B: {{ transferArrival.babiesNumber  }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="d-flex flex-column flex-lg-row mt-2">
+                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
+                                                <input class="form-control mt-3" type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/>
                                             {% else %}
                                                 {{ transferArrival.getMeetingAtTime}}
                                             {% endif %}
-                                        </td> 
-                                        <td> 
-                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
-                                                <select name="staff_{{ transferArrival.id }}" title="Rep">
+
+                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
+                                                <select class="form-select mt-3" name="staff_{{ transferArrival.id }}" title="Rep">
                                                     {% for user in users %}
                                                         {% if "ROLE_REP" in user.roles %}
                                                             <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
@@ -85,10 +160,9 @@
                                             {% else %}
                                                 {{ transferArrival.staff.username|title }}
                                             {% endif %}
-                                        </td> 
-                                        <td>
-                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %} 
-                                            <select name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
+
+                                            {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %} 
+                                            <select class="form-select mt-3" name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
                                                 {% for meetingPoint in meetingPoints %}
                                                     {% if (meetingPoint is not null)  %}
                                                         <option value="{{ meetingPoint.id}} " {{ ( (transferArrival.meetingPoint != null) and (transferArrival.meetingPoint.id == meetingPoint.id) ) ? "selected" : ""}}  >{{ (meetingPoint.checkLanguage(app.user.language) != null) ? meetingPoint.checkLanguage(app.user.language) : meetingPoint.en }}</option>
@@ -100,14 +174,17 @@
                                             {% else %}
                                                 {{ (transferArrival.meetingPoint.checkLanguage(app.user.language) != null) ? transferArrival.meetingPoint.checkLanguage(app.user.language) : transferArrival.meetingPoint.en }}
                                             {% endif %}
-                                        </td> 
-                                    </tr>
-                            
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) ) %}    
-                        <input type="submit" value="{% trans %}Submit{% endtrans %}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% if ( ("ROLE_HULK" in app.user.roles) or ("ROLE_SUPERMAN" in app.user.roles) or ("ROLE_AIRPORT_SUPERVISOR" in app.user.roles) ) %}    
+                        <input 
+                            type="submit" 
+                            value="{% trans %}Submit{% endtrans %}"
+                            class="btn btn-success waves-effect waves-light"
+                        >
                     </form>
                     {% endif %}
                     </div>

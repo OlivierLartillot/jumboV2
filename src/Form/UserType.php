@@ -18,6 +18,9 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        
+
         $builder
             ->add('username')
             ->add('password', RepeatedType::class, [
@@ -29,11 +32,11 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Confirmez le mot de passe*'],
                 'constraints' => [
                         new NotBlank([
-                            'message' => 'Un mot de passe est nécessaire',
+                            'message' => 'Password is required',
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                            'minMessage' => 'Your password must contain at least {{ limit }} characters',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),
@@ -43,14 +46,20 @@ class UserType extends AbstractType
                 'label' => 'Etes-vous ?',
                 'choices' => [
                     'Admin' => 'ROLE_SUPERMAN',
+                    'Airport supervisor' => 'ROLE_AIRPORT_SUPERVISOR',
                     'Rep' => 'ROLE_REP',
                     'Airport' => 'ROLE_AIRPORT',
-                    'Operations' => 'ROLE_OPERATIONS',
-                    'Import' => 'ROLE_IMPORT',
+                    'Reservations' => 'ROLE_RESERVATIONS',
+                    'Transfers' => 'ROLE_TRANSFERS',
                     'Briefings' => 'ROLE_BRIEFING',
                 ],
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Select at least one choice.',
+                    ]), 
+                ],
             ])         
             ->add('phoneNumber')
             ->add('area', EntityType::class, [

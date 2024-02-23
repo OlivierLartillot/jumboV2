@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StatusHistoryRepository;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StatusHistoryRepository::class)]
@@ -26,7 +28,12 @@ class StatusHistory
     private ?User $updatedBy = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
+
+
+    public function __construct(){
+        $this->createdAt = new DateTimeImmutable("now", new DateTimeZone('America/Santo_Domingo'));
+    }
 
     public function getId(): ?int
     {

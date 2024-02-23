@@ -1,0 +1,56 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Errors'}) }}
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <p><i>*In this page, there are inconsistencies between the <b>arrival date indicated by the transfer team</b> and the <b>briefing date</b>. This is due to the arrival date being changed, and therefore the date declared by the import booking team must be different from the date declared by the transfer team.</i></p>
+                    <div>
+                        <div class="row">
+
+                            <hr/>
+                            {% if erreursDatesArriveesEtMeeting %}
+                                {% for transferVehicleArrival in erreursDatesArriveesEtMeeting %} 
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> {{transferVehicleArrival.transferArrival.customerCard.holder}}</h5>
+                                                <p class="mb-3">#{{ transferVehicleArrival.transferArrival.customerCard.reservationNumber }}</p>
+                                                <p>
+                                                    Arrival: {{ transferVehicleArrival.transferArrival.date|date('d-m-Y H:i')}} <br/>
+                                                    Arrival Transfer Team: {{ transferVehicleArrival.date|date('d-m-Y H:i')}} <br/>
+                                                    Meeting: {{ transferVehicleArrival.transferArrival.meetingAt|date('d-m-Y H:i')}}
+                                                </p>
+                                                <div class="row justify-content-around">
+                                                    <div class="col-md-4">
+                                                        <a href="{{path('app_transfer_arrival_edit',{id: transferVehicleArrival.transferArrival.id } )}}" class="btn btn-success">
+                                                            {% trans %}Manage{% endtrans %}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %} 
+                                                                                             
+                            {% else %}
+                                {% trans %}A problem has occurred{% endtrans %}
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+
+
+
+

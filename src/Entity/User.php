@@ -30,6 +30,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min:2, max:180)]
     private ?string $username = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $usageName = null;
+
     #[ORM\Column]
     private array $roles = [];
 
@@ -58,6 +61,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: StatusHistory::class)]
     private Collection $statusHistories;
 
+    #[ORM\OneToMany(mappedBy: 'statusUpdatedBy', targetEntity: TransferArrival::class)]
+    private Collection $statusUpdatedBy;
+
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $language = null;
 
@@ -67,11 +73,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'staff', targetEntity: TransferArrival::class)]
     private Collection $transferArrivals;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WhatsAppMessage::class)]
+    private Collection $whatsAppMessages;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?AirportHotel $airport = null;
+
+    #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: CheckedHistory::class)]
+    private Collection $checkedHistories;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->statusHistories = new ArrayCollection();
         $this->transferArrivals = new ArrayCollection();
+        $this->whatsAppMessages = new ArrayCollection();
+        $this->checkedHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -309,6 +326,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $transferArrival->setStaff(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WhatsAppMessage>
+     */
+    public function getWhatsAppMessages(): Collection
+    {
+        return $this->whatsAppMessages;
+    }
+
+    public function addWhatsAppMessage(WhatsAppMessage $whatsAppMessage): static
+    {
+        if (!$this->whatsAppMessages->contains($whatsAppMessage)) {
+            $this->whatsAppMessages->add($whatsAppMessage);
+            $whatsAppMessage->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWhatsAppMessage(WhatsAppMessage $whatsAppMessage): static
+    {
+        if ($this->whatsAppMessages->removeElement($whatsAppMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($whatsAppMessage->getUser() === $this) {
+                $whatsAppMessage->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAirport(): ?AirportHotel
+    {
+        return $this->airport;
+    }
+
+    public function setAirport(?AirportHotel $airport): static
+    {
+        $this->airport = $airport;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CheckedHistory>
+     */
+    public function getCheckedHistories(): Collection
+    {
+        return $this->checkedHistories;
+    }
+
+    public function addCheckedHistory(CheckedHistory $checkedHistory): static
+    {
+        if (!$this->checkedHistories->contains($checkedHistory)) {
+            $this->checkedHistories->add($checkedHistory);
+            $checkedHistory->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCheckedHistory(CheckedHistory $checkedHistory): static
+    {
+        if ($this->checkedHistories->removeElement($checkedHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($checkedHistory->getUpdatedBy() === $this) {
+                $checkedHistory->setUpdatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUsageName(): ?string
+    {
+        return $this->usageName;
+    }
+
+    public function setUsageName(?string $usageName): static
+    {
+        $this->usageName = $usageName;
 
         return $this;
     }

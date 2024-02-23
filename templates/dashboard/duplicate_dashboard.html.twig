@@ -1,0 +1,117 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Duplicate Transfers'}) }}
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <div class="row">
+
+                            <p>
+                                <a class="btn btn-success btn-sm">{% trans %}Manage{% endtrans %} </a> {% trans %}This is the most logical way to handle the situation. If the duplicate should not exist, delete the bad transfer in the client file.{% endtrans %}  
+                            </p>
+
+                            <p>
+                                <a class="btn btn-danger btn-sm">{% trans %}Ignore Duplicate{% endtrans %}</a> {% trans %}Make sure the duplicate is normal before choosing this option.{% endtrans %}                                         
+                            </p>
+                            <hr/>
+
+                            {% if param == 'arrival' %}
+                                {% for doublon in doublons %} 
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> {{ doublon.transferArrival.customerCard.holder}}</h5>
+                                                <p class="mb-3">#{{ doublon.transferArrival.customerCard.reservationNumber }}</p>
+                                                <div class="row justify-content-around">
+                                                    <div class="col-md-4">
+                                                        <a href="{{path('app_customer_card_show',{id: doublon.transferArrival.customerCard.id } )}}" class="btn btn-success">
+                                                            {% trans %}Manage{% endtrans %}
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-4 mt-3 mt-md-0">
+                                                        <form method="post" action="{{ path('ignore_duplicate_transfers', {id: doublon.transferArrival.customerCard.id, param:'arrival' }) }}" onsubmit="return confirm('if you ignore this duplicate it will no longer be present in the list. You can always access it by going to the customer file.');">
+                                                        {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transfer_arrival.id) }}"> #}
+                                                        <button class="btn btn-danger">{% trans %}Ignore Duplicate{% endtrans %}</button>
+                                                    </form>
+                                                    
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %} 
+                                                    
+                            {% elseif param == 'interhotel' %}  
+                                {% for doublon in doublons %} 
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> {{ doublon.transferInterHotel.customerCard.holder}}</h5>
+                                                <p class="mb-3">#{{ doublon.transferInterHotel.customerCard.reservationNumber }}</p>
+                                                <div class="row justify-content-around">
+                                                    <div class="col-md-4">
+                                                        <a href="{{path('app_customer_card_show',{id: doublon.transferInterHotel.customerCard.id } )}}" class="btn btn-success">
+                                                            {% trans %}Manage{% endtrans %}
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-4 mt-3 mt-md-0">
+                                                        <form method="post" action="{{ path('ignore_duplicate_transfers', {id: doublon.transferInterHotel.customerCard.id, param:'interhotel' }) }}" onsubmit="return confirm('if you ignore this duplicate it will no longer be present in the list. You can always access it by going to the customer file.');">
+                                                        {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transfer_arrival.id) }}"> #}
+                                                        <button class="btn btn-danger">{% trans %}Ignore Duplicate{% endtrans %}</button>
+                                                    </form>
+                                                    
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %} 
+                            {% elseif param == 'departure' %}                   
+                                {% for doublon in doublons %} 
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> {{ doublon.transferDeparture.customerCard.holder}}</h5>
+                                                <p class="mb-3">#{{ doublon.transferDeparture.customerCard.reservationNumber }}</p>
+                                                <div class="row justify-content-around">
+                                                    <div class="col-md-4">
+                                                        <a href="{{path('app_customer_card_show',{id: doublon.transferDeparture.customerCard.id } )}}" class="btn btn-success">
+                                                            {% trans %}Manage{% endtrans %}
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-4 mt-3 mt-md-0">
+                                                        <form method="post" action="{{ path('ignore_duplicate_transfers', {id: doublon.transferDeparture.customerCard.id, param:'departure' }) }}" onsubmit="return confirm('if you ignore this duplicate it will no longer be present in the list. You can always access it by going to the customer file.');">
+                                                        {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transfer_arrival.id) }}"> #}
+                                                        <button class="btn btn-danger">{% trans %}Ignore Duplicate{% endtrans %}</button>
+                                                    </form>
+                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}                             
+                            {% else %}
+                                {% trans %}A problem has occurred{% endtrans %}
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+
+
+
+

@@ -21,9 +21,6 @@ class Agency
     #[ORM\OneToMany(mappedBy: 'agency', targetEntity: CustomerCard::class)]
     private Collection $customerCards;
 
-    #[ORM\Column]
-    private ?bool $isActive = null;
-
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $language = null;
 
@@ -32,6 +29,7 @@ class Agency
 
     public function __construct()
     {
+        $this->language = 'en';
         $this->customerCards = new ArrayCollection();
         $this->printingOptions = new ArrayCollection();
     }
@@ -84,18 +82,6 @@ class Agency
                 $customerCard->setAgency(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getIsActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
 
         return $this;
     }

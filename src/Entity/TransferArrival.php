@@ -14,7 +14,7 @@ class TransferArrival
     #[ORM\Column]
     private ?int $id = null;
     
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $serviceNumber = null;
 
 /*     #[ORM\Column(nullable: true)]
@@ -31,14 +31,14 @@ class TransferArrival
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $fromStart = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    #[ORM\ManyToOne(inversedBy: 'transferToArrivals')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $hour = null;
 
     #[ORM\OneToOne(mappedBy: 'transferArrival', cascade: ['persist', 'remove'])]
@@ -65,7 +65,7 @@ class TransferArrival
     #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
     private ?Status $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
+    #[ORM\ManyToOne(inversedBy: 'statusUpdatedBy')]
     private ?User $statusUpdatedBy = null;
 
     #[ORM\Column(nullable: true)]
@@ -74,9 +74,13 @@ class TransferArrival
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $duplicateIgnored = null;
+
 
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable('now');
+        $this->duplicateIgnored = false;
     }
     
     public function getId(): ?int
@@ -313,6 +317,18 @@ class TransferArrival
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isDuplicateIgnored(): ?bool
+    {
+        return $this->duplicateIgnored;
+    }
+
+    public function setDuplicateIgnored(?bool $duplicateIgnored): static
+    {
+        $this->duplicateIgnored = $duplicateIgnored;
 
         return $this;
     }

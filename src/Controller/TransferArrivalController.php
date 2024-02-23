@@ -3,11 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\CustomerCard;
+use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Form\TransferArrivalType;
+use App\Repository\StatusHistoryRepository;
+use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferVehicleArrivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,14 +71,16 @@ class TransferArrivalController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-
             return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard], Response::HTTP_SEE_OTHER);
         }
 
+        // Y a t il deja un transfer vehicule associé ? 
+        $isTransferVehicleExist = $transferArrival->getTransferVehicleArrival();
+       
         return $this->render('transfer_arrival/edit.html.twig', [
             'transfer_arrival' => $transferArrival,
             'form' => $form,
+            'isTransferVehicleExist' => $isTransferVehicleExist
         ]);
     }
 
@@ -89,4 +97,51 @@ class TransferArrivalController extends AbstractController
 
         return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/maj/status/{id}/{statusName}', name: 'app_transfer_arrival_maj_status', methods: ['POST'])]
+    public function majStatusAjax(TransferArrival $transferArrival, 
+                                  $statusName, 
+                                  StatusRepository $statusRepository, 
+                                  EntityManagerInterface $entityManager): Response
+    {
+
+        //je fais mes traitements
+        $newStatus = $statusRepository->findOneBy(['name' => $statusName]);
+        $transferArrival->setStatus($newStatus);
+
+        // On met à jour le statusHistory
+        $newStatusHistory = new StatusHistory();
+        $currentUser = $this->getUser();
+        $newStatusHistory->setStatus($newStatus);
+        $newStatusHistory->setCustomerCard( $transferArrival->getCustomerCard());
+        $newStatusHistory->setUpdatedBy($currentUser);
+
+        $entityManager->persist($newStatusHistory);
+
+        $entityManager->flush();
+
+
+        try {
+            return $this->json(
+                    // les données à transformer en JSON
+                    $transferArrival->getStatus()->getName(),
+                    // HTTP STATUS CODE
+                    200,
+                    // HTTP headers supplémentaires, dans notre cas : aucune
+                    [],
+                    // Contexte de serialisation, les groups de propriété que l'on veux serialise
+                   
+            );
+    
+         } catch (Exception $e){ // si une erreur est LANCE, je l'attrape
+            // je gère l'erreur
+            // par exemple si tu me file un genre ['3000'] qui n existe pas...
+             return new JsonResponse("Hoouuu !! Ce qui vient d'arriver est de votre faute : JSON invalide", Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+
+
+    }
+
+
 }

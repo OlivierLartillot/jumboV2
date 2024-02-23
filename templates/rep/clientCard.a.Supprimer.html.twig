@@ -1,0 +1,176 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Rep', title: 'Fiche Client'}) }}
+
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card  bg bg-sprimary p-2 ">
+                    <div class="d-flex flex-row bd-highlight card-body bg bg-light rounded mb-2">
+                        <div class="me-2">
+                            <i class="uil uil-arrow-circle-right"></i>
+                        </div>
+                        <div>
+                                <a href="{{ path('app_customer_card_show', {id: customerCard.id  })}}"><span class="fw-bold">{{ customerCard.holder|title }}</span></a><br/>
+                                <span class="fw-bold">{{ customerCard.agency|capitalize }}</span><br/>
+
+                                {{ customerCard.reservationNumber|upper }}<br/>
+                           
+                        </div>
+                    </div>
+                   {% if ( (customerCard.transferArrivals is defined) and (customerCard.transferArrivals|length > 0) ) %}
+                    <div class="card-body bg bg-light rounded mb-2">
+                        {% for arrival in customerCard.transferArrivals %}
+
+                                <div class="d-flex flex-row justify-content-between mb-2">
+                                    <div>
+                                        <i class="mdi mdi-airplane-landing fs-3"></i> Arrival
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-secondary">{{ arrival.staff }}</span><br>
+                                            {{ arrival.status|lower  == 'no show' ? '<span class="badge bg-danger">' : '<span class="badge bg-success">' }}
+                                        {{ arrival.status }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-row justify-content-around">
+                                    <div>
+                                        adults: {{ arrival.adultsNumber }}
+                                    </div>
+                                    <div>
+                                        children: {{ arrival.childrenNumber }}
+                                    </div>
+                                    <div>
+                                        babies: {{ arrival.babiesNumber }}<br/>      
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="d-flex flex-row justify-content-around">
+                                    <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3"> {{ arrival.date|date('d/m/Y') }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                            {{ arrival.flightNumber|upper }}
+                                        </span>
+                                    </div>                    
+                                    <div>
+                                        <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                            {{ arrival.hour|date('H:i') }}
+                                        </span>
+                                    </div>                                          
+                                </div>
+
+                                <div class="row">
+                                    <span class="btn btn-outline-primary">{{ arrival.fromStart }}</span>
+                                </div> 
+                                <div class="fs-5 bolder text-center"><i class="uil-arrow-down fs-1"></i></div>
+                                <div class="row">
+                                    <span class="btn btn-outline-primary">{{ arrival.ToArrival }}</span>
+                                </div> 
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if ( (customerCard.transferInterHotels is defined) and (customerCard.transferInterHotels|length > 0) ) %}
+                    <div class="card-body bg bg-light rounded mb-2">
+                        {% for interHotel in customerCard.transferInterHotels %}
+
+                                <div class="d-flex flex-row justify-content-between">
+                                    <div>
+                                        <i class="mdi mdi-car fs-3"></i> Inter-Hotel
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-row justify-content-around">
+                                <div>
+                                    adults: {{ interHotel.adultsNumber }}
+                                </div>
+                                <div>
+                                    children: {{ interHotel.childrenNumber }}
+                                </div>
+                                    <div>
+                                        babies: {{ interHotel.babiesNumber }}<br/>      
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="d-flex flex-row justify-content-around">
+                                    <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3"> {{ interHotel.date|date('d/m/Y') }}</span>
+                                    </div>
+                            
+                                    <div>
+                                        <span class="badge rounded-pill bg-success p-2 mt-1 mb-3">
+                                            {{ interHotel.PickUp|date('H:i') }}
+                                        </span>
+                                    </div>                                          
+                                </div>
+
+                                <div class="row">
+                                    <span class="btn btn-outline-primary">{{ interHotel.fromStart }}</span>
+                                </div> 
+                                <div class="fs-5 bolder text-center">V</div>
+                                <div class="row">
+                                    <span class="btn btn-outline-primary">{{ interHotel.ToArrival }}</span>
+                                </div> 
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if ( (customerCard.transferdeparture is defined) and (customerCard.transferdeparture|length > 0) ) %}
+                    <div class="card-body bg bg-light rounded mb-2">
+                        {% for departure in customerCard.transferdeparture %}
+
+                                <div class="d-flex flex-row justify-content-between">
+                                    <div >
+                                        <i class="mdi mdi-airplane-takeoff fs-3"></i> Departure
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-row justify-content-around">
+                                <div>
+                                    adults: {{ departure.adultsNumber }}
+                                </div>
+                                <div>
+                                    children: {{ departure.childrenNumber }}
+                                </div>
+                                    <div>
+                                        babies: {{ departure.babiesNumber }}<br/>      
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="d-flex flex-row justify-content-around">
+                                    <div>
+                                        <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3"> {{ departure.date|date('d/m/Y') }}</span>
+                                    </div>
+                                   <div>
+                                        <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3"> {{ departure.flightNumber|upper }}</span>
+                                    </div>    
+                                    <div>
+                                        <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                            {{ departure.hour|date('H:i') }}
+                                        </span>
+                                    </div>                                                               
+                                    <div>
+                                        <span class="badge rounded-pill bg-success p-2 mt-1 mb-3">
+                                            {{ departure.PickUp|date('H:i') }}
+                                        </span>
+                                    </div>                                          
+                                </div>
+
+                                <div class="row">
+                                    <span class="btn btn-outline-primary">{{ departure.fromStart }}</span>
+                                </div> 
+                                <div class="fs-5 bolder text-center">V</div>
+                                <div class="row">
+                                    <span class="btn btn-outline-primary">{{ departure.ToArrival }}</span>
+                                </div> 
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+{{ include('partials/footer-regroupement.html.twig') }}
+

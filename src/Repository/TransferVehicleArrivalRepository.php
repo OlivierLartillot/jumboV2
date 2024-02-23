@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\TransferVehicleArrival;
+use App\Entity\TransportCompany;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,20 +43,30 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return TransferJoan[] Returns an array of distinct transport_company  
-     */
-    public function transportCompanyList(): array
-    {
+     * 
+    */
+    public function findDifferencesWithtransferArrival() {
 
-        return $this->createQueryBuilder('t')
-            ->select('t.transportCompany')->distinct()
-            ->orderBy('t.transportCompany', 'ASC')
+        // récupèrer la date d'il y a un mois
+        // de cette facon si la date d arrivée est ultérieur a un mois on ne garde pas 
+        $date = new DateTimeImmutable('now');
+        $newDate = $date->modify('-1 month');
+   
+
+        return $this->createQueryBuilder('tva')
+            ->innerJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'transferArrival.id = tva.transferArrival')
+            ->orWhere('tva.adultsNumber != transferArrival.adultsNumber')
+            ->orWhere('tva.childrenNumber != transferArrival.childrenNumber')
+            ->orWhere('tva.babiesNumber != transferArrival.babiesNumber')
+            ->orWhere('tva.fromStart != transferArrival.fromStart')
+            ->orWhere('tva.toArrival != transferArrival.toArrival')
+            ->andWhere('transferArrival.date > :dateToExclude')
+            ->setParameter('dateToExclude', $newDate->format('Y-m-d'))
             ->getQuery()
             ->getResult()
         ;
-    }
 
-
+    } 
 
 
     /**
@@ -98,10 +110,10 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
     } */
 
     /**
-     * @return CustomerCard[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
-     * Attribution des représentants
+     * @return TransferVehicleArrival[] Returns an array 
+     * 
      */
-        public function findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company): array
+    public function findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type): array
     {
 
         $dateStart = new DateTimeImmutable($dateStart);
@@ -114,13 +126,19 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
 
         if ($company != 'all') {
             $requete = $requete
-                ->andWhere('ta.transportCompany = :company') 
-            ->setParameter('company', $company)
-                
-                ;
-
+            ->andWhere('ta.transportCompany = :company') 
+            ->setParameter('company', $company);
         }
-
+        if ($area != 'all') {
+            $requete = $requete
+            ->andWhere('ta.area = :area') 
+            ->setParameter('area', $area);
+        }
+        if ($type != 'all') {
+            $requete = $requete
+            ->andWhere('ta.isCollective = :isCollective') 
+            ->setParameter('isCollective', $type);
+        }
         $requete = $requete
             ->getQuery()
             ->getResult()
@@ -130,12 +148,45 @@ class TransferVehicleArrivalRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * zones unique pour le transferVehicule
+     */
+    public function findTransferVehicleArrivalAreas(): array
+    {
+        return $this->createQueryBuilder('ta')
+                    ->select('ta.area')
+                    ->distinct()
+                    ->getQuery()
+                    ->getResult()
+                ;
+    }
 
+ /**
+     * @return TransferVehicleArrival[] Returns an array 
+     * 
+     */
+    public function findErrorArrivalDateANdMeetingDate(): array
+    {
+   
+        $entityManager = $this->getEntityManager();
+        
+        $sql = '
+            SELECT vehicleArrival.*
+            FROM transfer_vehicle_arrival AS vehicleArrival
+            INNER JOIN transfer_arrival AS arrival 
+            ON arrival.id = vehicleArrival.transfer_arrival_id
+            WHERE DATE(arrival.meeting_at) <= DATE(vehicleArrival.date) 
+        '; 
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('App\Entity\TransferVehicleArrival', 'vehicleArrival');
 
+        // Définir les champs à mapper
+        $rsm->addFieldResult('vehicleArrival', 'id', 'id');
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $result = $query->getResult();
+        return $result;
 
-
-
-
+    }
 
 //    /**
 //     * @return TransferVehicleArrival[] Returns an array of TransferVehicleArrival objects

@@ -1,5 +1,5 @@
 security:
-    enable_authenticator_manager: true
+    #enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -22,6 +22,12 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 25200 # 1 week in seconds
+            login_throttling:
+                max_attempts: 5
+                interval: '10 minutes'
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -33,20 +39,22 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/team-manager/status, roles: [ROLE_HULK] }
-        - { path: ^/admin, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT] }
-        - { path: ^/team-transfer/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
-        - { path: ^/team-manager/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
-        - { path: ^/team-manager/traitement_csv, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_IMPORT] }
+        - { path: ^/team-manager/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_IMPORT, ROLE_RESERVATIONS] }
+        - { path: ^/team-transfer/import, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_IMPORT, ROLE_TRANSFERS] }
+        - { path: ^/team-transfer/traitement_xls, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_IMPORT, ROLE_TRANSFERS] }
+        - { path: ^/team-manager/traitement_csv, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_IMPORT] }
         - { path: ^/customer/card/new, roles: [ROLE_HULK, ROLE_SUPERMAN] }
-        - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_REP, ROLE_AIRPORT, ROLE_IMPORT] }
-        - { path: ^/team-manager/briefings, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_BRIEFING] }
+        - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_REP, ROLE_AIRPORT, ROLE_IMPORT, ROLE_AIRPORT_SUPERVISOR,ROLE_RESERVATIONS, ROLE_TRANSFERS, ROLE_BRIEFING] }
+        - { path: ^/team-manager/briefings, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_BRIEFING] }
         - { path: ^/team-manager, roles: [ROLE_HULK, ROLE_SUPERMAN] }
-        - { path: ^/team-transfer, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
-        - { path: ^/airport, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS, ROLE_AIRPORT] }
-        - { path: ^/transportation, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_OPERATIONS] }
+        - { path: ^/team-transfer, roles: [ROLE_HULK, ROLE_SUPERMAN] }
+        - { path: ^/airport, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_AIRPORT] }
+        - { path: ^/transportation, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_TRANSFERS] }
         - { path: ^/pax, roles: [ROLE_HULK, ROLE_REP] }
 
-        
+    role_hierarchy:
+            ROLE_SUPERMAN:  [ROLE_USER, ROLE_AIRPORT_SUPERVISOR]
+            ROLE_HULK: [ROLE_SUPERMAN, ROLE_ALLOWED_TO_SWITCH]        
 
         # - { path: ^/profile, roles: ROLE_USER }
 

@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserEditPasswordType;
 use App\Form\UserEditType;
 use App\Form\UserType;
+use App\Repository\AirportHotelRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class UserController extends AbstractController
     }
 
     #[Route('team-manager/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $hasher): Response
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $hasher, AirportHotelRepository $airportHotelRepository): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -58,14 +59,12 @@ class UserController extends AbstractController
                 $user->getPassword()
             );
             $user->setPassword($hashedPassword);
-   
-
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_list', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('user/new.html.twig', [
+        return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
@@ -80,18 +79,26 @@ class UserController extends AbstractController
     }
 
     #[Route('team-manager/user/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $hasher): Response
     {
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $user = $form->getData();
+            $plainPassword = $form->get('password')->getData();
+
+            if (null !== $plainPassword) {
+                $user->setPassword($hasher->hashPassword($user, $plainPassword));
+            }
+
             $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_user_list', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('user/edit.html.twig', [
+        return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
@@ -110,15 +117,12 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $user = $form->getData();
+            $plainPassword = $form->get('password')->getData();
 
-            $newHashedPassword = $hasher->hashPassword(
-                $user, 
-                $user->getPassword()
-            ); 
-    
-            $userRepository->upgradePassword($user,  $newHashedPassword);
-
-
+            if (null !== $plainPassword) {
+                $user->setPassword($hasher->hashPassword($user, $plainPassword));
+            }
 
             $userRepository->save($user, true);
 
@@ -144,6 +148,6 @@ class UserController extends AbstractController
             $userRepository->remove($user, true);
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_list', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -141,7 +141,7 @@ class TeamManagerController extends AbstractController
         $day = $defineQueryDate->returnDay($request);
 
 
-          // on fixe la date que l'on va utiliser dans le filtre
+        // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
 
@@ -216,7 +216,27 @@ class TeamManagerController extends AbstractController
         // attraper la liste des objets correpsondants au representant et au jour du meeting
         //$attributionClientsByRepAndDate = $customerCardRepository->findByStaffAndMeetingDate($user, $date);
         $meetingPoints = $meetingPointRepository->findAll();
-        $users = $userRepository->findAll();
+        
+        $users = [];  /*   $users = $userRepository->findAll(); MAIS EN METTANT TRIE + SKIP ET NO rep en premier */
+        // trouve le skip pour le mettre en premier puis le No rep
+        $skip =  $userRepository->findOneBy(['username' => 'skip']);
+        if ($skip != null) {
+            $users[] = $skip; 
+        }
+        $noRep =  $userRepository->findOneBy(['username' => 'no rep']);
+        if ($noRep != null) {
+            $users[] = $noRep; 
+        }
+        
+        $usersRestant = $userRepository->findBy([], ['username' => 'ASC']);
+        foreach ($usersRestant as $userToPut) {
+            
+            // mais si $user = skip tu le sautes !!!
+            if ( (strtolower($userToPut->getUsername()) !== 'skip' ) and (strtolower($userToPut->getUsername()) !== 'no rep') ){ 
+                $users [] = $userToPut;
+            }
+            
+        }
 
         // on a un seul user dans cette page
         // Ne sert pas pour les pax car c'est groupé, on ne peut pas ajouté
@@ -268,9 +288,11 @@ class TeamManagerController extends AbstractController
             
             foreach ($request->request as $key => $currentRequest) {
                 
+                /* dump($key .' - '. $currentRequest); */
                 // convertir la clé en tableau
                 $keyTab = explode("_", $key);
     
+               /*  dump($keyTab); */
                 $transfer = $transferArrivalRepository->find($keyTab[1]);
                 $firstClient =  $transfer->getCustomerCard();
                 $staff = $transfer->getStaff();
@@ -285,17 +307,21 @@ class TeamManagerController extends AbstractController
                 //dump('client id: ' . $firstClient->getId() . ' s: ' .$staff . ' a: ' . $agency . ' h: ' . $hotel);
                 // pour chaque personne ce jour et ce staff, cet hotel et cet agence mettre a jour
                 // 1st récupérer la liste de ces personnes
-                $arrivalsListForThisCouple = $transferArrivalRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, null, $transfer->getMeetingAt(), $transfer->getMeetingPoint());
-  
+                $arrivalsListForThisCouple = $transferArrivalRepository->findCustomersByDateHotelAgency($date, $hotel, $agency, null,$transfer->getMeetingPoint());
+               
                 // 2d mettre a jour
                 // récupérer chaque couple hotel agence pour ce rep a ce jour 
                 // pour chaque résultats  
 
-                foreach ($arrivalsListForThisCouple as $arrival ) {
+                foreach ($arrivalsListForThisCouple as $currentArrival ) {
 
+                    
                     // récupérer l'objet correspondant a l id
                     //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
-                    $currentArrival = $arrival;
+                    
+
+
+                    /* dump($keyTab[0] .': '. $currentRequest .' - '.$currentArrival->getId()); */
 
                     // si c est heure set l objet avec l heure
                     if ($keyTab[0] == 'hour') {
@@ -312,10 +338,11 @@ class TeamManagerController extends AbstractController
                         $staff = $userRepository->find($currentRequest);
                         $currentArrival->setStaff($staff);
                     }
+                    
                 }
 
             }
-
+           
             
             $manager->flush();
             return $this->redirect($this->generateUrl('app_admin_team_manager_replist'));
@@ -354,7 +381,26 @@ class TeamManagerController extends AbstractController
         $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date);
 
         $meetingPoints = $meetingPointRepository->findAll();
-        $users = $userRepository->findAll();
+        $users = [];  /*   $users = $userRepository->findAll(); */
+        // trouve le skip pour le mettre en premier puis le No rep
+        $skip =  $userRepository->findOneBy(['username' => 'skip']);
+        if ($skip != null) {
+            $users[] = $skip; 
+        }
+        $noRep =  $userRepository->findOneBy(['username' => 'no rep']);
+        if ($noRep != null) {
+            $users[] = $noRep; 
+        }
+        
+        $usersRestant = $userRepository->findBy([], ['username' => 'ASC']);
+        foreach ($usersRestant as $userToPut) {
+            
+            // mais si $user = skip tu le sautes !!!
+            if ( (strtolower($userToPut->getUsername()) !== 'skip' ) and (strtolower($userToPut->getUsername()) !== 'no rep') ){ 
+                $users [] = $userToPut;
+            }
+            
+        }
     
 
         // on check - pour le 1er client, l heure, puis le rep, puis le lieu, puis le 2eme client, l heure ... etc
@@ -436,9 +482,9 @@ class TeamManagerController extends AbstractController
                                     AirportHotelRepository $airportHotelRepository,
                                     PrintingOptionsRepository $printingOptionsRepository,
                                     Request $request,
-                                    DefineQueryDate $defineQueryDate): Response 
+                                    DefineQueryDate $defineQueryDate,
+                                    ): Response 
     {
-
         $day =  $defineQueryDate->returnDay($request);
        
         $date = new DateTimeImmutable($day . '00:01:00');
@@ -462,49 +508,62 @@ class TeamManagerController extends AbstractController
             }
         }
         
-        // récupérer les cutomerCard correspondant à la meeting date
-        $meetings = $transferArrivalRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
-    
-        $checkFormAgencies = $request->request->get("form_check_agencies");
-        if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
-            foreach ($agencies as $agency) {
-                
-                $data = $request->request->get("agence_". $agency->getId());
-                
-                $test = ($data == "on") ? true : false;
-                
-                // si non, la créer
-                
-                if ($printingOptionsUser == null) {
-                    $printingOptionsUser = new PrintingOptions();
-                    $printingOptionsUser->setUser($user);
-                } 
-                
-                if($test) {
-                    $printingOptionsUser->addAgency($agency);
-                } else {
-                    $printingOptionsUser->removeAgency($agency);
-                }
-              
-                foreach ($airports as $airport) { 
-                    $data = $request->request->get("airport_". $airport->getId());
+        
+
+        // si y a le parametre clientArrival dans l adresse alors le tableau des meetings (transferArrival)
+        // n'aura que le transferArrival de ce client
+        if ($request->get("ta")) {
+            $meetings = [];
+            $meetings =  $transferArrivalRepository->findBy(['id' => $request->get("ta")]);
+            $date = $meetings[0]->getDate();
+            /* dump("on a le param d url");
+            dd($meetings); */
+        } else {
+            //sinon
+            // récupérer les cutomerCard correspondant à la meeting date
+            $meetings = $transferArrivalRepository->findByMeetingDate($date, $choosenAirports, $choosenAgencies);
+        
+            $checkFormAgencies = $request->request->get("form_check_agencies");
+            if ( (isset($checkFormAgencies)) and ($checkFormAgencies == "ok") ){
+                foreach ($agencies as $agency) {
+                    
+                    $data = $request->request->get("agence_". $agency->getId());
+                    
                     $test = ($data == "on") ? true : false;
                     
-                    // si c est on on rajoute
+                    // si non, la créer
+                    
+                    if ($printingOptionsUser == null) {
+                        $printingOptionsUser = new PrintingOptions();
+                        $printingOptionsUser->setUser($user);
+                    } 
+                    
                     if($test) {
-                        $printingOptionsUser->addAirport($airport);
+                        $printingOptionsUser->addAgency($agency);
                     } else {
-                        $printingOptionsUser->removeAirport($airport);
+                        $printingOptionsUser->removeAgency($agency);
                     }
-                    $manager->persist($printingOptionsUser);
-                    $manager->flush();                   
+                
+                    foreach ($airports as $airport) { 
+                        $data = $request->request->get("airport_". $airport->getId());
+                        $test = ($data == "on") ? true : false;
+                        
+                        // si c est on on rajoute
+                        if($test) {
+                            $printingOptionsUser->addAirport($airport);
+                        } else {
+                            $printingOptionsUser->removeAirport($airport);
+                        }
+                        $manager->persist($printingOptionsUser);
+                        $manager->flush();                   
+                    }
                 }
+                $this->addFlash(
+                    'danger',
+                    'Warning: To update the labels to be printed, please send back the date selection form'
+                );
+                $formAgencySend = true;
             }
-            $this->addFlash(
-                'danger',
-                'Warning: To update the labels to be printed, please send back the date selection form'
-            );
-            $formAgencySend = true;
         }
 
         return $this->render('team_manager/stickers.html.twig', [

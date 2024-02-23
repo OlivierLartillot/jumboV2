@@ -24,7 +24,7 @@ class TransferDeparture
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $fromStart = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transferDepartures')]
+    #[ORM\ManyToOne(inversedBy: 'transferToDepartures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
@@ -71,9 +71,13 @@ class TransferDeparture
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $duplicateIgnored = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable('now');
+        $this->duplicateIgnored = false;
     }
 
     public function getId(): ?int
@@ -285,6 +289,18 @@ class TransferDeparture
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isDuplicateIgnored(): ?bool
+    {
+        return $this->duplicateIgnored;
+    }
+
+    public function setDuplicateIgnored(?bool $duplicateIgnored): static
+    {
+        $this->duplicateIgnored = $duplicateIgnored;
 
         return $this;
     }

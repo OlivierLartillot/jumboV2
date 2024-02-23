@@ -27,14 +27,37 @@ class MeetingPointType extends AbstractType
             ->add('en', null, [
                 'label' => $this->translator->trans('English')
             ])
+            ->add('whatsAppEn', null, [
+                'label' => false,
+                'help' => $this->translator->trans('Expression that appears when a representative uses the variable for WhatsApp text in English'),
+            ])
             ->add('es', null, [
                 'label' => $this->translator->trans('Spanish')
+            ])
+            ->add('whatsAppEs', null, [
+                'label' => false,
+                'help' => $this->translator->trans('Expression that appears when a representative uses the variable for WhatsApp text in Spanish'),
             ])
             ->add('fr', null, [
                 'label' => $this->translator->trans('French')
             ])
+            ->add('whatsAppFr', null, [
+                'label' => false,
+                'help' => $this->translator->trans('Expression that appears when a representative uses the variable for WhatsApp text in French'),
+            ])
             ->add('it', null, [
                 'label' => $this->translator->trans('Italian')
+            ])
+            ->add('whatsAppIt', null, [
+                'label' => false,
+                'help' => $this->translator->trans('Expression that appears when a representative uses the variable for WhatsApp text in Italian'),
+            ])
+            ->add('po', null, [
+                'label' => $this->translator->trans('Portuguese')
+            ])
+            ->add('whatsAppPo', null, [
+                'label' => false,
+                'help' => $this->translator->trans('Expression that appears when a representative uses the variable for WhatsApp text in Portuguese'),
             ])
         ;
     }

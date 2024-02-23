@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\TransferArrival;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -56,13 +57,38 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return 
+     * retourne un tableau des arrivées multiples pour un meme compte (customer_card)
+     */
+    public function findMultiplesArrivals() :array
+    {
+        $tableauFinalDesDoublons = [];
+        $results = $this->createQueryBuilder('t')
+                    ->select('t as transferArrival', 'count(t.id) as count', 't.duplicateIgnored')
+                    ->where('t.duplicateIgnored = false')
+                    ->groupBy('t.customerCard')
+                    ->getQuery()
+                    ->getResult();
+
+        foreach ($results as $result) {
+            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
+
+                $tableauFinalDesDoublons[] = $result;
+            }
+        }
+
+        return $tableauFinalDesDoublons;
+    }
+
+    /**
      * @return TransferArrival[] Returns an array of TransferArrival objects
      */
     public function findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber): array
     {
             
         $requete = $this->createQueryBuilder('ta')
-                        ->leftJoin('App\Entity\TransferVehicleArrival', 'transferVehicleArrival', 'WITH', 'ta.customerCard = transferVehicleArrival.customerCard');
+                        ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'ta.customerCard = transferArrival.customerCard')
+                        ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'ta.customerCard = c.id');
 
         $requete = $requete->andWhere('ta.date = :date')->setParameter('date', $date); 
         if ($airport != 'all') {
@@ -72,10 +98,10 @@ class TransferArrivalRepository extends ServiceEntityRepository
         $requete = $requete->andWhere('ta.flightNumber LIKE :flightNumber')->setParameter('flightNumber', '%'.$flightNumber.'%');
         }
         if ($voucherNumber != '') {
-            $requete = $requete->andWhere('transferVehicleArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
+            $requete = $requete->andWhere('transferArrival.voucherNumber LIKE :voucherNumber')->setParameter('voucherNumber', '%'.$voucherNumber.'%');
         }
         
-        $requete = $requete->orderBy('ta.id', 'ASC')
+        $requete = $requete->orderBy('ta.flightNumber', 'ASC')->addOrderBy('c.holder', 'ASC')
         ->getQuery()
         ->getResult()
         ;
@@ -86,24 +112,27 @@ class TransferArrivalRepository extends ServiceEntityRepository
     /**
      * @return TransferArrival[] Returns an array of customersCards at this 
      * - choosen date by staff, 
-     * - grouped by staff, agency and arrival hotel
+     * - grouped by staff, agency and arrival hotel-
+     * - on désactive l'hotel si on veut regrouper les gens dans un meeting sans prendre en compte les différences d hotel ou d agence
      * Attribution des meetings
      */
-    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff) :array
+    public function meetingRegroupmentByDayStaffAgencyAndHotel($date, $staff, $deactivateHotel=false) :array
     {
 
-        
-
-        return $this->createQueryBuilder('t')
+        $requete =  $this->createQueryBuilder('t')
             ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.meetingAt >= :dateStart')
             ->andWhere('t.meetingAt <= :dateEnd')
             ->andWhere('t.staff = :staff')
             ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
             ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
-            ->setParameter('staff', $staff)
-            ->groupBy('t.staff', 'c.agency' ,'t.toArrival', 't.meetingAt', 't.meetingPoint')      
-            ->getQuery()
+            ->setParameter('staff', $staff);
+        if ($deactivateHotel){
+            $requete = $requete->groupBy('t.staff', 't.meetingAt');     
+        } else {
+            $requete = $requete->groupBy('t.staff', 'c.agency' ,'t.toArrival', 't.meetingAt', 't.meetingPoint');   
+        }
+        return $requete->getQuery()
             ->getResult()
         ;
     }
@@ -121,7 +150,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
         elseif ($age == "children") { $requete = $requete->select('sum(t.childrenNumber)');} 
         else { $requete = $requete->select('sum(t.babiesNumber)') ;}
 
-     $requete = $requete
+        $requete = $requete
             ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.staff = :staff')
             ->andWhere('t.meetingAt = :meetingAt')
@@ -147,22 +176,63 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day)
+     * @return int the Sum of paxes by regroupment 
+     * Attribution des représentants
      */
-    public function findByStaffAndMeetingDate($staff, $dateTimeImmutable): array
+    public function paxForRegroupementMeetingAt($staff, $age, $meetingAt, $meetingPoint, $flightNumber = null)
     {
 
-        $dateTime = $dateTimeImmutable->format('Y-m-d');
+        $requete = $this->createQueryBuilder('t');
 
+        if ($age == "adults") { $requete = $requete->select('sum(t.adultsNumber)');} 
+        elseif ($age == "children") { $requete = $requete->select('sum(t.childrenNumber)');} 
+        else { $requete = $requete->select('sum(t.babiesNumber)') ;}
+
+        $requete = $requete
+            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->andWhere('t.staff = :staff')
+            ->andWhere('t.meetingAt = :meetingAt')
+            ->andWhere('t.meetingPoint = :meetingPoint')
+            ->setParameter('meetingAt', $meetingAt) 
+            ->setParameter('meetingPoint', $meetingPoint) 
+            ->setParameter('staff', $staff);
+
+            if ($flightNumber != null) {
+                $requete = $requete
+                ->andWhere('t.flightNumber = :flightNumber')
+                ->setParameter('flightNumber', $flightNumber);
+            }
+            $requete = $requete
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        return $requete;
+    }
+
+    /**
+     * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day)
+     */
+    public function findByStaffAndMeetingDate($staff, $dateTimeImmutable, $hour=null): array
+    {
+
+
+        $dateTime = $dateTimeImmutable->format('Y-m-d');
+        $meeting = $dateTimeImmutable->format($dateTime . ' ' . $hour);
   
-        return $this->createQueryBuilder('t')
+        $requete = $this->createQueryBuilder('t')
             ->andWhere('t.staff = :staff')
             ->andWhere('t.meetingAt >= :date_start')
             ->andWhere('t.meetingAt <= :date_end')
             ->setParameter('staff', $staff)
             ->setParameter('date_start', $dateTimeImmutable->format($dateTime . ' 00:00:00'))
-            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'))
-            ->orderBy('t.id', 'ASC')
+            ->setParameter('date_end',   $dateTimeImmutable->format($dateTime . ' 23:59:59'));
+
+        if ($hour != null) {
+            $requete = $requete->andWhere('t.meetingAt = :hour')
+                               ->setParameter('hour', $meeting);
+        }
+
+         return $requete->orderBy('t.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -171,11 +241,11 @@ class TransferArrivalRepository extends ServiceEntityRepository
      * @return TransferArrival[] Returns an array of CustomerCard objects by staff and meeting date (day) + hotel and agency 
      * Attribution des représentants
      */
-    public function findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber = null, $meetingAt=null, $meetingPoint = null): array
+    public function findCustomersByDateHotelAgency($date, $hotel, $agency, $flightNumber = null, $meetingPoint = null): array
     {
 
         $requete = $this->createQueryBuilder('t')
-            ->innerJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
+            ->leftJoin('App\Entity\CustomerCard', 'c', 'WITH', 'c.id = t.customerCard')
             ->andWhere('t.meetingAt >= :dateStart')
             ->andWhere('t.meetingAt <= :dateEnd')
             ->andWhere('t.toArrival = :hotel')
@@ -191,9 +261,7 @@ class TransferArrivalRepository extends ServiceEntityRepository
                 ->andWhere('t.flightNumber = :flightNumber')
                 ->setParameter('flightNumber', $flightNumber)     ;
             }
-            if ($meetingAt != null) {
-                $requete= $requete->andWhere('t.meetingAt = :meetingAt')->setParameter('meetingAt', $meetingAt);
-            }
+
             if ($meetingPoint != null) {
                 $requete= $requete->andWhere('t.meetingPoint = :meetingPoint')->setParameter('meetingPoint', $meetingPoint);
             }        
@@ -289,10 +357,10 @@ class TransferArrivalRepository extends ServiceEntityRepository
         ;
     }
 
-        /**
-     * @return TransferArrival[] Returns a int, countnumber of items
+    /**
+     *  Returns a int, countnumber of items
      */
-    public function countNumberNonAttributedMeetingsByDate($date): int
+    public function countNumberNonAttributedMeetingsByDate($date)
     {
 
         return $this->createQueryBuilder('t')
@@ -304,8 +372,6 @@ class TransferArrivalRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
         ;
     }
-
-
 
     /**
      *
@@ -390,10 +456,10 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return TransferArrival[] counts number of time arrival exist EXCEPT TODAY
+     *  counts number of time arrival exist EXCEPT TODAY
      * Cette requête sert à des vérifications pendant l import du csv
      */
-    public function CheckIfArrivalExistAnotherDay($reservationNumber, $date): int
+    public function CheckIfArrivalExistAnotherDay($reservationNumber, $date)
     { 
 
         $dateTimeImmutable = new DateTimeImmutable($date);
@@ -414,6 +480,83 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * @return array customerCard[] counts number of time arrival exist EXCEPT TODAY
+     * Récupérer toutes les customers cards liées a ce staff dans les arrivées et superieur a la date envoyée pourlimiter les réponses
+     */
+    public function arrivalByStaffAndSupADATE($staff, $dateInterHotel): array
+    { 
+
+        $MoinsUnMoiEtDemie = $dateInterHotel->modify('-1 month -15days');
+
+        return $this->createQueryBuilder('t')
+                    ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+                    ->select('customerCard.id')
+                    ->andwhere('t.date < :dateInterHotel')
+                    ->andWhere('t.date > :minusTwoMonth')
+                    ->andwhere('t.staff = :staff')
+                    ->setParameter('dateInterHotel', $dateInterHotel)
+                    ->setParameter('minusTwoMonth', $MoinsUnMoiEtDemie)
+                    ->setParameter('staff', $staff)
+                    ->getQuery()
+                    ->getResult()
+        ;
+
+    }
+
+    /**
+     * @return TransferArrival[] Returns an array 
+     * 
+     */
+    public function findErrorArrivalDateANdMeetingDate(): array
+    {
+   
+        $entityManager = $this->getEntityManager();
+        
+        $sql = '
+            SELECT *
+            FROM transfer_arrival AS arrival
+            WHERE DATE(arrival.meeting_at) <= DATE(arrival.date) 
+        '; 
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('App\Entity\TransferArrival', 'arrival');
+
+        // Définir les champs à mapper
+        $rsm->addFieldResult('arrival', 'id', 'id');
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $result = $query->getResult();
+        return $result;
+
+    }
+
+
+    /**
+     * @return TransferArrival[] , personnels AIRPORT
+     * Retourne un tableau d'arrivées du jour et de l'aéroport
+     */
+/*     public function arrivalsByDteAndAirport($date, $airport):array
+    { 
+
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-m-d");
+
+
+
+        return $this->createQueryBuilder('t')
+        ->innerJoin('App\Entity\CustomerCard', 'customerCard', 'WITH', 'customerCard.id = t.customerCard')
+        ->select('customerCard.id')
+
+        ->andwhere('t.date < :dateInterHotel')
+        ->andWhere('t.date > :minusTwoMonth')
+        ->andwhere('t.staff = :staff')
+        ->setParameter('dateInterHotel', $dateInterHotel)
+        ->setParameter('minusTwoMonth', $MoinsUnMoiEtDemie)
+        ->setParameter('staff', $staff)
+        ->getQuery()
+        ->getResult()
+;
+
+    } */
 
 //    /**
 //     * @return TransferArrival[] Returns an array of TransferArrival objects

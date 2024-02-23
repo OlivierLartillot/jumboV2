@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -39,6 +40,7 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($username),
             new PasswordCredentials($request->request->get('password', '')),
             [
+                new RememberMeBadge(),
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
         );
@@ -52,18 +54,22 @@ class UserAuthentificatorAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $this->userRepository->findOneBy([
             'username' => $request->request->get('username', '') 
-
         ]);
 
         $request->getSession()->set('_locale', $user->getLanguage());
-
-
 
         if ($user->isDeactivate()) {
             return new RedirectResponse($this->urlGenerator->generate('app_logout'));
         } ;
 
         // For example:
+        if ((in_array('ROLE_HULK', $user->getRoles())) or (in_array('ROLE_SUPERMAN', $user->getRoles())) or (in_array('ROLE_AIRPORT_SUPERVISOR', $user->getRoles())) ) {
+            return new RedirectResponse($this->urlGenerator->generate('home'));
+        } elseif (in_array('ROLE_AIRPORT', $user->getRoles())){
+            return new RedirectResponse($this->urlGenerator->generate('app_customer_card_airport'));
+        } elseif (in_array('ROLE_REP', $user->getRoles())){
+            return new RedirectResponse($this->urlGenerator->generate('app_admin_rep_replist'));
+        } 
         return new RedirectResponse($this->urlGenerator->generate('app_customer_card_index'));
         
     }

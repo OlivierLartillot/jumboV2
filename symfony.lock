@@ -77,6 +77,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
+    "eckinox/tinymce-bundle": {
+        "version": "v0.1.5"
+    },
     "egulias/email-validator": {
         "version": "3.1.2"
     },
@@ -397,6 +400,20 @@
     "symfony/service-contracts": {
         "version": "v3.0.0"
     },
+    "symfony/stimulus-bundle": {
+        "version": "2.15",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.13",
+            "ref": "6acd9ff4f7fd5626d2962109bd4ebab351d43c43"
+        },
+        "files": [
+            "./assets/bootstrap.js",
+            "./assets/controllers.json",
+            "./assets/controllers/hello_controller.js"
+        ]
+    },
     "symfony/stopwatch": {
         "version": "v6.0.3"
     },
@@ -446,6 +463,9 @@
         "files": [
             "./config/routes/ux_autocomplete.yaml"
         ]
+    },
+    "symfony/ux-chartjs": {
+        "version": "v2.15.0"
     },
     "symfony/ux-dropzone": {
         "version": "v2.9.1"

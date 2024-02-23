@@ -1,5 +1,92 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
+
+
+.w-30 {
+  width: 30% !important; }
+
+.w-40 {
+  width: 40% !important; }
+  .w-30 {
+    width: 30% !important; }
+  
+  .w-60 {
+    width: 60% !important; }
+
+  .cursor {
+    cursor: pointer;
+  }
+  /* bottom menu */
+
+.bottom-navbar {
+  background-color: white;
+  box-shadow: 0px -2px 2px grey;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.bottom-navbar a {
+  float: left;
+  display: block;
+  color: #495057;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 0.6rem;
+}
+
+.bottom-navbar a:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.bottom-navbar a.active {
+  background-color: #5b73e8;
+  color: white;
+}
+
+.dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropup {
+  position: relative;
+  display: inline-block;
+}
+
+.dropup-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  bottom: 50px;
+  z-index: 9999;
+}
+
+.dropup-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropup-content a:hover {background-color: #ccc}
+
+.dropup:hover .dropup-content {
+  display: block;
+}
+
+.dropup:hover .dropbtn {
+  background-color: #2980B9;
+}
+
+
 /* common */
 .ribbon {
   width: 131px;
@@ -233,4 +320,53 @@
   position: absolute;
   bottom: 0;
   height: 7rem;
+}
+
+/****** timeline box pour les reps ******/
+.rep-timeline-box {
+  color: black;
+  background-color: white;
+  padding: 0.8rem;
+  border-radius: 0 0 10px 10px; 
+  border-top: 0.4rem solid #5b73e8;
+  border-right: 0.1rem solid #5b73e8;
+  border-bottom: 0.1rem solid #5b73e8;
+  border-left: 0.1rem solid #5b73e8;
+}
+
+.rep-timeline-badge {
+  width: 100px;
+  height: 34px;
+  border-radius: 21px;
+  background: #FF543D;
+  color: #0A2449;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 1px;
+}
+
+.verticaltext{
+  transform: rotate(-90deg);
+}
+
+.airport-background-no-checked {
+  background-color: #ffe5ec;
+  border-radius: 0.2rem;
+}
+
+
+.image-clignote  {
+  animation-duration: .8s;
+  animation-name: clignoter;
+  animation-iteration-count: infinite;
+  transition: none;
+}
+@keyframes clignoter {
+ 0%   { opacity:1; }
+ 40%   {opacity:0; }
+ 100% { opacity:1; }
 }

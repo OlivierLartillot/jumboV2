@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\CustomerCard;
+use App\Entity\StatusHistory;
 use App\Entity\TransferArrival;
 use App\Entity\User;
 use App\Form\CommentType;
@@ -17,13 +18,15 @@ use App\Repository\MeetingPointRepository;
 use App\Repository\StatusHistoryRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferDepartureRepository;
+use App\Repository\TransferInterHotelRepository;
 use App\Repository\TransferVehicleArrivalRepository;
-use App\Repository\TransferVehicleDepartureRepository;
-
+use App\Repository\TransportCompanyRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +45,24 @@ class CustomerCardController extends AbstractController
                           AirportHotelRepository $airportHotelRepository, 
                           PaginatorInterface $paginator): Response
     {
+        /*
+        $path = $this->getParameter('fiches_clients_folder');
+        $nom_fichier = $path . date('d-m-Y-h_i_s').'.csv';
+        fopen($nom_fichier, 'w');
+        $records = [
+            [1, 2, 5],
+            ['foo', 'bar', 'baz'],
+            ['john', 'doe', 'john.doe@example.com'],
+        ];
+        
+        try {
+            $writer = Writer::createFromPath($nom_fichier, 'w+');
+            $writer->insertAll($records);
+        } catch (CannotInsertRecord $e) {
+            $e->getRecord(); //returns [1, 2, 3]
+        } 
+        */
+
 
         //Listes des informations a afficher dans les tris
         $agencies = $agencyRepository->findAllAsc();
@@ -53,80 +74,103 @@ class CustomerCardController extends AbstractController
         $reps = [];
         foreach ($users as $user) {
             if (in_array("ROLE_REP", $user->getRoles() )) {
-                $reps[] = $user;
-            }
-        }
-        
-        // si on a cliqué sur envoyé
-        if (count($request->query) > 0) {
-            $empty = true;
-            //on vérifie si on a envoyé au moins un élément de tri
-            foreach ($request->query as $param) {
-                if ($param != null) {
-                    $empty = false;
-                    break;
+                if ($user->getUsername() != "skip") {
+                    $reps[] = $user;
                 }
-                
             }
-
-            // si y a au moins un élément envoyé au tri
-            if ($empty == false) {
-
-    
-                // alors on peut récupérer les données et les filtrer
-                
-                $customerPresence = $request->query->get('customerPresence');
-                
-                // si tout va bien  on envoie la dql 
-                $dateStart = $request->query->get('dateStart');
-                $dateEnd = $request->query->get('dateEnd');
-
-                $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
-                $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
-                $rep = $request->query->get('reps');
-                $natureTransfer = $request->query->get('natureTransfer');
-                $status = $request->query->get('status');
-
-                //! hotels
-                $hotel = $request->query->get('hotel');
-                $agency = $request->query->get('agency');
-                $flightNumber = $request->query->get('flightNumber');
-                $search = $request->query->get('search');
-                    
-                $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
-
-                // la requete qui execute la recherche
-                $results = $customerCardRepository->customerCardPageSearch($dateStart, $dateEnd, $customerPresence, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
-
-                $count = count($results);
-                
-
-                $pagination = $paginator->paginate(
-                    $results,
-                    $request->query->getInt('page', 1),
-                    27,
-                );
-
-                //dd($results);
-                // et on envoi la nouvelle page 
-                return $this->render('customer_card/index.html.twig', [
-                    'customer_cards' => $pagination,
-                    'count' => $count,
-                    'agencies' => $agencies,
-                    'hotels' => $hotels,
-                    'statusList' => $statusList,
-                    'reps' => $reps,
-                ]);
-                
-                
-                // sinon renvoyer la page de base
-                
-
-            }
-            // sinon on renvoie la page de base 
-            // todo ? peut etre un message flash ?
         }
 
+        $empty = true;
+        // on vérifie si on a cliqué sur envoyé
+        if (count($request->query) > 0) {
+            // si y en a qu un et que c est page alors tu renvoie la page de base donc empty true
+            if ( (count($request->query) === 1) and $request->query->get('page') ) {
+                $empty = true;
+            } else {
+                //on vérifie si on a envoyé au moins un élément de tri (donc différent de page)
+                foreach ($request->query as $param) {    
+                    if ($param != null) {
+                        $empty = false;
+                        break;
+                    }
+                }
+
+            }
+        }
+    
+        // si y a au moins un élément envoyé au tri
+        if ($empty == false) {
+
+            // alors on peut récupérer les données et les filtrer
+            $rep = $request->query->get('reps');
+            // si on est uniquement rep(role_rep & user) d ou  == 2 
+            if (( count($this->getUser()->getRoles()) == 2 ) and (in_array('ROLE_REP', $this->getUser()->getRoles()))) {
+                // si on envoie un autre rep => denied
+                if ($userRepository->find($rep) != $this->getUser()) {
+                    return throw $this->createAccessDeniedException();
+                };
+            }
+
+            $customerPresence = $request->query->get('customerPresence');
+
+
+            // si tout va bien  on envoie la dql 
+            $dateStart = $request->query->get('dateStart');
+            $dateEnd = $request->query->get('dateEnd');
+
+            $dateStart = ($dateStart != "") ? New DateTimeImmutable($dateStart . '00:00:00') : null ;
+            $dateEnd = ($dateEnd != "") ? $dateEnd = New DateTimeImmutable($dateEnd . '23:59:59') : null;
+            
+            $natureTransfer = $request->query->get('natureTransfer');
+            $status = $request->query->get('status');
+
+            //! hotels
+            $hotel = $request->query->get('hotel');
+            $agency = $request->query->get('agency');
+            $flightNumber = $request->query->get('flightNumber');
+            $search = $request->query->get('search');
+                
+            $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
+
+
+            // si c est présence
+            if ($customerPresence == 1){
+                // la requete qui execute la recherche
+                $results = $customerCardRepository->customerCardPageSearchPresence($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $flightNumber);
+            } else { // si c est opération
+                $results = $customerCardRepository->customerCardPageSearchOperation($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
+
+            }
+
+            $count = count($results);
+            
+
+            $pagination = $paginator->paginate(
+                $results,
+                $request->query->getInt('page', 1),
+                27,
+            );
+
+            //dd($results);
+            // et on envoi la nouvelle page 
+            return $this->render('customer_card/index.html.twig', [
+                'customer_cards' => $pagination,
+                'count' => $count,
+                'agencies' => $agencies,
+                'hotels' => $hotels,
+                'statusList' => $statusList,
+                'reps' => $reps,
+                'clientsMenu' => true
+            ]);
+            
+            
+            // sinon renvoyer la page de base
+            
+
+        }
+        // sinon on renvoie la page de base 
+        // todo ? peut etre un message flash ?
+        
 
         // quand on arrive sur la page on récupere les mouvements du jour
         $findAllByNow = $customerCardRepository->findByNow();
@@ -143,6 +187,7 @@ class CustomerCardController extends AbstractController
             'statusList' => $statusList,
             'reps' => $reps,
             'count' => $count,
+            'clientsMenu' => true
         ]);
     }
 
@@ -170,6 +215,7 @@ class CustomerCardController extends AbstractController
     { 
      
         $users = $userRepository->findBy([],['username' => 'ASC']);
+        $rep = false;
         $reps = [];
         foreach ($users as $user) {
             if (in_array("ROLE_REP", $user->getRoles() )) {
@@ -195,11 +241,11 @@ class CustomerCardController extends AbstractController
             if ($empty == false) {
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
-                $rep = $request->query->get('reps');
+                $rep = ($request->query->get('reps') != "all") ? $userRepository->find($request->query->get('reps')) : "all";    
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-            $dateStart = $dateStart->format('Y-m-d');
+            $dateStart = $dateStart->format('Y-m-01');
             $dateEnd = new DateTimeImmutable('now');
             $dateEnd = $dateEnd->format('Y-m-d');
             $rep="all";
@@ -267,6 +313,7 @@ class CustomerCardController extends AbstractController
 
         return $this->render('customer_card/calcul_pax_rep.html.twig', [
             'reps' => $reps,
+            'rep' => $rep,
             'results' => $results,
             'tabDetailsRep' => $tabDetails
         ]); 
@@ -302,7 +349,7 @@ class CustomerCardController extends AbstractController
             } 
         } else {
             $dateStart = new DateTimeImmutable('now');
-            $dateStart = $dateStart->format('Y-m-d');
+            $dateStart = $dateStart->format('Y-m-01');
             $dateEnd = new DateTimeImmutable('now');
             $dateEnd = $dateEnd->format('Y-m-d');
         }
@@ -310,7 +357,7 @@ class CustomerCardController extends AbstractController
         $noShow = $statusRepository->findOneBy(["name"=> "No Show"]);
 
         //pax adults de tel date à tel date
-        $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
+/*         $results['nbrTotalAdults'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults");
         $results['nbrTotalAdults'] = intval($results['nbrTotalAdults']);
         $results['nbrTotalChildren'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "children");
         $results['nbrTotalChildren'] = intval($results['nbrTotalChildren']);
@@ -318,7 +365,7 @@ class CustomerCardController extends AbstractController
         $results['nbrTotalbabies'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "babies");
         $results['nbrTotalbabies'] = intval($results['nbrTotalbabies']);
         $results['sumNbrTotal'] = $results['nbrTotalAdults'] + $results['nbrTotalChildren'] + $results['nbrTotalbabies'];
-        $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren'];
+        $results['sumPaxTotal'] = $results['nbrTotalAdults'] + $results['paxTotalChildren']; */
         // pax adults sans no show
         $results['nbrAdultsShow'] = $customerCardRepository->numberOfPaxPerDateAndAge($dateStart, $dateEnd, $this->getUser(), "adults", $noShow);
         $results['nbrAdultsShow'] = intval($results['nbrAdultsShow']);
@@ -332,38 +379,23 @@ class CustomerCardController extends AbstractController
 
         return $this->render('customer_card/calcul_pax_par_rep.html.twig', [
             'results' =>$results,
+            'paxMenu' => true
         ]);
     }
 
     #[Route('/transportation/management', name: 'app_customer_card_transportation_management', methods: ['GET', 'POST'])]
     public function transportationManagement(Request $request, 
                                              TransferVehicleArrivalRepository $transferVehicleArrivalRepository, 
-                                             CustomerCardRepository $customerCardRepository, 
-                                             UserRepository $userRepository): Response
+                                             TransferInterHotelRepository $transferInterHotelRepository, 
+                                             TransferDepartureRepository $transferDepartureRepository, 
+                                             TransportCompanyRepository $transportCompanyRepository,
+                                            ): Response
     {
 
         // TODO refaire les compagnies a partir du repos vehicleArrival
 
-        $transportCompaniesArr = $transferVehicleArrivalRepository->transportCompanyList();
-/*         $transportCompaniesInt = $transferVehicleInterHotelRepository->transportCompanyList();
-        $transportCompaniesDep = $transferVehicleDepartureRepository->transportCompanyLis t();*/
-
-        $transportCompanies = [];
-        foreach ($transportCompaniesArr as $company) {
-            if (!in_Array($company, $transportCompanies) ) {
-                $transportCompanies[] = $company ;
-            }
-        }
-        foreach ($transportCompaniesInt as $company) {
-            if (!in_Array($company, $transportCompanies) ) {
-                $transportCompanies[] = $company ;
-            }
-        }
-        foreach ($transportCompaniesDep as $company) {
-            if (!in_Array($company, $transportCompanies) ) {
-                $transportCompanies[] = $company ;
-            }
-        }
+        $companies = $transportCompanyRepository->findBy([],['name' => 'ASC']);
+      
 
         // si on recoit le formulaire
         // si on a cliqué sur envoyé
@@ -382,104 +414,88 @@ class CustomerCardController extends AbstractController
                 // todo  : alors on peut récupérer les données et les filtrer
                 $dateStart = $request->query->get('dateStart');
                 $dateEnd = $request->query->get('dateEnd');
-                $company= $request->query->get('company');
+                $company = ($request->query->get('company') != 'all') 
+                            ? $transportCompanyRepository->findOneBy(['name' => $request->query->get('company')]) 
+                            : $request->query->get('company')
+                            ;  
+                $area = $request->query->get('area');
+                $type = ($request->query->get('type') == 2)? false: $request->query->get('type');
             } 
         } else {
                 $dateStart = new DateTime();
-                $dateStart = $dateStart->format('Y-m-d');
+                $dateStart = $dateStart->format('Y-m-01');
                 $dateEnd = new DateTime();
                 $dateEnd = $dateEnd->format('Y-m-d');
-                $company="all";
+                $company ="all";
+                $area = "all";
+                $type = "all";
+        }
+
+        $transferVehicleArrivals = $transferVehicleArrivalRepository->findVehicleArrivalsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type);
+        $transferInterHotels = $transferInterHotelRepository->findInterHotelsBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type);
+        $transferDepartures = $transferDepartureRepository->findDeparturesBydatesAndCompanies($dateStart, $dateEnd, $company, $area, $type); 
+
+        // récupération des zones pour chaque transfer et array unique 
+        
+        $transferArrivalsAreas = $transferVehicleArrivalRepository->findTransferVehicleArrivalAreas();
+        $transferInterhotelsAreas = $transferInterHotelRepository->findTransferInterhotelAreas();
+        $transferDeparturesAreas = $transferDepartureRepository->findTransferDepartureAreas();
+        $mergeTransferAreas = array_merge($transferArrivalsAreas,$transferInterhotelsAreas,$transferDeparturesAreas);
+        $uniqueAreas = [];
+        foreach ($mergeTransferAreas as $area) {
+            if (!in_array($area,$uniqueAreas)) { $uniqueAreas[] = $area; }
         }
 
 
-        $transferArrivals = $transferVehicleArrivalRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
-        $transferInterHotels = $transferVehicleInterHotelRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
-        $transferDepartures = $transferVehicleDepartureRepository->findCustomerCardsBydatesAndCompanies($dateStart, $dateEnd, $company);
-
-        $results = [];
+        $allTransfers = [];
         $adultsNumber = 0;
         $childrenNumber = 0;
         $babiesNumber = 0;
 
-        foreach ($transferArrivals as $transferArrival) {
-            $results[] = $transferArrival; 
-            $adultsNumber +=  $transferArrival->getCustomerCard()->getAdultsNumber();
-            $childrenNumber +=  $transferArrival->getCustomerCard()->getChildrenNumber();
-            $babiesNumber +=  $transferArrival->getCustomerCard()->getBabiesNumber();
+        $iKey = 0;
+        foreach ($transferVehicleArrivals as $transferVehicleArrival) {
+            $allTransfers[$iKey]['object'] = $transferVehicleArrival;
+            $allTransfers[$iKey]['instance'] = 'arrival';
+            $allTransfers[$iKey]['date'] = $transferVehicleArrival->getDate()->format('Y-m-d');
+            $allTransfers[$iKey]['hour'] = $transferVehicleArrival->getDate()->format('H:i');
+            $adultsNumber +=  $transferVehicleArrival->getTransferArrival()->getAdultsNumber();
+            $childrenNumber +=  $transferVehicleArrival->getTransferArrival()->getChildrenNumber();
+            $babiesNumber +=  $transferVehicleArrival->getTransferArrival()->getBabiesNumber();
+            $iKey++;
         }
-        foreach ($transferInterHotels as $transferInterHotel) {
-            $results[] = $transferInterHotel;
-            $adultsNumber += $transferInterHotel->getCustomerCard()->getAdultsNumber();
-            $childrenNumber += $transferInterHotel->getCustomerCard()->getChildrenNumber();
-            $babiesNumber += $transferInterHotel->getCustomerCard()->getBabiesNumber();
 
+        //dd($allTransfers);
+        foreach ($transferInterHotels as $transferInterHotel) {
+            $allTransfers[$iKey]['object'] = $transferInterHotel;
+            $allTransfers[$iKey]['instance'] = 'interhotel';
+            $allTransfers[$iKey]['date'] = $transferInterHotel->getDate()->format('Y-m-d');
+            $allTransfers[$iKey]['hour'] = $transferInterHotel->getPickUp()->format(('H:i'));
+            $adultsNumber += $transferInterHotel->getAdultsNumber();
+            $childrenNumber += $transferInterHotel->getChildrenNumber();
+            $babiesNumber += $transferInterHotel->getBabiesNumber();
+            $iKey++;
         }
         foreach ($transferDepartures as $transferDeparture) {
-            $results[] = $transferDeparture; 
-            $adultsNumber += $transferDeparture->getCustomerCard()->getAdultsNumber();
-            $childrenNumber += $transferDeparture->getCustomerCard()->getChildrenNumber();
-            $babiesNumber += $transferDeparture->getCustomerCard()->getBabiesNumber();
-        }
+            $allTransfers[$iKey]['object'] = $transferDeparture;
+            $allTransfers[$iKey]['instance'] = 'departure';
+            $allTransfers[$iKey]['date'] = $transferDeparture->getDate()->format('Y-m-d');
+            $allTransfers[$iKey]['hour'] = $transferDeparture->getPickUp()->format('H:i');
+            $adultsNumber += $transferDeparture->getAdultsNumber();
+            $childrenNumber += $transferDeparture->getChildrenNumber();
+            $babiesNumber += $transferDeparture->getBabiesNumber();
+            $iKey++;
+        } 
 
         return $this->render('customer_card/transportation_management.html.twig', [
-            'transportCompanies' => $transportCompanies,
-            'results' => $results,
+            'transportCompanies' => $companies,
+            'allTransfers' => $allTransfers,
+            'transferVehicleArrivals' => $transferVehicleArrivals,
             'adultsNumber' => $adultsNumber,
             'childrenNumber' => $childrenNumber,
-            'babiesNumber' => $babiesNumber
+            'babiesNumber' => $babiesNumber,
+            'uniqueAreas' => $uniqueAreas
         ]);
     }
-
-
-    #[Route('/airport', name: 'app_customer_card_airport', methods: ['GET'])]
-    public function airport(Request $request, TransferArrivalRepository $transferArrivalRepository, AirportHotelRepository $airportHotelRepository, StatusRepository $statusRepository): Response
-    {
-        
-        $airports = $airportHotelRepository->findBy(['isAirport' => true]);
-        $status = $statusRepository->findAll();
-
-        //dd($request->query);
-        // si on a cliqué sur envoyé
-        if (count($request->query) > 0) {
-            $empty = true;
-            //on vérifie si on a envoyé au moins un élément de tri
-            foreach ($request->query as $param) {
-                if ($param != null) {
-                    $empty = false;
-                    break;
-                }
-                
-            }
-            // si y a au moins un élément envoyé au tri
-            if ($empty == false) { 
-                $date= htmlspecialchars($request->query->get('date'));
-                $date = new DateTimeImmutable($date);
-                $airport= trim(htmlspecialchars($request->query->get('airports')));
-                $flightNumber =  trim(htmlspecialchars($request->query->get('flightNumber')));
-                $voucherNumber =  trim(htmlspecialchars($request->query->get('voucherNumber')));
-                
-
-                $results = $transferArrivalRepository->findByDateAirportFlightNumberVoucherNumber($date, $airport, $flightNumber, $voucherNumber);
-                return $this->render('customer_card/airport.html.twig', [
-                    'results' => $results,
-                    'airports' => $airports,
-                    'airport' => $airport,
-                    'status' =>  $status
-                ]);                
-            }
-        }
-
-        $date = new DateTimeImmutable('now');
-        $results = $transferArrivalRepository->findBy(['date' => $date]);
-        return $this->render('customer_card/airport.html.twig', [
-            'results' => $results,
-            'airports' => $airports,
-            'status' =>  $status
-        ]);
-
-    }
-
 
     #[Route('team-manager/customer/card/new', name: 'app_customer_card_new', methods: ['GET', 'POST'])]
     public function new(Request $request, 
@@ -520,7 +536,9 @@ class CustomerCardController extends AbstractController
             $customerCard = new CustomerCard();
             $customerCard->setHolder($post['fullName']);
             $customerCard->setReservationNumber($post['reservationNumber']);
-            $customerCard->setJumboNumber($post['jumboNumber']);
+            if (isset($post['jumboNumber'])) {
+                $customerCard->setJumboNumber($post['jumboNumber']);
+            }
             $agencyObject = $agencyRepository->find($post['agency']);
             $customerCard->setAgency($agencyObject);
 
@@ -539,15 +557,15 @@ class CustomerCardController extends AbstractController
 
 
     #[Route('customer/card/{id}', name: 'app_customer_card_show', methods: ['GET' , 'POST'])]
-    public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
+    public function show(CustomerCard $customerCard, Request $request, CommentRepository $commentRepository): Response
     {
 
 
         $user = $this->getUser();
         $comments = $commentRepository->findby(['customerCard' => $customerCard]);
 
-        // enregistre les date
-
+        // enregistrement de la timeline:
+        // les dates seront rendues par ASC dans twig
         $tableauTimeline = [];
         $i = 0;
         // date d'arrivée
@@ -555,18 +573,22 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['name'] = 'Arrival';
             $tableauTimeline[$i]['date'] = $arrival->getDate();
             $tableauTimeline[$i]['hour'] = $arrival->getHour()->format('H:i');
-            
+            $i++;  
+
             $tableauTimeline[$i]['name'] = 'Meeting';
             $tableauTimeline[$i]['date'] = $arrival->getMeetingAt();
             $tableauTimeline[$i]['hour'] = $arrival->getMeetingAt()->format('H:i');
             $tableauTimeline[$i]['staff'] = $arrival->getStaff();
             $tableauTimeline[$i]['meetingPoint'] = $arrival->getMeetingPoint();
-            $i++;            
-            
-            
-            
-            
             $i++;
+            
+            if ($arrival->getTransferVehicleArrival()) {
+                // si y a une arrivée ajouté par la team transfert
+                $tableauTimeline[$i]['name'] = 'Arrival (Transfer team)';
+                $tableauTimeline[$i]['date'] = $arrival->getTransferVehicleArrival()->getDate();
+                $tableauTimeline[$i]['hour'] = $arrival->getTransferVehicleArrival()->getDate()->format('H:i');
+                $i++;
+            }
         }
 
         foreach ($customerCard->getTransferInterHotels() as $interHotel) {
@@ -581,30 +603,33 @@ class CustomerCardController extends AbstractController
             $tableauTimeline[$i]['hour'] = $departure->getHour()->format('H:i');
             $i++;
         }
-/*         if ($customerCard->getMeetingAt()) {
-            $tableauTimeline[$i]['name'] = 'Meeting';
-            $tableauTimeline[$i]['date'] = $customerCard->getMeetingAt();
-            $tableauTimeline[$i]['hour'] = $customerCard->getMeetingAt()->format('H:i');
-            $tableauTimeline[$i]['staff'] = $customerCard->getStaff();
-            $tableauTimeline[$i]['meetingPoint'] = $customerCard->getMeetingPoint();
-            $i++;
-        } */
 
+        // l'historique du changement de status
+        if (count($customerCard->getStatusHistories())  > 0 ) {
+            foreach ($customerCard->getStatusHistories() as $modifiedStatus) {
+                $tableauTimeline[$i]['name'] = 'Status';
+                $tableauTimeline[$i]['title'] = $modifiedStatus->getStatus();
+                $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt();
+                $tableauTimeline[$i]['hour'] = $modifiedStatus->getCreatedAt()->format('H:i');
+                $tableauTimeline[$i]['updatedBy'] = $modifiedStatus->getUpdatedBy();
+                $i++;
+            }
+        }    
+        if (count($customerCard->getCheckedHistories())  > 0 ) {
+            foreach ($customerCard->getCheckedHistories() as $modifiedChecked) {
+                $tableauTimeline[$i]['name'] = 'Checked';
+                $tableauTimeline[$i]['title'] = $modifiedChecked->getType();
+                $tableauTimeline[$i]['date'] = $modifiedChecked->getCreatedAt();
+                $tableauTimeline[$i]['hour'] = $modifiedChecked->getCreatedAt()->format('H:i');
+                $tableauTimeline[$i]['updatedBy'] = $modifiedChecked->getUpdatedBy();
+                $tableauTimeline[$i]['isChecked'] = $modifiedChecked->isIsChecked();
+                $i++;
+            }
+        }    
 
+        // TODO: l'historique du changement de checked !! ---------------------------------------------------------------------    
 
-            if (count($customerCard->getStatusHistories())  > 0 ) {
-                foreach ($customerCard->getStatusHistories() as $modifiedStatus) {
-                    $tableauTimeline[$i]['name'] = 'Status';
-                    $tableauTimeline[$i]['title'] = $modifiedStatus->getStatus();
-                    $tableauTimeline[$i]['date'] = $modifiedStatus->getCreatedAt();
-                    $tableauTimeline[$i]['hour'] = $modifiedStatus->getCreatedAt()->format('H:i');
-                    $tableauTimeline[$i]['updatedBy'] = $modifiedStatus->getUpdatedBy();
-                    $i++;
-                }
-
-            }         
-
-        /*  dd($tableauTimeline); */
+        //dd($tableauTimeline); 
         // date des inter hotels
         // date de départ 
         $comment = new Comment();
@@ -641,30 +666,49 @@ class CustomerCardController extends AbstractController
 
 
             $commentRepository->save($comment, true);
-            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_card_show', [
+                'id' => $customerCard->getId(),
+                'clientsMenu' => true
+            ], 
+            Response::HTTP_SEE_OTHER);
         }
-
- 
-/*         if (($request->request->get('message') !== null)) {
-
-            $comment = new Comment;
-            $comment->setCreatedBy($user);
-            $comment->setContent($request->request->get('message'));
-            $comment->setCustomerCard($customerCard);
-            $commentRepository->save($comment, true);
-
-            return $this->redirectToRoute('app_customer_card_show', ['id' => $customerCard->getId()], Response::HTTP_SEE_OTHER);
-
-        } */
-
 
         return $this->render('customer_card/show.html.twig', [
             'customer_card' => $customerCard,
             'comments' => $comments,
             'form' => $form,
-            'tableauTimeline' => $tableauTimeline
+            'tableauTimeline' => $tableauTimeline,
+            'clientsMenu' => true
         ]);
     }
+
+    #[Route('customer/card/change/{id}', name: 'app_customer_card_change_status', methods: ['POST'])]
+    public function changeStatus(TransferArrival $transferArrival, 
+                                 StatusRepository $statusRepository, 
+                                 EntityManagerInterface $entityManager): Response
+    {
+
+        $statusName = $_POST['status'];
+        
+        //je fais mes traitements
+        $newStatus = $statusRepository->findOneBy(['name' => strtolower($statusName)]);
+        $transferArrival->setStatus($newStatus);
+
+        // On met à jour le statusHistory
+        $newStatusHistory = new StatusHistory();
+        $currentUser = $this->getUser();
+        $newStatusHistory->setStatus($newStatus);
+        $newStatusHistory->setCustomerCard( $transferArrival->getCustomerCard());
+        $newStatusHistory->setUpdatedBy($currentUser);
+
+        $entityManager->persist($newStatusHistory);
+        $entityManager->flush();
+
+        return $this->redirectToRoute("app_customer_card_show", ['id' => $transferArrival->getCustomerCard()->getId()]);
+
+    }
+
+
 
     #[Route('customer/card/{id}/edit', name: 'app_customer_card_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, CustomerCard $customerCard, CustomerCardRepository $customerCardRepository, StatusHistoryRepository $statusHistoryRepository): Response

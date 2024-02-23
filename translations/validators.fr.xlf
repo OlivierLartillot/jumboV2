@@ -563,35 +563,31 @@
       </trans-unit>
       <trans-unit id="Td7A4JK" resname="There is already an account with this username">
         <source>There is already an account with this username</source>
-        <target>__There is already an account with this username</target>
+        <target>Il existe déjà un compte avec ce nom d'utilisateur</target>
       </trans-unit>
       <trans-unit id="IaE5GBl" resname="You should agree to our terms.">
         <source>You should agree to our terms.</source>
-        <target>__You should agree to our terms.</target>
+        <target>Vous devez accepter nos conditions.</target>
       </trans-unit>
       <trans-unit id="YXZ26gK" resname="Please enter a password">
         <source>Please enter a password</source>
-        <target>__Please enter a password</target>
+        <target>Veuillez entrer un mot de passe</target>
       </trans-unit>
       <trans-unit id=".esazsm" resname="Your password should be at least {{ limit }} characters">
         <source>Your password should be at least {{ limit }} characters</source>
-        <target>__Your password should be at least {{ limit }} characters</target>
+        <target>Votre mot de passe doit contenir au moins {{ limit }} caractères</target>
       </trans-unit>
       <trans-unit id="eurhQSS" resname="Password is required">
         <source>Password is required</source>
-        <target>__Password is required</target>
+        <target>Le mot de passe est requis</target>
       </trans-unit>
       <trans-unit id="FWPYE87" resname="Your password must contain at least {{ limit }} characters">
         <source>Your password must contain at least {{ limit }} characters</source>
-        <target>__Your password must contain at least {{ limit }} characters</target>
+        <target>Votre mot de passe doit contenir au moins {{ limit }} caractères</target>
       </trans-unit>
-      <trans-unit id="FhkPdkH" resname="Un mot de passe est nécessaire">
-        <source>Un mot de passe est nécessaire</source>
-        <target>__Un mot de passe est nécessaire</target>
-      </trans-unit>
-      <trans-unit id="V9lfDl7" resname="Votre mot de passe doit contenir au moins {{ limit }} caractères">
-        <source>Votre mot de passe doit contenir au moins {{ limit }} caractères</source>
-        <target>__Votre mot de passe doit contenir au moins {{ limit }} caractères</target>
+      <trans-unit id="lRnkTBu" resname="Select at least one choice.">
+        <source>Select at least one choice.</source>
+        <target>Sélectionnez au moins un choix.</target>
       </trans-unit>
     </body>
   </file>

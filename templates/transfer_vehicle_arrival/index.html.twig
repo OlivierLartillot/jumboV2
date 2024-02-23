@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<title>TransferVehicleArrival index</title>
+
+{% block body %}
+    <h1>TransferVehicleArrival index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>IsCollective</th>
+                <th>VehicleNumber</th>
+                <th>VehicleType</th>
+                <th>Date</th>
+                <th>VoucherNumber</th>
+                <th>Area</th>
+                <th>AdultsNumber</th>
+                <th>ChildrenNumber</th>
+                <th>BabiesNumber</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transfer_vehicle_arrival in transfer_vehicle_arrivals %}
+            <tr>
+                <td>{{ transfer_vehicle_arrival.id }}</td>
+                <td>{{ transfer_vehicle_arrival.isCollective ? 'Yes' : 'No' }}</td>
+                <td>{{ transfer_vehicle_arrival.vehicleNumber }}</td>
+                <td>{{ transfer_vehicle_arrival.vehicleType }}</td>
+                <td>{{ transfer_vehicle_arrival.date ? transfer_vehicle_arrival.date|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ transfer_vehicle_arrival.voucherNumber }}</td>
+                <td>{{ transfer_vehicle_arrival.area }}</td>
+                <td>{{ transfer_vehicle_arrival.adultsNumber }}</td>
+                <td>{{ transfer_vehicle_arrival.childrenNumber }}</td>
+                <td>{{ transfer_vehicle_arrival.babiesNumber }}</td>
+                <td>
+                    <a href="{{ path('app_transfer_vehicle_arrival_show', {'id': transfer_vehicle_arrival.id}) }}">show</a>
+                    <a href="{{ path('app_transfer_vehicle_arrival_edit', {'id': transfer_vehicle_arrival.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transfer_vehicle_arrival_new') }}">Create new</a>
+{% endblock %}

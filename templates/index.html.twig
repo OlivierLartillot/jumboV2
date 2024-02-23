@@ -1,24 +1,194 @@
-{{ include('partials/header-reproupement.html.twig') }}
+ {{ include('partials/header-reproupement.html.twig') }}
 
-                        {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Dashboard'}) }}
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Home'|trans, title: 'Dashboard'}) }}
 
-                        <div class="row">
-                            <div class="col">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="float-end mt-2">
-                                            <div id="total-revenue-chart"></div>
-                                        </div>
-                                        <div>
-                                            <h4 class="mb-1 mt-1">Dashboard</h4>
-
-                                        </p>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        {% set problems = 'Be careful, you have problems to resolve.'|trans %}
+                        {% set noProblem = 'Nothing to do.'|trans %}
+                        {% if is_granted('ROLE_SUPERMAN') %}
+                            <div class="row">
+                                <h5>{% trans %}Transfer Management{% endtrans %}</h5>
+                                
+                                {% if doublonsArrivee %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('duplicate_transfers', { param: 'arrival'})}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> {% trans %}Arrivals{% endtrans %}</h5>
+                                                    <p class="mb-0">{{ problems }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </div>
-                                </div>
-                            </div> <!-- end col-->
-                        </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-landing"></i> {% trans %}Arrivals{% endtrans %}</h5>
+                                                <p class="mb-0 text-success">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if doublonsInterHotel %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('duplicate_transfers', { param: 'interhotel'})}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> {% trans %}InterHotels{% endtrans %}</h5>
+                                                    <p class="mb-0">{{ problems }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-car"></i> {% trans %}InterHotels{% endtrans %}</h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>                                            
+                                {% endif %}
+
+                                {% if doublonsDepart %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('duplicate_transfers', { param: 'departure'})}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-takeoff"></i> {% trans %}Departures{% endtrans %}</h5>
+                                                    <p class="mb-0">{{ problems }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="mdi mdi-airplane-takeoff"></i> {% trans %}Departures{% endtrans %}</h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- end row-->
+                            <hr class="border border-2 text-black"/>
+                        {% endif %}
+                        {% if is_granted('ROLE_AIRPORT_SUPERVISOR') %}
+                            <div class="row">
+                                <h5>{% trans %}Rep Assignment{% endtrans %}</h5>
+
+                                {% if erreursDatesArriveesEtMeeting %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('errors_dates')}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase image-clignote"><i class="uil-exclamation-triangle"></i> Errors !!!</h5>
+                                                    <p class="mb-0">{% trans %}Please note that the meeting date does not coincide with the arrival date.{% endtrans %}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="uil-exclamation-triangle"></i> No Error </h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if dateRestantes %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('app_admin_team_manager')}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="uil-pen"></i> {% trans %}Assignment{% endtrans %}</h5>
+                                                    <p class="mb-0">{% trans %}You have unassigned clients{% endtrans %}.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="uil-pen"></i> {% trans %}Assignment{% endtrans %}</h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}     
+
+                                {% if datesWithSkippedClients %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('app_admin_team_manager')}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="uil-users-alt"></i> Skip</h5>
+                                                    <p class="mb-0">{% trans %}"Skip" still has assigned clients. Please remember to assign them to their representative or assign them to the "Alpitour" representative.{% endtrans %}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="uil-users-alt"></i> Skip</h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                            </div>
+                            <hr class="border border-2 text-black"/>
+                            <!-- end row-->
+                        {% endif %}
 
 
+                            <div class="row">
+                                <h5>{% trans %}Differencies{% endtrans %}</h5>
+
+                                {% if differencies %}
+                                    <div class="col-md-4">
+                                        <a href="{{ path('errors_dates')}}" class="text-danger">
+                                            <div class="card mt-4 maintenance-box border border-danger">
+                                                <div class="card-body p-4 ">
+                                                    <h5 class="font-size-15 text-uppercase"><i class="uil-file-exclamation"></i> Differencies !!!</h5>
+                                                    <p class="mb-0">{% trans %}There are differences between the import booking file and the import transfers file.{% endtrans %}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <div class="card mt-4 maintenance-box">
+                                            <div class="card-body p-4">
+                                                <h5 class="font-size-15 text-uppercase"><i class="uil-file-exclamation"></i> No Error </h5>
+                                                <p class="text-success mb-0">{{ noProblem }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+
+                    </div>
+                </div>
+            </div> 
+            <!-- end col-->
+        </div>
+ 
 {{ include('partials/footer-regroupement.html.twig') }}
 
 

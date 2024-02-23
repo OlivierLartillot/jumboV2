@@ -22,11 +22,12 @@ class AgencyType extends AbstractType
                     'Spanish' => 'es',
                     'French' => 'fr',
                     'Italian' => 'it',
+                    'Portuguese' => 'po',
                 ],
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('isActive')
+           
         ;
     }
 

@@ -26,9 +26,27 @@ class MeetingPoint
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $it = null;
+    
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $po = null;
 
     #[ORM\OneToMany(mappedBy: 'meetingPoint', targetEntity: TransferArrival::class)]
     private Collection $transferArrivals;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whatsAppEn = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whatsAppEs = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whatsAppFr = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whatsAppIt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whatsAppPo = null;
 
     public function __construct()
     {
@@ -93,6 +111,18 @@ class MeetingPoint
         return $this;
     }
 
+    public function getPo(): ?string
+    {
+        return $this->po;
+    }
+
+    public function setPo(?string $po): static
+    {
+        $this->po = $po;
+
+        return $this;
+    }
+
     public function checklanguage($lang) {
 
         if ($lang == null) {
@@ -131,4 +161,65 @@ class MeetingPoint
 
         return $this;
     }
+
+    public function getWhatsAppEn(): ?string
+    {
+        return $this->whatsAppEn;
+    }
+
+    public function setWhatsAppEn(?string $whatsAppEn): static
+    {
+        $this->whatsAppEn = $whatsAppEn;
+
+        return $this;
+    }
+
+    public function getWhatsAppEs(): ?string
+    {
+        return $this->whatsAppEs;
+    }
+
+    public function setWhatsAppEs(?string $whatsAppEs): static
+    {
+        $this->whatsAppEs = $whatsAppEs;
+
+        return $this;
+    }
+
+    public function getWhatsAppFr(): ?string
+    {
+        return $this->whatsAppFr;
+    }
+
+    public function setWhatsAppFr(?string $whatsAppFr): static
+    {
+        $this->whatsAppFr = $whatsAppFr;
+
+        return $this;
+    }
+
+    public function getWhatsAppIt(): ?string
+    {
+        return $this->whatsAppIt;
+    }
+
+    public function setWhatsAppIt(?string $whatsAppIt): static
+    {
+        $this->whatsAppIt = $whatsAppIt;
+
+        return $this;
+    }
+
+    public function getWhatsAppPo(): ?string
+    {
+        return $this->whatsAppPo;
+    }
+
+    public function setWhatsAppPo(?string $whatsAppPo): static
+    {
+        $this->whatsAppPo = $whatsAppPo;
+
+        return $this;
+    }
+
 }

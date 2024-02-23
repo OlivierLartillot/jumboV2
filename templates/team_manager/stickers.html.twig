@@ -7,10 +7,10 @@
         {{ include('partials/head-css.html.twig') }}
 
         <script type="text/javascript">
-              function imprimer_page(){
-              window.print();
-              }
-          </script>
+			function imprimer_page(){
+				window.print();
+			}
+        </script>
 
  		<script type="text/javascript">  
             function selects(){  
@@ -30,12 +30,7 @@
             }             
         </script>  
 
-
-
         <style>
-
-
-
             body {
                 margin: 0.56in 0.15in 0.48in 0.15in;
             }
@@ -118,8 +113,6 @@
 
         </style>
 
-
-
     </head>
 
     {{ include('partials/body.html.twig') }}
@@ -134,13 +127,17 @@
             <!-- Start right Content here -->
             <!-- ============================================================== -->
             <div class="main-content">
-
+				
+				{% set pageTitleText = app.request.query.get("ta") ? 'Print Unique Label' : 'Labels Printing' %}
+				 
                 <div class="page-content">
                     <div class="container-fluid">
-			    		{{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Labels printing'}) }}
+			    		{{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: pageTitleText}) }}
 
 						<div class="notImpressed">
-
+							{% if app.request.query.get("ta") %}
+								<a class="btn btn-secondary btn-sm my-3" href="{{ path('app_admin_stickers_par_date')}}">Back To Multiple Labels</a>
+							{% endif %}
 
 							<div class="text-center mb-3">
 
@@ -216,6 +213,14 @@
 														<label for="date">{% trans %}Arrival Date{% endtrans %}</label>
 														<input class="form-control" id="date" name="date" type="date" value="{{date | date('Y-m-d') }}">
 													</div>
+													{# Si on est sur l'impresssion d une seule étiquette #}
+													{# on a le parametre TA dans l'url (transferArrival) #}
+													{% if app.request.query.get("ta") %}
+														<div class="my-3 hidden">
+															<label for="ta">{% trans %}Transfer Arrival{% endtrans %}</label>
+															<input class="form-control" id="ta" name="ta" type="ta" value="{{ app.request.query.get("ta")}}">
+														</div>
+													{% endif %}
 													<div class="my-3">
 														<label for="labelNumber">{% trans %}Print from{% endtrans %}
 															<!-- Button trigger modal -->
@@ -297,13 +302,15 @@
 										'en' : "Chats with", 
 										'es' : "Chatear con",  
 										'it' : "Chattare con", 
+										'po' : "Converse com o", 
 										},
 									1 : {
 										'fr': "Nom", 
 										'' : "Name", 
 										'en' : "Name", 
 										'es' : "Apellido",  
-										'it' : "Cognome", 
+										'it' : "Cognome",
+										'po' : "Sobrenome", 
 										},
 									2 : {
 										'fr': "Hôtel", 
@@ -311,115 +318,123 @@
 										'en' : "Hotel", 
 										'es' : "Hotel",  
 										'it' : "Hotel", 
+										'po' : "Hotel", 
 										},
 									3 : {
 										'fr': "Réunion de Bienvenue & d'Information", 
 										'' : "Welcome and Information Meeting", 
 										'en' : "Welcome and Information Meeting", 
 										'es' : "Reunión informativa y de bienvenida",  
-										'it' : "Incontro di benvenuto e informativo",  
+										'it' : "Incontro di benvenuto e informativo", 
+										'po' : "Reunião de Boas-vindas e Informações", 
 										},
 									4 : {
 										'fr': "Demain à", 
 										'' : "Tomorrow at",
 										'en' : "Tomorrow at",
-										'es' : "Mañana a",  
+										'es' : "Mañana a las",  
 										'it' : "Domani alle",  
+										'po' : "Amanhã às", 
 										},
 									5 : {
 										'fr': "Lieu de rencontre", 
 										'' : "Meeting Place", 
 										'en' : "Meeting Place", 
 										'es' : "Lugar de encuentro", 
-										'it' : "Luogo d'incontro", 
+										'it' : "Luogo di incontro", 
+										'po' : "Local de encontro", 
 										},
 									6 : {
 										'fr': "Votre représentant",
 										'' : "Your representative", 
 										'en' : "Your representative", 
 										'es' : "Su representante", 
-										'it' : "Il tuo rappresentante", 
+										'it' : "Il rappresentante", 
+										'po' : "Seu representante", 
 										},
 								}
 								
 							%}
 							
 							{% set labelNumber = app.request.get('labelNumber') %}
-
-							{% for meetingInfos in meetings %} 
-
-								{% set currentLanguage = meetingInfos.customerCard.agency.language %}
-		
-								{% if (i == 1) %} 
-									{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
-									<div class="labels-container {{ pagesSuivantes }}">
-								{% endif %} 
-
-									{% if labelNumber > 1 %}
-									{% set labelNumber = labelNumber - 1 %}
-										{% for j in 1..labelNumber %}
-											<div class="label d-flex flex-column justify-content-between"></div>
-											{% set i = i + 1 %}
-										{% endfor %}
-									{% endif %}
-									{% set labelNumber = 0 %}
-
-									<div class="label d-flex flex-column justify-content-between">
+								
+								{% for meetingInfos in meetings %} 
+									{% if meetingInfos.staff|lower ==  "skip" or  meetingInfos.staff|lower == "no rep" %}
+									
+									{% else %}
 										
-										{% if meetingInfos.staff %}
+										{% set currentLanguage = meetingInfos.customerCard.agency.language %}
+				
+										{% if (i == 1) %} 
+											{% set pagesSuivantes = (page == 1 ? "" : "container-suivant" ) %}
+											<div class="labels-container {{ pagesSuivantes }}">
+										{% endif %} 
 
-										<div class="qrcode">
-											{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}   
-												<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
-												<div class="chattez-rep">{{ languageTab[0][currentLanguage] }}<br>{{ meetingInfos.staff }}</div>
+											{% if labelNumber > 1 %}
+											{% set labelNumber = labelNumber - 1 %}
+												{% for j in 1..labelNumber %}
+													<div class="label d-flex flex-column justify-content-between"></div>
+													{% set i = i + 1 %}
+												{% endfor %}
 											{% endif %}
-										</div>
+											{% set labelNumber = 0 %}
 
-										{% endif %}
-
-										<div class="mt-2">
-											<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.customerCard.holder|title }}</p>
-											<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 		
-												{{ meetingInfos.toArrival|title}}	
-											</p>
-										</div>
-										<div class="mb-2">
-										
-											<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
-											<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }}{% if meetingInfos.meetingAt is null %}   {% else %} {{ meetingInfos.meetingAtTime }} {% endif %}</strong></p>
-											<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
-												<strong class="crimson">
-													{% if ((meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) and  (meetingInfos.meetingPoint.checkLanguage(currentLanguage) != NULL))%} 
-														{{ meetingInfos.meetingPoint.checkLanguage(currentLanguage) }}
-													{% elseif ( (meetingInfos.meetingPoint.en is defined) and  (meetingInfos.meetingPoint.en != NULL) ) %} 
-														{{ meetingInfos.meetingPoint.en }} 												
-													{% else %}
-													    ??? 
-													{% endif %}
-													
-												</strong>
-											</p>
-											<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
-											<p class="line-height-5">Whatsapp:  
-												{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
+											<div class="label d-flex flex-column justify-content-between">
 												
-											</p>
-										</div>
-									</div>
+												{% if meetingInfos.staff %}
 
-								{% if (i == 10) %}     
-									</div></div>
-								{% endif %}
-								{# si $i = 10 alors $i == 1 sinon $i++ #}
-								{% if (i == 10) %}  
-									{% set i = 1 %} 
-									{% set page = page + 1 %}
-									<div class="break">
-								{% else %}  
-									{% set i = i + 1 %} 
-								{% endif %} 
+												<div class="qrcode">
+													{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}   
+														<img src="{{ qr_code_url('wa.me/' ~ meetingInfos.staff.phoneNumber) }}" /> <br>
+														<div class="chattez-rep">{{ languageTab[0][currentLanguage] }}<br>{{ meetingInfos.staff }}</div>
+													{% endif %}
+												</div>
 
-							{% endfor %}
+												{% endif %}
+
+												<div class="mt-2">
+													<p class="my-1"><strong>{{ languageTab[1][currentLanguage] }}: </strong> {{ meetingInfos.customerCard.holder|title }}</p>
+													<p class="mt-1 mb-2"><strong>{{ languageTab[2][currentLanguage] }}:</strong> 		
+														{{ meetingInfos.toArrival|title}}	
+													</p>
+												</div>
+												<div class="mb-2">
+												
+													<p class="line-height-5" ><strong class="crimson">{{ languageTab[3][currentLanguage] }}</strong></p>
+													<p class="line-height-5"><strong class="crimson"> {{ languageTab[4][currentLanguage] }}{% if meetingInfos.meetingAt is null %}   {% else %} {{ meetingInfos.meetingAtTime }} {% endif %}</strong></p>
+													<p class="line-height-5">{{ languageTab[5][currentLanguage] }}: 
+														<strong class="crimson">
+															{% if ((meetingInfos.meetingPoint.checkLanguage(currentLanguage) is defined) and  (meetingInfos.meetingPoint.checkLanguage(currentLanguage) != NULL))%} 
+																{{ meetingInfos.meetingPoint.checkLanguage(currentLanguage) }}
+															{% elseif ( (meetingInfos.meetingPoint.en is defined) and  (meetingInfos.meetingPoint.en != NULL) ) %} 
+																{{ meetingInfos.meetingPoint.en }} 												
+															{% else %}
+																??? 
+															{% endif %}
+															
+														</strong>
+													</p>
+													<p class="line-height-5">{{ languageTab[6][currentLanguage] }}: <strong class="crimson">{{ meetingInfos.staff|title }}</strong></p>
+													<p class="line-height-5">Whatsapp:  
+														{% if meetingInfos.staff.phoneNumber is defined and  meetingInfos.staff.phoneNumber is not null %}<strong>+ {{ meetingInfos.staff.phoneNumber }} </strong>{% endif %}
+														
+													</p>
+												</div>
+											</div>
+
+										{% if (i == 10) %}     
+											</div></div>
+										{% endif %}
+										{# si $i = 10 alors $i == 1 sinon $i++ #}
+										{% if (i == 10) %}  
+											{% set i = 1 %} 
+											{% set page = page + 1 %}
+											<div class="break">
+										{% else %}  
+											{% set i = i + 1 %} 
+										{% endif %} 
+									{% endif %}
+								{% endfor %}
 							</div>
 						</div>
 

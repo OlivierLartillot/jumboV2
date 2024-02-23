@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<title>WhatsAppMessage index</title>
+
+{% block body %}
+    <h1>WhatsAppMessage index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>TypeTransfer</th>
+                <th>Language</th>
+                <th>Message</th>
+                <th>IsDefaultMessage</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for whats_app_message in whats_app_messages %}
+            <tr>
+                <td>{{ whats_app_message.id }}</td>
+                <td>{{ whats_app_message.typeTransfer }}</td>
+                <td>{{ whats_app_message.language }}</td>
+                <td>{{ whats_app_message.message }}</td>
+                <td>{{ whats_app_message.isDefaultMessage ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_whats_app_message_show', {'id': whats_app_message.id}) }}">show</a>
+                    <a href="{{ path('app_whats_app_message_edit', {'id': whats_app_message.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_whats_app_message_new') }}">Create new</a>
+{% endblock %}

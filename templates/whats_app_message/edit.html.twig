@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<title>Edit WhatsAppMessage</title>
+
+{% block body %}
+    <h1>Edit WhatsAppMessage</h1>
+
+    {{ include('whats_app_message/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_whats_app_message_index') }}">back to list</a>
+
+    {{ include('whats_app_message/_delete_form.html.twig') }}
+{% endblock %}

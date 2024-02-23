@@ -1,78 +1,323 @@
 {{ include('partials/header-reproupement.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }}
+{#     {{ include('partials/page-title.html.twig', {pagetitle: 'Team Manager', title: 'Reps Briefings'}) }} #}
 
-        <div class="row mb-3">    
-            <form action={{ path('app_admin_rep_replist') }} method="GET">
-                <input name="date" type="date" value="{{date | date('Y-m-d') }}">
-                <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
-            </form>
-        </div>
-
-
-
-        <p class="alert alert-info" role="alert">
-            {% trans %}Arrival date{% endtrans %}: <b>{{ date|date_modify("-1 day")| date('d-m-Y')}}</b><br/>
-            {% trans %}Briefing date{% endtrans %}: <b>{{ date| date('d-m-Y')}}</b>
-        </p>
-
-        <div class="row">
-            
-           
-                <div class="col-sm-5 mb-3 mb-sm-0">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ user }} </h5>
-
-                                {% if paxTab is empty %} {% set paxCount = 0 %} {% endif %}  
-
-                                {% if  paxTab[user.username] is defined %}
-                                    {% set paxCount = paxTab[user.username]['adults'] + paxTab[user.username]['children'] + paxTab[user.username]['babies'] %}
-                                    {% if paxCount == 0 %}  <p class="card-text">{% trans %}This rep has no client assigned today.{% endtrans %}</p> 
-                                    {% else %}   
-                                    <p>{% trans %}Adults{% endtrans %}: {{ paxTab[user.username]['adults'] }}  / {% trans %}Children{% endtrans %}: {{ paxTab[user.username]['children'] }}  / {% trans %}Babies{% endtrans %}: {{ paxTab[user.username]['babies'] }} </p>
-                                    {% endif %}
-                                {% endif %}
-                                <hr>
-                                {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
-
-                                    {% if (regroupement is not empty) %}                                                        
-                                    
-                                        {% if regroupement.staff == user %}
-                                            <p class="card-text {{ (regroupement.getMeetingAtTime == '00:01') ? "text-danger" : "text-success" }}">
-                                                {# Définir l'hotel pour avoir accès a ses propriétés id name etc #}
-                                                {% set hotel =  regroupement.toArrival %}
-
-                                                <strong>{{ hotel.name|title }}<br/>
-                                                {{ regroupement.getMeetingAtTime }} - {{ (regroupement.meetingPoint.checkLanguage(app.user.language) != null) ? regroupement.meetingPoint.checkLanguage(app.user.language) : regroupement.meetingPoint.en }}</strong><br/>
-                                
-
-                                                {% trans %}Agency{% endtrans %}: {{ regroupement.customerCard.agency|title }}<br/>
-                                                Pax:
-                                                {# Récupération des infos de pax pour chaque "regroupement et adultes/enfants/bébés #}
-                                                {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
-                                                    A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
-                                                {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
-                                                    N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
-                                                {% endif %}
-                                                {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
-                                                    B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
-                                                {% endif %}
-                                               
-                                                <br/>
-                                            </p>
-                                            <hr>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if paxCount > 0 %}
-                                <a href="{{ path('app_admin_rep_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
-                            {% endif %}
-                        </div>              
+{# CALCUL
+    {% set monTableau = {} %}
+#}
+{# CALCUL
+    Méthode pour calculer en fonctions des résultats récupérés dans la page
+    A:4 E:2 B:0
+    Pour le moment c'est calculé avec les imports booking, meeting at, pax avec les TransferArrival
+    Si besoin :
+    1. passer par tous les endroits Notés CALCUL
+    2. afficher les résultast dans des spans en finde page 
+    3. les injecter en js dans les résultats
+    la méthode 
+    // debut de la boucle avec iindexTab = 0
+    {% set nbreDadultes = 0 %}
+    // debut de la boucle du premier regroupement
+        // calcul 
+        {% set sumNbreDadultes = sumNbreDadultes + nbreAdultes %}
+    {% endfor %}
+        {% set keynbreDadultes = 'nbreAdultes' + 1 %}
+        {% set monTableau = monTableau|merge({ (keynbreDadultes): nbreDadultes }) %}
+    {{ dump(monTableau) }}
+ #}
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-row bd-highlight mb-2 justify-content-center">   
+                            <form action={{ path('app_admin_rep_replist') }} method="GET">
+                                <div class="text-center">
+                                    <input class="form-control mt-3 mb-3" name="date" type="date" value="{{date | date('Y-m-d') }}">
+                                </div>
+                                <div class="text-center">
+                                    <input type="submit" class="btn btn-primary waves-effect waves-light btn-sm">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-          
+            </div>
         </div>
 
-{{ include('partials/footer-regroupement.html.twig') }}
+        <div class="row justify-content-center mb-5">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        {% if regroupementsClients|length > 0 %}
+                            {% set i = 0 %}
+                            {# CALCUL
+                                Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert     
+                                faire pareil pour enfants et bébés                   
+                                {% set indexTab = 0 %}
+                                {% set keynbreAdultes = 'nbreAdultes' ~ indexTab %} 
+                            #}
+
+                            
+
+                        <ul class="activity-feed  mb-0 ps-2">
+                            {% for regroupement in regroupementsClients|sort((a, b) => a.meetingAt <=> b.meetingAt) %}
+                                {# CALCUL
+                                    Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert
+                                    {% set nbreAdultes = 0 %}
+                                    {% set sumNbreAdultes = 0 %}
+                                    {% set nbreEnfants = 0 %}
+                                    {% set sumNbreEnfants = 0 %}
+                                    {% set nbreBb = 0 %}
+                                    {% set sumNbreBb = 0 %}
+                                #}
+                                
+
+                                {% if (regroupement is not empty) %}                                                        
+                                    {% if regroupement.staff == user %}
+                                        {% set hotel =  regroupement.toArrival %}
+                                        <a  class="cursor" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
+                                            <li class="feed-item  border-top border-primary">
+                                                <div class="feed-item-list rep-timeline-box ">
+                                                    <p class="badge rounded-pill bg-primary mt-1 mb-3 fs-6">{{ regroupement.getMeetingAtTime }}</p>
+                                                    <p class="text-muted mb-1"><b>{{ hotel.name|title }}</b> </p>
+                                                    <p class="text-muted mb-1">
+                                                    
+                                                        {% if paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            A: {{ paxPerHotelAgency[user.username~'_adults'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
+                                                        {% endif %}
+                                                        {% if paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            N: {{ paxPerHotelAgency[user.username~'_children'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }}, 
+                                                        {% endif %}
+                                                        {% if paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] is defined %}
+                                                            B: {{ paxPerHotelAgency[user.username~'_babies'][regroupement.customerCard.agency.id~'_'~hotel.id~'_'~regroupement.meetingAt|date('H:i')~'_'~regroupement.meetingPoint] }} 
+                                                        {% endif %}                                           
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </a>
+                                    {% endif %}
+                                
+                                {% endif %}
+                                    {# 
+                                        <!-- Button Modal -->
+                                        <button type="button" class="badge btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">Show More</button>
+                                     #}                                
+
+                                
+                                    <!-- sample modal content -->
+                                    <div id="myModal-{{i}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myModalLabel"><b>{{hotel|title}}</b><br>{{ regroupement.getMeetingAtTime }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+            
+                                                    {% for currentMeeting in meetingsClients %}
+                                                    
+                                                        {% for client in currentMeeting %}
+                                                            {% set isChecked = client.customerCard.isChecked is defined and client.customerCard.isChecked ? 'checked' : '' %}
+                                                            {% set isCheckedBgClass = isChecked ? "" : "airport-background-no-checked" %}
+                                                            {% set isCheckedInputClass = isChecked ? "bg-success border border-success" : "" %}   
+                 
+
+                                                            {% if client.meetingAt ==  regroupement.getMeetingAt  %}
+                                                                {%  set statusClass = (client.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
+                                                                <div class="col-lg-12">
+                                                                    <div class="card border {{ statusClass }} " data-group="group-{{client.id}}">
+
+                                                                        <div class="card-body {{ isCheckedBgClass }}" id="card-body-{{ client.customerCard ? client.customerCard.id : ""}}">
+                                                                            <div class="d-flex justify-content-between">
+                                                                                <div class="d-flex flex-row bd-highlight mb-3">
+                                                                                    
+                                                                                    <div class="me-2">
+                                                                                        <i class="uil uil-arrow-circle-right"></i>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <p><a href="{{ path('app_customer_card_show', {id: client.customerCard.id  }) }}"> <b><span id="textToCopy-{{client.id}}">{{ client.customerCard.holder|title }}</span></b> </a><br>
+                                                                                            {{ client.customerCard.agency|title }}<br/>
+                                                                                            <b><i>{{client.toArrival|title}}</i></b>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div>
+
+                                                                                <div data-group="group-{{client.id}}" class="btn-current-status cursor currentStatus" class="text-end">
+                                                                                    {# <a href="{{ path('app_customer_card_show', {id: client.customerCard.id  }) }}"> #}
+                                                                                        {% if client.status|lower == "no show" %}
+                                                                                            <span class="badge rounded-pill bg-danger" data-group="group-{{client.id}}">{{ client.status }}</span>
+                                                                                        {% else %}
+                                                                                            <span class="badge rounded-pill bg-success" data-group="group-{{client.id}}">{{ client.status }}</span>
+                                                                                        {% endif %}
+                                                                                    {# </a> #}
+                                                                                </div>
+                
+                                                                                <div id="changeArea" class="d-none" data-group="group-{{client.id}}">
+                                                                                    <form action="{{ path('app_customer_card_change_status', {id: client.id }) }}" method="POST">
+                                                                                                
+                                                                                        <div class="">
+                                                                                            <div>
+                                                                                                <select name="status" id="changeStatus" class="form-select" data-group="group-{{client.id}}">
+                                                                                                    <option value="Arrived" {{client.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                                                                    <option value="Go show (airport)" {{client.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                                                                    <option value="Go show (hotel)"   {{client.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                                                                    <option value="No Show"  {{client.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="ms-2">
+                                                                                                <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{client.id}}"><i class="mdi mdi-check"></i></button>
+                                                                                                <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{client.id}}"><i class="mdi mdi-close"></i></button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                    <span id="transferArrivalId" data-group="group-{{client.id}}" class="d-none">{{ client.id }}</span>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row mb-3 justify-content-around align-items-center">
+
+                                                                            <div class="col-6 ps-4">
+                                                                                <div class="mb-1">
+                                                                                {% set nbreAdultes = client.transferVehicleArrival ? client.transferVehicleArrival.adultsNumber : client.adultsNumber %}
+                                                                                {# CALCUL
+                                                                                    Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert
+                                                                                    faire de meme pour les enfants et bébés
+                                                                                    {% set sumNbreAdultes = sumNbreAdultes + nbreAdultes  %}
+                                                                                #}
+                                                                                    Adultes: <b>{{ nbreAdultes  }}</b>
+                                                                                </div>
+                                                                                <div class="mb-1">
+                                                                                    Children: <b>{{ client.transferVehicleArrival ? client.transferVehicleArrival.childrenNumber : client.childrenNumber }}</b>
+                                                                                </div>
+                                                                                <div class="mb-1">
+                                                                                    Bébés: <b>{{ client.transferVehicleArrival ? client.transferVehicleArrival.babiesNumber : client.babiesNumber }}</b>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-3 text-end">
+                                                                                <p class="pt-1">
+                                                                                    <img src="{{ asset("images/brands/copier.png")}}" id="{{client.id}}" class="cursor w-60 bontonCopier" title="copier" value="copier"/><br>
+                                                                                    <span id="thumb-{{client.id}}" class="thumb d-none">👍</span>
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-3 text-end">
+                                                                                <p>
+                                                                                    <a href="{{ path('app_whats_app_client', {'natureTransfer': 'arrival','transferId': client.id}) }}" target="blank" class="linkButton "><img src="{{ asset("images/brands/whatsApp.png")}}" class="w-75"/></a>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row justify-content-around">
+                                                                            <div class="col-4">
+                                                                                <div>
+                                                                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ client.customerCard.reservationNumber }}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4 text-center">                     
+                                                                                {% if client.fromStart == "Punta cana international (puj)" %}
+                                                                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">PUJ</div>
+                                                                                {% elseif client.fromStart == "Santo domingo (sdq)" %}
+                                                                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">SDQ</div>
+                                                                                {% elseif client.fromStart == "La romana international (lrm)" %}
+                                                                                    <div><span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">LRM</div>
+                                                                                {% else %}
+                                                                                    <div><span>{{ client.fromStart }}</div>
+                                                                                {% endif %} 
+                                                                            </div>
+                                                                            <div class="col-4 text-end">
+                                                                                <div>
+                                                                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">{{  client.transferVehicleArrival ? client.transferVehicleArrival.date|date('H:i') : client.hour|date('H:i') }}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <div class=" form-switch form-switch-lg">
+                                                                                <input 
+                                                                                type="checkbox" 
+                                                                                class="form-check-input rep-isChecked-btn {{ isCheckedInputClass }}" 
+                                                                                id="{{ client.customerCard.id}}" {{isChecked}} > 
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                            {% set i = i+1 %}  
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+
+
+                            {# CALCUL
+                                Au cas ou y a besoin d'etre toujours raccord avec le nombre entre equipe booking / équipe transfert                    
+                                {% set keynbreAdultes = 'nbreAdultes' ~ indexTab %}
+                                {% set monTableau = monTableau|merge({ (keynbreAdultes): sumNbreAdultes }) %}
+                                {{ dump(monTableau) }}
+                                {% set indexTab = indexTab + 1 %}
+                             #}
+                                {% endfor %}
+                            {# CALCUL
+                                {% for item in monTableau %}
+                                    adultes : {{ item }}
+                            
+                                {% endfor %}
+                                {% set testKey = 0 %}
+                                {{ dump(monTableau['nbreAdultes'~testKey]) }} 
+                            #}
+                        </ul>
+                        {% else %}
+                        {% trans  %}You don't have any client today{% endtrans %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+                    {# {{ include('partials/footer-regroupement.html.twig') }} #}
+                    <!--******************** footer ********************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        {# <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> #}
+        {#  <script src="/js/pages/dashboard.init.js"></script> #}
+       
+
+        <!-- App js --> 
+        <script src="/js/app.js"></script>
+
+        <script src="/js/jsPersos/changementStatusSelectAjax.js"></script>
+        <script src="/js/jsPersos/boutonCopier.js"></script>
+        <script src="/js/jsPersos/repCheckbox.js"></script>
+
+    </body>
+
+</html>

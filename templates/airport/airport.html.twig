@@ -1,0 +1,355 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Airport'|trans, title: 'Arrivals'|trans}) }}
+
+        <form method="GET" class="mb-3">
+            <div class="row">
+                <div class="col-lg-3">
+                    {% set now = "now"|date("Y-m-d") %}
+                    <div class="mb-3">
+                        <label class="form-label">{% trans %}Search date{% endtrans %}</label>
+                        <input class="form-control" name="date" placeholder="Date" type="date" value="{{ (app.request.query.get('date') != '') ? app.request.query.get('date') : now }}" id="date">
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="= mb-3">
+                    <label class="form-label">{% trans %}Search Airport{% endtrans %}</label>
+                        <select name="airports" class="form-select" id="airport" >
+                            <option value="all">All airports</option>
+                            {% for airport in airports|sort((a, b) => a.name <=> b.name) %} 
+                                <option value="{{ airport.id }}" 
+                                    {% if app.request.query.get('airports') is defined and app.request.query.get('airports') != null %}
+                                        {% if (app.request.query.get('airports') == airport.id ) %}
+                                            selected
+                                        {% endif %}
+                                    {% elseif app.user.airport is defined %}
+                                        {% if app.user.airport is not null and app.user.airport.id == airport.id %}
+                                            selected
+                                        {% endif %}
+                                    {% else %}
+                                        ''
+                                    {% endif %}
+                                
+                                
+                                    >{{ airport }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {#  <div class="col-lg-3">
+                    <div class="= mb-3">
+                        <label for="flightNumber">{% trans %}Flight Number{% endtrans %}</label>
+                        <input name="flightNumber" type="text" class="form-control" id="flightNumber" placeholder="Flight Numbers" value="{{ (app.request.query.get('flightNumber')) }}">
+                    </div>
+                </div> #}
+                {#
+                 <div class="col-lg-3">
+                    <div class="= mb-3">
+                        <label for="voucherNumber">{% trans %}Voucher Number{% endtrans %}</label>
+                        <input name="voucherNumber" type="text" class="form-control" id="voucherNumber" placeholder="Voucher Number" value="{{ (app.request.query.get('voucherNumber')) }}">
+                    </div>
+                </div> #}
+            </div>
+            <div class="row">
+                <div class="text-center text-md-start col-md-2 ">
+                    <input type="submit" class="btn btn-primary">
+                </div>
+
+            </div>
+
+        </form>
+        {# !!! tu si tu changes par exemple btn-outline-primary en btn-outline-success tu dois mettre a jour le js#}
+        <div class="d-flex flex-wrap">
+            {% for flightNumber in flightNumbers %}
+                    <button type="button" class="airport-flightNumber-btn btn btn-outline-primary mx-1 mb-2" id="{{ flightNumber }}">{{ flightNumber }}</button>
+            {% endfor %}
+        </div>
+
+        {% set i = 0 %}
+        <div class="row mt-3">
+            {% for transferArrival in results  %}
+
+                {% set isChecked =  "" %}
+                {% set isCheckedBgClass = "" %}
+                {% set isCheckedInputClass = "" %}    
+
+            {% if transferArrival.transferVehicleArrival is defined %}
+                {% set isChecked = transferArrival.transferVehicleArrival.isChecked is defined and transferArrival.transferVehicleArrival.isChecked ? 'checked' : '' %}
+                {% set isCheckedBgClass = isChecked ? "" : "airport-background-no-checked" %}
+                {% set isCheckedInputClass = isChecked ? "bg-success border border-success" : "" %}    
+            {% endif %}
+
+            {% set statusClass = (transferArrival.status.name|lower != "no show") ? 'border-success' : 'border-danger'  %}
+
+            <!-- On met l'id en UpperCase pour éviter les problèmes entre la bdd, le bouton et le Js-->
+            <div class="col-lg-4 d-none" data-group="{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.flightNumber|upper : transferArrival.flightNumber|upper }}">
+                <div class="card border {{ statusClass }}" data-group="group-{{ transferArrival.id }}">
+
+                    <div class="card-body {{ isCheckedBgClass }}" id="card-body-{{ transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.id : ""}}">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row bd-highlight mb-3">
+                                
+                                <div class="me-2">
+                                    <i class="uil uil-arrow-circle-right"></i>
+                                </div>
+                                <div>
+                                    <p>
+                                        <a  class="cursor" data-bs-toggle="modal" data-bs-target="#myModal-{{i}}">
+                                            <b>{{ transferArrival.customerCard.holder|title }}</b> 
+                                        </a><br/>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.adultsNumber ~'A '  :  transferArrival.adultsNumber ~'A ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.childrenNumber ~'C '  : transferArrival.childrenNumber ~'C ') }} 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.babiesNumber ~'B '  : transferArrival.babiesNumber ~'B ') }} 
+                                        <br/>
+                                        <span class="text-primary"> {{ transferArrival.customerCard.agency|title }}</span>
+
+                                        {# {{ transferArrival.hour|date('H:i') }} #}
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <div data-group="group-{{transferArrival.id}}" class="btn-current-status cursor currentStatus" class="text-end">
+                                    {# <a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}"> #}
+                                        {% if transferArrival.status|lower == "no show" %}
+                                            <span class="badge rounded-pill bg-danger" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
+                                        {% else %}
+                                            <span class="badge rounded-pill bg-success" data-group="group-{{transferArrival.id}}">{{ transferArrival.status }}</span>
+                                        {% endif %}
+                                    {# </a> #}
+                                </div>
+
+                                <div id="changeArea" class="d-none" data-group="group-{{transferArrival.id}}">
+                                    <form action="{{ path('app_customer_card_change_status', {id: transferArrival.id }) }}" method="POST">
+                                                
+                                        <div class="">
+                                            <div>
+                                                <select name="status" id="changeStatus" class="form-select" data-group="group-{{transferArrival.id}}">
+                                                    <option value="Arrived" {{transferArrival.status|lower == "arrived" ? "selected": ""}}>Arrived</option>
+                                                    <option value="Go show (airport)" {{transferArrival.status|lower == "go show (airport)" ? "selected": ""}}   >Go Show Airport</option>
+                                                    <option value="Go show (hotel)"   {{transferArrival.status|lower == "go show (hotel)" ? "selected": ""}}  >Go Show Hotel</option>
+                                                    <option value="No Show"  {{transferArrival.status|lower == "no show" ? "selected": ""}}  >No Show</option>
+                                                </select>
+                                            </div>
+                                            <div class="ms-2">
+                                                <button type="submit" class="btn btn-success editable-submit btn-sm waves-effect waves-light validate-status-button" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-check"></i></button>
+                                                <button type="button" id="statusCancelButton" class="btn btn-danger editable-cancel btn-sm waves-effect waves-light button-cancel" data-group="group-{{transferArrival.id}}"><i class="mdi mdi-close"></i></button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                    <span id="transferArrivalId" data-group="group-{{transferArrival.id}}" class="d-none">{{ transferArrival.id }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap justify-content-around">
+                            <div class="text-start">
+                                {# <div><span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">{{ transferArrival.customerCard.reservationNumber }}</span></div> #}
+                                <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">            
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '?') }} 
+                                        <br/> 
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '') }}  
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-center">                      
+                                <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                        {% if transferArrival.transferVehicleArrival  %}
+                                            {{ (transferArrival.transferVehicleArrival.isCollective ? 'Collective'|trans : 'Individual'|trans) }} 
+                                        {% else %}
+                                        ?
+                                        {% endif %}
+                                    </span>
+                                </div>           
+                            </div>
+                            <div class="text-center">                      
+                                <div>
+                                    <span class="badge rounded-pill bg-primary p-2 mt-1 mb-3">
+                                     {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.flightNumber : transferArrival.flightNumber)}}
+                                    </span>
+                                </div>           
+                            </div>
+                            <div class="text-end">
+                                <div>
+                                    <span class="badge rounded-pill bg-primary py-2 px-3 mt-1 mb-3">
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('H:i') : transferArrival.hour|date('H:i'))}}
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if transferArrival.transferVehicleArrival  %}
+                            <div class="d-flex justify-content-center">
+                                <div class=" form-switch form-switch-lg">
+                                    <input type="checkbox" class="form-check-input airport-isChecked-btn {{ isCheckedInputClass }}"  id="{{ transferArrival.transferVehicleArrival.id}}" {{isChecked}} >
+                                    {# <label class="form-check-label text-danger" for="customSwitchsizelg">Not Checked</label> #}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+           
+                <!-- sample modal content -->
+                <div id="myModal-{{i}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myModalLabel"><b></b><br><a href="{{ path('app_customer_card_show', {id: transferArrival.customerCard.id  }) }}">{{ transferArrival.customerCard.holder|title }}</a></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body ">
+                               <div class="row justify-content-around text-center">
+                                    {# 
+                                    <div class="col-10 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Date/Hour{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.date|date('d-m-Y H:i') : '-') }} 
+                                    </div>
+                                     #}
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Vehicle Type{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleType : '-') }} 
+                                    </div>
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Transport{% endtrans %}</b><br>
+                                        {% if transferArrival.transferVehicleArrival %} 
+                                            {{ transferArrival.transferVehicleArrival.isCollective ? 'Collective' : 'Private' }}
+                                        {% else %}
+                                        -
+                                        {% endif %} 
+                                    </div>
+                                    {# 
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Vehicle Number{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.vehicleNumber : '-') }} 
+                                    </div>
+                                     #}
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Voucher Number{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.voucherNumber : '-') }} 
+                                    </div>
+                                    {# 
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Area{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.area : '-') }} 
+                                    </div>
+                                     #}
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Transport Company{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? transferArrival.transferVehicleArrival.transportCompany : '-') }} 
+                                    </div>
+
+                                    <div class="col-3 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Adults{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? 
+                                            transferArrival.transferVehicleArrival.adultsNumber : '-') }} 
+                                    </div>
+                                    <div class="col-3 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Children{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? 
+                                             transferArrival.transferVehicleArrival.childrenNumber : '-') }} 
+                                    </div>
+                                    <div class="col-3 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Babies{% endtrans %}</b><br>
+                                        {{ (transferArrival.transferVehicleArrival ? 
+                                            transferArrival.transferVehicleArrival.babiesNumber : '-') }} 
+                                    </div>
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                       <b>{% trans %}From{% endtrans %}</b><br>
+                                        {{ (transferArrival ? transferArrival.fromStart : '-') }} 
+                                    </div>
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}To{% endtrans %}</b><br>
+                                        {{ (transferArrival ? transferArrival.toArrival : '-') }} 
+                                    </div>
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                       <b>{% trans %}Rep{% endtrans %}</b><br>
+                                        {{ (transferArrival ? transferArrival.staff : '-') }} 
+                                    </div>
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Meeting{% endtrans %}</b><br>
+                                        {{ (transferArrival ? transferArrival.meetingPoint : '-') }} -  {{ (transferArrival ? transferArrival.meetingAt|date('d-m-Y H:i') : '-') }}
+                                    </div>
+
+
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                       <b>{% trans %}Service Number{% endtrans %}</b><br>
+                                        {{ (transferArrival ? transferArrival.serviceNumber : '-') }} 
+                                    </div>
+                                    <div class="col-5 border border-secondary rounded mb-3">
+                                        <b>{% trans %}Flight Number{% endtrans %}</b><br>
+                                        {{ (transferArrival ? transferArrival.flightNumber : '-') }} 
+                                    </div>
+                               </div>
+                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            </div>
+            {% set i = i + 1 %}
+            {% endfor %}
+        </diV>
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+    </div> <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+
+
+
+
+
+                    {# {{ include('partials/footer-regroupement.html.twig') }} #}
+                    <!--******************** footer ********************-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+            <!-- Le menu créé pour les rep en bas de page -->
+            {% if "ROLE_REP" in app.user.roles %}
+                {{ include('partials/rep-bottom-menu.html.twig') }}            
+            {% endif %}
+        </div>
+        <!-- END layout-wrapper -->
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        {# <script src="{{ asset('/libs/apexcharts/apexcharts.min.js')}}"></script> #}
+        {#  <script src="/js/pages/dashboard.init.js"></script> #}
+       
+
+        <!-- App js --> 
+        <script src="/js/app.js"></script>
+
+        <script src="/js/jsPersos/changementStatusSelectAjax.js"></script>
+        <script src="/js/jsPersos/airportCheckbox.js"></script>
+
+    </body>
+
+</html>
