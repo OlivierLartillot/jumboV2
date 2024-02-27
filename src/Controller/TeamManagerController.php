@@ -140,13 +140,28 @@ class TeamManagerController extends AbstractController
         // utilisation du service qui définit si on utilise la query ou la session
         $day = $defineQueryDate->returnDay($request);
 
-
         // on fixe la date que l'on va utiliser dans le filtre
         $date = new DateTimeImmutable($day . '00:01:00');
         $arrivalDate = $date->modify('-1 day');
 
-        // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
-        $repUsers = $userRepository->findAll();
+        // SI C EST QUELQU UN d'autre il n'est pas autorisé dans le sécurity
+        // si on est un rep et dans une entreprise authorisée alors on récup juste l'user courant
+        if ( !in_array('ROLE_HULK', $this->getUser()->getRoles()) and 
+             !in_array('ROLE_SUPERMAN', $this->getUser()->getRoles()) and 
+             !in_array('ROLE_AIRPORT_SUPERVISOR', $this->getUser()->getRoles()) and 
+             !in_array('ROLE_BRIEFING', $this->getUser()->getRoles()) 
+            ) { 
+            if (in_array('ROLE_REP', $this->getUser()->getRoles())) {
+                if ($this->getParameter('app.repCanChooseMeetingHour')) {
+                    $repUsers = $userRepository->findBy(['id' => $this->getUser()->getId()]);
+                } else {
+                    return throw $this->createAccessDeniedException();
+                }
+            }
+        } else {
+            // récupération de tous les utilisateurs du site (pas nombreux a ne pas etre rep donc on checkera apres)
+            $repUsers = $userRepository->findAll();
+        }
 
         // nombre de arrivals sans attributions
         $countNonAssignedClient = $transferArrivalRepository->countNumberNonAttributedMeetingsByDate($date);

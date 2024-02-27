@@ -45,6 +45,8 @@ security:
         - { path: ^/team-manager/traitement_csv, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_IMPORT] }
         - { path: ^/customer/card/new, roles: [ROLE_HULK, ROLE_SUPERMAN] }
         - { path: ^/customer/card, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_REP, ROLE_AIRPORT, ROLE_IMPORT, ROLE_AIRPORT_SUPERVISOR,ROLE_RESERVATIONS, ROLE_TRANSFERS, ROLE_BRIEFING] }
+        # si tu authorises quelqu'un, il faut checker le controler car $repUsers n'existera pas !!!!
+        - { path: ^/team-manager/briefings/replist, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_BRIEFING, ROLE_REP] }
         - { path: ^/team-manager/briefings, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_BRIEFING] }
         - { path: ^/team-manager, roles: [ROLE_HULK, ROLE_SUPERMAN] }
         - { path: ^/team-transfer, roles: [ROLE_HULK, ROLE_SUPERMAN] }

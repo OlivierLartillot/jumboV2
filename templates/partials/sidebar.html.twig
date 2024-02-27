@@ -74,6 +74,21 @@
 
                 <li class="menu-title">{% trans %}Clients{% endtrans %}</li>
 
+                <!-- ***** Si la variable d environement est a true alors on affiche également ce menu pour le REP ***** -->
+                {% set usersAuthorized = false %}
+                {% if repCanChooseMeetingHour %}
+                    {% set usersAuthorized = (("ROLE_REP" in app.user.roles)) %}
+                {% endif %}
+                {% if usersAuthorized %}
+                    <li>
+                        <a href="{{ path('app_admin_team_manager_replist') }}">
+                            <i class="uil-calendar-alt"></i>
+                            <span>{% trans %}Rep Briefings{% endtrans %}</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <!-- *************************************************************************************************** -->
+
                 <li>
                     <a href="{{ path('app_customer_card_index') }}">
                         <i class="fas fa-id-card"></i>
@@ -114,7 +129,7 @@
                             <i class="uil-pen"></i>
                             <span>{% trans %}Rep assignment{% endtrans %}</span>
                         </a>
-                    </li>
+                    </li> 
                     <li>
                         <a href="{{ path('app_admin_team_manager_replist') }}">
                             <i class="uil-calendar-alt"></i>

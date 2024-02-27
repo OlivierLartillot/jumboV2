@@ -20,8 +20,16 @@ On peut typer en utilisatnt symfony: Il suffit d un peu de config:
     # Je peux aussi définir ici directement une variable d'env !
     app.uneAutreVariable: true 
 ```
+
 ### controlleur
 ```php
     $this->getParameter('app.maVariable'); // récupéré de service YAML
     $_ENV['MA_VARIABLE']; // Ne peut etre que type string
+```
+
+### twig
+```yaml
+    globals:
+        entreprise: '%env(ENTREPRISE)%'
+        repCanChooseMeetingHour: '%env(bool:REP_CAN_CHOOSE_MEETING_HOUR)%'
 ```
