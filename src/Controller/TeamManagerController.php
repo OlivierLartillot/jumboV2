@@ -146,12 +146,17 @@ class TeamManagerController extends AbstractController
 
         // SI C EST QUELQU UN d'autre il n'est pas autorisé dans le sécurity
         // si on est un rep et dans une entreprise authorisée alors on récup juste l'user courant
-        if ( !in_array('ROLE_HULK', $this->getUser()->getRoles()) and 
-             !in_array('ROLE_SUPERMAN', $this->getUser()->getRoles()) and 
-             !in_array('ROLE_AIRPORT_SUPERVISOR', $this->getUser()->getRoles()) and 
-             !in_array('ROLE_BRIEFING', $this->getUser()->getRoles()) 
-            ) { 
+        $imNotJustRep = ( 
+            in_array('ROLE_HULK', $this->getUser()->getRoles()) or 
+            in_array('ROLE_SUPERMAN', $this->getUser()->getRoles()) or 
+            in_array('ROLE_AIRPORT_SUPERVISOR', $this->getUser()->getRoles()) or 
+            in_array('ROLE_BRIEFING', $this->getUser()->getRoles()) 
+        );
+
+        // si je suis juste un rep !
+        if (!$imNotJustRep) { 
             if (in_array('ROLE_REP', $this->getUser()->getRoles())) {
+                // si le projet est configuré avec repCanChooseMeetingHour a true on peut récup, sinon access denied
                 if ($this->getParameter('app.repCanChooseMeetingHour')) {
                     $repUsers = $userRepository->findBy(['id' => $this->getUser()->getId()]);
                 } else {
@@ -185,7 +190,7 @@ class TeamManagerController extends AbstractController
            
                $regroupementsClients[] = $regroupements;
                foreach ($regroupements as $transferArrival) {
-                   
+                  
                    $hotels = [];
                    $agency = $transferArrival->getCustomerCard()->getAgency();
                    $hotels[] = $transferArrival->getToArrival();
@@ -209,7 +214,8 @@ class TeamManagerController extends AbstractController
             'regroupementsClients' => $regroupementsClients,
             'countNonAssignedClient' => $countNonAssignedClient,
             'paxTab' => $paxTab,
-            'paxPerHotelAgency' => $paxPerHotelAgency
+            'paxPerHotelAgency' => $paxPerHotelAgency,
+            'imNotJustRep' => $imNotJustRep
         ]);
 
     } 
@@ -226,6 +232,25 @@ class TeamManagerController extends AbstractController
 
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:01:00');
+
+        // SI C EST QUELQU UN d'autre il n'est pas autorisé dans le sécurity
+        // si on est un rep et dans une entreprise authorisée alors on récup juste l'user courant
+        $imNotJustRep = ( 
+            in_array('ROLE_HULK', $this->getUser()->getRoles()) or 
+            in_array('ROLE_SUPERMAN', $this->getUser()->getRoles()) or 
+            in_array('ROLE_AIRPORT_SUPERVISOR', $this->getUser()->getRoles()) or 
+            in_array('ROLE_BRIEFING', $this->getUser()->getRoles()) 
+        );
+
+        // si je suis juste un rep !
+        if (!$imNotJustRep) { 
+            if (in_array('ROLE_REP', $this->getUser()->getRoles())) {
+                // si le projet est configuré avec repCanChooseMeetingHour a true on peut continuer, sinon access denied
+                if (!$this->getParameter('app.repCanChooseMeetingHour')) {
+                    return throw $this->createAccessDeniedException();
+                } 
+            }
+        }
 
         //dd($day);06/09
         // attraper la liste des objets correpsondants au representant et au jour du meeting
@@ -333,8 +358,6 @@ class TeamManagerController extends AbstractController
                     
                     // récupérer l'objet correspondant a l id
                     //$currentCustommerCard = $customerCardRepository->find($keyTab[1]);
-                    
-
 
                     /* dump($keyTab[0] .': '. $currentRequest .' - '.$currentArrival->getId()); */
 
@@ -350,12 +373,14 @@ class TeamManagerController extends AbstractController
                     }
                     // si c est l'endroit convertir l objet avec l endroit 
                     else if ($keyTab[0] == 'staff') {
+
+                        if (!$imNotJustRep) {
+                            return throw $this->createAccessDeniedException('Access Denied: You do not have the right to change the representative\'s assignment');
+                        } 
                         $staff = $userRepository->find($currentRequest);
                         $currentArrival->setStaff($staff);
-                    }
-                    
+                    }          
                 }
-
             }
            
             
@@ -372,7 +397,8 @@ class TeamManagerController extends AbstractController
             "paxPerHotelAgency" => $paxPerHotelAgency,
             'regroupements' => $regroupements,
             'paxTab' => $paxTab,
-            'countPax' => $countPax
+            'countPax' => $countPax,
+            'imNotJustRep' => $imNotJustRep
         ]);
     }
 
@@ -381,7 +407,6 @@ class TeamManagerController extends AbstractController
     // la fiche doit permettre de changer la date du mmeting comme de rep
     #[Route('/team-manager/briefings/fiche/{user}/date/details', name: 'app_admin_team_manager_fiche_par_date_details',methods:["POST", "GET"])]
     public function ficheRepParDateDetails( User $user, 
-                                            CustomerCardRepository $customerCardRepository, 
                                             TransferArrivalRepository $transferArrivalRepository,
                                             MeetingPointRepository $meetingPointRepository,  
                                             UserRepository $userRepository,
@@ -392,6 +417,26 @@ class TeamManagerController extends AbstractController
         $day =  $defineQueryDate->returnDay($request);
         $date = new DateTimeImmutable($day . '00:01:00');
 
+        // SI C EST QUELQU UN d'autre il n'est pas autorisé dans le sécurity
+        // si on est un rep et dans une entreprise authorisée alors on récup juste l'user courant
+        $imNotJustRep = ( 
+            in_array('ROLE_HULK', $this->getUser()->getRoles()) or 
+            in_array('ROLE_SUPERMAN', $this->getUser()->getRoles()) or 
+            in_array('ROLE_AIRPORT_SUPERVISOR', $this->getUser()->getRoles()) or 
+            in_array('ROLE_BRIEFING', $this->getUser()->getRoles()) 
+        );
+
+        // si je suis juste un rep !
+        if (!$imNotJustRep) { 
+            if (in_array('ROLE_REP', $this->getUser()->getRoles())) {
+                // si le projet est configuré avec repCanChooseMeetingHour a true on peut continuer, sinon access denied
+                if (!$this->getParameter('app.repCanChooseMeetingHour')) {
+                    return throw $this->createAccessDeniedException();
+                } 
+            }
+        }
+
+        
         // attraper la liste des objets correpsondants au representant et au jour 
         $attributionClientsByRepAndDate = $transferArrivalRepository->findByStaffAndMeetingDate($user, $date);
 
@@ -452,6 +497,9 @@ class TeamManagerController extends AbstractController
                     }
                     // si c est l'endroit convertir l objet avec l endroit 
                     else if ($keyTab[0] == 'staff') {
+                        if (!$imNotJustRep) {
+                            return throw $this->createAccessDeniedException('Access Denied: You do not have the right to change the representative\'s assignment');
+                        } 
                         $staff = $userRepository->find($currentRequest);
                         $transfer->setStaff($staff);
                   
@@ -482,7 +530,8 @@ class TeamManagerController extends AbstractController
             "user" => $user,
             "users" => $users,
             "paxTab" => $paxTab,
-            'countPax' => $countPax
+            'countPax' => $countPax,
+            'imNotJustRep' => $imNotJustRep,
 
         ]);
     }
