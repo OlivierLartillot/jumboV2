@@ -12,7 +12,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-minus me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
+                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="uil-calendar-alt me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
                                 <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
                             </div>
 
@@ -98,13 +98,16 @@
                                         <div class="d-flex flex-column flex-lg-row">
                                             <input class="form-control mt-3" type="time" value="{{ transferArrival.getMeetingAtTime}}" name="hour_{{ transferArrival.id }}"/>
                                         
-                                            <select class="form-select mt-3" name="staff_{{ transferArrival.id }}" title="Rep">
-                                                {% for user in users %}
-                                                    {% if "ROLE_REP" in user.roles %}
-                                                        <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </select>
+                                            {% if imNotJustRep %}
+                                                <select class="form-select mt-3" name="staff_{{ transferArrival.id }}" title="Rep">
+                                                    {% for user in users %}
+                                                        {% if "ROLE_REP" in user.roles %}
+                                                            <option value="{{user.id}}" {{ user.id == transferArrival.staff.id ? "selected" : ""}}  >{{user.username}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+
                                             <select class="form-select mt-3" name="meetingPoint_{{ transferArrival.id }}" title="meeting point"> 
                                                 {% for meetingPoint in meetingPoints %}
                                                     {% if (meetingPoint is not null)  %}

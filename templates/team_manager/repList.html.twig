@@ -18,10 +18,12 @@
             </form>
         </div>
 
-        {% if countNonAssignedClient > 0 %}
-            <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} {{ (countNonAssignedClient>1) ? "clients do not"|trans : "client does not"|trans }} {% trans %} yet have a meeting time assigned{% endtrans %}.</p>
-        {% else %}
-            <p class="alert alert-success" role="alert">{% trans %}No or more client groups to assign for this date{% endtrans %}.</p>
+        {% if imNotJustRep %}       
+            {% if countNonAssignedClient > 0 %}
+                <p class="alert alert-danger" role="alert">{{ countNonAssignedClient }} {{ (countNonAssignedClient>1) ? "clients do not"|trans : "client does not"|trans }} {% trans %} yet have a meeting time assigned{% endtrans %}.</p>
+            {% else %}
+                <p class="alert alert-success" role="alert">{% trans %}No or more client groups to assign for this date{% endtrans %}.</p>
+            {% endif %}
         {% endif %}
 
         <p class="alert alert-info" role="alert">
