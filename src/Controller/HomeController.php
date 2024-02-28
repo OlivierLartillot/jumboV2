@@ -817,7 +817,7 @@ class HomeController extends AbstractController
                                     ): Response
     {
 
-        dump('on est chez meeting point');
+        //dump('on est chez meeting point');
 
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
         $mimeType = $fileToUpload->getMimeType();
