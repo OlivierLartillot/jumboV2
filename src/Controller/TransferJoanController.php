@@ -758,7 +758,7 @@ class TransferJoanController extends AbstractController
                           ): Response
     {
 
-        // dd('tu es bien arrivé chez meeting point transferts !!! ');
+        dd('tu es bien arrivé chez meeting point transferts !!! ');
 
 
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
@@ -819,6 +819,7 @@ class TransferJoanController extends AbstractController
             $transportCompany = $row[11];
             
             $currentClient = $customerCardRepository->findOneBy(['holder' => $client]);
+            dd($currentClient);
             $currentHotel = $airportHotelRepository->findOneBy(['name' => $hotel]);
             $currentAirport = $airportHotelRepository->findOneBy(['name' => $airport]);
             $currentTransportCompany = $transportCompanyRepository->findOneBy(['name' => $transportCompany]);
