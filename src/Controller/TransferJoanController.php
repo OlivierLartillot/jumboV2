@@ -758,7 +758,7 @@ class TransferJoanController extends AbstractController
                           ): Response
     {
 
-        dd('tu es bien arrivé chez meeting point transferts !!! ');
+        //dd('tu es bien arrivé chez meeting point transferts !!! ');
 
 
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
@@ -802,7 +802,7 @@ class TransferJoanController extends AbstractController
         $row = 0;
         $rowNumber = 0;
         foreach ($rows as $row) {  
-            if ($rowNumber == 0 or trim($row[0]) == "Transfer Date") {$rowNumber++; continue;}
+            if ($rowNumber == 0 or trim($row[0]) == "Transfer Date") { continue; }
             if (trim($row[0]) == "") {break;}
 
             $transferDate = $row[0];
