@@ -67,7 +67,14 @@
     {% set date = transferObject.date|date('d-m-Y') %}
 {% endif %}
 
-
+{# Entreprise Name #}
+{% if app.request.server.get('ENTREPRISE') == 'jumbo' %}
+    {% set entreprise = 'Jumbo Tours' %}
+{% elseif app.request.server.get('ENTREPRISE') == 'meetingPoint' %}
+    {% set entreprise = 'Meeting Point' %}
+{% else %}
+    {% set entreprise = "Entreprise" %}
+{% endif %}
 
 
 {% if text %}
@@ -84,7 +91,7 @@
 <div id="message">
 Bonjour {{transferObject.customerCard.holder|title}}! Bienvenue à Punta Cana! 🌴
 
-*Je suis {{ transferObject.staff }} votre représentant Jumbo Tours.*
+*Je suis {{ transferObject.staff }} votre représentant {{ entreprise }}.*
 
 Vous pouvez me joindre à ce numéro en cas de besoin. 
 
@@ -98,7 +105,7 @@ Nous en profiterons aussi pour planifier vos *excursions* et *confirmer votre re
 <div id="message">
 ¡Hola {{transferObject.customerCard.holder|title}}! ¡Bienvenido a Punta Cana! 🌴
 
-*Soy {{ transferObject.staff }}, tu representante de Jumbo Tours.*
+*Soy {{ transferObject.staff }}, tu representante de {{ entreprise }}.*
 
 Puedes contactarme en este número en caso de necesitar ayuda.
 
@@ -112,7 +119,7 @@ También aprovecharemos para planificar tus *excursiones* y *confirmar tu regres
 <div id="message">
 Hello {{transferObject.customerCard.holder|title}}! Welcome to Punta Cana! 🌴
 
-*I am {{ transferObject.staff }}, your Jumbo Tours representative.*
+*I am {{ transferObject.staff }}, your {{ entreprise }} representative.*
 
 You can reach me at this number in case you need assistance.
 
@@ -126,7 +133,7 @@ We will also take the opportunity to plan your *excursions* and *confirm your re
 <div id="message">
 Ciao {{transferObject.customerCard.holder|title}}! Benvenuto a Punta Cana! 🌴
 
-*Sono {{ transferObject.staff }}, il tuo rappresentante di Jumbo Tours.*
+*Sono {{ transferObject.staff }}, il tuo rappresentante di {{ entreprise }}.*
 
 Puoi contattarmi a questo numero in caso di bisogno.
 
@@ -140,7 +147,7 @@ Ne approfitteremo anche per pianificare le tue *escursioni* e *confermare il tuo
 <div id="message">
 Olá {{transferObject.customerCard.holder|title}}! Bem-vindo a Punta Cana! 🌴
 
-*Eu sou {{ transferObject.staff }}, seu representante da Jumbo Tours.*
+*Eu sou {{ transferObject.staff }}, seu representante da {{ entreprise }}.*
 
 Você pode me contatar neste número caso precise de assistência.
 
