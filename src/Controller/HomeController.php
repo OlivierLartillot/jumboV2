@@ -1092,7 +1092,7 @@ class HomeController extends AbstractController
                     $manager->persist($hotel);
                     $manager->flush();
                 }
-                
+
                 // regarde si une carte client avec numéro client et nom existe
                 
                 // sinon on la cré !
@@ -1120,6 +1120,7 @@ class HomeController extends AbstractController
                 $newTransferArrival->setDate($arrivalDate);
                 $newTransferArrival->setHour($arrivalhour);
                 $newTransferArrival->setMeetingAt($meetingAt);
+                $newTransferArrival->setMeetingPoint($meetingPoint);
                 $manager->persist($newTransferArrival);
         
                 /*                
