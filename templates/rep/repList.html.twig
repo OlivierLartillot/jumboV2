@@ -42,7 +42,10 @@
                 </div>
             </div>
         </div>
-       <div class="row justify-content-center">
+
+
+
+       <div class="row justify-content-center mb-3">
             <div class="col-xl-4 col-sm-6 text-center">
                 <a href="{{ path('app_admin_team_manager_fiche_par_date', {'user': app.user.id}) }}" class="btn btn-success btn-sm waves-effect waves-light"><i class="uil-pen me-2"></i>{% trans %}Update{% endtrans %}</a>
                 <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': app.user.id}) }}" class="btn btn-primary btn-sm waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
