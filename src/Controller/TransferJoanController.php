@@ -798,13 +798,12 @@ class TransferJoanController extends AbstractController
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
-
-        $row = 0;
+        //$row = 0;
         $rowNumber = 0;
         foreach ($rows as $row) {  
-            if ($rowNumber == 0 or trim($row[0]) == "Transfer Date") { continue; }
+            
+            if ($rowNumber == 0 or trim($row[0]) == "Date") {$rowNumber++; continue; }
             if (trim($row[0]) == "") {break;}
-
             $transferDate = $row[0];
             $airport = $row[1];
             $flightNumber = $row[2];
@@ -812,7 +811,7 @@ class TransferJoanController extends AbstractController
             $hotel = $row[4];
             $type = $row[5];
             $ref = $row[6];
-            $client = $row[7];
+            $client = trim(strtolower($row[7]));
             $pax = $row[8];
             $agency = $row[9];
             $pickUp = $row[10];
