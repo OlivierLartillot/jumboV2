@@ -284,6 +284,9 @@ class TeamManagerController extends AbstractController
         $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
         //$customersGroupingPax = $transferArrivalRepository->meetingRegroupmentPax($date, $user);
         $paxTab = [];
+        $paxPerHotelAgency['adults'] = [];
+        $paxPerHotelAgency['children'] = [];
+        $paxPerHotelAgency['babies'] = [];
         foreach ($regroupements as $transferArrival) {
 
             $agency = $transferArrival->getCustomerCard()->getAgency();
