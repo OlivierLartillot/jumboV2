@@ -883,7 +883,9 @@ class HomeController extends AbstractController
             $row = 0;
             // bloquer a une seule date possible par import
             $daysTab = []; // le tableau qui va enregistrer les dates
-/*             foreach ($csv as $record) {
+
+            /*             
+                foreach ($csv as $record) {
                 $row++;
 
                 if (!isset($record['Nº Vuelo/Transporte Origen']) ){

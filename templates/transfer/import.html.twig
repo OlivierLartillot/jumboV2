@@ -55,11 +55,16 @@
                         <div class="card">
                             <div class="card-body">
                                 <div>
-
-                                    <form name="drag_and_drop" method="post" action="{{ path('admin_transfer_traitement_csv')}}" enctype="multipart/form-data" class="dropzone dz-clickable">
+                                    {% set formPath = 'admin_transfer_traitement_csv_jumbo' %}
+                                            {% if app.request.server.get('ENTREPRISE') == 'jumbo' %}
+                                                    {% set formPath = 'admin_transfer_traitement_csv_jumbo' %}
+                                            {% elseif app.request.server.get('ENTREPRISE') == 'meetingPoint' %}
+                                                    {% set formPath = 'admin_transfer_traitement_csv_meetingPoint' %}
+                                            {% endif %}
+                                    <form name="drag_and_drop" method="post" action="{{ path(formPath)}}" enctype="multipart/form-data" class="dropzone dz-clickable">
+                                    {#  <form name="drag_and_drop" method="post" action="{{ path('admin_transfer_traitement_csv')}}" enctype="multipart/form-data" class="dropzone dz-clickable"> #}
                                         <div class="dz-message needsclick">
                                             
-
                                                 <div class="mt-4" data-controller="symfony--ux-dropzone--dropzone">
                                                     <input type="file" id="drag_and_drop_name" name="drag_and_drop[fileToUpload]" required="required" placeholder="Drag and drop or browse" data-controller="" class="dropzone-input" data-symfony--ux-dropzone--dropzone-target="input" style="display: block;">
 

@@ -52,7 +52,7 @@ class TransferJoanController extends AbstractController
         ]);
     }
 
-    #[Route('/traitement_xls', name: 'admin_transfer_traitement_csv', methods: ['POST'])]
+    #[Route('/traitement_xls/jumbo', name: 'admin_transfer_traitement_csv_jumbo', methods: ['POST'])]
     public function index(Request $request, 
                           EntityManagerInterface $manager,
                           CustomerCardRepository $customerCardRepository,
@@ -742,6 +742,134 @@ class TransferJoanController extends AbstractController
         ]); */
     }
     
+
+    #[Route('/traitement_xls/meetingPoint', name: 'admin_transfer_traitement_csv_meetingPoint', methods: ['POST'])]
+    public function indexMeetingPoint(Request $request, 
+                          EntityManagerInterface $manager,
+                          CustomerCardRepository $customerCardRepository,
+                          TransferArrivalRepository $transferArrivalRepository,
+                          TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
+                          TransferInterHotelRepository $transferInterHotelRepository,
+                          TransferDepartureRepository $transferDepartureRepository,
+                          TransportCompanyRepository $transportCompanyRepository, 
+                          ErrorsImportManager $errorsImportManager,
+                          AirportHotelRepository $airportHotelRepository,
+                          TranslatorInterface $translator
+                          ): Response
+    {
+
+        // dd('tu es bien arrivé chez meeting point transferts !!! ');
+
+
+        $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
+       /*  $mimeType = $fileToUpload->getMimeType(); */
+        $error = $fileToUpload->getError();
+
+        // récupération du token
+        $submittedToken = $request->request->get('token');
+                    
+        $errorDetails = [];
+        // 'delete-item' is the same value used in the template to generate the token
+        if (!$this->isCsrfTokenValid('upload-item', $submittedToken)) {
+           $errorDetails[] = 'Code import 1 - Token error, please refresh the page and start again.';
+        }
+
+        // test des données recues
+        // infos sur le csv
+        if ($error > 0) {
+            $errorDetails[] = 'Code import 2 - Error uploading the file. Error code :' . $error;
+        }
+    
+        // Vérifier si le fichier a été correctement téléchargé
+        if (!file_exists($fileToUpload)) {
+            $errorDetails[] = "Code import 3 - File not found.";
+        }
+        // Vérifier le type de fichier
+        if ( ($fileToUpload->getClientOriginalExtension() != "xlsm") and ($fileToUpload->getClientOriginalExtension() != "xlsx") ){
+            $errorDetails[] = "Code import 4 - The file extension is not correct !";
+        }
+        if (count($errorDetails) > 0) {
+            return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorDetails]);
+        }
+
+        // Charger le fichier Excel
+        $spreadsheet = IOFactory::load($fileToUpload);
+        //$spreadsheet->setActiveSheetIndexByName('OPERATIVA');
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = $worksheet->toArray();
+
+
+
+
+
+        $row = 0;
+        $rowNumber = 0;
+        foreach ($rows as $row) {  
+            if ($rowNumber == 0 or trim($row[0]) == "Transfer Date") {$rowNumber++; continue;}
+            if (trim($row[0]) == "") {break;}
+
+            $transferDate = $row[0];
+            $airport = $row[1];
+            $flightNumber = $row[2];
+            $flightHour = $row[3];
+            $hotel = $row[4];
+            $type = $row[5];
+            $ref = $row[6];
+            $client = $row[7];
+            $pax = $row[8];
+            $agency = $row[9];
+            $pickUp = $row[10];
+            $transportCompany = $row[11];
+            
+            $currentClient = $customerCardRepository->findOneBy(['holder' => $client]);
+            $currentHotel = $airportHotelRepository->findOneBy(['name' => $hotel]);
+            $currentAirport = $airportHotelRepository->findOneBy(['name' => $airport]);
+            $currentTransportCompany = $transportCompanyRepository->findOneBy(['name' => $transportCompany]);
+
+
+            $newTransfer = new TransferDeparture();
+
+            $newTransfer->setCustomerCard($currentClient);
+            $newTransfer->setFromStart($currentHotel);
+            $newTransfer->setToArrival($currentAirport);
+            $newTransfer->setTransportCompany($currentTransportCompany);
+            $newTransfer->setFlightNumber($flightNumber);
+
+
+            // traitement des dates
+            $date= explode("/", $transferDate);
+            $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
+            //dump('date2: ' . $date[2] . ' date0: ' . $date[0] .' date1: '. $date[1] . '---' . $dateFormat . ' ' . $clientName);             
+            $transferDate = new DateTimeImmutable($dateFormat);
+            $flightHour = new DateTimeImmutable($dateFormat . ' ' . $flightHour );
+            $pickUp = new DateTimeImmutable($dateFormat . ' ' . $pickUp );
+
+
+            $newTransfer->setDate($transferDate);
+            $newTransfer->setHour($flightHour);
+            $newTransfer->setPickUp($pickUp);
+
+            // $newTransfer->setVehicleNumber('?');
+            // $newTransfer->setVehicleType() 
+            $newTransfer->setIsCollective($type == 'private');
+            // $newTransfer->setVoucherNumber
+            // $newTransfer->setArea()
+            $newTransfer->setAdultsNumber($pax);
+            $newTransfer->setChildrenNumber(0);
+            $newTransfer->getBabiesNumber(0);
+
+            $manager->persist($newTransfer);
+
+
+            $rowNumber++; 
+        }
+
+
+        $manager->flush();
+
+
+    }
+
 
     #[Route('/new', name: 'app_transfer_joan_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TransferJoanRepository $transferJoanRepository): Response

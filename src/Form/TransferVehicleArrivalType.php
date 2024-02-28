@@ -41,6 +41,7 @@ class TransferVehicleArrivalType extends AbstractType
         /* dd($dqlCompanies[0]); */
 
         $builder
+            ->add('flightNumber')
             ->add('vehicleNumber', null, [
                 'label' => $this->translator->trans('Vehicle Number'),
             ])
