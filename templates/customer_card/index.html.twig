@@ -162,7 +162,7 @@
             <div class="col-xl-4 col-sm-6">
                 {% if customer_card.transferArrivals|length > 1 %}<div class="card border border-danger">{% else %}<div class="card"> {% endif %}
                     {# TODO: !!! A ATTENTION A transferArrivals[0] -> si y a mieux ... #}
-                    {% if customer_card.transferArrivals[0].staff is not null %}
+                    {% if customer_card.transferArrivals[0] is defined and customer_card.transferArrivals[0].staff is not null %}
                         {% if customer_card.transferArrivals|length > 1 %}
                         <div class="text-end m-3">
                             {% for transferArrival in customer_card.transferArrivals %}

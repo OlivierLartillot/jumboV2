@@ -799,9 +799,6 @@ class TransferJoanController extends AbstractController
         $rows = $worksheet->toArray();
 
 
-
-
-
         $row = 0;
         $rowNumber = 0;
         foreach ($rows as $row) {  
@@ -856,7 +853,7 @@ class TransferJoanController extends AbstractController
             // $newTransfer->setArea()
             $newTransfer->setAdultsNumber($pax);
             $newTransfer->setChildrenNumber(0);
-            $newTransfer->getBabiesNumber(0);
+            $newTransfer->setBabiesNumber(0);
 
             $manager->persist($newTransfer);
 
@@ -866,7 +863,11 @@ class TransferJoanController extends AbstractController
 
 
         $manager->flush();
-
+        return $this->redirectToRoute('app_transfer_import', [
+            'numberOfRows' => $rowNumber,
+            /* 'insertedLine' => $insertedLine,
+            'errorClients' => $errorClients, */
+        ]);
 
     }
 
