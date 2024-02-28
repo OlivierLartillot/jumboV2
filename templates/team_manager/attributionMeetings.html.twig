@@ -12,10 +12,12 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light"><i class="uil-calendar-alt me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
-                                <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
+                                <a href="{{ path('app_admin_team_manager_replist') }}" class="btn btn-secondary waves-effect waves-light mb-2"><i class="uil-calendar-alt me-2"></i>{% trans %}Briefing Rep{% endtrans %}</a>
+                                <a href="{{ path('app_admin_team_manager_fiche_par_date_details',{'user': user.id}) }}" class="btn btn-primary waves-effect waves-light mb-2"><i class="mdi mdi-plus me-2"></i>{% trans %}Details{% endtrans %}</a>
+                                {% if not imNotJustRep %}
+                                    <a href="{{ path('app_admin_rep_replist') }}" class="btn btn-secondary waves-effect waves-light mb-2"><i class="uil-pen"></i> {% trans %}My briefings{% endtrans %}</a>    
+                                {% endif %}
                             </div>
-
                         </div>
                     </div>
     

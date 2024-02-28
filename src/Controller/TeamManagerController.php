@@ -246,7 +246,8 @@ class TeamManagerController extends AbstractController
         if (!$imNotJustRep) { 
             if (in_array('ROLE_REP', $this->getUser()->getRoles())) {
                 // si le projet est configuré avec repCanChooseMeetingHour a true on peut continuer, sinon access denied
-                if (!$this->getParameter('app.repCanChooseMeetingHour')) {
+                // par contre le user doit etre le meme que le currentUser
+                if ((!$this->getParameter('app.repCanChooseMeetingHour')) or ($user != $this->getUser())) {
                     return throw $this->createAccessDeniedException();
                 } 
             }
@@ -283,6 +284,9 @@ class TeamManagerController extends AbstractController
         $regroupements = $transferArrivalRepository->meetingRegroupmentByDayStaffAgencyAndHotel($date, $user);
         //$customersGroupingPax = $transferArrivalRepository->meetingRegroupmentPax($date, $user);
         $paxTab = [];
+        $paxPerHotelAgency['adults'] = [];
+        $paxPerHotelAgency['children'] = [];
+        $paxPerHotelAgency['babies'] = [];
         foreach ($regroupements as $transferArrival) {
 
             $agency = $transferArrival->getCustomerCard()->getAgency();
@@ -430,7 +434,7 @@ class TeamManagerController extends AbstractController
         if (!$imNotJustRep) { 
             if (in_array('ROLE_REP', $this->getUser()->getRoles())) {
                 // si le projet est configuré avec repCanChooseMeetingHour a true on peut continuer, sinon access denied
-                if (!$this->getParameter('app.repCanChooseMeetingHour')) {
+                if ((!$this->getParameter('app.repCanChooseMeetingHour')) or ($user != $this->getUser())) {
                     return throw $this->createAccessDeniedException();
                 } 
             }
