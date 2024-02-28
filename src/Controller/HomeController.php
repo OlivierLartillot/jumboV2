@@ -1014,30 +1014,32 @@ class HomeController extends AbstractController
             // traitement de la première entrée, puis de la deuxième etc ...
             $rowNumber = 0;
             foreach ($rows as $row) {  
-                if ($rowNumber == 0) {$rowNumber++; continue;}
+                if ($rowNumber == 0 or trim($row[0]) == "Transfer Date") {$rowNumber++; continue;}
                 if (trim($row[0]) == "") {break;}
 
                 $transferDate = trim($row[0]); 
-                $agencyName = trim(strtolower($row[1]));
-                $tipoTransfert = trim($row[2]);
-                $flightNumber = trim(strtolower($row[3]));
-                $airportName = trim(strtolower($row[4]));
-                $reservationNumber = trim(strtolower($row[5]));
-                $clientName = trim(strtolower($row[6]));
-                $adult = trim($row[7]);
-                $children = trim($row[8]);
-                $bb = trim($row[9]);
-                $pax = trim($row[10]);
-                $hotelName = trim(strtolower($row[11]));
-                $clientLanguage = trim(strtolower($row[12]));
-                $remarque = trim(strtolower($row[13]));
-                $repName = trim(strtolower($row[14]));
+                $agencyName = trim(strtolower($row[2]));
+                $tipoTransfert = trim($row[3]);
+                $flightNumber = trim(strtolower($row[4]));
+                $airportName = trim(strtolower($row[5]));
+                $reservationNumber = trim(strtolower($row[6]));
+                $clientName = trim(strtolower($row[7]));
+                $adult = trim($row[8]);
+                $children = trim($row[9]);
+                $bb = trim($row[10]);
+                $pax = trim($row[11]);
+                $hotelName = trim(strtolower($row[12]));
+                $clientLanguage = trim(strtolower($row[13]));
+                $remarque = trim(strtolower($row[14]));
+                $repName = trim(strtolower($row[15]));
                 
                 // traitement des dates
                 $date= explode("/", $transferDate);
 /*                 if (strlen($date[0]) < 2) { $date[0] = '0'.$date[0]; }
-                if (strlen($date[1]) < 2) { $date[1] = '0'.$date[1]; } */
-                $dateFormat = $date[2] . '-' . $date[0] .'-'. $date[1];
+                if (strlen($date[1]) < 2) { $date[1] = '0'.$date[1]; } 
+                */
+
+                $dateFormat = $date[2] . '-' . $date[1] .'-'. $date[0];
                 //dump('date2: ' . $date[2] . ' date0: ' . $date[0] .' date1: '. $date[1] . '---' . $dateFormat . ' ' . $clientName);             
                 $arrivalDate = new DateTimeImmutable($dateFormat);
                 $arrivalhour = new DateTimeImmutable($dateFormat . ' 00:00' );
@@ -1050,7 +1052,7 @@ class HomeController extends AbstractController
                 $status = $statusRepository->find(1);
                 // TODO: VIRER CETTE PARTIE SUR LES REPS ? ************************************************************************************
                 // regarde si cette agence existe sinon tu la crée
-                $rep = $userRepository->findOneBy(['username' => $repName]);
+                /* $rep = $userRepository->findOneBy(['username' => $repName]);
                 if (!$rep) {
                     $rep = new User();
                     $rep->setArea($area);
@@ -1059,7 +1061,7 @@ class HomeController extends AbstractController
                     $rep->setPassword('$2y$13$esUOkXdEI6y6hYwoSghTI.kLdfI5BQ5CnBNgB2gw4dCtEc3./c/32');
                     $manager->persist($rep);
                     $manager->flush();
-                }
+                } */
                 // TODO: FIN ******************************************************************************************************************************
 
                 // regarde si cette agence existe sinon tu la crée
@@ -1104,7 +1106,7 @@ class HomeController extends AbstractController
                 
                 $newTransferArrival = new TransferArrival();
                 // TODO: a conserver ? *************************** 
-                $newTransferArrival->setStaff($rep);
+                // $newTransferArrival->setStaff($rep);
                 // TODO: a conserver ? *************************** 
                 
                 $newTransferArrival->setStatus($status);
@@ -1119,10 +1121,9 @@ class HomeController extends AbstractController
                 $newTransferArrival->setHour($arrivalhour);
                 $newTransferArrival->setMeetingAt($meetingAt);
                 $manager->persist($newTransferArrival);
-
-            
-                
-/*                 $record['Agencia'] = trim(strtolower($record['Customer']));
+        
+                /*                
+                $record['Agencia'] = trim(strtolower($record['Customer']));
                 $record['Tipo traslado'] = trim($record['Sale Type Code']); // shuttle/private/collective
                 $record['flight'] = trim(strtolower($record['Flight'])); */
                 
