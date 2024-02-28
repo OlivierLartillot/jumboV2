@@ -818,7 +818,7 @@ class TransferJoanController extends AbstractController
             $transportCompany = $row[11];
             
             $currentClient = $customerCardRepository->findOneBy(['holder' => $client]);
-            dd($currentClient);
+            
             $currentHotel = $airportHotelRepository->findOneBy(['name' => $hotel]);
             $currentAirport = $airportHotelRepository->findOneBy(['name' => $airport]);
             $currentTransportCompany = $transportCompanyRepository->findOneBy(['name' => $transportCompany]);
@@ -861,7 +861,7 @@ class TransferJoanController extends AbstractController
             $rowNumber++; 
         }
 
-
+        
         $manager->flush();
         return $this->redirectToRoute('app_transfer_import', [
             'numberOfRows' => $rowNumber,
