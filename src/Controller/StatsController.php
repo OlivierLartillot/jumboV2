@@ -94,7 +94,7 @@ class StatsController extends AbstractController
             'reps' => $reps
         ]);
     }
-    #[Route('/stats/example', name: 'app_stats_exemple')]
+    #[Route('/stats/example', name: 'app_stats_example')]
     public function statsExample(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
@@ -138,8 +138,8 @@ class StatsController extends AbstractController
                         'rgb(54, 162, 235)',
                         'rgb(255, 205, 86)'
                       ],
-                    'hoverOffset'=> 4,
-                    'borderColor' => 'rgb(255, 99, 132)',
+                    'hoverOffset'=> 30,
+                    //'borderColor' => 'rgb(255, 99, 132)',
                     'data' => [300, 50, 100],
                 ],
             ],

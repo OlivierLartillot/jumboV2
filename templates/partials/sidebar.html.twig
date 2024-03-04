@@ -42,6 +42,19 @@
                         <span>{% trans %}Dashboard{% endtrans %}</span>
                     </a>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-chart-pie-alt"></i>
+                        <span>{% trans %}Stats{% endtrans %}</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li><a href="{{ path('app_stats_check_history')}}"><i class="uil-check-square"></i>{% trans %}Checked History{% endtrans %}</a></li>
+                        <li><a href="{{ path('app_stats_example')}}"><i class="uil-chart-line"></i>{% trans %}Example Charts{% endtrans %}</a></li>
+                    </ul>
+                </li>
+
+
+
                 {% if ( ("ROLE_HULK" in app.user.roles) or 
                         ("ROLE_SUPERMAN" in app.user.roles) or 
                         ("ROLE_OPERATIONS" in app.user.roles) or 
