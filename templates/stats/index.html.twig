@@ -1,27 +1,276 @@
-{{ include('partials/header-reproupement.html.twig') }}
+{{ include('partials/main.html.twig') }}
 
-    {{ include('partials/page-title.html.twig', {pagetitle: 'General Settings', title: 'New Client Status'}) }}
-    <h1>Create new Status</h1>
+    <head>
+
+        {{ include('partials/title-meta.html.twig', {title: 'Stats'}) }}
+
+        {{ include('partials/head-css.html.twig') }}
+
+        {{ include('partials/head-css.html.twig') }}
 
 
-        <div class="d-flex flex-wrap justify-content-around">
-   
-            <div class="col-lg-6">
-                {{ render_chart(chart) }}
+    <style>
+         .just-for-print {
+            display: none;
+         }
+            @page{
+                margin: 2cm 1.5cm;
+            }
+        @media print{
+            /* Je cache le header footer*/
+            .menu,
+            .footer, .no-print{display:none}
+            /* je supprime le fond  et je change la couleur de police */
+            #background{
+                background-image :  none; 
+                color:#000;  
+                display:inline-block;
+            }
+            .just-for-print {
+                display:block;
+            }
+            /* Je supprimme les bordures */
+            p{border:0;}
+            .table-responsive {
+                width:100%;
+                margin:auto;
+            }
+
+        }
+    </style>        
+
+
+    </head>
+
+    {{ include('partials/body.html.twig') }}
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'Transportation', title: 'Transfer calculation'|trans}) }}
+
+<form method="GET">
+    <label class="form-label no-print">{% trans %}Search date{% endtrans %}</label>
+    <div class="row no-print mb-3">
+        <div class="col-md-3 col-lg-2">
+                    {% set now = "now"|date("Y-m-d") %}
+                    {% set firstDay = "now"|date("Y-m-01") %}
+                    <input class="form-control " name="dateStart" placeholder="Start Date" type="date" value="{{ (app.request.query.get('dateStart') != '') ? app.request.query.get('dateStart') : firstDay }}" id="dateStart">
+        </div>
+        <div class="col-md-3 col-lg-2">
+                <input class="form-control " name="dateEnd" placeholder="End Date" type="date" value="{{ (app.request.query.get('dateEnd') != '') ? app.request.query.get('dateEnd') : now }}" id="dateEnd">                               
+        </div>
+    </div>
+
+    <div class="row no-print">
+
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="airportOrBriefing" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All{% endtrans %}</option>                  
+                    <option value="1" {{ (app.request.query.get('airportOrBriefing') == 1) ? 'selected' : '' }}>{% trans %}Airport{% endtrans %}</option>
+                    <option value="2" {{ (app.request.query.get('airportOrBriefing') == 2) ? 'selected' : '' }}>{% trans %}Briefing{% endtrans %}</option>
+                </select>
+                <label for="floatingSelectGrid">{% trans %}Aiport or briefing ?{% endtrans %}</label>
             </div>
-
-            <div class="col-lg-6">
-
-            {# You can pass HTML attributes as a second argument to add them on the <canvas> tag #}
-                {{ render_chart(chart, {'class': 'my-chart'}) }}
+        </div>
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="check" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All{% endtrans %}</option>                  
+                    <option value="1" {{ (app.request.query.get('check') == 1) ? 'selected' : '' }}>{% trans %}Checked{% endtrans %}</option>
+                    <option value="2" {{ (app.request.query.get('check') == 2) ? 'selected' : '' }}>{% trans %}No Checked{% endtrans %}</option>
+                </select>
+                <label for="floatingSelectGrid">{% trans %}is Checked ?{% endtrans %}</label>
             </div>
-
-            <div class="col-6 text-center my-5">
-                <h1>Répartition des clients</h1>
-                {{ render_chart(pie, {'class': 'my-chart'}) }}
-            </div>
-  
         </div>
 
 
-{{ include('partials/footer-regroupement.html.twig') }}
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="rep" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All Reps{% endtrans %}</option>
+                    
+                    {% for rep in reps %} 
+                        <option value="{{ rep.username }}" {{ (app.request.query.get('rep') == rep.username) ? 'selected' : '' }}>{{ rep.username|capitalize }}</option>
+                    {% endfor %}
+                    
+                </select>
+                <label for="floatingSelectGrid">{% trans %}Select a Rep{% endtrans %}</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="area" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All areas{% endtrans %}</option>
+                    {#
+                     {% for uniqueArea in uniqueAreas|sort((a,b) => a.area <=> b.area) %} 
+                        <option value="{{ uniqueArea.area }}" {{ (app.request.query.get('area') == uniqueArea.area) ? 'selected' : '' }}>{{ uniqueArea.area }}</option>
+                    {% endfor %} 
+                    #}
+                </select>
+                <label for="floatingSelectGrid">{% trans %}Select an area{% endtrans %}</label>
+            </div>
+        </div>
+
+{#         <div class="col-md-2">
+            <div class="form-floating mb-3">
+                <select name="type" class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                    <option value="all" selected>{% trans %}All types{% endtrans %}</option>                  
+                    <option value="1" {{ (app.request.query.get('type') == 1) ? 'selected' : '' }}>{% trans %}Collective{% endtrans %}</option>
+                    <option value="2" {{ (app.request.query.get('type') == 2) ? 'selected' : '' }}>{% trans %}Private{% endtrans %}</option>
+                </select>
+                <label for="floatingSelectGrid">{% trans %}Select a type{% endtrans %}</label>
+            </div>
+        </div> #}
+    </div>
+    <div class="row no-print">
+        <div class="text-md-start col-md-2 ">
+            <input type="submit" class="btn btn-primary mb-3">
+        </div>
+    </div>
+
+</form>
+
+ <div class="card no-print">
+        <div class="card-body">
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Graph
+                    </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <div class="d-flex">
+                                <div class="col-6 text-center">
+                                    <h2>Airport</h2>
+                                    {{ render_chart(airportPie, {'class': 'my-chart'}) }}                        
+                                </div>
+                                <div class="col-6 text-center">
+                                    <h2>Briefing</h2>
+                                    {{ render_chart(briefingPie, {'class': 'my-chart'}) }}                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<div class="">
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center my-3 no-print">
+                <form>
+                    <input class="btn btn-success .btn-soft-success  waves-effect waves-light btn-sm" id="impression" name="impression" type="button" onclick="imprimer_page()" value="{% trans %}Print{% endtrans %}" />
+                </form>
+            </div>
+            <h1 class=" text-center my-5">{% trans %}Customer check history{% endtrans %}</h1>
+
+            <div class="d-flex my-3 justify-content-center">
+                <div class="btn btn-outline-primary me-3">
+                    Airport: {{totalCheckAirport}} / {{totalNumberAirport}} ({{ ((totalCheckAirport * 100) / totalNumberAirport)|round(1, 'floor') }}%)<br>
+                </div>
+                <div class="btn btn-outline-primary ms-3">
+                    Briefing: {{totalCheckBriefing}} / {{totalNumberBriefing}} ({{ ((totalCheckBriefing * 100) / totalNumberBriefing)|round(1, 'floor') }}%)
+                </div>
+            </div>
+
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered border-primary mb-0 text-center">
+
+                    <thead class="bg-primary bg-gradient text-light border-end-light">
+                        <tr>
+                            <th>Staff</th>
+                            <th>Reservation Number</th>
+                            <th>Client</th>
+                            <th>Type</th>
+                            <th>Is checked ?</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for check in checkedHistory %}
+                            <tr>
+                                <td>{{ check.updatedBy }}</td>
+                                <td>{{ check.customerCard.reservationNumber}}</td>
+                                <td>{{check.customerCard.holder}}</td>
+                                <td>{{ check.type == 1 ? '<i class="uil-plane-arrival"></i> Airport' : '<i class="uil-pen"></i> Briefing'  }}</td>
+                                <td>{{ check.isChecked ? 'yes' : 'no' }}</td>
+                                <td>{{ check. createdAt|date('d-m-Y H:i')}}</td>
+                            </tr>
+                            {% endfor %}
+                        {#
+                         <tfooter>
+                            <tr>
+                                <th>Total</th>
+                            </tr>
+                        </tfooter> 
+                        #}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+        </div>
+        <!-- END layout-wrapper -->
+
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <!-- plugins -->
+        <script src="/libs/select2/js/select2.min.js"></script>
+        <script src="/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+        <script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script src="/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+        <script src="/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+        <script src="/libs/@chenfengyuan/datepicker/datepicker.min.js"></script>
+
+        <!-- datepicker js -->
+        <script src="/libs/flatpickr/flatpickr.min.js"></script>
+
+        <!-- init js -->
+        <script src="/js/pages/form-advanced.init.js"></script>
+
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+
+        <script type="text/javascript">
+              function imprimer_page(){
+              window.print();
+              }
+        </script>
+
+    </body>
+</html>

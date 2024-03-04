@@ -1,0 +1,35 @@
+{{ include('partials/header-reproupement.html.twig') }}
+
+    {{ include('partials/page-title.html.twig', {pagetitle: 'stats', title: 'Statistics example pages'}) }}
+    <h1>Statistics example pages</h1>
+
+
+        <div class="row justify-content-center">
+            <div class="col-xl-12 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap justify-content-around">
+   
+                            <div class="col-lg-6">
+                                {{ render_chart(chart) }}
+                            </div>
+
+                            <div class="col-lg-6">
+
+                            {# You can pass HTML attributes as a second argument to add them on the <canvas> tag #}
+                                {{ render_chart(chart, {'class': 'my-chart'}) }}
+                            </div>
+
+                            <div class="col-6 text-center my-5">
+                                <h1>Répartition des clients</h1>
+                                {{ render_chart(pie, {'class': 'my-chart'}) }}
+                            </div>
+                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{{ include('partials/footer-regroupement.html.twig') }}

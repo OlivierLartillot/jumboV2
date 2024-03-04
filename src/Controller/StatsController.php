@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Repository\CheckedHistoryRepository;
+use App\Repository\CustomerCardRepository;
+use App\Repository\TransferArrivalRepository;
+use App\Repository\TransferVehicleArrivalRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,8 +15,87 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 class StatsController extends AbstractController
 {
-    #[Route('/stats', name: 'app_stats')]
-    public function index(ChartBuilderInterface $chartBuilder): Response
+    #[Route('/stats/CheckHistory', name: 'app_stats_check_history')]
+    public function index(CheckedHistoryRepository $checkedHistoryRepository, 
+                          CustomerCardRepository $customerCardRepository,
+                          TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
+                          ChartBuilderInterface $chartBuilder,
+                          UserRepository $userRepository): Response
+    {
+
+
+        /* $numberTotalOfClients = count($customerCardRepository->findAll());
+        $briefingsChecks = $customerCardRepository->findBy(['isChecked' => true]); 
+
+        $numberTotalOfVehicleArrivals = count($transferVehicleArrivalRepository->findAll());
+        $airportsChecks = $transferVehicleArrivalRepository->findBy(['isChecked' => true]); */
+
+        $checkedHistory = $checkedHistoryRepository->findAll();
+        // exemple simple sans repository
+        $totalNumberAirport = count($checkedHistoryRepository->findBy(['type' => 1]));
+        $totalCheckAirport = count($checkedHistoryRepository->findBy(['type' => 1, 'isChecked' => 1]));
+
+        $totalNumberBriefing = count($checkedHistoryRepository->findBy(['type' => 2]));
+        $totalCheckBriefing = count($checkedHistoryRepository->findBy(['type' => 2, 'isChecked' => 1]));
+        
+        $reps = $userRepository->findAll();
+
+        /* dump($totalNumberAirport);
+        dump($totalCheckAirport);
+        dump($totalNumberBriefing);
+        dump($totalCheckBriefing);
+ */
+
+        $airportPie = $chartBuilder->createChart(Chart::TYPE_PIE);
+
+        $airportPie->setData([
+            'labels' => ['Checked','Not Checked'],
+            'datasets' => [
+                [
+                    'label' => 'Nombre de Clients',
+                    'backgroundColor' => [
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)',
+                    ],
+                    'hoverOffset'=> 4,
+                    // 'borderColor' => 'rgb(255, 99, 132)',
+                    'data' => [$totalCheckAirport, $totalNumberAirport-$totalCheckAirport],
+                ],
+            ],
+        ]);
+
+        $briefingPie = $chartBuilder->createChart(Chart::TYPE_PIE);
+
+        $briefingPie->setData([
+            'labels' => ['Checked','Not Checked'],
+            'datasets' => [
+                [
+                    'label' => 'Nombre de Clients',
+                    'backgroundColor' => [
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)',
+                    ],
+                    'hoverOffset'=> 4,
+                    // 'borderColor' => 'rgb(255, 99, 132)',
+                    'data' => [$totalCheckBriefing, $totalNumberBriefing-$totalCheckBriefing],
+                ],
+            ],
+        ]);
+
+
+        return $this->render('stats/index.html.twig', [
+            'checkedHistory' => $checkedHistory,
+            'totalNumberAirport' => $totalNumberAirport,
+            'totalCheckAirport' => $totalCheckAirport,
+            'totalNumberBriefing' => $totalNumberBriefing ,
+            'totalCheckBriefing' => $totalCheckBriefing,
+            'airportPie' => $airportPie,
+            'briefingPie' => $briefingPie,
+            'reps' => $reps
+        ]);
+    }
+    #[Route('/stats/example', name: 'app_stats_exemple')]
+    public function statsExample(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
 
@@ -71,7 +155,7 @@ class StatsController extends AbstractController
         ]); */
 
 
-        return $this->render('stats/index.html.twig', [
+        return $this->render('stats/stats_example.html.twig', [
             'chart' => $chart,
             'pie' => $pie
         ]);
