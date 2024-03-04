@@ -189,11 +189,15 @@
                 <div class="btn btn-outline-primary me-3">
                     {% if totalNumberAirport > 0 %}
                         Airport: {{totalCheckAirport}} / {{totalNumberAirport}} ({{ ((totalCheckAirport * 100) / totalNumberAirport)|round(1, 'floor') }}%)<br>
+                    {% else %}
+                        Airport: No Result
                     {% endif %}
                 </div>
                 <div class="btn btn-outline-primary ms-3">
                     {% if totalNumberBriefing %}
                         Briefing: {{totalCheckBriefing}} / {{totalNumberBriefing}} ({{ ((totalCheckBriefing * 100) / totalNumberBriefing)|round(1, 'floor') }}%)
+                    {% else %}
+                        Briefing: No Result
                     {% endif %}
                 </div>
             </div>
