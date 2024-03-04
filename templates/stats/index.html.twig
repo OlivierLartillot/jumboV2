@@ -187,10 +187,14 @@
 
             <div class="d-flex my-3 justify-content-center">
                 <div class="btn btn-outline-primary me-3">
-                    Airport: {{totalCheckAirport}} / {{totalNumberAirport}} ({{ ((totalCheckAirport * 100) / totalNumberAirport)|round(1, 'floor') }}%)<br>
+                    {% if totalNumberAirport > 0 %}
+                        Airport: {{totalCheckAirport}} / {{totalNumberAirport}} ({{ ((totalCheckAirport * 100) / totalNumberAirport)|round(1, 'floor') }}%)<br>
+                    {% endif %}
                 </div>
                 <div class="btn btn-outline-primary ms-3">
-                    Briefing: {{totalCheckBriefing}} / {{totalNumberBriefing}} ({{ ((totalCheckBriefing * 100) / totalNumberBriefing)|round(1, 'floor') }}%)
+                    {% if totalNumberBriefing %}
+                        Briefing: {{totalCheckBriefing}} / {{totalNumberBriefing}} ({{ ((totalCheckBriefing * 100) / totalNumberBriefing)|round(1, 'floor') }}%)
+                    {% endif %}
                 </div>
             </div>
 
