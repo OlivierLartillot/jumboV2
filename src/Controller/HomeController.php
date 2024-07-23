@@ -44,7 +44,6 @@ class HomeController extends AbstractController
                             UserRepository $userRepository
                             )
     {
-
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
         /***** section  Transfer Management ******/
