@@ -1157,6 +1157,18 @@
         <source>Portuguese</source>
         <target>Portugais</target>
       </trans-unit>
+      <trans-unit id="mLAbiQaR" resname="Russian">
+        <source>Russian</source>
+        <target>Russe</target>
+      </trans-unit>
+      <trans-unit id="mLAbiQaG" resname="German">
+        <source>German</source>
+        <target>Allemand</target>
+      </trans-unit>
+      <trans-unit id="mLAbiQaPz" resname="Polish">
+        <source>Polish</source>
+        <target>Polonais</target>
+      </trans-unit>
       <trans-unit id="zJeEt59" resname="Expression that appears when a representative uses the variable for WhatsApp text in Portuguese">
         <source>Expression that appears when a representative uses the variable for WhatsApp text in Portuguese</source>
         <target>Expression qui apparaît lorsque le représentant utilise la variable pour le texte WhatsApp en portugais</target>
