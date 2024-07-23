@@ -2177,6 +2177,62 @@
         <source>Please note that the meeting date does not coincide with the arrival date.</source>
         <target>La fecha de la reunión no coincide con la fecha de llegada.</target>
       </trans-unit>
+      <trans-unit id="ok5mxhv" resname="Print Label">
+        <source>Print Label</source>
+        <target>__Print Label</target>
+      </trans-unit>
+      <trans-unit id="kH1M9F9" resname="Differencies">
+        <source>Differencies</source>
+        <target>__Differencies</target>
+      </trans-unit>
+      <trans-unit id="GskfWZh" resname="There are differences between the import booking file and the import transfers file.">
+        <source>There are differences between the import booking file and the import transfers file.</source>
+        <target>__There are differences between the import booking file and the import transfers file.</target>
+      </trans-unit>
+      <trans-unit id="tKc2V0D" resname="Stats">
+        <source>Stats</source>
+        <target>__Stats</target>
+      </trans-unit>
+      <trans-unit id="yDxtUfu" resname="Checked History">
+        <source>Checked History</source>
+        <target>__Checked History</target>
+      </trans-unit>
+      <trans-unit id="s.nqzur" resname="Example Charts">
+        <source>Example Charts</source>
+        <target>__Example Charts</target>
+      </trans-unit>
+      <trans-unit id="pSrOQg8" resname="All">
+        <source>All</source>
+        <target>__All</target>
+      </trans-unit>
+      <trans-unit id="BJCpr0b" resname="Aiport or briefing ?">
+        <source>Aiport or briefing ?</source>
+        <target>__Aiport or briefing ?</target>
+      </trans-unit>
+      <trans-unit id="Dv2SozW" resname="Checked">
+        <source>Checked</source>
+        <target>__Checked</target>
+      </trans-unit>
+      <trans-unit id="h_TMX9." resname="No Checked">
+        <source>No Checked</source>
+        <target>__No Checked</target>
+      </trans-unit>
+      <trans-unit id="15f3ESi" resname="is Checked ?">
+        <source>is Checked ?</source>
+        <target>__is Checked ?</target>
+      </trans-unit>
+      <trans-unit id="Vp_Mx95" resname="Customer check history">
+        <source>Customer check history</source>
+        <target>__Customer check history</target>
+      </trans-unit>
+      <trans-unit id="9Jk9dWn" resname="Transfer Arrival">
+        <source>Transfer Arrival</source>
+        <target>__Transfer Arrival</target>
+      </trans-unit>
+      <trans-unit id="F44RBQJ" resname="Manage Client Card">
+        <source>Manage Client Card</source>
+        <target>__Manage Client Card</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

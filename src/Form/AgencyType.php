@@ -23,6 +23,9 @@ class AgencyType extends AbstractType
                     'French' => 'fr',
                     'Italian' => 'it',
                     'Portuguese' => 'po',
+                    'Russian' => 'ru',
+                    'German' => 'de',
+                    'Polish' => 'pl',
                 ],
                 'multiple' => false,
                 'expanded' => true
