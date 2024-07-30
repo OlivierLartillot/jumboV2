@@ -23,19 +23,40 @@
             {% for customer_card in customer_cards %}
                 <div class="col-xl-4 col-sm-6">
                     {% if customer_card.transferArrivals|length > 1 %}<div class="card border border-danger">{% else %}<div class="card"> {% endif %}
-                        {% if customer_card.transferArrivals[0].staff is not null %}
-                            {% if customer_card.transferArrivals|length > 1 %}
-                            <div class="text-end m-3">
-                                {% for transferArrival in customer_card.transferArrivals %}
-                                <span class="badge rounded-pill bg-danger p-2">{{ transferArrival.staff }}</span>
-                                {% endfor %}
-                            </div>
-                            {% else %}
-                            <div class="ribbon ribbon-top-right">
-                                <span>{{ customer_card.transferArrivals[0].staff }}</span>
-                            </div>
-                            {% endif %}
-                        {% endif %}
+                       
+
+                            {% for transferArrival in customer_card.transferArrivals %}
+                                {% if transferArrival.staff is not null %}
+                                    {% if customer_card.transferArrivals|length > 1 %}
+                                        <div class="text-end m-3">
+                                            {% for transferArrival in customer_card.transferArrivals %}
+                                            <span class="badge rounded-pill bg-danger p-2">{{ transferArrival.staff }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="ribbon ribbon-top-right">
+                                            <span>{{ customer_card.transferArrivals[0].staff }}</span>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                
+                            {#  Créé une erreur key[0] si le transferArrivals n'existe pas 
+                                -> cas d'un client qui n'a plus d'arrivée associée                       
+                                {% if customer_card.transferArrivals[0].staff is not null %}
+                                {% if customer_card.transferArrivals|length > 1 %}
+                                <div class="text-end m-3">
+                                    {% for transferArrival in customer_card.transferArrivals %}
+                                    <span class="badge rounded-pill bg-danger p-2">{{ transferArrival.staff }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <div class="ribbon ribbon-top-right">
+                                    <span>{{ customer_card.transferArrivals[0].staff }}</span>
+                                </div>
+                                {% endif %}
+                            {% endif %} 
+                            #}
                         <div class="card-body">
                             <div class="d-flex align-items-start">
                                 <div class="d-none d-md-block flex-shrink-0 me-4">
