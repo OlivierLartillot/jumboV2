@@ -1,5 +1,10 @@
 <?php
 
+/***** FAQ
+    Ce fichier était le fichier de base
+    Il utilise le fichier transformé par Joan avant d'être envoyé et  traité par ce fichier
+*/
+
 namespace App\Controller;
 
 use App\Entity\AirportHotel;
@@ -29,12 +34,12 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('team-transfer')]
-class TransferJoanController extends AbstractController
-{   
-    // Route qui reçoit le formulaire et éventuellement les erreurs lorsqu'il est envoyé
-    #[Route('/import/transfer', name: 'app_transfer_import', methods: ['GET'])]
+class TransferJoanControllerSaveVersionJoan extends AbstractController
+{
+    #[Route('/import/transfer/', name: 'app_transfer_import', methods: ['GET'])]
     public function import(TransferJoanRepository $transferJoanRepository, Request $request): Response
     {
+
         $errorClients = ($request->get('errorClients')) ? $request->get('errorClients') : [];
         $numberOfRows = $request->get('numberOfRows');
         $insertedLine = $request->get('insertedLine') ? $request->get('insertedLine') : 0;
@@ -52,7 +57,6 @@ class TransferJoanController extends AbstractController
         ]);
     }
 
-    // JUMBO: Route qui traite le formulaire
     #[Route('/traitement_xls/jumbo', name: 'admin_transfer_traitement_csv_jumbo', methods: ['POST'])]
     public function index(Request $request, 
                           EntityManagerInterface $manager,
@@ -67,7 +71,7 @@ class TransferJoanController extends AbstractController
                           TranslatorInterface $translator
                           ): Response
     {
-        
+
         $fileToUpload = $request->files->get('drag_and_drop')["fileToUpload"];
        /*  $mimeType = $fileToUpload->getMimeType(); */
         $error = $fileToUpload->getError();
@@ -115,9 +119,8 @@ class TransferJoanController extends AbstractController
         
         // 1. on va récupérer le nom pour savoir si c est llegada/interHotel/salida
         // LLEGADAS - INTERHOTEL - SALIDAS -> llegadas - interhotel - salidas
-        $natureTransfer = strtolower($rows[1][12]);  
-  
-
+        $natureTransfer = strtolower($rows[2][1]);  
+        
         if (in_array($natureTransfer,$ecrituresDeLlegada)) { 
             $natureTransferRepository = $transferArrivalRepository;
             $newTransfer = new TransferArrival ;
@@ -138,19 +141,19 @@ class TransferJoanController extends AbstractController
             foreach ($ecrituresDeInterHotel as $ecriture) { $listeInterHotel .= '- ' . $ecriture . ' '; }
             foreach ($ecrituresDeSalidas as $ecriture) { $listesalidas .= '- ' . $ecriture . ' '; }
 
-            $errorsImportManager->addErrors('Code import 30 - In cell M1 should be written:');
+            $errorsImportManager->addErrors('Code import 30 - In cell B3 should be written:');
             $errorsImportManager->addErrors('<b>Arrival:</b> ' . $listeLlegada);
             $errorsImportManager->addErrors('<b>InterHotel:</b> ' .$listeInterHotel);
             $errorsImportManager->addErrors('<b>Departure:</b>  ' . $listesalidas);
             return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' =>  $errorsImportManager->getErrors()]);
         }
         
-        if (strtolower($rows[0][0]) != 'num reserva') {
-            $errorsImportManager->addErrors('Code import 31 - In cell A1 should be written: Num Reserva');
+        if (strtolower($rows[8][0]) != 'num reserva') {
+            $errorsImportManager->addErrors('Code import 31 - In cell A9 should be written: Num Reserva');
             return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
         }
         // check toute les lignes et problèmes en amont pour ne pas executer le fichier
-        $firstRow = 1;
+        $firstRow = 9;
         $i = 0;
         // on remplit pour voir si il y a plusieurs dates dans ce fichier
         $dates = [];
@@ -160,7 +163,7 @@ class TransferJoanController extends AbstractController
 
         foreach ($rows as $row) {
             // les lignes à ignorer
-            if ( ($i<$firstRow) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'Num Reserva' OR $row[1] == "Agencia") ) {
+            if ( ($i<$firstRow) AND ($row[0] == NULL OR $row[1] == NULL OR $row[2] == NULL) OR ($row[0] == 'N. Reserva' OR $row[1] == "Agencia") ) {
                 $i++;
                 continue;
             }    
@@ -224,7 +227,7 @@ class TransferJoanController extends AbstractController
                     }
                 }
                 //sinon renvoie l'erreur
-                if ((isset($natureTransferError)) and $natureTransferError ) {
+                if ((isset($natureTransferError)) and ($natureTransferError) ) {
                     $errorsImportManager->addErrors('Code import 34 - the nature of the transfer declared in B3 is not the same as in/out.'); 
                     return $this->render("bundles/TwigBundle/Exception/error-import.html.twig", ['errorDetails' => $errorsImportManager->getErrors()]);
                 }
@@ -249,7 +252,7 @@ class TransferJoanController extends AbstractController
                 $reservationNumber = trim($row[0]);
                 $serviceNumbersInCSV[] = $reservationNumber;
                 $vuelo = trim(strtoupper($row[3])); 
-                $reservationNumberFlightNumberIncsv[] = $reservationNumber .'-'. strtolower($vuelo) ;
+                $reservationNumberFlightNumberIncsv[] = $reservationNumber .'-'. $vuelo ;
             }
         }
         $countEachServiceNumbersInCSV = array_count_values ($serviceNumbersInCSV);
@@ -443,9 +446,8 @@ class TransferJoanController extends AbstractController
                             $newTransfer->setFlightNumber(strtoupper($vuelo));
                             $newTransfer->setHour($hour);
                         }
-                        $manager->persist($newTransfer);    
+                        $manager->persist($newTransfer);      
                         $insertedLine++;
-                    
                     }                       
                 }
             
@@ -637,31 +639,30 @@ class TransferJoanController extends AbstractController
 
         $manager->flush();
         
- 
 
         //****************************** Recherche des  Arrivéées de ce jour qui ne sont plus présentes dans le CSV ******************************//
         //****************************************************************************************************************************************//
-            if (isset($dateFormat) and ($dateFormat!= null)) {
+            if ( (isset($dateFormat)) and ($dateFormat!= null) ) {
             
                 if (in_array($natureTransfer,$ecrituresDeLlegada)) {
                     // construit un tableau pour chaque arrivée de ce jour
-                    $clientNumberArrivalsInBdd = [];
+                    $clientNumberArrivalsInBdd = [];    
                     // recherche toute les arrivées de ce jour
                     $arrivalVehicles = $transferVehicleArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
                     // les arrivées de ce jour dans un tableau avec 182232-cm802 (reservationNumber, flightNumber)
                     foreach ($arrivalVehicles as $arrivalVehicle) { 
                         $clientNumberArrivalsInBdd[] = $arrivalVehicle->getTransferArrival()->getCustomerCard()->getReservationNumber() .'-'.  strtolower($arrivalVehicle->getTransferArrival()->getFlightNumber());
                     }
-
                     // on regarde si il y a des diff ( des numéros qui étaient en bdd mais plus dans le csv)
                     $nonPresentsDansLeNouveauCSV = array_diff($clientNumberArrivalsInBdd, $reservationNumberFlightNumberIncsv);
-
+                    
                     // sinon on peut supprimer
                     foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
 
                         $dataToDelete = explode('-',$toDelete);
+
                         $customerCard = $customerCardRepository->findOneBy(["reservationNumber" => $dataToDelete[0]]);
-                        $flightNumber = $dataToDelete[1];
+                        $flightNumber = $dataToDelete[1];   
 
                         // on re-récupère les arrivées  avec le numéro de vol qui correspond !!!
                         $arrivalsDayInBdd = $transferArrivalRepository->findBy(['customerCard' => $customerCard, 
@@ -672,6 +673,8 @@ class TransferJoanController extends AbstractController
                         foreach ($arrivalsDayInBdd as $arrival) {   
                             $transferVehicleArrivalRepository->remove($arrival->getTransferVehicleArrival(), true);
                         }
+                    
+                    
                     }
                 }
                 else if (in_array($natureTransfer,$ecrituresDeInterHotel)) {
@@ -706,7 +709,6 @@ class TransferJoanController extends AbstractController
                         $clientNumberTransfersInBdd[] = $departure->getCustomerCard()->getReservationNumber() .'-'.  strtolower($departure->getFlightNumber());
                     }
                     $nonPresentsDansLeNouveauCSV = array_diff($clientNumberTransfersInBdd, $reservationNumberFlightNumberIncsv);
-
                     // sinon on peut supprimer
                     foreach ($nonPresentsDansLeNouveauCSV as $toDelete) {
 
@@ -745,7 +747,7 @@ class TransferJoanController extends AbstractController
         ]); */
     }
     
-    // Meeting Point: Route qui traite le formulaire
+
     #[Route('/traitement_xls/meetingPoint', name: 'admin_transfer_traitement_csv_meetingPoint', methods: ['POST'])]
     public function indexMeetingPoint(Request $request, 
                           EntityManagerInterface $manager,
@@ -873,6 +875,7 @@ class TransferJoanController extends AbstractController
         ]);
 
     }
+
 
     #[Route('/new', name: 'app_transfer_joan_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TransferJoanRepository $transferJoanRepository): Response
