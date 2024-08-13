@@ -342,7 +342,7 @@ class TransferJoanController extends AbstractController
             if ($nombre != null) {
                 $nombre=str_replace("\n"," ",$nombre);
                 $nombre=str_replace("\r"," ",$nombre);
-                $nombre = preg_replace('/- /', '-', $nombre);
+                $nombre = preg_replace('/- {0,}/', '-', $nombre);
             }
             if ($zonas != null) {
                 $zonas=str_replace("\n"," ",$zonas);
