@@ -342,6 +342,7 @@ class TransferJoanController extends AbstractController
             if ($nombre != null) {
                 $nombre=str_replace("\n"," ",$nombre);
                 $nombre=str_replace("\r"," ",$nombre);
+                $nombre = preg_replace('/- /', '-', $nombre);
             }
             if ($zonas != null) {
                 $zonas=str_replace("\n"," ",$zonas);
@@ -646,7 +647,7 @@ class TransferJoanController extends AbstractController
                 if (in_array($natureTransfer,$ecrituresDeLlegada)) {
                     // construit un tableau pour chaque arrivée de ce jour
                     $clientNumberArrivalsInBdd = [];
-                    // recherche toute les arrivées de ce jour
+                    // recherche toutes les arrivées de ce jour
                     $arrivalVehicles = $transferVehicleArrivalRepository->findBy(['date' => new DateTimeImmutable($dateFormat)]);
                     // les arrivées de ce jour dans un tableau avec 182232-cm802 (reservationNumber, flightNumber)
                     foreach ($arrivalVehicles as $arrivalVehicle) { 
