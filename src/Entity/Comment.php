@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CommentRepository;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -11,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ApiResource]
 class Comment
 {
     #[ORM\Id]
