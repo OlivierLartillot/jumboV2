@@ -6,6 +6,7 @@ use App\Repository\CustomerCardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerCardRepository::class)]
 class CustomerCard
@@ -13,15 +14,19 @@ class CustomerCard
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(groups: ['customersArrival'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 24)]
+    #[Groups(groups: ['customersArrival'])]
     private ?string $reservationNumber = null;
 
     #[ORM\Column(length: 24, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?string $jumboNumber = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(groups: ['customersArrival'])]
     private ?string $holder = null;
 
     #[ORM\Column(nullable: true)]
@@ -38,9 +43,11 @@ class CustomerCard
     private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'customerCards')]
+    #[Groups(groups: ['customersArrival'])]
     private ?Agency $agency = null;
 
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferArrival::class)]
+    #[Groups(groups: ['customersArrival'])]
     private Collection $transferArrivals;
 
     #[ORM\OneToMany(mappedBy: 'customerCard', targetEntity: TransferInterHotel::class)]

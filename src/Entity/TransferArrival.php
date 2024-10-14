@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TransferArrivalRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TransferArrivalRepository::class)]
 class TransferArrival
@@ -21,6 +22,7 @@ class TransferArrival
     private ?\DateTimeImmutable $dateHour = null; */
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?string $flightNumber = null;
 
     #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
@@ -29,28 +31,35 @@ class TransferArrival
 
     #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(groups: ['customersArrival'])]
     private ?AirportHotel $fromStart = null;
 
     #[ORM\ManyToOne(inversedBy: 'transferToArrivals')]
+    #[Groups(groups: ['customersArrival'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?AirportHotel $toArrival = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Groups(groups: ['customersArrival'])]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?\DateTimeImmutable $hour = null;
 
     #[ORM\OneToOne(mappedBy: 'transferArrival', cascade: ['persist', 'remove'])]
     private ?TransferVehicleArrival $transferVehicleArrival = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?int $adultsNumber = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?int $childrenNumber = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?int $babiesNumber = null;
 
     #[ORM\ManyToOne(inversedBy: 'transferArrivals')]
