@@ -15,8 +15,7 @@ class ApiController extends AbstractController
 {
 
 
-
-    #[Route('/api/bus', name: 'app_api_bus')]
+    #[Route('/api/bus', name: 'app_api_bus', methods: ['GET'])]
     public function bus(BusVoucherMappingRepository $busVoucherMappingRepository): Response
     {
 
@@ -28,7 +27,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/api/admin/bus', name: 'app_api_bus_admin')]
+    #[Route('/api/admin/bus', name: 'app_api_bus_admin', methods: ['GET'])]
     public function busAdmin(BusVoucherMappingRepository $busVoucherMappingRepository): Response
     {
 
@@ -41,7 +40,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/api/users', name: 'app_api')]
+    #[Route('/api/users', name: 'app_api', methods: ['GET'])]
     public function users(UserRepository $userRepository): Response
     {
 
@@ -58,7 +57,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/api/customers/{flightNumber}/{arrivalDate}', name: 'app_customers')]
+    #[Route('/api/customers/{flightNumber}/{arrivalDate}', name: 'app_customers', methods: ['GET'])]
     public function customersArrival(Request $request, CustomerCardRepository $customerCardRepository , $flightNumber, $arrivalDate): Response
     {
         //dd($flightNumber);
