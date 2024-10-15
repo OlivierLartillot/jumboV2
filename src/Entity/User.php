@@ -18,16 +18,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`user`')]
 /* #[ORM\EntityListeners(['App\EntityListener\UserListener'])] */
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(groups: ['user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank()]
     #[Assert\Length(min:2, max:180)]
+    #[Groups(groups: ['user'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 100, nullable: true)]

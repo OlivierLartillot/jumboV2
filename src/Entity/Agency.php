@@ -6,6 +6,7 @@ use App\Repository\AgencyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AgencyRepository::class)]
 class Agency
@@ -13,15 +14,18 @@ class Agency
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(groups: ['customersArrival'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(groups: ['customersArrival'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'agency', targetEntity: CustomerCard::class)]
     private Collection $customerCards;
 
     #[ORM\Column(length: 6, nullable: true)]
+    #[Groups(groups: ['customersArrival'])]
     private ?string $language = null;
 
     #[ORM\ManyToMany(targetEntity: PrintingOptions::class, mappedBy: 'Agencies')]

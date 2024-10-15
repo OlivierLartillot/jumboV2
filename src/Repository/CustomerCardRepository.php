@@ -567,6 +567,52 @@ class CustomerCardRepository extends ServiceEntityRepository
         return $requete;
     }
 
+/* *************************************************************************************************** */
+/* *************************************************************************************************** */
+/* **********************             API             ************************************************ */
+/* *************************************************************************************************** */
+/* *************************************************************************************************** */
+
+    /**
+     * @return [] Returns an array of customerCards objects with pagination informations (current page and totalpages)
+    */
+    public function findAllWithPagination($page, $limit)
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+        return $qb->getQuery()->getResult();
+    }
+
+
+
+    /**
+     * @return CustomerCard[] Returns an array of CustomerCard objects by flight Num and arrival date (day) 
+     * Attribution des représentants
+     */
+    public function findCustomerCardsByFlightAndDate($flightNumber, $arrivalDate): array
+    {
+
+        /*         
+        $dateStart, $dateEnd,
+        $dateStart = new DateTimeImmutable($dateStart);
+        $dateEnd = new DateTimeImmutable($dateEnd); 
+        */
+
+        $requete = $this->createQueryBuilder('c')
+            ->leftJoin('App\Entity\TransferArrival', 'transferArrival', 'WITH', 'c.id = transferArrival.customerCard')
+            ->where('transferArrival.flightNumber = :flightNumber')
+            ->andWhere('transferArrival.date = :date')
+            ->setParameter('flightNumber', $flightNumber)
+            ->setParameter('date', $arrivalDate);
+
+            $requete = $requete
+            ->getQuery()
+            ->getResult()
+        ;
+        return $requete;
+
+    }
 
 //    public function findOneBySomeField($value): ?CustomerCard
 //    {

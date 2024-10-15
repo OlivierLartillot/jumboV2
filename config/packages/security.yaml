@@ -55,6 +55,12 @@ security:
         - { path: ^/airport, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_AIRPORT] }
         - { path: ^/transportation, roles: [ROLE_HULK, ROLE_SUPERMAN, ROLE_TRANSFERS] }
         - { path: ^/pax, roles: [ROLE_HULK, ROLE_REP] }
+        ##################################################################################################################################
+        ###################################################          API           #######################################################
+        ##################################################################################################################################
+        - { path: ^/api/admin, roles: [ROLE_SUPERMAN, ROLE_API] }
+        
+
 
     role_hierarchy:
             ROLE_SUPERMAN:  [ROLE_USER, ROLE_AIRPORT_SUPERVISOR]
