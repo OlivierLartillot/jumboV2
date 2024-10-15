@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\api;
 
-use App\Repository\AgencyRepository;
 use App\Repository\BusVoucherMappingRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\UserRepository;
