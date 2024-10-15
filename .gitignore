@@ -19,3 +19,5 @@ php.ini.save.txt
 
 /public/.htaccess
 /public/clients/
+
+/jwt/
