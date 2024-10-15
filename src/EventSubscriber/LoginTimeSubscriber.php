@@ -83,12 +83,15 @@ class LoginTimeSubscriber implements EventSubscriberInterface
         } else {
 
             if ($route != 'app_login') {
-            $redirectUrl = $this->router->generate('app_login');
-            // Créez une réponse de redirection vers l'URL générée
-            $response = new RedirectResponse($redirectUrl);
 
-            // Assignez la réponse à l'événement
-            $event->setResponse($response);  
+                if ($route == 'app_api_public_test') { return ;}
+
+                $redirectUrl = $this->router->generate('app_login');
+                // Créez une réponse de redirection vers l'URL générée
+                $response = new RedirectResponse($redirectUrl);
+
+                // Assignez la réponse à l'événement
+                $event->setResponse($response);  
             }
               
         }

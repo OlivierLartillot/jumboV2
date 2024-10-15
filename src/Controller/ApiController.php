@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\api;
+namespace App\Controller;
 
+use App\Repository\AgencyRepository;
 use App\Repository\BusVoucherMappingRepository;
 use App\Repository\CustomerCardRepository;
 use App\Repository\UserRepository;
@@ -14,8 +15,9 @@ use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuild
 class ApiController extends AbstractController
 {
 
-
-    #[Route('/api/bus', name: 'app_api_bus', methods: ['GET'])]
+    // !!! modification du LoginTimeSubscriber pour permettre à cette route ublique de ne pas être
+    // renvoyée vers le login form
+    #[Route('/api/public/test', name: 'app_api_public_test', methods: ['GET'])]
     public function bus(BusVoucherMappingRepository $busVoucherMappingRepository): Response
     {
 
@@ -27,7 +29,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/api/admin/bus', name: 'app_api_bus_admin', methods: ['GET'])]
+    #[Route('/admin/api/bus', name: 'app_api_bus_admin', methods: ['GET'])]
     public function busAdmin(BusVoucherMappingRepository $busVoucherMappingRepository): Response
     {
 
