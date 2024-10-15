@@ -24,7 +24,7 @@ class ApiController extends AbstractController
             $busVoucherMappingRepository->findAll(),
             200,
             [],
-            
+            ['groups' => 'api_public_test']   
         );
     }
 

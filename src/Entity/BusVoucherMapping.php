@@ -14,17 +14,19 @@ class BusVoucherMapping
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(groups: ['bus_correspondence_admin'])]
+    #[Groups(groups: ['api_public_test', 'bus_correspondence_admin'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 15)]
-    #[Groups(groups: ['bus_correspondence_admin'])]
+    #[Groups(groups: ['api_public_test', 'bus_correspondence_admin'])]
     private ?string $busNumber = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(groups: ['api_public_test'])]
     private ?int $voucherNumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(groups: ['api_public_test'])]
     private ?\DateTimeInterface $correspondenceDate = null;
 
     #[Groups(groups: ['bus_correspondence_admin'])]
