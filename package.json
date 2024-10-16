@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+<<<<<<< ours
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/stimulus-bridge": "^3.0.0",
         "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",
@@ -11,6 +12,16 @@
         "regenerator-runtime": "^0.13.2",
         "tom-select": "^2.2.2",
         "webpack-notifier": "^1.6.0"
+=======
+        "@babel/core": "^7.17.0",
+        "@babel/preset-env": "^7.16.0",
+        "@symfony/webpack-encore": "^5.0.0",
+        "core-js": "^3.38.0",
+        "regenerator-runtime": "^0.13.9",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^5.1.0",
+        "webpack-notifier": "^1.15.0"
+>>>>>>> theirs
     },
     "license": "UNLICENSED",
     "private": true,
