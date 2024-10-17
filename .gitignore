@@ -20,4 +20,7 @@ php.ini.save.txt
 /public/.htaccess
 /public/clients/
 
-/jwt/
+/config/jwt/*.pem
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
