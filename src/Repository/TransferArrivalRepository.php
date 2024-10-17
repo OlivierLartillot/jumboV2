@@ -56,6 +56,24 @@ class TransferArrivalRepository extends ServiceEntityRepository
                     ->getResult();
     }
 
+    /** retourne le compte des arrivées multiples  
+     * cette requête sert sur le dashboard a savoir si il y a au moins un doublon a régler
+     *  
+     */
+    public function countMultiplesArrivals():array 
+    {
+
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+           ->where('t.duplicateIgnored = false')
+            ->groupBy('t.customerCard')
+            ->having('COUNT(t.customerCard) >= 2') 
+            ->getQuery()
+            ->getScalarResult();
+            ;
+
+    }
+
     /**
      * @return 
      * retourne un tableau des arrivées multiples pour un meme compte (customer_card)
@@ -67,16 +85,20 @@ class TransferArrivalRepository extends ServiceEntityRepository
                     ->select('t as transferArrival', 'count(t.id) as count', 't.duplicateIgnored')
                     ->where('t.duplicateIgnored = false')
                     ->groupBy('t.customerCard')
+                    ->setMaxResults(5)
                     ->getQuery()
                     ->getResult();
 
-        foreach ($results as $result) {
-            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
 
-                $tableauFinalDesDoublons[] = $result;
-            }
-        }
-
+                    
+                    foreach ($results as $result) {
+                        if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
+                            
+                            $tableauFinalDesDoublons[] = $result;
+                        }
+                    }
+                    //dd($results);
+       
         return $tableauFinalDesDoublons;
     }
 

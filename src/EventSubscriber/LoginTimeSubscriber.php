@@ -48,7 +48,6 @@ class LoginTimeSubscriber implements EventSubscriberInterface
             return;
         } 
 
-
         // Vérifiez si l'utilisateur est connecté
         if ($token && $token->getUser()) {
 
@@ -80,6 +79,7 @@ class LoginTimeSubscriber implements EventSubscriberInterface
                     }
                 }
             }
+            
         } else {
 
             if ($route != 'app_login') {

@@ -47,7 +47,7 @@ class HomeController extends AbstractController
         /** Peu importe le jour !!! **/
         // recherche pour un client si il y a deux arrivées
         /***** section  Transfer Management ******/
-        $doublonsArrivee = $transferArrivalRepository->findMultiplesArrivals();
+        $doublonsArrivee = $transferArrivalRepository->countMultiplesArrivals();
         $doublonsInterHotel = $transferInterHotelRepository->findMultiplesInterHotels();
         $doublonsDepart = $transferDepartureRepository->findMultiplesDepartures(); 
   

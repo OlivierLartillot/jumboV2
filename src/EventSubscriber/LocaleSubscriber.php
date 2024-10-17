@@ -21,11 +21,10 @@ class LocaleSubscriber implements EventSubscriberInterface
         if (!$request->hasPreviousSession()) {
             return;
         }
-
-        
+       
         // On vérifie si la langue est passée en paramètre de l'URL
         if ($locale = $request->query->get('_locale')) {
-            $request->setLocale($locale);
+           $request->setLocale($locale);
         } else if ($request->getSession()->get('_locale') != null){
             // Sinon on utilise celle de la session
             $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));

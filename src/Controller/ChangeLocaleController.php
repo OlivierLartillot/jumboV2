@@ -17,7 +17,7 @@ class ChangeLocaleController extends AbstractController
 
         $currentUser = $this->getUser();
         $currentUser->setLanguage($locale);
-        $em->flush($currentUser);
+        $em->flush();
         
         // On stocke la langue dans la session
         $request->getSession()->set('_locale', $locale); 
