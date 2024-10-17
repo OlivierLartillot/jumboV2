@@ -63,15 +63,15 @@ class TransferArrivalRepository extends ServiceEntityRepository
     public function countMultiplesArrivals():array 
     {
 
-        return $this->createQueryBuilder('t')
-            ->select('COUNT(t.id)')
-           ->where('t.duplicateIgnored = false')
+        $test = $this->createQueryBuilder('t')
+            ->select(select: 'COUNT(t.id)')
+            ->where('t.duplicateIgnored = false')
             ->groupBy('t.customerCard')
             ->having('COUNT(t.customerCard) >= 2') 
             ->getQuery()
-            ->getScalarResult();
+            ->getResult()
             ;
-
+       return $test;
     }
 
     /**
@@ -80,26 +80,26 @@ class TransferArrivalRepository extends ServiceEntityRepository
      */
     public function findMultiplesArrivals() :array
     {
-        $tableauFinalDesDoublons = [];
+        /* $tableauFinalDesDoublons = []; */
         $results = $this->createQueryBuilder('t')
                     ->select('t as transferArrival', 'count(t.id) as count', 't.duplicateIgnored')
                     ->where('t.duplicateIgnored = false')
                     ->groupBy('t.customerCard')
-                    ->setMaxResults(5)
+                    ->having('COUNT(t.customerCard) >= 2') 
                     ->getQuery()
                     ->getResult();
 
 
                     
-                    foreach ($results as $result) {
-                        if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
-                            
-                            $tableauFinalDesDoublons[] = $result;
-                        }
-                    }
-                    //dd($results);
+        /* foreach ($results as $result) {
+            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
+                
+                $tableauFinalDesDoublons[] = $result;
+            }
+        } */
+        return $results;
        
-        return $tableauFinalDesDoublons;
+       
     }
 
     /**
