@@ -2,7 +2,9 @@
 
     {{ include('partials/page-title.html.twig', {pagetitle: 'Home', title: 'Duplicate Transfers'}) }}
 
+
     <div class="row">
+
         <div class="col">
             <div class="card">
                 <div class="card-body">
@@ -18,8 +20,20 @@
                             </p>
                             <hr/>
 
+                            <div class="row ms-5 mt-5">
+                                {% if pagination.getTotalItemCount > 1 %}
+                                    {% trans %}There are{% endtrans %} {{ pagination.getTotalItemCount }} {% trans %}matching results{% endtrans %}.
+                                {% else %}
+                                    {% trans %}There is{% endtrans %} {{ pagination.getTotalItemCount }} {% trans %}matching result{% endtrans %}.
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex justify-content-center mb-5">
+                            {# {% do customer_cards.setPageRange(1) %} #}
+                                {{ knp_pagination_render(pagination, 'modules/pagination.html.twig') }}
+                            </div>
                             {% if param == 'arrival' %}
-                                {% for doublon in doublons %} 
+                                {% for doublon in pagination %} 
                                     <div class="col-md-4">
                                         <div class="card mt-4 maintenance-box">
                                             <div class="card-body p-4">

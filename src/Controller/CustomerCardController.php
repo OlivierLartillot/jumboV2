@@ -132,19 +132,13 @@ class CustomerCardController extends AbstractController
                 
             $flightNumber = ($flightNumber == "") ? "all" : $flightNumber;
 
-
-            // si c est présence
-            if ($customerPresence == 1){
-                // la requete qui execute la recherche
-                $results = $customerCardRepository->customerCardPageSearchPresence($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $flightNumber);
-            } else { // si c est opération
-                $results = $customerCardRepository->customerCardPageSearchOperation($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
-
-            }
+            // Présence ou Opérations ?  la requete qui execute la recherche 
+            $results = ($customerPresence == 1) 
+            ? $customerCardRepository->customerCardPageSearchPresence($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $flightNumber) 
+            : $customerCardRepository->customerCardPageSearchOperation($dateStart, $dateEnd, $rep, $status, $agency, $hotel, $search, $natureTransfer, $flightNumber);
 
             $count = count($results);
             
-
             $pagination = $paginator->paginate(
                 $results,
                 $request->query->getInt('page', 1),

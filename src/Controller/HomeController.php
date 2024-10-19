@@ -25,6 +25,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class HomeController extends AbstractController
                             TransferVehicleArrivalRepository $transferVehicleArrivalRepository,
                             TransferInterHotelRepository $transferInterHotelRepository, 
                             TransferDepartureRepository $transferDepartureRepository,
-                            UserRepository $userRepository
+                            UserRepository $userRepository,
                             )
     {
         /** Peu importe le jour !!! **/
@@ -62,6 +63,7 @@ class HomeController extends AbstractController
         /***** regarde si il existe des différences entre les données de transfer team et import booking ******/
         $differencies = $transferVehicleArrivalRepository->findDifferencesWithtransferArrival();
 
+
         return $this->render('index.html.twig', [
             'doublonsArrivee' => $doublonsArrivee,
             'doublonsInterHotel' => $doublonsInterHotel,
@@ -75,9 +77,11 @@ class HomeController extends AbstractController
     
     #[Route('/duplicate/transfers/{param}', name: 'duplicate_transfers' )]
     public function duplicateTransfers($param,
+                                       Request $request,
                                        TransferArrivalRepository $transferArrivalRepository, 
                                        TransferInterHotelRepository $transferInterHotelRepository, 
-                                       TransferDepartureRepository $transferDepartureRepository)
+                                       TransferDepartureRepository $transferDepartureRepository,
+                                       PaginatorInterface $paginator)
     {
         /** Peu importe le jour !!! **/
         //******************** SECURITY *************************** */
@@ -94,9 +98,17 @@ class HomeController extends AbstractController
             return throw $this->createAccessDeniedException('Please, don\'t modify the URL');
          }
 
+
+         $pagination = $paginator->paginate(
+            $doublons,
+            $request->query->getInt('page', 1),
+            27,
+        ); 
+
+
         return $this->render('dashboard/duplicate_dashboard.html.twig', [
-            'doublons' => $doublons,
-            'param' => $param
+            'param' => $param,
+            'pagination' => $pagination
         ]);
     }
 
