@@ -63,15 +63,16 @@ class TransferArrivalRepository extends ServiceEntityRepository
     public function countMultiplesArrivals():array 
     {
 
-        $test = $this->createQueryBuilder('t')
-            ->select(select: 'COUNT(t.id)')
+        return $this->createQueryBuilder('t')
+            ->select(select: 't.id')
             ->where('t.duplicateIgnored = false')
             ->groupBy('t.customerCard')
             ->having('COUNT(t.customerCard) >= 2') 
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult()
             ;
-       return $test;
+
     }
 
     /**
@@ -81,25 +82,13 @@ class TransferArrivalRepository extends ServiceEntityRepository
     public function findMultiplesArrivals() :array
     {
         /* $tableauFinalDesDoublons = []; */
-        $results = $this->createQueryBuilder('t')
-                    ->select('t as transferArrival', 'count(t.id) as count', 't.duplicateIgnored')
+        return $this->createQueryBuilder('t')
+                    ->select('t as transferArrival')
                     ->where('t.duplicateIgnored = false')
                     ->groupBy('t.customerCard')
                     ->having('COUNT(t.customerCard) >= 2') 
                     ->getQuery()
                     ->getResult();
-
-
-                    
-        /* foreach ($results as $result) {
-            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
-                
-                $tableauFinalDesDoublons[] = $result;
-            }
-        } */
-        return $results;
-       
-       
     }
 
     /**

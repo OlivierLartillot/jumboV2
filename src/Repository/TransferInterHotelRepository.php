@@ -61,28 +61,41 @@ class TransferInterHotelRepository extends ServiceEntityRepository
         ;
     }
 
+
+    /** 
+     * @return 
+     * retourne le compte des interHotels multiples  
+     * cette requête sert sur le dashboard a savoir si il y a au moins un doublon a régler
+     *  
+     */
+    public function countMultiplesInterHotels():array 
+    {
+
+        return $this->createQueryBuilder('t')
+            ->select(select: 't.id')
+            ->where('t.duplicateIgnored = false')
+            ->groupBy('t.customerCard')
+            ->having('COUNT(t.customerCard) >= 2') 
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
     /**
      * @return 
      * retourne un tableau des interHotel multiples pour un meme compte (customer_card)
      */
     public function findMultiplesInterHotels() :array
     {
-        $tableauFinalDesDoublons = [];
-        $results = $this->createQueryBuilder('t')
-                    ->select('t as transferInterHotel', 'count(t.id) as count', 't.duplicateIgnored')
+        return $this->createQueryBuilder('t')
+                    ->select('t as transferInterHotel')
                     ->where('t.duplicateIgnored = false')
                     ->groupBy('t.customerCard')
+                    ->having('COUNT(t.customerCard) >= 2') 
                     ->getQuery()
                     ->getResult();
-
-        foreach ($results as $result) {
-            if ( ($result['count'] > 1 )  and ($result['duplicateIgnored'] === false) ) {
-
-                $tableauFinalDesDoublons[] = $result;
-            }
-        }
-
-        return $tableauFinalDesDoublons;
     }
 
     /**
