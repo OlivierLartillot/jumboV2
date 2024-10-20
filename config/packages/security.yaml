@@ -72,7 +72,7 @@ security:
         ##################################################################################################################################
         - { path: ^/admin/api, roles: [ROLE_SUPERMAN, ROLE_API] }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api,       roles: ROLE_API }
+        - { path: ^/api,       roles: [ROLE_API, ROLE_HULK, ROLE_SUPERMAN, ROLE_AIRPORT_SUPERVISOR, ROLE_AIRPORT] }
         
 
 

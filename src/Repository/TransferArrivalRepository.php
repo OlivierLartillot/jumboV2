@@ -541,6 +541,31 @@ class TransferArrivalRepository extends ServiceEntityRepository
     }
 
 
+/***************************************************************************************************/
+/***********************************     API       *************************************************/
+/***************************************************************************************************/
+
+    /**
+     * Renvoie les numéros de vol pour cet aéroport ce jour
+     * Cette requête sert à renvoyer les vols de l'api pour ce personnel d'aéroport ce jour
+     * A ce stade nous connaissons l'aéroport de prédilection pour ce représentant
+     */
+    public function searchFlightsNumberForThisAeroportrepAndDay($airport, $date):array
+    { 
+        $dateTimeImmutable = new DateTimeImmutable($date);
+        $date = $dateTimeImmutable->format("Y-m-d");
+
+        return $this->createQueryBuilder('t')
+                    ->select('t.flightNumber')
+                    ->where('t.fromStart = :airport')
+                    ->andWhere('t.date = :date')
+                    ->setParameter('airport', $airport)
+                    ->setParameter('date', $date)
+                    ->groupBy('t.flightNumber')
+                    ->getQuery()
+                    ->getResult();
+    }
+
     /**
      * @return TransferArrival[] , personnels AIRPORT
      * Retourne un tableau d'arrivées du jour et de l'aéroport
