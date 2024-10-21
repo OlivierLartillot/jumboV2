@@ -41,7 +41,7 @@ class BusVoucherController extends AbstractController
         // si il n'y a pas de date fournie
         if (!isset($date)) {return $this->json("You must choose a date");}
         $checkDate = $this->valideDate($date);
-        if (!$checkDate) { return $this->json(" ");}
+        if (!$checkDate) { return $this->json("Invalid date format");}
         
         // rechercher tous les vols de ce jour pour cet aéroport
         $flightNumbers = $transferArrivalRepository->searchFlightsNumberForThisAeroportrepAndDay($currentUserAirport, $date);
