@@ -37,11 +37,11 @@ class BusVoucherController extends AbstractController
         
         // Gestion des ERREURS
         // si l'utilisateur n'a pas associé d'aéroport, tu renvoie une erreur lisible
-        if ($currentUserAirport == null) { return $this->json("You must choose a favorite Airport in your settings",404,[],);}
+        if ($currentUserAirport == null) { return $this->json("You must choose a favorite Airport in your settings",400,[],);}
         // si il n'y a pas de date fournie
-        if (!isset($date)) {return $this->json("You must choose a date",404,[],);}
+        if (!isset($date)) {return $this->json("You must choose a date",400,[],);}
         $checkDate = $this->valideDate($date);
-        if (!$checkDate) { return $this->json("Invalid date format",404,[],);}
+        if (!$checkDate) { return $this->json("Invalid date format",400,[],);}
         
         // rechercher tous les vols de ce jour pour cet aéroport
         $flightNumbers = $transferArrivalRepository->searchFlightsNumberForThisAeroportrepAndDay($currentUserAirport, $date);
